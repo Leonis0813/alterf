@@ -13,7 +13,7 @@ to = ARGV[1] ? ARGV[1] : Time.now.strftime('%Y/%m/%d')
 
   races = res.body.scan(%r[.*(/race/\d+)]).flatten
   unless races.empty?
-    File.mkdir(OUTPUT_DIR) unless File.exist?(OUTPUT_DIR)
+    Dir.mkdir(OUTPUT_DIR) unless File.exist?(OUTPUT_DIR)
     File.open(File.join(OUTPUT_DIR, "#{date.strftime('%Y%m%d')}.txt"), 'w') do |out|
       races.each {|race| out.puts(race) }
     end
