@@ -1,6 +1,12 @@
 毎日１回0:00に実行
 1. 前日のレースリスト(race/list)を取得する
+   ・extract/race_list.rb
 2. レース結果(race/<id>)があれば取得する
+   ・extract/race_result.rb
 3. レース結果から素性を抽出する
+   ・extract/race_feature.rb
+   ・extract/race_result_feature.rb
 4. レース結果に未知の馬が出ていれば新しく馬情報(/horse/<id>)を取得する
+   ・extract/horse.rb
 5. 馬情報から素性を抽出する
+   ・extract/horse_feature.rb
