@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS race_results (
   race_id INTEGER,
   horse_id INTEGER,
   number INTEGER NOT NULL,
-  order INTEGER NOT NULL,
+  `order` INTEGER NOT NULL,
   time TIME NOT NULL,
   margin VARCHAR(10) NOT NULL,
   third_corner INTEGER NOT NULL,
