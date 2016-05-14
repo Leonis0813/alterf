@@ -14,9 +14,17 @@
 　・発走時間
 　・競馬場
 　・ラウンド
-　・レース日
 　・馬数
----- ここを分ける ----
+
+レース馬情報
+　・レースID primary_key foreign_key
+　・馬ID primary_key foreign_key
+　・年齢
+　・騎手
+　・斤量
+　・馬体重
+
+レース結果
 　・レースID primary_key foreign_key
 　・馬ID primary_key foreign_key
 　・馬番
@@ -27,7 +35,8 @@
 　・上り
 　・単勝
 　・人気
----- ここも分ける ----
+
+払い戻し
 　・レースID primary_key foreign_key
 　・賞名（単勝、馬連など） primary_key
 　・払い戻し金額
@@ -36,10 +45,6 @@
 馬情報
 　・馬ID primary_key
 　・馬名
-　・年齢
-　・騎手
-　・斤量
-　・馬体重
 　・調教師
 　・馬主
 　・生年月日
