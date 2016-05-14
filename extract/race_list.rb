@@ -20,4 +20,3 @@ to = ARGV[1] ? ARGV[1] : today
     end
   end
 end
-
