@@ -10,8 +10,5 @@ CREATE TABLE IF NOT EXISTS race_results (
   slope TIME NOT NULL,
   odds FLOAT NOT NULL,
   popularity INTEGER NOT NULL,
-  age INTEGER NOT NULL,
-  burden_weight FLOAT NOT NULL,
-  weight FLOAT NOT NULL,
   PRIMARY KEY(race_id, horse_id)
 )
