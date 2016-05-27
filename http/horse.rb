@@ -3,7 +3,7 @@ require 'date'
 require 'fileutils'
 require 'net/http'
 
-OUTPUT_DIR = File.join(Settings.application_root, 'raw_data/races')
+OUTPUT_DIR = File.join(Settings.application_root, 'raw_data/horses')
 
 today = Time.now.strftime('%Y/%m/%d')
 from = ARGV[0] ? ARGV[0] : (today - 24 * 60 * 60)

@@ -1,4 +1,4 @@
-url: 'http://db.netkeiba.com/race/list'
+url: 'http://db.netkeiba.com'
 database: 'alterf'
 host: 'localhost'
 username: 'root'
