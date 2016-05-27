@@ -1,5 +1,5 @@
 url: 'http://db.netkeiba.com/race/list'
-database: 'mysql'
+database: 'alterf'
 host: 'localhost'
 username: 'root'
 password: '7QiSlC?4'
