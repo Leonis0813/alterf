@@ -1,3 +1,4 @@
+url: 'http://db.netkeiba.com/race/list'
 database: 'mysql'
 host: 'localhost'
 username: 'root'
