@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS race_results (
+CREATE TABLE IF NOT EXISTS results (
   race_id INTEGER,
   horse_id INTEGER,
   `order` INTEGER NOT NULL,

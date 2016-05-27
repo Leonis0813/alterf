@@ -1,7 +1,12 @@
 require_relative '../config/settings.rb'
 require 'mysql2'
 
-mysql_conf = {:host => Settings.host, :username => Settings.username, :password => Settings.password}
+mysql_conf = {
+  :host => Settings.host,
+  :username => Settings.username,
+  :password => Settings.password,
+}
+
 query = "DROP DATABASE #{Settings.database}"
 client = Mysql2::Client.new(mysql_conf)
 client.query(query)
