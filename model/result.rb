@@ -44,16 +44,16 @@ class Result
 INSERT INTO
   results
 VALUES (
-  #{race_id},
-  #{horse_id},
-  #{order},
-  #{time},
-  '#{margin}',
-  #{third_corner},
-  #{forth_corner},
-  #{slope},
-  #{odds},
-  #{popularity}
+  #{@race_id},
+  #{@horse_id},
+  #{@order},
+  #{@time},
+  '#{@margin}',
+  #{@third_corner},
+  #{@forth_corner},
+  #{@slope},
+  #{@odds},
+  #{@popularity}
 )
 EOF
     begin

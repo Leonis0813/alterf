@@ -94,6 +94,8 @@ EOF
     begin
       result = client.query(query)
       client.close
+      result[:id]
     rescue
+    end
   end
 end
