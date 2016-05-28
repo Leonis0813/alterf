@@ -12,6 +12,11 @@ class HTTPClient
     get("#{Settings.url}/race/#{race_id}")
   end
 
+  def get_horse(horse_id)
+    return unless horse_id.kind_of?(String)
+    get("#{Settings.url}/horse/#{horse_id}")
+  end
+
   private
 
   def get(url)
