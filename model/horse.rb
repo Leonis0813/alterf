@@ -17,6 +17,7 @@ class Horse
     pedigree = pedigree.first.scan(/<td.*?<\/td>/).map{|td| td.gsub(/<.*?>/, '') }
 
     @name = html.scan(/horse_title.*<h1>(.*?)<\/h1>/).flatten.first.gsub(/　| /, '')
+    @name = @name.sub(/\A.*[地|外|抽|父|市]/, '')
     @trainer = profile[1]
     @owner = profile[2]
     @birthday = profile[0].gsub(/年|月/, '-').gsub('日', '')

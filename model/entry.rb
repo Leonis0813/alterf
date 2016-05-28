@@ -42,7 +42,7 @@ class Entry
     client = Mysql2::Client.new(mysql_conf)
     query =<<"EOF"
 INSERT INTO
-  results
+  entries
 VALUES (
   #{@race_id},
   #{@horse_id},
@@ -51,7 +51,7 @@ VALUES (
   #{@age},
   '#{@jockey}',
   #{@burden_weight},
-  #{@weight}
+  #{@weight || 'NULL'}
 )
 EOF
     begin
@@ -92,14 +92,14 @@ SELECT
 FROM
   conditions
 WHERE
-  name = #{race_name}
-  AND start_time = #{start_time}
+  name = '#{race_name}'
+  AND start_time = '#{start_time}'
 LIMIT 1
 EOF
     begin
       result = client.query(query)
       client.close
-      result[:id]
+      result.first['id']
     rescue
     end
   end
@@ -119,14 +119,14 @@ SELECT
 FROM
   horses
 WHERE
-  name = #{horse_name}
+  name = '#{horse_name}'
 LIMIT 1
 EOF
     begin
       result = client.query(query)
       client.close
-      result[:id]
-    rescue
+      result.first['id']
+     rescue
     end
   end
 end
