@@ -2,8 +2,6 @@
 require_relative '../config/settings.rb'
 require 'mysql2'
 
-HTML_DIR = File.join(Settings.application_root, 'raw_data/results')
-
 class Condition
   attr_accessor :id, :name, :track, :direction, :distance, :weather
   attr_accessor :track_condition, :place, :round, :start_time, :num_of_horse
@@ -28,6 +26,8 @@ class Condition
   end
 
   def save!
+    return nil if @track == '障'
+
     mysql_conf = {
       :host => Settings.host,
       :username => Settings.username,
@@ -57,6 +57,7 @@ EOF
       client.query(query)
       @id = client.last_id
       client.close
+      self
     rescue
     end
   end

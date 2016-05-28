@@ -2,8 +2,6 @@
 require_relative '../config/settings.rb'
 require 'mysql2'
 
-HTML_DIR = File.join(Settings.application_root, 'raw_data/results')
-
 class Entry
   attr_accessor :race_id, :horse_id, :number, :bracket, :age, :jockey
   attr_accessor :burden_weight, :weight
@@ -18,7 +16,7 @@ class Entry
     end
     entry = results.find{|result| result[3] == horse_name }
 
-    race_name = html.scan(/race_data.*?<h1>(.*?)<\/h1>/).gsub(/<.*?>/, '').strip
+    race_name = html.scan(/race_data.*?<h1>(.*?)<\/h1>/).flatten.first.gsub(/<.*?>/, '').strip
     race_date = html.match(/<li class="result_link"><.*?>(\d*年\d*月\d*日)のレース結果<.*?>/)[1].gsub(/年|月/, '-').sub('日', '')
     start_time = html.scan(/<dl class="racedata.*?\/dl>/).first.match(/<span>(.*)<\/span>/)[1].split(' / ')[3].match(/発走 : (.*)/)[1]
     @race_id = get_race_id(race_name, "#{race_date} #{start_time}:00")
@@ -28,10 +26,12 @@ class Entry
     @age = entry[4].match(/(\d+)\z/)[1]
     @jockey = entry[6]
     @burden_weight = entry[5]
-    @weight = entry[14].match(/\A(\d+)/)[1]
+    @weight = entry[14].match(/\A(\d+)/)[1] unless entry[14] == '計不'
   end
 
   def save!
+    return if @weight == '計不'
+
     mysql_conf = {
       :host => Settings.host,
       :username => Settings.username,
@@ -68,7 +68,7 @@ EOF
 
     horse_names = results.map do |result|
       features = result.gsub(/<[\/]?tr>/, '').scan(/<td.*?>(.*?)<\/td>/).flatten
-      features.map{|feature| feature.gsub(/<.*?>/, '') }
+      features.map!{|feature| feature.gsub(/<.*?>/, '') }
       features[3]
     end
 
@@ -92,7 +92,7 @@ SELECT
 FROM
   conditions
 WHERE
-  name = #{parent_name}
+  name = #{race_name}
   AND start_time = #{start_time}
 LIMIT 1
 EOF

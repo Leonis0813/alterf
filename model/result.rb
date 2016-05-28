@@ -1,7 +1,6 @@
+# coding: utf-8
 require_relative '../config/settings.rb'
 require 'mysql2'
-
-HTML_DIR = File.join(Settings.application_root, 'raw_data/results')
 
 class Result
   attr_accessor :race_id, :horse_id, :order, :time, :margin, :third_corner, :forth_corner
@@ -18,9 +17,13 @@ class Result
 
     results.each do |result|
       @order = result[0]
-      minute, second = result[7].split(':')
-      sec, msec = second.split('.')
-      @time = minute.to_i * 60 + sec.to_i + msec.to_f / 10
+      if @order =~ /中|取/
+        @time = 0.0
+      else
+        minute, second = result[7].split(':')
+        sec, msec = second.split('.')
+        @time = minute.to_i * 60 + sec.to_i + msec.to_f / 10
+      end
       @margin = result[8]
       corners = result[10].split('-')
       @third_corner = corners[2]

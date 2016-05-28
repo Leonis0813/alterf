@@ -1,10 +1,11 @@
 require_relative '../config/settings.rb'
+require 'date'
 require 'net/http'
 
 class HTTPClient
   def get_race_list(date)
     return unless date.kind_of?(String) and date.match(/\d{4}-\d{2}-\d{2}/)
-    get("#{Settings.url}/race/list/#{date.strftime('%Y%m%d')}")
+    get("#{Settings.url}/race/list/#{Date.parse(date).strftime('%Y%m%d')}")
   end
 
   def get_race_result(race_id)

@@ -10,6 +10,8 @@ def output_race_result(date)
   FileUtils.mkdir_p(race_result_dir)
 
   [].tap do |race_ids|
+    return [] unless File.exists?(race_list_file)
+
     File.open(race_list_file, 'r') do |file|
       file.each_line do |path|
         race_id = path.match(/\/race\/(\d+)/)[1]

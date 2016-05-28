@@ -19,11 +19,11 @@ class Horse
     @name = html.scan(/horse_title.*<h1>(.*?)<\/h1>/).flatten.first.gsub(/　| /, '')
     @trainer = profile[1]
     @owner = profile[2]
-    @birthday = profile[0]
+    @birthday = profile[0].gsub(/年|月/, '-').gsub('日', '')
     @breeder = profile[3]
     @growing_area = profile[4]
     @central_prize = (profile[6].gsub(',', '').to_f * 10000).to_i
-    @local_prize = (profiles[7].gsub(',', '').to_f * 10000).to_i
+    @local_prize = (profile[7].gsub(',', '').to_f * 10000).to_i
     total_prize, prizes = profile[8].split(' ')
     @first = prizes.match(/\[(\d+)-\d+-\d+-\d+\]/)[1]
     @second = prizes.match(/\[\d+-(\d+)-\d+-\d+\]/)[1]
@@ -58,9 +58,9 @@ VALUES (
   #{@first},
   #{@second},
   #{@third},
-  #{@total_race}
-  #{@father_id}
-  #{@mother_id}
+  #{@total_race},
+  #{@father_id || 'NULL'},
+  #{@mother_id || 'NULL'}
 )
 EOF
     begin
