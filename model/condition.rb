@@ -61,12 +61,3 @@ EOF
     end
   end
 end
-
-require_relative  'result.rb'
-Dir[File.join(HTML_DIR, '201610010812.html')].sort.each do |html_file|
-  race = Race.new(html_file)
-  race.save!
-
-  result = Result.new(html_file)
-  result.race_id = race.id
-end

@@ -63,7 +63,3 @@ EOF
     end
   end
 end
-
-Dir[File.join(HTML_DIR, '201610010812.html')].sort.each do |html_file|
-  Result.new(html_file).save!
-end
