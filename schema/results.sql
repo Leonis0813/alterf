@@ -1,12 +1,12 @@
 CREATE TABLE IF NOT EXISTS results (
   race_id INTEGER,
   horse_id INTEGER,
-  `order` INTEGER NOT NULL,
-  time FLOAT NOT NULL,
-  margin VARCHAR(10) NOT NULL,
-  third_corner INTEGER NOT NULL,
-  forth_corner INTEGER NOT NULL,
-  slope FLOAT NOT NULL,
+  `order` VARCHAR(2) NOT NULL,
+  time FLOAT,
+  margin VARCHAR(10),
+  third_corner VARCHAR(2),
+  forth_corner VARCHAR(2),
+  slope FLOAT,
   odds FLOAT NOT NULL,
   popularity INTEGER NOT NULL,
   PRIMARY KEY(race_id, horse_id)

@@ -22,20 +22,21 @@ class Result
     @race_id = get_race_id(race_name, "#{race_date} #{start_time}:00")
     @horse_id = get_horse_id(horse_name)
     @order = result[0]
-    if @order =~ /中|取/
-      @time = 0.0
-    else
-      minute, second = result[7].split(':')
-      sec, msec = second.split('.')
-      @time = minute.to_i * 60 + sec.to_i + msec.to_f / 10
-    end
+    @time = if @order =~ /\A\d+\z/
+              minute, second = result[7].split(':')
+              sec, msec = second.split('.')
+              minute.to_i * 60 + sec.to_i + msec.to_f / 10
+            else
+              0.0
+            end
     @margin = result[8]
+    @res = result[10]
     corners = result[10].split('-')
-    @third_corner = corners[-2]
-    @forth_corner = corners[-1]
-    @slope = result[11]
-    @odds = result[12]
-    @popularity = result[13]
+    @third_corner = corners[-2] || "''"
+    @forth_corner = corners[-1] || "''"
+    @slope = result[11].empty? ? 0.0 : result[11]
+    @odds = result[12] =~ /\A\d+\.\d+\z/ ? result[12] : 0.0
+    @popularity = result[13].empty? ? 0 : result[13]
   end
 
   def save!
@@ -53,8 +54,8 @@ INSERT INTO
 VALUES (
   #{@race_id},
   #{@horse_id},
-  #{@order},
-  #{@time},
+  '#{@order}',
+  #{@time || 'NULL'},
   '#{@margin}',
   #{@third_corner},
   #{@forth_corner},
@@ -68,6 +69,7 @@ EOF
       client.close
     rescue => e
       puts query
+      puts @res
       puts e.message
     end
   end
