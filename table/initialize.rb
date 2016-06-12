@@ -14,7 +14,7 @@ client.query(query)
 client.close
 
 client = Mysql2::Client.new(Settings.mysql)
-Dir[File.join(Settings.application_root, 'schema/*.sql')].each do |sql_file|
+Dir[File.join(Settings.application_root, 'table/*.sql')].each do |sql_file|
   client.query(File.read(sql_file))
 end
 client.close
