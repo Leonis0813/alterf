@@ -120,6 +120,8 @@ FROM
   horses
 WHERE
   name = '#{horse_name}'
+ORDER BY
+  birthday desc
 LIMIT 1
 EOF
     begin
