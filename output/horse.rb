@@ -12,6 +12,8 @@ def output_horse(file_id)
   [].tap do |horse_ids|
     horse_paths.each do |path|
       horse_id = path.match(/\/horse\/(\d+)/)[1]
+      next if File.exists?(File.join(output_dir, "#{horse_id}.html"))
+
       res = HTTPClient.new.get_horse(horse_id)
 
       File.open(File.join(output_dir, "#{horse_id}.html"), "w:utf-8") do |out|
