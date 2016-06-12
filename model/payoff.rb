@@ -34,7 +34,6 @@ VALUES (
 EOF
     begin
       client.query(query)
-      @id = client.last_id
       client.close
     rescue
     end
