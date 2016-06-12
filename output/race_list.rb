@@ -4,6 +4,9 @@ require 'date'
 require 'fileutils'
 
 def output_race_list(date)
+  races_dir = File.join(Settings.application_root, 'raw_data/races')
+  return File.exists?(File.join(races_dir, Date.parse(date).strftime('%Y%m%d')))
+
   res = HTTPClient.new.get_race_list(date)
   races = res.body.scan(%r[.*(/race/\d+)]).flatten
 
