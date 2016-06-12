@@ -1,4 +1,4 @@
-require_relative '../config/settings.rb'
+require_relative '../settings/settings.rb'
 require 'mysql2'
 
 client = Mysql2::Client.new(Settings.mysql)

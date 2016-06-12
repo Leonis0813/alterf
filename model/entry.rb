@@ -1,5 +1,6 @@
 # coding: utf-8
-require_relative '../config/settings.rb'
+require_relative '../settings/settings.rb'
+require_relative '../client/mysql.rb'
 require 'mysql2'
 
 class Entry
@@ -66,48 +67,5 @@ EOF
     end
 
     horse_names.each {|horse_name| self.new(html_file, horse_name).save! }
-  end
-
-  private
-
-  def get_race_id(race_name, start_time)
-    client = Mysql2::Client.new(Settings.mysql)
-    query =<<"EOF"
-SELECT
-  id
-FROM
-  conditions
-WHERE
-  name = '#{race_name}'
-  AND start_time = '#{start_time}'
-LIMIT 1
-EOF
-    begin
-      result = client.query(query)
-      client.close
-      result.first['id']
-    rescue
-    end
-  end
-
-  def get_horse_id(horse_name)
-    client = Mysql2::Client.new(Settings.mysql)
-    query =<<"EOF"
-SELECT
-  id
-FROM
-  horses
-WHERE
-  name = '#{horse_name}'
-ORDER BY
-  birthday desc
-LIMIT 1
-EOF
-    begin
-      result = client.query(query)
-      client.close
-      result.first['id']
-     rescue
-    end
   end
 end

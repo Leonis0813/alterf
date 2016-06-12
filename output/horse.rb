@@ -1,5 +1,5 @@
-require_relative '../config/settings.rb'
-require_relative '../http/client.rb'
+require_relative '../settings/settings.rb'
+require_relative '../client/http.rb'
 require 'fileutils'
 
 def output_horse(file_id)

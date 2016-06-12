@@ -1,5 +1,6 @@
 # coding: utf-8
-require_relative '../config/settings.rb'
+require_relative '../settings/settings.rb'
+require_relative '../client/mysql.rb'
 require 'mysql2'
 
 class Payoff
@@ -48,28 +49,6 @@ EOF
         p = [payoff[0], money, popularity]
         self.new(html, p).save!
       end
-    end
-  end
-
-  private
-
-  def get_race_id(race_name, start_time)
-    client = Mysql2::Client.new(Settings.mysql)
-    query =<<"EOF"
-SELECT
-  id
-FROM
-  conditions
-WHERE
-  name = '#{race_name}'
-  AND start_time = '#{start_time}'
-LIMIT 1
-EOF
-    begin
-      result = client.query(query)
-      client.close
-      result.first['id']
-    rescue
     end
   end
 end

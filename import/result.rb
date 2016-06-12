@@ -1,4 +1,4 @@
-require_relative '../config/settings.rb'
+require_relative '../settings/settings.rb'
 require_relative '../model/result.rb'
 
 def import_result(file_id)

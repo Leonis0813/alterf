@@ -1,5 +1,5 @@
 # coding: utf-8
-require_relative '../config/settings.rb'
+require_relative '../settings/settings.rb'
 require 'mysql2'
 
 class Horse
