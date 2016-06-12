@@ -15,6 +15,8 @@ def output_race_result(date)
     File.open(race_list_file, 'r') do |file|
       file.each_line do |path|
         race_id = path.match(/\/race\/(\d+)/)[1]
+        next if File.exists?(File.join(race_result_dir, "#{race_id}.html"))
+
         res = HTTPClient.new.get_race_result(race_id)
         
         File.open(File.join(race_result_dir, "#{race_id}.html"), "w:utf-8") do |out|
