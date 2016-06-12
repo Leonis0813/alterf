@@ -9,5 +9,6 @@ CREATE TABLE IF NOT EXISTS conditions (
   start_time DATETIME NOT NULL,
   place VARCHAR(16) NOT NULL,
   round INTEGER NOT NULL,
-  num_of_horse INTEGER NOT NULL
+  num_of_horse INTEGER NOT NULL,
+  UNIQUE(name, start_time)
 )
