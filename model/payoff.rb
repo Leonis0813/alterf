@@ -24,23 +24,12 @@ class Payoff
     client = Mysql2::Client.new(mysql_conf)
     query =<<"EOF"
 INSERT INTO
-  horses
+  payoffs
 VALUES (
-  NULL,
-  '#{@name}',
-  '#{@trainer}',
-  '#{@owner}',
-  '#{@birthday}',
-  '#{@breeder}',
-  '#{@growing_area}',
-  #{@central_prize},
-  #{@local_prize},
-  #{@first},
-  #{@second},
-  #{@third},
-  #{@total_race},
-  #{@father_id || 'NULL'},
-  #{@mother_id || 'NULL'}
+  '#{@race_id}',
+  '#{@prize_name}',
+  #{@money},
+  #{@popularity}
 )
 EOF
     begin
