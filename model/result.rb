@@ -40,14 +40,7 @@ class Result
   end
 
   def save!
-    mysql_conf = {
-      :host => Settings.host,
-      :username => Settings.username,
-      :password => Settings.password,
-      :database => Settings.database,
-    }
-
-    client = Mysql2::Client.new(mysql_conf)
+    client = Mysql2::Client.new(Settings.mysql)
     query =<<"EOF"
 INSERT INTO
   results
@@ -91,14 +84,7 @@ EOF
   private
 
   def get_race_id(race_name, start_time)
-    mysql_conf = {
-      :host => Settings.host,
-      :username => Settings.username,
-      :password => Settings.password,
-      :database => Settings.database,
-    }
-
-    client = Mysql2::Client.new(mysql_conf)
+    client = Mysql2::Client.new(Settings.mysql)
     query =<<"EOF"
 SELECT
   id
@@ -118,14 +104,7 @@ EOF
   end
 
   def get_horse_id(horse_name)
-    mysql_conf = {
-      :host => Settings.host,
-      :username => Settings.username,
-      :password => Settings.password,
-      :database => Settings.database,
-    }
-
-    client = Mysql2::Client.new(mysql_conf)
+    client = Mysql2::Client.new(Settings.mysql)
     query =<<"EOF"
 SELECT
   id

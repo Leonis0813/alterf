@@ -28,14 +28,7 @@ class Condition
   def save!
     return nil if @track == '障'
 
-    mysql_conf = {
-      :host => Settings.host,
-      :username => Settings.username,
-      :password => Settings.password,
-      :database => Settings.database,
-    }
-
-    client = Mysql2::Client.new(mysql_conf)
+    client = Mysql2::Client.new(Settings.mysql)
     query =<<"EOF"
 INSERT INTO
   conditions
