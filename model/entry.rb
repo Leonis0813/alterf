@@ -1,5 +1,6 @@
 # coding: utf-8
-require_relative '../config/settings.rb'
+require_relative '../settings/settings.rb'
+require_relative '../client/mysql.rb'
 require 'mysql2'
 
 class Entry
@@ -19,8 +20,8 @@ class Entry
     race_name = html.scan(/race_data.*?<h1>(.*?)<\/h1>/).flatten.first.gsub(/<.*?>/, '').strip
     race_date = html.match(/<li class="result_link"><.*?>(\d*年\d*月\d*日)のレース結果<.*?>/)[1].gsub(/年|月/, '-').sub('日', '')
     start_time = html.scan(/<dl class="racedata.*?\/dl>/).first.match(/<span>(.*)<\/span>/)[1].split(' / ')[3].match(/発走 : (.*)/)[1]
-    @race_id = get_race_id(race_name, "#{race_date} #{start_time}:00")
-    @horse_id = get_horse_id(horse_name)
+    @race_id = MysqlClient.new.get_race_id(race_name, "#{race_date} #{start_time}:00")
+    @horse_id = MysqlClient.new.get_horse_id(horse_name)
     @number = entry[2]
     @bracket = entry[1]
     @age = entry[4].match(/(\d+)\z/)[1]
@@ -32,14 +33,7 @@ class Entry
   def save!
     return if @weight == '計不'
 
-    mysql_conf = {
-      :host => Settings.host,
-      :username => Settings.username,
-      :password => Settings.password,
-      :database => Settings.database,
-    }
-
-    client = Mysql2::Client.new(mysql_conf)
+    client = Mysql2::Client.new(Settings.mysql)
     query =<<"EOF"
 INSERT INTO
   entries
@@ -73,60 +67,5 @@ EOF
     end
 
     horse_names.each {|horse_name| self.new(html_file, horse_name).save! }
-  end
-
-  private
-
-  def get_race_id(race_name, start_time)
-    mysql_conf = {
-      :host => Settings.host,
-      :username => Settings.username,
-      :password => Settings.password,
-      :database => Settings.database,
-    }
-
-    client = Mysql2::Client.new(mysql_conf)
-    query =<<"EOF"
-SELECT
-  id
-FROM
-  conditions
-WHERE
-  name = '#{race_name}'
-  AND start_time = '#{start_time}'
-LIMIT 1
-EOF
-    begin
-      result = client.query(query)
-      client.close
-      result.first['id']
-    rescue
-    end
-  end
-
-  def get_horse_id(horse_name)
-    mysql_conf = {
-      :host => Settings.host,
-      :username => Settings.username,
-      :password => Settings.password,
-      :database => Settings.database,
-    }
-
-    client = Mysql2::Client.new(mysql_conf)
-    query =<<"EOF"
-SELECT
-  id
-FROM
-  horses
-WHERE
-  name = '#{horse_name}'
-LIMIT 1
-EOF
-    begin
-      result = client.query(query)
-      client.close
-      result.first['id']
-     rescue
-    end
   end
 end

@@ -1,4 +1,4 @@
-require_relative '../config/settings.rb'
+require_relative '../settings/settings.rb'
 require_relative '../model/horse.rb'
 
 def import_horse(file_id)

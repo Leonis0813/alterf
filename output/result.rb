@@ -1,5 +1,5 @@
-require_relative '../config/settings.rb'
-require_relative '../http/client.rb'
+require_relative '../settings/settings.rb'
+require_relative '../client/http.rb'
 require 'date'
 require 'fileutils'
 
@@ -15,6 +15,9 @@ def output_race_result(date)
     File.open(race_list_file, 'r') do |file|
       file.each_line do |path|
         race_id = path.match(/\/race\/(\d+)/)[1]
+        race_ids << race_id
+        next if File.exists?(File.join(race_result_dir, "#{race_id}.html"))
+
         res = HTTPClient.new.get_race_result(race_id)
         
         File.open(File.join(race_result_dir, "#{race_id}.html"), "w:utf-8") do |out|
@@ -22,8 +25,6 @@ def output_race_result(date)
             out.puts line
           end
         end
-
-        race_ids << race_id
       end
     end
   end

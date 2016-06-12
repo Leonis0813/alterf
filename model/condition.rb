@@ -1,5 +1,5 @@
 # coding: utf-8
-require_relative '../config/settings.rb'
+require_relative '../settings/settings.rb'
 require 'mysql2'
 
 class Condition
@@ -28,14 +28,7 @@ class Condition
   def save!
     return nil if @track == '障'
 
-    mysql_conf = {
-      :host => Settings.host,
-      :username => Settings.username,
-      :password => Settings.password,
-      :database => Settings.database,
-    }
-
-    client = Mysql2::Client.new(mysql_conf)
+    client = Mysql2::Client.new(Settings.mysql)
     query =<<"EOF"
 INSERT INTO
   conditions

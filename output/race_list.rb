@@ -1,9 +1,12 @@
-require_relative '../config/settings.rb'
-require_relative '../http/client.rb'
+require_relative '../settings/settings.rb'
+require_relative '../client/http.rb'
 require 'date'
 require 'fileutils'
 
 def output_race_list(date)
+  races_dir = File.join(Settings.application_root, 'raw_data/races')
+  return if File.exists?(File.join(races_dir, "#{Date.parse(date).strftime('%Y%m%d')}.txt"))
+
   res = HTTPClient.new.get_race_list(date)
   races = res.body.scan(%r[.*(/race/\d+)]).flatten
 

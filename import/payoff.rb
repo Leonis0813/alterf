@@ -1,4 +1,4 @@
-require_relative '../config/settings.rb'
+require_relative '../settings/settings.rb'
 require_relative '../model/payoff.rb'
 
 def import_payoff(file_id)

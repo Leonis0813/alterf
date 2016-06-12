@@ -3,7 +3,7 @@ require 'yaml'
 module Settings
   class << self
     def initialize!
-      YAML.load_file('config/constants.yml').each do |k, v|
+      YAML.load_file('settings/constants.yml').each do |k, v|
         if v.kind_of?(String)
           eval "def #{k}; '#{v}'; end"
         else
