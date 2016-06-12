@@ -11,6 +11,6 @@ file_ids.each do |file_id|
   if import_condition(file_id)
     import_entry(file_id)
     import_result(file_id)
-    #  import_payoff(file_id)
+    import_payoff(file_id)
   end
 end

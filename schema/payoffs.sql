@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS payoffs (
-  race_id INTEGER,
-  prize_name VARCHAR(6),
+  id INTEGER AUTO_INCREMENT PRIMARY KEY,
+  race_id INTEGER NOT NULL,
+  prize_name VARCHAR(6) NOT NULL,
   money INTEGER NOT NULL,
-  popularity INTEGER NOT NULL,
-  PRIMARY KEY(race_id, prize_name)
+  popularity INTEGER NOT NULL
 )
