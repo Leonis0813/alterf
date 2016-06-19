@@ -1,3 +1,4 @@
+require_relative '../settings/settings.rb'
 require 'date'
 
 from = Date.parse('1980-01-01')
@@ -10,4 +11,6 @@ rescue => e
   return
 end
 
-(from..to).each {|date| system "ruby ../alterf #{date.strftime('%Y-%m-%d')}" }
+(from..to).each do |date|
+  system "ruby #{Settings.application_root}/alterf.rb #{date.strftime('%Y-%m-%d')}"
+end
