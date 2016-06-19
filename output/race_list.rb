@@ -4,17 +4,17 @@ require 'date'
 require 'fileutils'
 
 def output_race_list(date)
-  races_dir = File.join(Settings.application_root, 'raw_data/races')
-  return if File.exists?(File.join(races_dir, "#{Date.parse(date).strftime('%Y%m%d')}.txt"))
+  race_list_dir = File.join(Settings.raw_data_path, 'races')
+  race_list_file = File.join(race_list_dir, "#{Date.parse(date).strftime('%Y%m%d')}.txt")
+  return if File.exists?(race_list_file)
 
   res = HTTPClient.new.get_race_list(date)
   races = res.body.scan(%r[.*(/race/\d+)]).flatten
 
   return if races.empty?
 
-  output_dir = File.join(Settings.application_root, 'raw_data/races')
-  FileUtils.mkdir_p(output_dir)
-  File.open(File.join(output_dir, "#{Date.parse(date).strftime('%Y%m%d')}.txt"), 'w') do |out|
+  FileUtils.mkdir_p(race_list_dir)
+  File.open(race_list_file, 'w') do |out|
     races.each {|race| out.puts(race) }
   end
 end
