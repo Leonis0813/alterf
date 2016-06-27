@@ -4,9 +4,8 @@ require 'date'
 require 'fileutils'
 
 def output_race_result(date)
-  data_dir = File.join(Settings.application_root, 'raw_data')
-  race_list_file = File.join(data_dir, 'races', "#{Date.parse(date).strftime('%Y%m%d')}.txt")
-  race_result_dir = File.join(data_dir, 'results')
+  race_list_file = File.join(Settings.raw_data_path, 'races', "#{Date.parse(date).strftime('%Y%m%d')}.txt")
+  race_result_dir = File.join(Settings.raw_data_path, 'results')
   FileUtils.mkdir_p(race_result_dir)
 
   [].tap do |race_ids|

@@ -1,7 +1,7 @@
 require_relative '../settings/settings.rb'
 require 'date'
 
-from = Date.parse('1980-01-01')
+from = Date.parse('1988-01-01')
 to = Date.today
 begin
   from = Date.parse(ARGV[0]) if ARGV[0]

@@ -15,6 +15,10 @@ module Settings
     def application_root
       File.expand_path(File.dirname('..'))
     end
+
+    def raw_data_path
+      '/var/alterf/raw_data'
+    end
   end
 end
 
