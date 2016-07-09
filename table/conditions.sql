@@ -10,5 +10,5 @@ CREATE TABLE IF NOT EXISTS conditions (
   place VARCHAR(16) NOT NULL,
   round INTEGER NOT NULL,
   num_of_horse INTEGER NOT NULL,
-  UNIQUE(name, start_time)
+  UNIQUE(name, start_time, place)
 )
