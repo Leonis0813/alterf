@@ -14,11 +14,10 @@ def import_race(race_id)
   parsed_entries.each do |e|
     entry = Entry.new(e)
     horse = Horse.find_by(:external_id => entry.external_id)
-    unless horse
-      parsed_horse = HTML.parse(html, :horse)
-      horse = Horse.new(parsed_horse)
-      horse.save!
-    end
+    horse = unless horse
+              output_horse(entry.external_id)
+              import_horse(entry.external_id)
+            end
     entry.race_id = race.id
     entry.horse_id = horse.id
     entry.save!
