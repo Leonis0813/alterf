@@ -17,7 +17,7 @@ module Settings
     end
 
     def raw_data_path
-      '/var/alterf/raw_data'
+      '/var/alterf'
     end
   end
 end
