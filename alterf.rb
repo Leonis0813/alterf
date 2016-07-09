@@ -1,16 +1,16 @@
+require 'date'
+require 'fileutils'
 Dir['{import,output}/*.rb'].each {|file| require_relative file }
 
-date = ARGV[0] ? ARGV[0] : Time.now.strftime('%Y-%m-%d')
+date = (ARGV[0] ? Date.parse(ARGV[0]) : Date.today).strftime('%Y%m%d')
 
-output_race_list(date)
-file_ids = output_race_result(date)
+output_races(date)
 
-file_ids.each do |file_id|
-  output_horse(file_id)
-  import_horse(file_id)
-  if import_condition(file_id)
-    import_entry(file_id)
-    import_result(file_id)
-    import_payoff(file_id)
-  end
+file_path = File.join(Settings.raw_data_path, "races/#{date}.html")
+result_dir = File.join(Settings.raw_data_path, 'results')
+FileUtils.mkdir_p(result_dir)
+
+File.read(file_path).split("\n").each do |race_path|
+  output_result(race_path)
+  import_result(race_path)
 end
