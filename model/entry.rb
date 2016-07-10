@@ -5,7 +5,7 @@ require 'mysql2'
 
 class Entry
   attr_accessor :race_id, :horse_id, :number, :bracket, :age, :jockey
-  attr_accessor :burden_weight, :weight
+  attr_accessor :burden_weight, :weight, :external_id
 
   def initialize(attribute)
     attribute.each {|key, value| send("#{key}=", value) }

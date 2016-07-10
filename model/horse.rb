@@ -5,7 +5,7 @@ require 'mysql2'
 class Horse
   attr_accessor :id, :name, :trainer, :owner, :birthday, :breeder, :growing_area
   attr_accessor :central_prize, :local_prize, :first, :second, :third, :total_race
-  attr_accessor :father_id, :mother_id
+  attr_accessor :father_id, :mother_id, :external_id
 
   def initialize(attribute)
     attribute.each {|key, value| send("#{key}=", value) }
@@ -31,41 +31,42 @@ VALUES (
   #{@third},
   #{@total_race},
   #{@father_id || 'NULL'},
-  #{@mother_id || 'NULL'}
+  #{@mother_id || 'NULL'},
+  #{@external_id}
 )
 EOF
     begin
       client.query(query)
       @id = client.last_id
-      client.close
-      p 'ok: ' + name
     rescue => e
-      p 'ng: ' + name
       p e.message
       raise
+    ensure
+      client.close
     end
   end
 
-  private
+  def self.find_by(attribute)
+    attribute = attribute.map {|key, value| "#{key} = #{value}"}
 
-  def get_parent_id(parent_name)
     client = Mysql2::Client.new(Settings.mysql)
     query =<<"EOF"
 SELECT
-  id
+  *
 FROM
   horses
 WHERE
-  name = "#{parent_name}"
+  #{attribute.join(' AND ')}
 LIMIT 1
 EOF
     begin
-      result = client.query(query)
-      client.close
-      result.first['id'] if result.first
+      results = client.query(query)
+      results.first
     rescue => e
       p e.message
       raise
+    ensure
+      client.close
     end
   end
 end

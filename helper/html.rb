@@ -47,6 +47,7 @@ class HTML
           attribute[:jockey] = features[6]
           attribute[:burden_weight] = features[5].to_f
           attribute[:weight] = features[14].match(/\A(\d+)/)[1].to_f unless features[14] == '計不'
+          attribute[:external_id] = entry.scan(/href="\/horse\/(\d*)\/"/).flatten.first.to_i
         end
       end
     end
@@ -65,7 +66,7 @@ class HTML
         attribute[:growing_area]= profile[4]
         attribute[:central_prize] = (profile[6].gsub(',', '').to_f * 10000).to_i
         attribute[:local_prize] = (profile[7].gsub(',', '').to_f * 10000).to_i
-        attribute[:total_prize], prizes = profile[8].split(' ')
+        total_prize, prizes = profile[8].split(' ')
         attribute[:first] = prizes.match(/\[(\d+)-\d+-\d+-\d+\]/)[1]
         attribute[:second] = prizes.match(/\[\d+-(\d+)-\d+-\d+\]/)[1]
         attribute[:third] = prizes.match(/\[\d+-\d+-(\d+)-\d+\]/)[1]

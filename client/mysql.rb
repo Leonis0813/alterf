@@ -17,7 +17,9 @@ EOF
       result = client.query(query)
       client.close
       result.first['id']
-    rescue
+    rescue => e
+      p e.message
+      raise
     end
   end
 
@@ -38,7 +40,9 @@ EOF
       result = client.query(query)
       client.close
       result.first['id']
-     rescue
+    rescue => e
+      p e.message
+      raise
     end
   end
 end

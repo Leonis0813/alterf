@@ -1,5 +1,6 @@
 require_relative '../settings/settings.rb'
-require_relative '../model/result.rb'
+require_relative '../helper/html.rb'
+Dir["#{Settings.application_root}/model/*.rb"].each {|file| require_relative file }
 
 def import_race(race_id)
   html_file = File.join(Settings.backup_path, "races/#{race_id}.html")
