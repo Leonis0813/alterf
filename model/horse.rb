@@ -8,7 +8,7 @@ class Horse
   attr_accessor :father_id, :mother_id
 
   def initialize(attribute)
-    attribute.each {|key, value| eval("@#{key}=#{value}") }
+    attribute.each {|key, value| send("#{key}=", value) }
   end
 
   def save!

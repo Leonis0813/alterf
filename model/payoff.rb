@@ -7,7 +7,7 @@ class Payoff
   attr_accessor :id, :race_id, :prize_name, :money, :popularity
 
   def initialize(attribute)
-    attribute.each {|key, value| eval("@#{key}=#{value}") }
+    attribute.each {|key, value| send("#{key}=", value) }
   end
 
   def save!

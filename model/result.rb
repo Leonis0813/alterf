@@ -8,7 +8,7 @@ class Result
   attr_accessor :slope, :odds, :popularity
 
   def initialize(attribute)
-    attribute.each {|key, value| eval("@#{key}=#{value}") }
+    attribute.each {|key, value| send("#{key}=", value) }
   end
 
   def save!
