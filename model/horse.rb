@@ -7,7 +7,7 @@ class Horse
   attr_accessor :central_prize, :local_prize, :first, :second, :third, :total_race
   attr_accessor :father_id, :mother_id
 
-  def initialize(html_file)
+  def initialize(attribute)
     raw_html = File.read(html_file)
     html = raw_html.gsub("\n", '').gsub('&nbsp;', ' ')
     profile = html.scan(/db_prof_table.*?(<.*?)<\/table>/).flatten
@@ -61,7 +61,11 @@ EOF
       client.query(query)
       @id = client.last_id
       client.close
-    rescue
+      p 'ok: ' + name
+    rescue => e
+      p 'ng: ' + name
+      p e.message
+      raise
     end
   end
 
@@ -75,14 +79,16 @@ SELECT
 FROM
   horses
 WHERE
-  name = #{parent_name}
+  name = "#{parent_name}"
 LIMIT 1
 EOF
     begin
       result = client.query(query)
       client.close
-      result[:id]
-    rescue
+      result.first['id'] if result.first
+    rescue => e
+      p e.message
+      raise
     end
   end
 end

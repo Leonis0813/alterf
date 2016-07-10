@@ -51,7 +51,9 @@ EOF
       @id = client.last_id
       client.close
       self
-    rescue
+    rescue => e
+      p e.message
+      raise
     end
   end
 end

@@ -3,8 +3,9 @@ require_relative '../settings/settings.rb'
 require_relative '../client/mysql.rb'
 require 'mysql2'
 
-class Payoff
-  attr_accessor :id, :race_id, :prize_name, :money, :popularity
+class Race
+  attr_accessor :id, :name, :track, :direction, :distance, :weather
+  attr_accessor :track_condition, :place, :round, :start_time, :num_of_horse
 
   def initialize(attribute)
     attribute.each {|key, value| eval("@#{key}=#{value}") }
@@ -14,12 +15,17 @@ class Payoff
     client = Mysql2::Client.new(Settings.mysql)
     query =<<"EOF"
 INSERT INTO
-  payoffs
+  results
 VALUES (
-  NULL,
-  '#{@race_id}',
-  '#{@prize_name}',
-  #{@money},
+  #{@race_id},
+  #{@horse_id},
+  '#{@order}',
+  #{@time || 'NULL'},
+  '#{@margin}',
+  #{@third_corner},
+  #{@forth_corner},
+  #{@slope},
+  #{@odds},
   #{@popularity}
 )
 EOF
