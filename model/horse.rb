@@ -8,30 +8,7 @@ class Horse
   attr_accessor :father_id, :mother_id
 
   def initialize(attribute)
-    raw_html = File.read(html_file)
-    html = raw_html.gsub("\n", '').gsub('&nbsp;', ' ')
-    profile = html.scan(/db_prof_table.*?(<.*?)<\/table>/).flatten
-    profile = profile.first.scan(/<td>.*?<\/td>/).map{|td| td.gsub(/<.*?>/, '') }
-
-    pedigree = html.scan(/blood_table.*?(<.*?)<\/table>/).flatten
-    pedigree = pedigree.first.scan(/<td.*?<\/td>/).map{|td| td.gsub(/<.*?>/, '') }
-
-    @name = html.scan(/horse_title.*<h1>(.*?)<\/h1>/).flatten.first.gsub(/　| /, '')
-    @name = @name.sub(/\A.*[地|外|抽|父|市]/, '')
-    @trainer = profile[1]
-    @owner = profile[2]
-    @birthday = profile[0].gsub(/年|月/, '-').gsub('日', '')
-    @breeder = profile[3]
-    @growing_area = profile[4]
-    @central_prize = (profile[6].gsub(',', '').to_f * 10000).to_i
-    @local_prize = (profile[7].gsub(',', '').to_f * 10000).to_i
-    total_prize, prizes = profile[8].split(' ')
-    @first = prizes.match(/\[(\d+)-\d+-\d+-\d+\]/)[1]
-    @second = prizes.match(/\[\d+-(\d+)-\d+-\d+\]/)[1]
-    @third = prizes.match(/\[\d+-\d+-(\d+)-\d+\]/)[1]
-    @total_race = total_prize.match(/(\d+)戦/)[1]
-    @father_id = get_parent_id(pedigree[0])
-    @mother_id = get_parent_id(pedigree[1])
+    attribute.each {|key, value| eval("@#{key}=#{value}") }
   end
 
   def save!

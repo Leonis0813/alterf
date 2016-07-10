@@ -1,4 +1,3 @@
-# coding: utf-8
 require_relative '../settings/settings.rb'
 require_relative '../model/result.rb'
 
