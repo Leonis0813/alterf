@@ -6,10 +6,10 @@ def output_race(race_path)
   race_id = race_path.delete('/race/')
 
   unless File.exists?(File.join(races_dir, "#{race_id}.html"))
-    res = HTTPClient.new.get_race(race_path)
+    res = HTTPClient.new.get_race(race_id)
 
     File.open(File.join(races_dir, "#{race_id}.html"), "w:utf-8") do |out|
-      res.body.encode("utf-8", "euc-jp").split("\n").each do |line|
+      res.body.encode("utf-8", "euc-jp", :undef => :replace, :replace => '?').split("\n").each do |line|
         out.puts(line)
       end
     end

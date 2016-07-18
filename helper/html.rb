@@ -54,7 +54,7 @@ class HTML
 
     def horse(html)
       profile = html.scan(/db_prof_table.*?(<.*?)<\/table>/).flatten
-      profile = profile.first.scan(/<td>.*?<\/td>/).map{|td| td.gsub(/<.*?>/, '') }
+      profile = profile.first.scan(/<td>.*?<\/td>/).map {|td| td.gsub(/<.*?>/, '') }
 
       {}.tap do |attribute|
         name = html.scan(/horse_title.*<h1>(.*?)<\/h1>/).flatten.first.gsub(/　| /, '')

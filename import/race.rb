@@ -9,7 +9,7 @@ def import_race(race_id)
   parsed_race = HTML.parse(:race, html)
   race = Race.new(parsed_race)
   race.save!
-
+  return unless race.id
   parsed_entries = HTML.parse(:entry, html)
   parsed_results = HTML.parse(:result, html)
   parsed_entries.zip(parsed_results).each_with_index do |parsed_data, i|
@@ -17,11 +17,10 @@ def import_race(race_id)
     result = Result.new(parsed_data.last)
 
     horse = Horse.find_by(:external_id => entry.external_id)
-    horse = unless horse
-              output_horse(entry.external_id)
-              import_horse(entry.external_id)
-            end
-
+    unless horse
+      output_horse(entry.external_id)
+      horse = import_horse(entry.external_id)
+    end
     entry.race_id = race.id
     entry.horse_id = horse.id
     entry.save!

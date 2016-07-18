@@ -18,12 +18,12 @@ INSERT INTO
   horses
 VALUES (
   NULL,
-  '#{@name}',
-  '#{@trainer}',
-  '#{@owner}',
-  '#{@birthday}',
-  '#{@breeder}',
-  '#{@growing_area}',
+  "#{@name}",
+  "#{@trainer}",
+  "#{@owner}",
+  "#{@birthday}",
+  "#{@breeder}",
+  "#{@growing_area}",
   #{@central_prize},
   #{@local_prize},
   #{@first},
@@ -61,7 +61,7 @@ LIMIT 1
 EOF
     begin
       results = client.query(query)
-      results.first
+      results.first ? self.new(results.first) : nil
     rescue => e
       p e.message
       raise

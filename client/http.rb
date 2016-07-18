@@ -13,7 +13,7 @@ class HTTPClient
   end
 
   def get_horse(horse_id)
-    return unless horse_id.kind_of?(String)
+    return unless horse_id.kind_of?(String) or horse_id.kind_of?(Fixnum)
     get("#{Settings.url}/horse/#{horse_id}")
   end
 
