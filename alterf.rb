@@ -1,16 +1,25 @@
+require 'date'
+require 'fileutils'
 Dir['{import,output}/*.rb'].each {|file| require_relative file }
 
-date = ARGV[0] ? ARGV[0] : Time.now.strftime('%Y-%m-%d')
-
+date = (ARGV[0] ? Date.parse(ARGV[0]) : Date.today).strftime('%Y%m%d')
+p date
+race_list_dir = File.join(Settings.backup_path, 'race_list')
+FileUtils.mkdir_p(race_list_dir)
 output_race_list(date)
-file_ids = output_race_result(date)
 
-file_ids.each do |file_id|
-  output_horse(file_id)
-  import_horse(file_id)
-  if import_condition(file_id)
-    import_entry(file_id)
-    import_result(file_id)
-    import_payoff(file_id)
+race_list_file = File.join(race_list_dir, "#{date}.txt")
+if File.exists?(race_list_file)
+  races_dir = File.join(Settings.backup_path, 'races')
+  FileUtils.mkdir_p(races_dir)
+
+  File.read(race_list_file).split("\n").each do |race_path|
+    output_race(race_path)
+    begin
+      import_race(race_path.delete('/race/'))
+    rescue => e
+      p e.message
+      next
+    end
   end
 end

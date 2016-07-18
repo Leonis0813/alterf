@@ -1,28 +1,18 @@
+require 'fileutils'
 require_relative '../settings/settings.rb'
 require_relative '../client/http.rb'
-require 'fileutils'
 
-def output_horse(file_id)
-  output_dir = File.join(Settings.raw_data_path, 'horses')
-  FileUtils.mkdir_p(output_dir)
+def output_horse(horse_id)
+  horses_dir = File.join(Settings.backup_path, 'horses')
+  FileUtils.mkdir_p(horses_dir)
 
-  race_result_file = File.join(Settings.raw_data_path, 'results', "#{file_id}.html")
-  horse_paths = File.read(race_result_file).scan(/\/horse\/\d+/)
+  horse_file = File.join(horses_dir, "#{horse_id}.html")
+  return if File.exists?(horse_file) and not File.zero?(horse_file)
+  res = HTTPClient.new.get_horse(horse_id)
 
-  [].tap do |horse_ids|
-    horse_paths.each do |path|
-      horse_id = path.match(/\/horse\/(\d+)/)[1]
-      next if File.exists?(File.join(output_dir, "#{horse_id}.html"))
-
-      res = HTTPClient.new.get_horse(horse_id)
-
-      File.open(File.join(output_dir, "#{horse_id}.html"), "w:utf-8") do |out|
-        res.body.encode("utf-8", "euc-jp").split("\n").each do |line|
-          out.puts line
-        end
-      end
-
-      horse_ids << horse_id
+  File.open(File.join(horses_dir, "#{horse_id}.html"), "w:utf-8") do |out|
+    res.body.encode("utf-8", "euc-jp", :undef => :replace, :replace => '?').split("\n").each do |line|
+      out.puts(line)
     end
   end
 end

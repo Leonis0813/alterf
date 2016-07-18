@@ -14,5 +14,6 @@ CREATE TABLE IF NOT EXISTS horses (
   total_race INTEGER NOT NULL,
   father_id INTEGER,
   mother_id INTEGER,
+  external_id INTEGER UNIQUE NOT NULL,
   UNIQUE(name, birthday)
 )

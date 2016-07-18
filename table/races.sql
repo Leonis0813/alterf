@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS conditions (
+CREATE TABLE IF NOT EXISTS races (
   id INTEGER AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   track VARCHAR(6) NOT NULL,
@@ -10,5 +10,5 @@ CREATE TABLE IF NOT EXISTS conditions (
   place VARCHAR(16) NOT NULL,
   round INTEGER NOT NULL,
   num_of_horse INTEGER NOT NULL,
-  UNIQUE(name, start_time)
+  UNIQUE(name, start_time, place)
 )

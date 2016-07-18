@@ -16,8 +16,8 @@ module Settings
       File.expand_path(File.dirname('..'))
     end
 
-    def raw_data_path
-      '/var/alterf/raw_data'
+    def backup_path
+      '/var/alterf'
     end
   end
 end
