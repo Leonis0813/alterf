@@ -1,7 +1,7 @@
 # coding: utf-8
 require 'mysql2'
-require_relative '../settings/settings.rb'
-require_relative '../client/mysql.rb'
+require_relative '../settings/settings'
+require_relative '../client/mysql'
 
 class Race
   attr_accessor :id, :name, :track, :direction, :distance, :weather

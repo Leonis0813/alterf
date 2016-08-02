@@ -1,4 +1,4 @@
-require_relative '../import/condition.rb'
+require_relative '../import/condition'
 
 file_path = ARGV[0]
 matched_data = file_path.match(/\/(?<file_id>\d+)\.html\z/)

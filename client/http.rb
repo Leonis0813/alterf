@@ -1,5 +1,5 @@
 require 'net/http'
-require_relative '../settings/settings.rb'
+require_relative '../settings/settings'
 
 class HTTPClient
   def get_races(date)

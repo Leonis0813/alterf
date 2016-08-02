@@ -1,6 +1,6 @@
 # coding: utf-8
-require_relative '../settings/settings.rb'
-require_relative '../client/mysql.rb'
+require_relative '../settings/settings'
+require_relative '../client/mysql'
 require 'mysql2'
 
 class Result

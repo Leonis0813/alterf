@@ -1,5 +1,5 @@
-require_relative '../settings/settings.rb'
-require_relative '../client/http.rb'
+require_relative '../settings/settings'
+require_relative '../client/http'
 
 def output_race(race_path)
   races_dir = File.join(Settings.backup_path, 'races')

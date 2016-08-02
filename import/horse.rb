@@ -1,5 +1,5 @@
-require_relative '../settings/settings.rb'
-require_relative '../model/horse.rb'
+require_relative '../settings/settings'
+require_relative '../model/horse'
 
 def import_horse(horse_id)
   html_file = File.join(Settings.backup_path, "horses/#{horse_id}.html")

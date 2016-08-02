@@ -1,5 +1,5 @@
 require 'mysql2'
-require_relative '../settings/settings.rb'
+require_relative '../settings/settings'
 
 client = Mysql2::Client.new(Settings.mysql)
 client.query("DROP DATABASE #{Settings.mysql['database']}")

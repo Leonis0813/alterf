@@ -1,4 +1,4 @@
-require_relative '../output/race_list.rb'
+require_relative '../output/race_list'
 require 'date'
 
 from = Date.parse('1980-01-01')

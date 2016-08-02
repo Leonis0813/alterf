@@ -1,4 +1,4 @@
-require_relative '../settings/settings.rb'
+require_relative '../settings/settings'
 require 'date'
 
 from = Date.parse('1988-01-01')
