@@ -1,0 +1,14 @@
+INSERT INTO
+  results
+VALUES (
+  $RACE_ID,
+  $HORSE_ID,
+  "$ORDER",
+  $TIME,
+  "$MARGIN",
+  $THIRD_CORNER,
+  $FORTH_CORNER,
+  $SLOPE,
+  $ODDS,
+  $POPULARITY
+)

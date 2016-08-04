@@ -1,0 +1,15 @@
+INSERT INTO
+  races
+VALUES (
+  NULL,
+  "$NAME",
+  "$TRACK",
+  "$DIRECTION",
+  $DISTANCE,
+  "$WEATHER",
+  "$TRACK_CONDITION",
+  "$START_TIME",
+  "$PLACE",
+  $ROUND,
+  $NUM_OF_HORSE
+)
