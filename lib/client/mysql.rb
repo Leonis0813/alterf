@@ -22,7 +22,7 @@ EOF
   end
 end
 
-def get_horse_id(horse_name)
+def get_horse_id(external_id)
   client = Mysql2::Client.new(Settings.mysql)
   query =<<"EOF"
 SELECT
@@ -30,7 +30,7 @@ SELECT
 FROM
   horses
 WHERE
-  name = '#{horse_name}'
+  external_id = #{external_id}
 ORDER BY
   birthday desc
 LIMIT 1
