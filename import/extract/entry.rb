@@ -1,5 +1,5 @@
 # coding: utf-8
-def parse(html)
+def parse_entry(html)
   entries = html.scan(/<table class="race_table.*?<\/table>/).first.scan(/<tr>.*?<\/tr>/)
 
   entries.map do |entry|

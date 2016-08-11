@@ -1,4 +1,5 @@
+Dir[File.join(Settings.application_root, 'import/extract/*.rb')].each {|file| require file }
+
 def extract(resource_type, html)
-  require_relative "extract/#{resource_type}"
-  parse(html)
+  send("parse_#{resource_type}", html.gsub("\n", '').gsub('&nbsp;', ' '))
 end

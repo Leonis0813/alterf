@@ -12,6 +12,6 @@ mysql:
   password: '7QiSlC?4'
 
 backup_dir:
-  race_list: '/var/alterf/race_list'
-  race: '/var/alterf/races'
-  horse: '/var/alterf/horses'
+  race_list: 'tmp/race_list'
+  race: 'tmp/races'
+  horse: 'tmp/horses'

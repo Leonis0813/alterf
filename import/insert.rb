@@ -1,11 +1,14 @@
 require 'mysql2'
-require_relative '../settings/settings'
+require_relative '../config/settings'
 
 def insert(resource_type, attribute)
-  query = File.read("insert/#{resource_type}.sql")
-  attribute.each {|key, value| query.gsub!("$#{key.upcase}", value) }
+  query = File.read(File.join(Settings.application_root, 'import/insert', "#{resource_type}.sql"))
+  attribute.each {|key, value| query.gsub!("$#{key.upcase}") {value.to_s} }
   client = Mysql2::Client.new(Settings.mysql)
-  result = client.query(query)
-  client.close
-  result
+  begin
+    client.query(query)
+  rescue Mysql2::Error => e
+  ensure
+    client.close
+  end
 end

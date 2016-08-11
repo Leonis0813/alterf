@@ -7,7 +7,7 @@ VALUES (
   "$DIRECTION",
   $DISTANCE,
   "$WEATHER",
-  "$TRACK_CONDITION",
+  "$CONDITION",
   "$START_TIME",
   "$PLACE",
   $ROUND,

@@ -1,5 +1,5 @@
 # coding: utf-8
-def parse(html)
+def parse_race(html)
   race_data = html.scan(/<dl class="racedata.*?\/dl>/).first
 
   {}.tap do |attribute|
@@ -10,7 +10,7 @@ def parse(html)
     attribute[:direction] = condition.first[1]
     attribute[:distance] = condition.first.match(/(\d*)m$/)[1].to_i
     attribute[:weather] = condition[1].match(/天候 : (.*)/)[1]
-    attribute[:track_condition] = condition[2].match(/[ダート|芝] : (.*)/)[1]
+    attribute[:condition] = condition[2].match(/[ダート|芝] : (.*)/)[1]
 
     start_time = condition[3].match(/発走 : (.*)/)[1]
     race_date = html.match(/<li class="result_link"><.*?>(\d*年\d*月\d*日)のレース結果<.*?>/)[1]

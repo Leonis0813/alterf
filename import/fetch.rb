@@ -1,5 +1,5 @@
 require 'net/http'
-require_relative '../settings/settings'
+require_relative '../config/settings'
 
 def fetch(resource_type, id)
   return unless Dir[File.join(Settings.backup_dir[resource_type], "#{id}.*")].empty?
