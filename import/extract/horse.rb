@@ -18,5 +18,7 @@ def parse_horse(html)
     attribute[:second] = prizes.match(/\[\d+-(\d+)-\d+-\d+\]/)[1]
     attribute[:third] = prizes.match(/\[\d+-\d+-(\d+)-\d+\]/)[1]
     attribute[:total_race] = total_prize.match(/(\d+)戦/)[1]
+    attribute[:father_id] =  'NULL'
+    attribute[:mother_id] =  'NULL'
   end
 end

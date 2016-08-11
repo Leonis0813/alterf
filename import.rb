@@ -25,7 +25,7 @@ to = ARGV[1] ? Date.parse(ARGV[1]) : Date.today
                    end
     output('race', encoded_html, "#{race_id}.html")
     race = extract('race', encoded_html)
-    insert('race', race)
+    race.merge!(:id => insert('race', race))
 
     entries = extract('entry', encoded_html)
     results = extract('result', encoded_html)
@@ -39,7 +39,7 @@ to = ARGV[1] ? Date.parse(ARGV[1]) : Date.today
                      end
       output('horse', encoded_html, "#{entry[:external_id]}.html")
       horse = extract('horse', encoded_html)
-      insert('horse', horse)
+      horse.merge!(:id => insert('horse', horse.merge(:external_id => entry[:external_id])))
 
       insert('entry', entry.merge(:race_id => race[:id], :horse_id => horse[:id]))
       insert('result', result.merge(:race_id => race[:id], :horse_id => horse[:id]))

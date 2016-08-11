@@ -12,7 +12,7 @@ def parse_entry(html)
       attribute[:age] = features[4].match(/(\d+)\z/)[1].to_i
       attribute[:jockey] = features[6]
       attribute[:burden_weight] = features[5].to_f
-      attribute[:weight] = features[14].match(/\A(\d+)/)[1].to_f unless features[14] == '計不'
+      attribute[:weight] = features[14] == '計不' ? features[14].match(/\A(\d+)/)[1].to_f : 'NULL'
       attribute[:external_id] = entry.scan(/href="\/horse\/(\d*)\/"/).flatten.first.to_i
     end
   end

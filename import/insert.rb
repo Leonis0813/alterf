@@ -7,7 +7,9 @@ def insert(resource_type, attribute)
   client = Mysql2::Client.new(Settings.mysql)
   begin
     client.query(query)
+    client.last_id
   rescue Mysql2::Error => e
+    raise unless e.message.match(/Duplicate/)
   ensure
     client.close
   end
