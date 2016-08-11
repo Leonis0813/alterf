@@ -1,5 +1,7 @@
 # coding: utf-8
 def parse_race(html)
+  html.gsub!("\n", '')
+  html.gsub!('&nbsp;', ' ')
   race_data = html.scan(/<dl class="racedata.*?\/dl>/).first
 
   {}.tap do |attribute|

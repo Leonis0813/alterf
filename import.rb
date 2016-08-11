@@ -40,9 +40,10 @@ to = ARGV[1] ? Date.parse(ARGV[1]) : Date.today
                      end
       output('horse', encoded_html, "#{entry[:external_id]}.html")
       horse = extract('horse', encoded_html)
-      horse.merge!(:id => insert('horse', horse.merge(:external_id => entry[:external_id])))
-
+      horse.merge!(:external_id => entry[:external_id])
+      horse.merge!(:id => insert('horse', horse))
       horse.merge!(:id => get_horse_id(horse[:external_id])) unless horse[:id]
+
       insert('entry', entry.merge(:race_id => race[:id], :horse_id => horse[:id]))
       insert('result', result.merge(:race_id => race[:id], :horse_id => horse[:id]))
     end

@@ -1,5 +1,7 @@
 # coding: utf-8
 def parse_horse(html)
+  html.gsub!("\n", '')
+  html.gsub!('&nbsp;', ' ')
   profile = html.scan(/db_prof_table.*?(<.*?)<\/table>/).flatten
   profile = profile.first.scan(/<td>.*?<\/td>/).map {|td| td.gsub(/<.*?>/, '') }
 

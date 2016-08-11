@@ -1,5 +1,7 @@
 # coding: utf-8
 def parse_payoff(html)
+  html.gsub!("\n", '')
+  html.gsub!('&nbsp;', ' ')
   payoffs = html.match(/pay_block.*?>(.*?)<\/dl>/)[1].scan(/<tr>.*?<\/tr>/)
   payoffs.map! {|payoff| payoff.scan(/<t[d|h].*?>(.*?)<\/t[d|h]>/).flatten }
   payoffs.each {|payoff| payoff.map! {|p| p.gsub(/<.*?>/, '|') } }
