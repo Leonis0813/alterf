@@ -6,7 +6,7 @@ VALUES (
   $NUMBER,
   $BRACKET,
   $AGE,
-  '$JOCKEY',
+  "$JOCKEY",
   $BURDEN_WEIGHT,
   $WEIGHT
 )

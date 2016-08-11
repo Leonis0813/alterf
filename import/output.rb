@@ -1,7 +1,7 @@
 require_relative '../settings/settings'
 
-def output(resource_type, string, id)
-  File.open(Settings.backup_dir[resource_type].sub(':id', id), 'w') do |out|
-    out.write(string)
-  end
+def output(resource_type, string, file_name)
+  file_path = File.join(Settings.backup_dir[resource_type], file_name)
+  File.open(file_path, 'w') {|out| out.write(string) }
+  file_path
 end
