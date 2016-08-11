@@ -1,4 +1,5 @@
 require_relative 'config/settings'
+require_relative 'lib/client/mysql'
 Dir['import/*.rb'].each {|file| require_relative file }
 
 from = ARGV[0] ? Date.parse(ARGV[0]) : Date.parse('1988-01-01')
@@ -41,6 +42,7 @@ to = ARGV[1] ? Date.parse(ARGV[1]) : Date.today
       horse = extract('horse', encoded_html)
       horse.merge!(:id => insert('horse', horse.merge(:external_id => entry[:external_id])))
 
+      horse.merge!(:id => get_horse_id(horse[:external_id])) unless horse[:id]
       insert('entry', entry.merge(:race_id => race[:id], :horse_id => horse[:id]))
       insert('result', result.merge(:race_id => race[:id], :horse_id => horse[:id]))
     end
