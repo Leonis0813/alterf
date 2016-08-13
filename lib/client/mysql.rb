@@ -1,6 +1,6 @@
 require 'mysql2'
 
-def get_race_id(race_name, start_time)
+def get_race_id(race_name, start_time, place)
   client = Mysql2::Client.new(Settings.mysql)
   query =<<"EOF"
 SELECT
@@ -10,6 +10,7 @@ FROM
 WHERE
   name = '#{race_name}'
   AND start_time = '#{start_time}'
+  AND place = '#{place}'
 LIMIT 1
 EOF
   begin

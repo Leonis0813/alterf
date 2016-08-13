@@ -27,7 +27,7 @@ to = ARGV[1] ? Date.parse(ARGV[1]) : Date.today
     output('race', encoded_html, "#{race_id}.html")
     race = extract('race', encoded_html)
     race.merge!(:id => insert('race', race))
-    race.merge!(:id => get_race_id(race[:name], race[:start_time])) unless race[:id]
+    race.merge!(:id => get_race_id(race[:name], race[:start_time], race[:place])) unless race[:id]
 
     entries = extract('entry', encoded_html)
     results = extract('result', encoded_html)
