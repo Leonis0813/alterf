@@ -9,7 +9,7 @@ def insert(resource_type, attribute)
     client.query(query)
     client.last_id
   rescue Mysql2::Error => e
-    raise unless e.message.match(/Duplicate/)
+    raise e.message
   ensure
     client.close
   end
