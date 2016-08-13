@@ -6,7 +6,7 @@ def get_race_id(race_name, start_time)
 SELECT
   id
 FROM
-  conditions
+  races
 WHERE
   name = '#{race_name}'
   AND start_time = '#{start_time}'
