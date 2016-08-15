@@ -8,6 +8,7 @@ def parse_race(html)
     attribute[:name] = race_data.match(/<h1>(.*)<\/h1>/)[1].gsub(/<.*?>/, '').strip
 
     condition = race_data.match(/<span>(.*)<\/span>/)[1].split(' / ')
+    return unless condition.size == 4
     attribute[:track] = condition.first[0].sub('ダ', 'ダート')
     attribute[:direction] = condition.first[1]
     attribute[:distance] = condition.first.match(/(\d*)m$/)[1].to_i

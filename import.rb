@@ -1,3 +1,4 @@
+# coding: utf-8
 require_relative 'config/settings'
 require_relative 'lib/client/mysql'
 Dir['import/*.rb'].each {|file| require_relative file }
@@ -26,6 +27,7 @@ to = ARGV[1] ? Date.parse(ARGV[1]) : Date.today
                    end
     output('race', encoded_html, "#{race_id}.html")
     race = extract('race', encoded_html)
+    next if race.nil? or race[:track] == '障'
     race.merge!(:id => insert('race', race))
     race.merge!(:id => get_race_id(race[:name], race[:start_time], race[:place])) if race[:id].to_i == 0
 
