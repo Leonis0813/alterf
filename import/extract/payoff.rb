@@ -1,4 +1,5 @@
-# coding: utf-8
+require_relative '../../lib/logger'
+
 def parse_payoff(html)
   html.gsub!("\n", '')
   html.gsub!('&nbsp;', ' ')
@@ -6,7 +7,7 @@ def parse_payoff(html)
   payoffs.map! {|payoff| payoff.scan(/<t[d|h].*?>(.*?)<\/t[d|h]>/).flatten }
   payoffs.each {|payoff| payoff.map! {|p| p.gsub(/<.*?>/, '|') } }
 
-  [].tap do |array|
+  payoffs = [].tap do |array|
     payoffs.each do |payoff|
       payoff[1].split('|').size.times do |i|
         array << {}.tap do |attribute|
@@ -17,4 +18,8 @@ def parse_payoff(html)
       end
     end
   end
+
+  Logger.write(File.basename(__FILE__, '.rb'), 'extract', {:'#_of_payoffs' => payoffs.size})
+
+  payoffs
 end
