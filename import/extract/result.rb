@@ -1,10 +1,12 @@
 # coding: utf-8
+require_relative '../../lib/logger'
+
 def parse_result(html)
   html.gsub!("\n", '')
   html.gsub!('&nbsp;', ' ')
   results = html.scan(/<table class="race_table.*?<\/table>/).first.scan(/<tr>.*?<\/tr>/)
 
-  results.map do |result|
+  results.map! do |result|
     features = result.gsub(/<[\/]?tr>/, '').scan(/<td.*?>(.*?)<\/td>/).flatten
     features.map! {|feature| feature.gsub(/<.*?>/, '') }
 
@@ -26,4 +28,8 @@ def parse_result(html)
       attribute[:popularity] = features[13].empty? ? 0 : features[13].to_i
     end
   end
+
+  Logger.write(File.basename(__FILE__, '.rb'), 'extract', {:'#_of_results' => results.size})
+
+  results
 end
