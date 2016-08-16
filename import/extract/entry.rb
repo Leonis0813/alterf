@@ -1,10 +1,12 @@
 # coding: utf-8
+require_relative '../../lib/logger'
+
 def parse_entry(html)
   html.gsub!("\n", '')
   html.gsub!('&nbsp;', ' ')
   entries = html.scan(/<table class="race_table.*?<\/table>/).first.scan(/<tr>.*?<\/tr>/)
 
-  entries.map do |entry|
+  entries.map! do |entry|
     features = entry.gsub(/<[\/]?tr>/, '').scan(/<td.*?>(.*?)<\/td>/).flatten
     features.map! {|feature| feature.gsub(/<.*?>/, '') }
 
@@ -18,4 +20,12 @@ def parse_entry(html)
       attribute[:external_id] = entry.scan(/href="\/horse\/(\d*)\/"/).flatten.first.to_i
     end
   end
+
+  Logger.write(
+    File.basename(__FILE__, '.rb'),
+    'extract',
+    {:'#_of_entries' => entries.size, :external_id => entries.map {|entry| entry[:external_id] } }
+  )
+
+  entries
 end
