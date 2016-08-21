@@ -9,7 +9,7 @@ def insert(resource, attribute)
   client = Mysql2::Client.new(Settings.mysql)
   begin
     client.query(query)
-    Logger.write(resource, operate, {:id => client.last_id, :attribute => attribute})
+    Logger.write(resource, operate, {:id => client.last_id, :attribute => attribute}) unless client.last_id == 0
     client.last_id
   rescue Mysql2::Error => e
     Logger.write(resource, operate, e.message)

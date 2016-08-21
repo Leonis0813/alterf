@@ -13,7 +13,6 @@ def fetch(resource, id)
     Logger.write(resource, operate, {:status => res.code, :uri => res.uri.to_s})
     res.body
   else
-    Logger.write(resource, operate, "found #{files}")
     nil
   end
 end
