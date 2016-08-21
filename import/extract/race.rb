@@ -1,10 +1,12 @@
 # coding: utf-8
+require_relative '../../lib/logger'
+
 def parse_race(html)
   html.gsub!("\n", '')
   html.gsub!('&nbsp;', ' ')
   race_data = html.scan(/<dl class="racedata.*?\/dl>/).first
 
-  {}.tap do |attribute|
+  race = {}.tap do |attribute|
     attribute[:name] = race_data.match(/<h1>(.*)<\/h1>/)[1].gsub(/<.*?>/, '').strip
 
     condition = race_data.match(/<span>(.*)<\/span>/)[1].split(' / ')
@@ -26,4 +28,12 @@ def parse_race(html)
     horses = html.scan(/<table class="race_table.*?<\/table>/).first
     attribute[:num_of_horse] = horses.scan(/<tr>.*?<\/tr>/).size
   end
+
+  Logger.write(
+    File.basename(__FILE__, '.rb'),
+    'extract',
+    {:name => race[:name], :start_time => race[:start_time], :place => race[:place]}
+  )
+
+  race
 end

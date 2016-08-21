@@ -1,11 +1,13 @@
 # coding: utf-8
+require_relative '../../lib/logger'
+
 def parse_horse(html)
   html.gsub!("\n", '')
   html.gsub!('&nbsp;', ' ')
   profile = html.scan(/db_prof_table.*?(<.*?)<\/table>/).flatten
   profile = profile.first.scan(/<td>.*?<\/td>/).map {|td| td.gsub(/<.*?>/, '') }
 
-  {}.tap do |attribute|
+  horse = {}.tap do |attribute|
     name = html.scan(/horse_title.*<h1>(.*?)<\/h1>/).flatten.first.gsub(/　| /, '')
     attribute[:name] = name.sub(/\A.*[地|外|抽|父|市]/, '')
     attribute[:trainer] = profile[1]
@@ -23,4 +25,12 @@ def parse_horse(html)
     attribute[:father_id] =  'NULL'
     attribute[:mother_id] =  'NULL'
   end
+
+  Logger.write(
+    File.basename(__FILE__, '.rb'),
+    'extract',
+    {:name => horse[:name], :birthday => horse[:birthday]}
+  )
+
+  horse
 end

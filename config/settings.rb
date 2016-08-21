@@ -15,10 +15,6 @@ module Settings
     def application_root
       File.expand_path(File.dirname('..'))
     end
-
-    def backup_path
-      '/var/alterf'
-    end
   end
 end
 
