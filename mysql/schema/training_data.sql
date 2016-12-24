@@ -8,14 +8,12 @@ CREATE TABLE IF NOT EXISTS training_data (
   start_time DATETIME NOT NULL,
   place VARCHAR(16) NOT NULL,
   round INTEGER NOT NULL,
-
   number INTEGER NOT NULL,
   bracket INTEGER NOT NULL,
   age INTEGER NOT NULL,
   jockey VARCHAR(16) NOT NULL,
   burden_weight FLOAT NOT NULL,
   weight FLOAT,
-
   horse_name VARCHAR(255) NOT NULL,
   trainer VARCHAR(255) NOT NULL,
   owner VARCHAR(255) NOT NULL,
@@ -30,7 +28,6 @@ CREATE TABLE IF NOT EXISTS training_data (
   total_race INTEGER NOT NULL,
   father_horse_name VARCHAR(255) NOT NULL,
   mother_horse_name VARCHAR(255) NOT NULL,
-
   `order` VARCHAR(2) NOT NULL,
   PRIMARY KEY(race_name, place, round, horse_name)
 )
