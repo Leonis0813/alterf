@@ -1,0 +1,36 @@
+CREATE TABLE IF NOT EXISTS training_data (
+  race_name VARCHAR(255) NOT NULL,
+  track VARCHAR(6) NOT NULL,
+  direction VARCHAR(2) NOT NULL,
+  distance INTEGER NOT NULL,
+  weather VARCHAR(6) NOT NULL,
+  `condition` VARCHAR(4) NOT NULL,
+  start_time DATETIME NOT NULL,
+  place VARCHAR(16) NOT NULL,
+  round INTEGER NOT NULL,
+
+  number INTEGER NOT NULL,
+  bracket INTEGER NOT NULL,
+  age INTEGER NOT NULL,
+  jockey VARCHAR(16) NOT NULL,
+  burden_weight FLOAT NOT NULL,
+  weight FLOAT,
+
+  horse_name VARCHAR(255) NOT NULL,
+  trainer VARCHAR(255) NOT NULL,
+  owner VARCHAR(255) NOT NULL,
+  birthday DATE NOT NULL,
+  breeder VARCHAR(255) NOT NULL,
+  growing_area VARCHAR(255) NOT NULL,
+  central_prize BIGINT NOT NULL,
+  local_prize BIGINT NOT NULL,
+  first INTEGER NOT NULL,
+  second INTEGER NOT NULL,
+  third INTEGER NOT NULL,
+  total_race INTEGER NOT NULL,
+  father_horse_name VARCHAR(255) NOT NULL,
+  mother_horse_name VARCHAR(255) NOT NULL,
+
+  `order` VARCHAR(2) NOT NULL,
+  PRIMARY KEY(race_name, place, round, horse_name)
+)
