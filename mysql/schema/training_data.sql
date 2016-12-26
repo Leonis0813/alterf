@@ -1,4 +1,5 @@
 CREATE TABLE IF NOT EXISTS training_data (
+  id INTEGER AUTO_INCREMENT PRIMARY KEY,
   race_name VARCHAR(255) NOT NULL,
   track VARCHAR(6) NOT NULL,
   direction VARCHAR(2) NOT NULL,
@@ -28,6 +29,5 @@ CREATE TABLE IF NOT EXISTS training_data (
   total_race INTEGER NOT NULL,
   father_horse_name VARCHAR(255) NOT NULL,
   mother_horse_name VARCHAR(255) NOT NULL,
-  `order` VARCHAR(2) NOT NULL,
-  PRIMARY KEY(race_name, place, round, horse_name)
+  `order` VARCHAR(2) NOT NULL
 )
