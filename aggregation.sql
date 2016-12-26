@@ -2,7 +2,6 @@ INSERT IGNORE INTO
   races
 SELECT
   NULL,
-  race.id,
   rane.name,
   race.track,
   race.direction,
