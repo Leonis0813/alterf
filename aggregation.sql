@@ -1,8 +1,8 @@
 INSERT IGNORE INTO
-  races
+  training_data
 SELECT
   NULL,
-  rane.name,
+  race.name,
   race.track,
   race.direction,
   race.distance,
@@ -13,7 +13,7 @@ SELECT
   race.round,
   entry.number,
   entry.bracket,
-  entry.horse_name,
+  horse.name,
   entry.age,
   entry.burden_weight,
   entry.jockey,
@@ -23,12 +23,6 @@ SELECT
   horse.birthday,
   horse.breeder,
   horse.growing_area,
-  horse.central_prize,
-  horse.local_prize,
-  horse.first,
-  horse.second,
-  horse.third,
-  horse.total_prize,
   horse.father_horse_name,
   horse.mother_horse_name,
   result.`order`
@@ -40,19 +34,19 @@ ON
   entry.race_id = race.id
 LEFT JOIN (
   SELECT
-    `self`.*,
+    self.*,
     father.name AS father_horse_name,
-    mother.name AS mother_horse_name,
+    mother.name AS mother_horse_name
   FROM
-    horse AS `self`
+    horses AS self
   LEFT JOIN
     horses AS father
   ON
-    `self`.father_id = father.id
+    self.father_id = father.id
   LEFT JOIN
     horses AS mother
   ON
-    `self`.mother_id = mother.id
+    self.mother_id = mother.id
 ) AS horse ON
   entry.horse_id = horse.id
 LEFT JOIN
