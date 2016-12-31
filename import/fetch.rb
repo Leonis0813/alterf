@@ -13,6 +13,7 @@ def fetch(resource, id)
     Logger.write(resource, operate, {:status => res.code, :uri => res.uri.to_s})
     res.body
   else
+    Logger.write(resource, operate, {:message => 'already_exist', :path => files.first})
     nil
   end
 end
