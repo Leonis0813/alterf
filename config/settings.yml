@@ -12,6 +12,6 @@ mysql:
   password: '7QiSlC?4'
 
 backup_dir:
-  race_list: 'tmp/race_list'
-  race: 'tmp/races'
-  horse: 'tmp/horses'
+  race_list: 'backup/race_list'
+  race: 'backup/races'
+  horse: 'backup/horses'
