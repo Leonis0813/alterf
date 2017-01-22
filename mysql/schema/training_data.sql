@@ -24,5 +24,5 @@ CREATE TABLE IF NOT EXISTS training_data (
   father_horse_name VARCHAR(255) NOT NULL,
   mother_horse_name VARCHAR(255) NOT NULL,
   `order` VARCHAR(2) NOT NULL,
-  UNIQUE(race_name, start_time, place, horse_name, birthday)
+  UNIQUE(start_time, place, horse_name, birthday)
 )
