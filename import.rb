@@ -3,7 +3,7 @@ require_relative 'config/settings'
 require_relative 'lib/mysql_client'
 Dir['import/*.rb'].each {|file| require_relative file }
 
-from = ARGV[0] ? Date.parse(ARGV[0]) : Date.parse('1988-01-01')
+from = ARGV[0] ? Date.parse(ARGV[0]) : (Date.today - 7)
 to = ARGV[1] ? Date.parse(ARGV[1]) : Date.today
 
 (from..to).each do |date|
