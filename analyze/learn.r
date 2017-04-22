@@ -12,3 +12,4 @@ training_data$won <- as.factor(training_data$won)
 
 library(randomForest)
 model <- randomForest(won~., data=training_data, ntree=ntree, mtry=mtry)
+save(model, file=paste(format(Sys.time(), "%Y%m%d%H%M%S"), ".rf", sep=""))
