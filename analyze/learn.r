@@ -12,4 +12,10 @@ training_data$won <- as.factor(training_data$won)
 
 library(randomForest)
 model <- randomForest(won~., data=training_data, ntree=ntree, mtry=mtry)
+
+write(paste("num_of_training_data:", num_training_data), file="inputs.txt")
+write(paste("ntree:", ntree), file="inputs.txt", append=T)
+write(paste("mtry:", mtry), file="inputs.txt", append=T)
+write("training_data:", file="inputs.txt", append=T)
+write(paste("  - [", paste(training_data$distance, training_data$round, training_data$number, training_data$bracket, training_data$age, training_data$burden_weight, training_data$weight, training_data$won, sep=", "), "]", sep=""), file="inputs.txt", append=T)
 save(model, file=paste(format(Sys.time(), "%Y%m%d%H%M%S"), ".rf", sep=""))
