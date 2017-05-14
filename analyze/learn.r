@@ -3,9 +3,12 @@ num_training_data <- args[1]
 ntree <- as.integer(args[2])
 mtry <- as.integer(args[3])
 
+library(yaml)
+config <- yaml.load_file("analyze/settings.yml")
+
 library(RMySQL)
 driver <- dbDriver("MySQL")
-dbconnector <- dbConnect(driver, dbname="alterf", user="root", password="7QiSlC?4", host="160.16.66.112", port=3306)
+dbconnector <- dbConnect(driver, dbname="alterf", user=config$mysql$user, password=config$mysql$password, host=config$mysql$host, port=as.integer(config$mysql$port))
 
 sql <- paste("SELECT distance, round, number, bracket, age, burden_weight, weight, IF(`order` = '1', 1, 0) AS won FROM training_data WHERE `order` REGEXP '[0-9]+' LIMIT", num_training_data)
 training_data <- dbGetQuery(dbconnector, sql)
