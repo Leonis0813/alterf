@@ -19,3 +19,8 @@ entries$round <- c(rep(test_data$round, entry_size))
 
 library(randomForest)
 result <- predict(model, entries)
+
+timestamp <- format(Sys.time(), "%Y%m%d%H%M%S")
+for(i in 1:length(result)) {
+    write(paste(i, ": ", result[i], sep=""), file=paste("results/prediction_", timestamp, ".txt", sep=""), append=T)
+}
