@@ -29,7 +29,7 @@ def parse_result(html)
     end
   end
 
-  Logger.write(File.basename(__FILE__, '.rb'), 'extract', {:'#_of_results' => results.size})
+  Logger.info(:action => 'extract', :resource => 'result', :'#_of_results' => results.size)
 
   results
 end

@@ -19,7 +19,7 @@ def parse_payoff(html)
     end
   end
 
-  Logger.write(File.basename(__FILE__, '.rb'), 'extract', {:'#_of_payoffs' => payoffs.size})
+  Logger.info(:action => 'extract', :resource => 'payoff', :'#_of_payoffs' => payoffs.size)
 
   payoffs
 end

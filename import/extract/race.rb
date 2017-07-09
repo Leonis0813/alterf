@@ -29,10 +29,12 @@ def parse_race(html)
     attribute[:num_of_horse] = horses.scan(/<tr>.*?<\/tr>/).size
   end
 
-  Logger.write(
-    File.basename(__FILE__, '.rb'),
-    'extract',
-    {:name => race[:name], :start_time => race[:start_time], :place => race[:place]}
+  Logger.info(
+    :action => 'extract',
+    :resource => 'race',
+    :name => race[:name],
+    :start_time => race[:start_time],
+    :place => race[:place]
   )
 
   race
