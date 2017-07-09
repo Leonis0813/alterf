@@ -2,7 +2,7 @@ require 'json'
 require_relative '../config/settings'
 
 module Logger
-  FILE_PATH = File.join(Settings.application_root, 'log/aggregate.log')
+  FILE_PATH = File.join(Settings.application_root, 'log/import.log')
 
   class << self
     def info(body)
