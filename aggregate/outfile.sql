@@ -42,3 +42,9 @@ WHERE
   AND entry.horse_id = horse.id
   AND entry.race_id = result.race_id
   AND entry.horse_id = result.horse_id
+INTO OUTFILE
+  '/tmp/training_data.csv'
+FIELDS TERMINATED BY
+  ','
+OPTIONALLY ENCLOSED BY
+  '"'
