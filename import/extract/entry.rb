@@ -21,10 +21,11 @@ def parse_entry(html)
     end
   end
 
-  Logger.write(
-    File.basename(__FILE__, '.rb'),
-    'extract',
-    {:'#_of_entries' => entries.size, :external_id => entries.map {|entry| entry[:external_id] } }
+  Logger.info(
+    :action => 'extract',
+    :resource => 'entry',
+    :'#_of_entries' => entries.size,
+    :external_id => entries.map {|entry| entry[:external_id] }
   )
 
   entries

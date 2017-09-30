@@ -26,10 +26,11 @@ def parse_horse(html)
     attribute[:mother_id] =  'NULL'
   end
 
-  Logger.write(
-    File.basename(__FILE__, '.rb'),
-    'extract',
-    {:name => horse[:name], :birthday => horse[:birthday]}
+  Logger.info(
+    :action => 'extract',
+    :resource => 'horse',
+    :name => horse[:name],
+    :birthday => horse[:birthday]
   )
 
   horse
