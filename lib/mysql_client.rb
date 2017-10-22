@@ -17,9 +17,11 @@ EOF
     result = client.query(query)
     client.close
     result.first['id']
-  rescue => e
-    p e.message
+  rescue Mysql2::Error => e
+    Logger.error(:action => 'insert', :resource => resource, :message => e.message)
     raise
+  ensure
+    client.close
   end
 end
 
@@ -40,8 +42,10 @@ EOF
     result = client.query(query)
     client.close
     result.first['id']
-  rescue => e
-    p e.message
+  rescue Mysql2::Error => e
+    Logger.error(:action => 'insert', :resource => resource, :message => e.message)
     raise
+  ensure
+    client.close
   end
 end
