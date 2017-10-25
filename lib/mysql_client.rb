@@ -18,7 +18,7 @@ EOF
     client.close
     result.first['id']
   rescue Mysql2::Error => e
-    Logger.error(:action => 'insert', :resource => resource, :message => e.message)
+    Logger.error(:action => 'get_race_id', :race_name => race_name, :start_time => start_time, :place => place, :message => e.message)
     raise
   ensure
     client.close
@@ -43,7 +43,7 @@ EOF
     client.close
     result.first['id']
   rescue Mysql2::Error => e
-    Logger.error(:action => 'insert', :resource => resource, :message => e.message)
+    Logger.error(:action => 'get_horse_id', :external_id => external_id, :message => e.message)
     raise
   ensure
     client.close
