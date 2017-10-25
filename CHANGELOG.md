@@ -1,3 +1,6 @@
+# 1.0.4 (2017/10/25)
+- [UPDATE] mysql client to output error log
+
 # 1.0.3 (2017/09/02)
 - [UPDATE] aggregation sql to be faster
 
