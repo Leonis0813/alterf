@@ -1,7 +1,9 @@
-<form id='new-analysis' style='padding: 10px' class='form-inline' action='/alterf/analysis/learn' method='post' data-remote='true'>
+<form id='new-analysis' class='form-inline' action='/alterf/analysis/learn' method='post' data-remote='true'>
   <% %w[ data tree feature ].each do |param| %>
-    <label for='num_<%= param %>'><%= param %></label>
-    <input class='form-control' type='text' name='num_<%= param %>' required='true' />
+    <span class='input-custom'>
+      <label for='num_<%= param %>'><%= param %></label>
+      <input class='form-control' type='text' name='num_<%= param %>' required='true' />
+    </span>
   <% end %>
   <input class='btn btn-default btn-sm' type='submit' />
 </form>
