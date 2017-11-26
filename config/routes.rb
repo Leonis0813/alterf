@@ -1,3 +1,4 @@
 Rails.application.routes.draw do
-  get '/' => 'analysis#manage'
+  get '/analysis' => 'analysis#manage'
+  post '/analysis/learn' => 'analysis#learn'
 end
