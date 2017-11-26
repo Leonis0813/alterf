@@ -1,10 +1,7 @@
-<form class='form-inline' action='/alterf/analysis/learn' method='post'>
-  <label for='num_data'>data</label>
-  <input class='form-control' type='text' name='num_data' />
-  <label for='num_tree'>tree</label>
-  <input class='form-control' type='text' name='num_tree' />
-  <label for='num_feature'>feature</label>
-  <input class='form-control' type='text' name='num_feature' />
+<form style='padding: 10px' class='form-inline' action='/alterf/analysis/learn' method='post'>
+  <% %w[ data tree feature ].each do |param| %>
+    <label for='num_<%= param %>'><%= param %></label>
+    <input class='form-control' type='text' name='num_<%= param %>' required='true' />
+  <% end %>
   <input class='btn btn-default btn-sm' type='submit' />
 </form>
-<hr>
