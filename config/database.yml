@@ -1,0 +1,21 @@
+default: &default
+  adapter: mysql2
+  encoding: utf8
+  pool: 5
+  host: localhost
+  password:
+
+development:
+  <<: *default
+  username: development
+  database: alterf
+
+test:
+  <<: *default
+  username: test
+  database: alterf
+
+production:
+  <<: *default
+  username: production
+  database: alterf
