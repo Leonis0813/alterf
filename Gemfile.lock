@@ -39,6 +39,7 @@ GEM
     arel (6.0.4)
     binding_of_caller (0.7.3)
       debug_inspector (>= 0.0.1)
+    bootbox-rails (0.5.0)
     builder (3.2.3)
     byebug (9.1.0)
     coffee-rails (4.1.1)
@@ -173,6 +174,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bootbox-rails
   byebug
   coffee-rails (~> 4.1.0)
   execjs

@@ -2,5 +2,9 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 $ ->
-  $('#learn').on 'ajax:success', (event, xhr, status, error) ->
+  $('#new-analysis').on 'ajax:success', (event, xhr, status, error) ->
+    bootbox.alert({
+      title: xhr.message,
+      message: '学習完了後，メールで結果が通知されます',
+    })
     return
