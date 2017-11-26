@@ -1,9 +1,13 @@
 <form id='new-analysis' class='form-inline' action='/alterf/analysis/learn' method='post' data-remote='true'>
-  <% %w[ data tree feature ].each do |param| %>
+  <% {:data => '学習データ数：', :tree => '決定木の数：', :feature => '特徴量の数：'}.each do |param, text| %>
     <span class='input-custom'>
-      <label for='num_<%= param %>'><%= param %></label>
+      <label for='num_<%= param %>'><%= text %></label>
       <input class='form-control' type='text' name='num_<%= param %>' required='true' />
     </span>
   <% end %>
-  <input class='btn btn-default btn-sm' type='submit' />
+  <span class='pull-right'>
+    <input class='btn btn-primary btn-sm' type='submit' value='実行' />
+    <input class='btn btn-default btn-sm' type='reset' />
+  </span>
 </form>
+<hr>
