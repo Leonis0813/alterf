@@ -1,0 +1,12 @@
+INSERT IGNORE INTO
+  entries
+VALUES (
+  $RACE_ID,
+  $HORSE_ID,
+  $NUMBER,
+  $BRACKET,
+  $AGE,
+  "$JOCKEY",
+  $BURDEN_WEIGHT,
+  $WEIGHT
+)

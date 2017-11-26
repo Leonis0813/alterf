@@ -1,0 +1,17 @@
+url: 'http://db.netkeiba.com'
+
+path:
+  race_list: '/race/list'
+  race: '/race'
+  horse: '/horse'
+
+mysql:
+  database: 'alterf'
+  host: 'localhost'
+  username: 'root'
+  password: '7QiSlC?4'
+
+backup_dir:
+  race_list: 'backup/race_list'
+  race: 'backup/races'
+  horse: 'backup/horses'
