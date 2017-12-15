@@ -52,6 +52,7 @@ GEM
     commonjs (0.2.7)
     concurrent-ruby (1.0.5)
     crass (1.0.3)
+    daemon-spawn (0.4.2)
     debug_inspector (0.0.3)
     erubis (2.7.0)
     execjs (2.7.0)
@@ -195,6 +196,7 @@ DEPENDENCIES
   bootbox-rails
   byebug
   coffee-rails (~> 4.1.0)
+  daemon-spawn
   execjs
   jbuilder (~> 2.0)
   jquery-rails
