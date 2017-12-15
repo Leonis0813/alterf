@@ -4,8 +4,8 @@
 $ ->
   $('#new-analysis').on 'ajax:success', (event, xhr, status, error) ->
     bootbox.alert({
-      title: '分析が完了しました',
-      message: '学習結果をフォルダに出力しました',
+      title: '分析を開始しました',
+      message: '終了後、メールにて結果を通知します',
     })
     return
 
