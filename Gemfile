@@ -2,6 +2,8 @@ source 'https://rubygems.org'
 
 gem 'rails', '4.2.2'
 gem 'mysql2', '~> 0.3.20'
+gem 'resque'
+gem 'resque-scheduler'
 
 # CSS
 gem 'sass-rails', '~> 5.0'
