@@ -1,4 +1,4 @@
-class AnalysisForm
+class Analysis
   include ActiveModel::Model
 
   attr_accessor :num_data, :num_tree, :num_feature

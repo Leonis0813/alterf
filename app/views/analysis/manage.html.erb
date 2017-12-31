@@ -1,13 +1,13 @@
-<form id='new-analysis' class='form-inline' action='/alterf/analysis/learn' method='post' data-remote='true'>
-  <% {:data => '学習データ数：', :tree => '決定木の数：', :feature => '特徴量の数：'}.each do |param, text| %>
+<%= form_for @analysis, {:url => analysis_learn_path, :remote => true, :html => {:class => 'form-inline'}} do |f| %>
+  <% {:num_data => '学習データ数', :num_tree => '決定木の数', :num_feature => '特徴量の数'}.each do |param, text| %>
     <span class='input-custom'>
-      <label for='num_<%= param %>'><%= text %></label>
-      <input class='form-control' type='text' name='num_<%= param %>' required='true' />
+      <%= f.label param, "#{text}：" %>
+      <%= f.text_field param, {:class => 'form-control', :name => param, :required => true} %>
     </span>
   <% end %>
   <span class='pull-right'>
-    <input class='btn btn-primary btn-sm' type='submit' value='実行' />
-    <input class='btn btn-default btn-sm' type='reset' />
+    <%= f.submit '実行', :class => 'btn btn-primary btn-sm' %>
+    <%= f.submit 'リセット', :type => 'reset', :class => 'btn btn-default btn-sm' %>
   </span>
-</form>
+<% end %>
 <hr>
