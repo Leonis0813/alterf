@@ -41,8 +41,11 @@ group :development, :test do
   gem 'rspec-power_assert'
   gem 'capybara'
   gem 'capybara-mechanize'
+  gem 'headless'
+  gem 'selenium-webdriver', '2.53.4'
 
   gem 'fuubar'
+  gem 'pry'
 
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
