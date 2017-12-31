@@ -1,3 +1,6 @@
+# 1.1.0 (2017/12/31)
+- [ADD] view to manage analysis
+
 # 1.0.4 (2017/10/25)
 - [UPDATE] mysql client to output error log
 
