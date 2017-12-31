@@ -1,4 +1,8 @@
 module CommonHelper
+  def base_url
+    ENV['REMOTE_HOST']
+  end
+
   def client
     @client ||= Capybara.page.driver
   end
