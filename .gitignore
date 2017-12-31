@@ -17,3 +17,6 @@
 /tmp
 
 vendor
+scripts/backup
+scripts/log
+scripts/results
