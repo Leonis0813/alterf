@@ -1,21 +1,21 @@
 # coding: utf-8
 require 'rails_helper'
 
-describe AnalysisForm, :type => :model do
-  shared_context 'AnalysisFormオブジェクトを検証する' do |params|
+describe Analysis, :type => :model do
+  shared_context 'Analysisオブジェクトを検証する' do |params|
     before(:all) do
-      @form = AnalysisForm.new(params)
-      @form.validate
+      @analysis = Analysis.new(params)
+      @analysis.validate
     end
   end
 
   shared_examples '検証結果が正しいこと' do |result|
-    it_is_asserted_by { @form.errors.empty? == result }
+    it_is_asserted_by { @analysis.errors.empty? == result }
   end
 
-  describe '#validated' do
+  describe '#validates' do
     describe '正常系' do
-      include_context 'AnalysisFormオブジェクトを検証する', {:num_data => 1, :num_tree => 1, :num_feature => 1}
+      include_context 'Analysisオブジェクトを検証する', {:num_data => 1, :num_tree => 1, :num_feature => 1}
       it_behaves_like '検証結果が正しいこと', true
     end
 
@@ -28,7 +28,7 @@ describe AnalysisForm, :type => :model do
 
       CommonHelper.generate_test_case(invalid_params).each do |params|
         context "フォームに#{params.keys.join(',')}を指定した場合" do
-          include_context 'AnalysisFormオブジェクトを検証する', params
+          include_context 'Analysisオブジェクトを検証する', params
           it_behaves_like '検証結果が正しいこと', false
         end
       end
