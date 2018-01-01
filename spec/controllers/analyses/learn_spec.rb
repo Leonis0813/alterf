@@ -13,6 +13,8 @@ describe AnalysesController, :type => :controller do
       end
     end
 
+    after(:all) { Analysis.where(default_params).last.destroy }
+
     it_behaves_like 'ステータスコードが正しいこと', '200'
 
     it 'レスポンスが空であること' do
