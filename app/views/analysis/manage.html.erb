@@ -10,4 +10,20 @@
     <%= f.submit 'リセット', :type => 'reset', :class => 'btn btn-default btn-sm' %>
   </span>
 <% end %>
+
 <hr>
+
+<h4 style='padding: 10px'>ジョブ実行履歴</h4>
+
+<div style='padding: 0px 50px'>
+  <table class='table table-hover'>
+    <thead>
+      <% %w[ 実行開始日時 学習データ数 決定木の数 特徴量の数 状態 ].each do |header| %>
+        <th><%= header %></th>
+      <% end %>
+    </thead>
+    <tbody>
+      <%= render @jobs %>
+    </tbody>
+  </table>
+</div>
