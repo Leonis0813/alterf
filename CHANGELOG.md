@@ -1,3 +1,6 @@
+# 2.0.0 (2018/01/02)
+- [ADD] list view to confirm analysis jobs
+
 # 1.1.0 (2017/12/31)
 - [ADD] view to manage analysis
 
