@@ -1,5 +1,5 @@
 class AnalysisJob < ActiveJob::Base
-  queue_as :default
+  queue_as :alterf
 
   def perform(analysis_id)
     analysis = Analysis.find(analysis_id)
