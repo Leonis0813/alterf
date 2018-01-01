@@ -6,7 +6,7 @@ class CreateJob < ActiveRecord::Migration
       t.integer :num_feature
       t.string :state
 
-      t.timestamp null: false
+      t.timestamps null: false
     end
   end
 end
