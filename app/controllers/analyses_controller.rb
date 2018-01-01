@@ -14,7 +14,7 @@ class AnalysesController < ApplicationController
       AnalysisJob.perform_later(analysis.id)
       render :status => :ok, :json => {}
     else
-      raise BadRequest.new(form.errors.messages.keys.map {|key| "invalid_param_#{key}" })
+      raise BadRequest.new(analysis.errors.messages.keys.map {|key| "invalid_param_#{key}" })
     end
   end
 

@@ -1,11 +1,12 @@
 # coding: utf-8
 require 'rails_helper'
 
-describe "analysis/manage", :type => :view do
+describe "analyses/manage", :type => :view do
   html = nil
 
   before(:all) do
     @analysis = Analysis.new
+    @analyses = Analysis.all
   end
 
   before(:each) do
@@ -14,7 +15,7 @@ describe "analysis/manage", :type => :view do
   end
 
   describe '<html><body>' do
-    form_xpath = '//form[action="/analysis/learn"][data-remote=true][method="post"][@class="form-inline"]'
+    form_xpath = '//form[action="/analyses/learn"][data-remote=true][method="post"][@class="form-inline"]'
 
     describe '<form>' do
       it '<form>タグがあること' do
