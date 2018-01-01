@@ -1,7 +1,7 @@
-# coding: utf-8
-class AnalysisController < ApplicationController
+class AnalysesController < ApplicationController
   def manage
     @analysis = Analysis.new
+    @analyses = Analysis.all
   end
 
   def learn
