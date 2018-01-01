@@ -1,10 +1,10 @@
 class CreateJob < ActiveRecord::Migration
   def change
     create_table :jobs do |t|
-      t.integer :num_data
-      t.integer :num_tree
-      t.integer :num_feature
-      t.string :state
+      t.integer :num_data, :null => false
+      t.integer :num_tree, :null => false
+      t.integer :num_feature, :null => false
+      t.string :state, :null => false
 
       t.timestamps null: false
     end
