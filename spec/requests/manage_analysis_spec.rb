@@ -5,10 +5,10 @@ describe "ブラウザで管理する", :type => :request do
   before(:all) { @driver = Selenium::WebDriver.for :firefox }
 
   describe '管理画面を開く' do
-    before(:all) { @driver.get("#{base_url}/analysis") }
+    before(:all) { @driver.get("#{base_url}/analyses") }
 
     it '管理画面が表示されていること' do
-      is_asserted_by { @driver.current_url == "#{base_url}/analysis" }
+      is_asserted_by { @driver.current_url == "#{base_url}/analyses" }
     end
   end
 
