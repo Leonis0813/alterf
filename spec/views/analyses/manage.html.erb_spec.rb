@@ -16,6 +16,7 @@ describe "analyses/manage", :type => :view do
 
   describe '<html><body>' do
     form_xpath = '//form[action="/analyses/learn"][data-remote=true][method="post"][@class="form-inline"]'
+    table_xpath = '//table[@class="table table-hover"]'
 
     describe '<form>' do
       it '<form>タグがあること' do
@@ -39,6 +40,18 @@ describe "analyses/manage", :type => :view do
       %w[ submit reset ].each do |type|
         it "typeが#{type}のボタンがあること" do
           expect(html).to have_selector("#{submit_span_xpath}/input[type='#{type}']")
+        end
+      end
+    end
+
+    describe '<table' do
+      it '<table>タグがあること' do
+        expect(html).to have_selector(table_xpath)
+      end
+
+      %w[ 実行開始日時 学習データ数 決定木の数 特徴量の数 状態 ].each do |header|
+        it "#{header}を表示する<th>タグがあること" do
+          expect(html).to have_selector("#{table_xpath}/thead/th", :text => header)
         end
       end
     end
