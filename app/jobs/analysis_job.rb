@@ -1,11 +1,11 @@
 class AnalysisJob < ActiveJob::Base
   queue_as :default
 
-  def perform(num_data, num_tree, num_feature)
-    job = Analysis.create!(:num_data => num_data, :num_tree => num_tree, :num_feature => num_feature, :state => 'processing')
-    ret = system "Rscript #{Rails.root}/scripts/analyze/learn.r #{num_data} #{num_tree} #{num_feature}"
-    job[:state] = 'complete'
-    job.save!
+  def perform(analysis_id)
+    analysis = Analysis.find(analysis_id)
+    args = [analysis.num_data, analysis.num_tree, analysis.num_feature]
+    ret = system "Rscript #{Rails.root}/scripts/analyze/learn.r #{args.join(' ')}"
+    analysis.update!(:state => 'completed')
     AnalysisMailer.finished(ret).deliver_now
   end
 end
