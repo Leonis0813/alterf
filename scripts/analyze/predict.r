@@ -1,26 +1,52 @@
 library(yaml)
 
 args = commandArgs(trailingOnly=T)
-model_file <- args[1]
-race_file <- args[2]
+training_file <- args[1]
+model_file <- args[2]
+race_file <- args[3]
 
 load(model_file)
-test_data <- yaml.load_file(race_file)
+data <- yaml.load_file(training_file)
+unlist_data <- unlist(data$training_data)
+data_size <- length(data$training_data)
+attribute_size <- length(unlist_data) / data_size
+training_data <- matrix(unlist_data, attribute_size, data_size)
+rownames(training_data) <- c("age", "direction", "distance", "number", "weight", "place", "round", "track", "weather", "burden_weight", "won")
+training_data <- as.data.frame(t(training_data))
+training_data <- training_data[,c(-11)]
+training_data_size <- data_size
 
-entries <- unlist(test_data$test_data)
-entry_size <- length(test_data$test_data)
-attribute_size <- length(entries) / entry_size
+data <- yaml.load_file(race_file)
+unlist_data <- unlist(data$test_data)
+data_size <- length(data$test_data)
+attribute_size <- length(unlist_data) / data_size
+test_data <- matrix(unlist_data, attribute_size, data_size)
+rownames(test_data) <- c("age", "number", "weight", "burden_weight")
+test_data <- as.data.frame(t(test_data))
+test_data$distance <- c(rep(data$distance, data_size))
+test_data$round <- c(rep(data$round, data_size))
+test_data$place <- c(rep(data$place, data_size))
+test_data$direction <- c(rep(data$direction, data_size))
+test_data$weather <- c(rep(data$weather, data_size))
+test_data$track <- c(rep(data$track, data_size))
+test_data_size <- data_size
 
-entries <- matrix(entries, attribute_size, entry_size)
-rownames(entries) <- c("number", "bracket", "age", "burden_weight", "weight")
-entries <- as.data.frame(t(entries))
-entries$distance <- c(rep(test_data$distance, entry_size))
-entries$round <- c(rep(test_data$round, entry_size))
+data <- rbind(training_data, test_data)
+data$age <- as.integer(data$age)
+data$distance <- as.integer(data$distance)
+data$number <- as.integer(data$number)
+data$round <- as.integer(data$round)
+data$place <- as.factor(data$place)
+data$direction <- as.factor(data$direction)
+data$weather <- as.factor(data$weather)
+data$track <- as.factor(data$track)
+data$weight <- as.numeric(data$weight)
+data$burden_weight <- as.numeric(data$burden_weight)
 
 library(randomForest)
-result <- predict(model, entries)
+result <- predict(model, data[(training_data_size + 1):(training_data_size + test_data_size),])
 
 timestamp <- format(Sys.time(), "%Y%m%d%H%M%S")
 for(i in 1:length(result)) {
-    write(paste(i, ": ", result[i], sep=""), file=paste("results/prediction_", timestamp, ".txt", sep=""), append=T)
+    write(paste(i, ": ", result[i], sep=""), file=paste("scripts/results/prediction_", timestamp, ".txt", sep=""), append=T)
 }
