@@ -14,6 +14,10 @@ training_data <- matrix(unlist_data, attribute_size, data_size)
 rownames(training_data) <- c("age", "direction", "distance", "number", "weight", "place", "round", "track", "weather", "burden_weight", "won")
 training_data <- as.data.frame(t(training_data))
 training_data <- training_data[,c(-11)]
+training_data$age <- as.integer(training_data$age)
+training_data$distance <- as.integer(training_data$distance)
+training_data$number <- as.integer(training_data$number)
+training_data$round <- as.integer(training_data$round)
 training_data_size <- data_size
 
 data <- yaml.load_file(race_file)
