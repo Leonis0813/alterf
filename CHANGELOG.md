@@ -1,3 +1,6 @@
+# 2.1.0 (2018/01/09)
+- [ADD] category features to random forest
+
 # 2.0.0 (2018/01/02)
 - [ADD] list view to confirm analysis jobs
 
