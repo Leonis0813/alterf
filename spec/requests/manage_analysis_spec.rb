@@ -1,8 +1,11 @@
 # coding: utf-8
 require 'rails_helper'
 
-describe "ブラウザで管理する", :type => :request do
-  before(:all) { @driver = Selenium::WebDriver.for :firefox }
+describe 'ブラウザで管理する', :type => :request do
+  before(:all) do
+    @driver = Selenium::WebDriver.for :firefox
+    @wait = Selenium::WebDriver::Wait.new(:timeout => 30)
+  end
 
   describe '管理画面を開く' do
     before(:all) { @driver.get("#{base_url}/analyses") }
@@ -18,7 +21,7 @@ describe "ブラウザで管理する", :type => :request do
       @driver.find_element(:id, 'analysis_num_tree').send_keys(1)
       @driver.find_element(:id, 'analysis_num_feature').send_keys(1)
       @driver.find_element(:xpath, '//form/span/input[@value="実行"]').click
-      sleep 1
+      @wait.until { @driver.find_element(:class, 'modal-body').displayed? }
     end
 
     it 'タイトルが正しいこと' do
