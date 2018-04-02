@@ -6,6 +6,6 @@ class AnalysisJob < ActiveJob::Base
     args = [analysis.num_data, analysis.num_tree, analysis.num_feature]
     ret = system "Rscript #{Rails.root}/scripts/learn.r #{args.join(' ')}"
     analysis.update!(:state => 'completed')
-    AnalysisMailer.finished(ret).deliver_now
+    AnalysisMailer.finished(analysis, ret).deliver_now
   end
 end
