@@ -1,3 +1,7 @@
+# 2.2.0 (2018/04/02)
+- [ADD] api to download training data
+- [UPDATE] mail body
+
 # 2.1.1 (2018/01/21)
 - [REMOVE] scripts except analyzing
 
