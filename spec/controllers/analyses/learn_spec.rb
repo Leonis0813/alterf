@@ -1,17 +1,19 @@
 # coding: utf-8
 require 'rails_helper'
 
-describe AnalysisController, :type => :controller do
-  default_params = {:num_data => 1000, :num_tree => 100, :num_feature => 10}
+describe AnalysesController, :type => :controller do
+  default_params = {:num_data => 1000, :num_tree => 100, :num_feature => 10, :state => 'processing'}
 
   describe '正常系' do
     before(:all) do
       RSpec::Mocks.with_temporary_scope do
         allow(AnalysisJob).to receive(:perform_later).and_return(true)
-        @res = client.post('/analysis/learn', default_params)
+        @res = client.post('/analyses/learn', default_params)
         @pbody = JSON.parse(@res.body) rescue nil
       end
     end
+
+    after(:all) { Analysis.where(default_params).last.destroy }
 
     it_behaves_like 'ステータスコードが正しいこと', '200'
 
@@ -21,7 +23,7 @@ describe AnalysisController, :type => :controller do
   end
 
   describe '異常系' do
-    param_keys = default_params.keys
+    param_keys = default_params.keys - [:state]
     test_cases = [].tap do |tests|
       (param_keys.size - 1).times {|i| tests << param_keys.combination(i + 1).to_a }
     end.flatten(1)
@@ -32,7 +34,7 @@ describe AnalysisController, :type => :controller do
         before(:all) do
           RSpec::Mocks.with_temporary_scope do
             allow(AnalysisJob).to receive(:perform_later).and_return(true)
-            @res = client.post('/analysis/learn', default_params.slice(*selected_keys))
+            @res = client.post('/analyses/learn', default_params.slice(*selected_keys))
             @pbody = JSON.parse(@res.body) rescue nil
           end
         end
@@ -48,7 +50,7 @@ describe AnalysisController, :type => :controller do
             allow(AnalysisJob).to receive(:perform_later).and_return(true)
             params = default_params.dup
             error_keys.each {|key| params.merge!(key => 'invalid') }
-            @res = client.post('/analysis/learn', params)
+            @res = client.post('/analyses/learn', params)
             @pbody = JSON.parse(@res.body) rescue nil
           end
         end

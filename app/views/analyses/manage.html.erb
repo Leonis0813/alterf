@@ -1,4 +1,4 @@
-<%= form_for @analysis, {:url => analysis_learn_path, :remote => true, :html => {:class => 'form-inline'}} do |f| %>
+<%= form_for @analysis, {:url => analyses_learn_path, :remote => true, :html => {:class => 'form-inline'}} do |f| %>
   <% {:num_data => '学習データ数', :num_tree => '決定木の数', :num_feature => '特徴量の数'}.each do |param, text| %>
     <span class='input-custom'>
       <%= f.label param, "#{text}：" %>
@@ -10,4 +10,20 @@
     <%= f.submit 'リセット', :type => 'reset', :class => 'btn btn-default btn-sm' %>
   </span>
 <% end %>
+
 <hr>
+
+<h4 style='padding: 10px'>ジョブ実行履歴</h4>
+
+<div style='padding: 0px 50px'>
+  <table class='table table-hover'>
+    <thead>
+      <% %w[ 実行開始日時 学習データ数 決定木の数 特徴量の数 状態 ].each do |header| %>
+        <th><%= header %></th>
+      <% end %>
+    </thead>
+    <tbody>
+      <%= render @analyses %>
+    </tbody>
+  </table>
+</div>

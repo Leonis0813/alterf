@@ -15,7 +15,7 @@ describe Analysis, :type => :model do
 
   describe '#validates' do
     describe '正常系' do
-      include_context 'Analysisオブジェクトを検証する', {:num_data => 1, :num_tree => 1, :num_feature => 1}
+      include_context 'Analysisオブジェクトを検証する', {:num_data => 1, :num_tree => 1, :num_feature => 1, :state => 'processing'}
       it_behaves_like '検証結果が正しいこと', true
     end
 
@@ -24,6 +24,7 @@ describe Analysis, :type => :model do
         :num_data => ['invalid', 1.0, 0],
         :num_tree => ['invalid', 1.0, 0],
         :num_feature => ['invalid', 1.0, 0],
+        :state => ['invalid', 1.0, 0],
       }
 
       CommonHelper.generate_test_case(invalid_params).each do |params|
