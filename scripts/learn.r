@@ -1,10 +1,11 @@
 args = commandArgs(trailingOnly=T)
-num_training_data <- args[1]
-ntree <- as.integer(args[2])
-mtry <- as.integer(args[3])
+id <- args[1]
+num_training_data <- args[2]
+ntree <- as.integer(args[3])
+mtry <- as.integer(args[4])
 
 library(yaml)
-config <- yaml.load_file("scripts/analyze/settings.yml")
+config <- yaml.load_file("scripts/settings.yml")
 
 library(RMySQL)
 driver <- dbDriver("MySQL")
@@ -21,12 +22,11 @@ training_data$won <- as.factor(training_data$won)
 library(randomForest)
 model <- randomForest(won~., data=training_data, ntree=ntree, mtry=mtry, na.action="na.omit")
 
-timestamp <- format(Sys.time(), "%Y%m%d%H%M%S")
-filename <- paste("scripts/results/", paste(timestamp, num_training_data, ntree, mtry, sep="_"), sep="")
+filename <- paste("results/analysis", id, sep="_")
 write(paste("num_of_training_data:", num_training_data), file=paste(filename, "yml", sep="."))
 write(paste("ntree:", ntree), file=paste(filename, "yml", sep="."), append=T)
 write(paste("mtry:", mtry), file=paste(filename, "yml", sep="."), append=T)
 write("training_data:", file=paste(filename, "yml", sep="."), append=T)
 attributes <- paste(training_data$age, training_data$direction, training_data$distance, training_data$number, training_data$weight, training_data$place, training_data$round, training_data$track, training_data$weather, training_data$burden_weight, training_data$won, sep=", ")
 write(paste("  - [", attributes, "]", sep=""), file=paste(filename, "yml", sep="."), append=T)
-save(model, file=paste("scripts/results/", timestamp, ".rf", sep=""))
+save(model, file=paste("results/", id, ".rf", sep=""))

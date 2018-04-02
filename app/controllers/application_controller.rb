@@ -6,4 +6,8 @@ class ApplicationController < ActionController::Base
   rescue_from BadRequest do |e|
     render :status => :bad_request, :json => e.errors
   end
+
+  rescue_from NotFound do |e|
+    head :not_found
+  end
 end
