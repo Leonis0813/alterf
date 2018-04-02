@@ -2,15 +2,16 @@
 require 'rails_helper'
 
 describe Api::AnalysesController, :type => :controller do
-  file_path = File.join(Rails.root, 'results/analysis_1.yml')
+  result_dir = File.join(Rails.root, 'results')
 
   describe '正常系' do
     before(:all) do
-      FileUtils.touch(file_path)
+      FileUtils.mkdir_p(result_dir)
+      FileUtils.touch(File.join(result_dir, 'analysis_1.yml'))
       @res = client.get('/api/analyses/1/training_data')
     end
 
-    after(:all) { FileUtils.rm(file_path) }
+    after(:all) { FileUtils.rm_r(result_dir) }
 
     it_behaves_like 'ステータスコードが正しいこと', '200'
   end
