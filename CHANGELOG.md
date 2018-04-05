@@ -1,3 +1,6 @@
+# 2.2.1 (2018/04/03)
+- [ADD] grade, weight_diff and month as features
+
 # 2.2.0 (2018/04/02)
 - [UPDATE] mail body
 - [ADD] attachment for training data
