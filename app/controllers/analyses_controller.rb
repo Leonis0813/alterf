@@ -4,7 +4,7 @@ class AnalysesController < ApplicationController
     @analyses = Analysis.all.order(:created_at => :desc)
   end
 
-  def learn
+  def execute
     attributes = params.permit(*analysis_params)
     absent_keys = analysis_params - attributes.symbolize_keys.keys
     raise BadRequest.new(absent_keys.map {|key| "absent_param_#{key}" }) unless absent_keys.empty?
