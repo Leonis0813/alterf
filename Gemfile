@@ -4,6 +4,7 @@ gem 'rails', '4.2.2'
 gem 'mysql2', '~> 0.3.20'
 gem 'resque'
 gem 'daemon-spawn', :require => 'daemon_spawn'
+gem 'remotipart'
 
 # CSS
 gem 'sass-rails', '~> 5.0'
