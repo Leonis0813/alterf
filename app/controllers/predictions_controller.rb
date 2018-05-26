@@ -9,7 +9,11 @@ class PredictionsController < ApplicationController
     absent_keys = prediction_params - attributes.symbolize_keys.keys
     raise BadRequest.new(absent_keys.map {|key| "absent_param_#{key}" }) unless absent_keys.empty?
 
-    prediction = Prediction.new(attributes.merge('state' => 'processing'))
+    prediction = Prediction.new(
+      :model => attributes[:model].original_filename,
+      :test_data => attributes[:test_data].original_filename,
+      :state => 'processing'
+    )
     if prediction.save
       PredictionJob.perform_later(prediction.id)
       render :status => :ok, :json => {}

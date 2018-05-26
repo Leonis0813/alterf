@@ -1,9 +1,9 @@
 <div class='row center-block'>
   <div class='col-lg-4'>
-    <div id='new-analysis' class='well tab-pane active'>
+    <div id='new-prediction' class='well tab-pane active'>
       <h3>レースを予測</h3>
-      <%= form_for @analysis, {:url => analyses_learn_path, :remote => true} do |f| %>
-        <% {:num_data => 'モデル', :num_tree => 'テストデータ'}.each do |param, text| %>
+      <%= form_for @prediction, {:url => predictions_path, :remote => true} do |f| %>
+        <% {:model => 'モデル', :test_data => 'テストデータ'}.each do |param, text| %>
           <div class='form-group'>
             <%= f.label param, text %><br>
             <%= f.file_field param, {:class => 'form-control', :name => param, :required => true} %>
