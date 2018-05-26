@@ -9,6 +9,13 @@ class PredictionsController < ApplicationController
     absent_keys = prediction_params - attributes.symbolize_keys.keys
     raise BadRequest.new(absent_keys.map {|key| "absent_param_#{key}" }) unless absent_keys.empty?
 
+    invalid_keys = attributes.select do |key, value|
+      not value.respond_to?(:original_filename)
+    end.keys
+    unless invalid_keys.empty?
+      raise BadRequest.new(invalid_keys.map {|key| "invalid_param_#{key}" })
+    end
+
     prediction = Prediction.new(
       :model => attributes[:model].original_filename,
       :test_data => attributes[:test_data].original_filename,
