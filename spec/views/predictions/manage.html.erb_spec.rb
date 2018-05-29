@@ -1,12 +1,12 @@
 # coding: utf-8
 require 'rails_helper'
 
-describe "analyses/manage", :type => :view do
+describe "predictions/manage", :type => :view do
   html = nil
 
   before(:all) do
-    @analysis = Analysis.new
-    @analyses = Analysis.all
+    @prediction = Prediction.new
+    @predictions = Prediction.all
   end
 
   before(:each) do
@@ -15,7 +15,7 @@ describe "analyses/manage", :type => :view do
   end
 
   describe '<html><body>' do
-    form_xpath = '//form[action="/analyses"][data-remote=true][method="post"][@class="new_analysis"]'
+    form_xpath = '//form[action="/predictions"][data-remote=true][method="post"][@class="new_prediction"]'
     table_xpath = '//table[@class="table table-hover"]'
 
     describe '<form>' do
@@ -25,13 +25,13 @@ describe "analyses/manage", :type => :view do
 
       input_span_xpath = "#{form_xpath}/div[@class='form-group']"
 
-      %w[ num_data num_tree num_feature ].each do |param|
-        it "analysis_#{param}を含む<label>タグがあること" do
-          expect(html).to have_selector("#{input_span_xpath}/label[for='analysis_#{param}']")
+      %w[ model test_data ].each do |param|
+        it "prediction_#{param}を含む<label>タグがあること" do
+          expect(html).to have_selector("#{input_span_xpath}/label[for='prediction_#{param}']")
         end
 
-        it "analysis_#{param}を含む<input>タグがあること" do
-          expect(html).to have_selector("#{input_span_xpath}/input[id='analysis_#{param}']")
+        it "prediction_#{param}を含む<input>タグがあること" do
+          expect(html).to have_selector("#{input_span_xpath}/input[id='prediction_#{param}']")
         end
       end
 
@@ -47,7 +47,7 @@ describe "analyses/manage", :type => :view do
         expect(html).to have_selector(table_xpath)
       end
 
-      %w[ 実行開始日時 学習データ数 決定木の数 特徴量の数 状態 ].each do |header|
+      %w[ 実行開始日時 モデル テストデータ 状態 ].each do |header|
         it "#{header}を表示する<th>タグがあること" do
           expect(html).to have_selector("#{table_xpath}/thead/th", :text => header)
         end
