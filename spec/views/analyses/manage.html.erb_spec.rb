@@ -4,6 +4,16 @@ require 'rails_helper'
 describe 'analyses/manage', :type => :view do
   row_xpath = '//div[@id="main-content"]/div[@class="row center-block"]'
 
+  shared_context '分析ジョブを登録する' do |num|
+    before(:all) do
+      param = {:num_data => 10000, :num_tree => 100, :num_feature => 100}
+      num.times { Analysis.create!(param.merge(:state => %w[processing completed].sample)) }
+      @analyses = Analysis.order(:created_at => :desc)
+    end
+
+    after(:all) { Analysis.destroy_all }
+  end
+
   shared_examples '入力フォームが表示されていること' do
     form_panel_xpath = [
       row_xpath,
@@ -39,7 +49,7 @@ describe 'analyses/manage', :type => :view do
     end
   end
 
-  shared_examples 'ジョブ実行履歴が表示されていること' do
+  shared_examples 'ジョブ実行履歴が表示されていること' do |expected_size|
     table_panel_xpath = [
       row_xpath,
       'div[@class="col-lg-8"]',
@@ -54,12 +64,24 @@ describe 'analyses/manage', :type => :view do
         expect(@html).to have_selector("#{table_panel_xpath}/table[@class='table table-hover']/thead/th", :text => header)
       end
     end
+
+    it 'データの数が正しいこと' do
+      table_body_xpath = "#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr"
+      expect(@html).to have_xpath(table_body_xpath, :count => expected_size)
+    end
+
+    it '背景色が正しいこと', :if => expected_size > 0 do
+      matched_data = @html.gsub("\n", '').match(/<tr\s*class='(?<color>.*?)'\s*>(?<data>.*?)<\/tr>/)
+      case matched_data[:color]
+      when 'warning'
+        is_asserted_by { matched_data[:data].include?('実行中') }
+      when 'success'
+        is_asserted_by { matched_data[:data].include?('完了') }
+      end
+    end
   end
 
-  before(:all) do
-    @analysis = Analysis.new
-    @analyses = Analysis.all
-  end
+  before(:all) { @analysis = Analysis.new }
 
   before(:each) do
     render :template => 'analyses/manage', :layout => 'layouts/application'
@@ -67,8 +89,9 @@ describe 'analyses/manage', :type => :view do
   end
 
   describe '<html><body>' do
+    include_context '分析ジョブを登録する', 10
     it_behaves_like 'ヘッダーが表示されていること'
     it_behaves_like '入力フォームが表示されていること'
-    it_behaves_like 'ジョブ実行履歴が表示されていること'
+    it_behaves_like 'ジョブ実行履歴が表示されていること', 10
   end
 end
