@@ -1,16 +1,19 @@
 # coding: utf-8
 require 'rails_helper'
 
-describe 'ブラウザで管理する', :type => :request do
+describe 'ブラウザで分析する', :type => :request do
+  user_id, password = 'test_user_id', 'test_user_pass'
   before(:all) do
     @driver = Selenium::WebDriver.for :firefox
+    @driver.get("#{base_url}/404_path")
+    @driver.manage.add_cookie(:name => 'algieba', :value => Base64.strict_encode64("#{user_id}:#{password}"))
     @wait = Selenium::WebDriver::Wait.new(:timeout => 30)
   end
 
-  describe '管理画面を開く' do
+  describe '分析画面を開く' do
     before(:all) { @driver.get("#{base_url}/analyses") }
 
-    it '管理画面が表示されていること' do
+    it '分析画面が表示されていること' do
       is_asserted_by { @driver.current_url == "#{base_url}/analyses" }
     end
   end
