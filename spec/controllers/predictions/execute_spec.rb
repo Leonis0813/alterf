@@ -16,7 +16,7 @@ describe PredictionsController, :type => :controller do
       end
     end
 
-    after(:all) { Prediction.where(default_params).last.try(:destroy) }
+    after(:all) { Prediction.destroy_all }
 
     it_behaves_like 'ステータスコードが正しいこと', '200'
 
