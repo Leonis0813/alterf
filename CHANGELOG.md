@@ -1,3 +1,6 @@
+# 3.0.0 (2018/06/05)
+- [ADD] management view for prediction
+
 # 2.2.1 (2018/04/03)
 - [ADD] grade, weight_diff and month as features
 
