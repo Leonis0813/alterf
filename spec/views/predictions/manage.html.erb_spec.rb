@@ -1,44 +1,44 @@
 # coding: utf-8
 require 'rails_helper'
 
-describe 'analyses/manage', :type => :view do
+describe 'predictions/manage', :type => :view do
   row_xpath = '//div[@id="main-content"]/div[@class="row center-block"]'
 
-  shared_context '分析ジョブを登録する' do |num|
+  shared_context '予測ジョブを登録する' do |num|
     before(:all) do
-      param = {:num_data => 10000, :num_tree => 100, :num_feature => 100}
-      num.times { Analysis.create!(param.merge(:state => %w[processing completed].sample)) }
-      @analyses = Analysis.order(:created_at => :desc)
+      param = {:model => 'model', :test_data => 'test_data'}
+      num.times { Prediction.create!(param.merge(:state => %w[processing completed].sample)) }
+      @predictions = Prediction.order(:created_at => :desc)
     end
 
-    after(:all) { Analysis.destroy_all }
+    after(:all) { Prediction.destroy_all }
   end
 
   shared_examples '入力フォームが表示されていること' do
     form_panel_xpath = [
       row_xpath,
       'div[@class="col-lg-4"]',
-      'div[@id="new-analysis"]',
+      'div[@id="new-prediction"]',
     ].join('/')
 
     it 'タイトルが表示されていること'do
-      expect(@html).to have_selector("#{form_panel_xpath}/h3", :text => 'レースを分析')
+      expect(@html).to have_selector("#{form_panel_xpath}/h3", :text => 'レースを予測')
     end
 
     form_xpath = [
       form_panel_xpath,
-      'form[action="/analyses"][data-remote=true][method="post"][@class="new_analysis"]',
+      'form[action="/predictions"][data-remote=true][method="post"][@class="new_prediction"]',
     ].join('/')
 
-    %w[ num_data num_tree num_feature ].each do |param|
+    %w[ model test_data ].each do |param|
       input_xpath = "#{form_xpath}/div[@class='form-group']"
 
-      it "analysis_#{param}を含む<label>タグがあること" do
-        expect(@html).to have_selector("#{input_xpath}/label[for='analysis_#{param}']")
+      it "prediction_#{param}を含む<label>タグがあること" do
+        expect(@html).to have_selector("#{input_xpath}/label[for='prediction_#{param}']")
       end
 
-      it "analysis_#{param}を含む<input>タグがあること" do
-        expect(@html).to have_selector("#{input_xpath}/input[id='analysis_#{param}']")
+      it "prediction_#{param}を含む<input>タグがあること" do
+        expect(@html).to have_selector("#{input_xpath}/input[id='prediction_#{param}']")
       end
     end
 
@@ -59,7 +59,7 @@ describe 'analyses/manage', :type => :view do
       expect(@html).to have_selector("#{table_panel_xpath}/h4", :text => 'ジョブ実行履歴')
     end
 
-    %w[ 実行開始日時 学習データ数 決定木の数 特徴量の数 状態 ].each do |header|
+    %w[ 実行開始日時 モデル テストデータ 状態 ].each do |header|
       it "ヘッダー(#{header})があること" do
         expect(@html).to have_selector("#{table_panel_xpath}/table[@class='table table-hover']/thead/th", :text => header)
       end
@@ -81,15 +81,15 @@ describe 'analyses/manage', :type => :view do
     end
   end
 
-  before(:all) { @analysis = Analysis.new }
+  before(:all) { @prediction = Prediction.new }
 
   before(:each) do
-    render :template => 'analyses/manage', :layout => 'layouts/application'
+    render :template => 'predictions/manage', :layout => 'layouts/application'
     @html ||= response
   end
 
   describe '<html><body>' do
-    include_context '分析ジョブを登録する', 10
+    include_context '予測ジョブを登録する', 10
     it_behaves_like 'ヘッダーが表示されていること'
     it_behaves_like '入力フォームが表示されていること'
     it_behaves_like 'ジョブ実行履歴が表示されていること', 10

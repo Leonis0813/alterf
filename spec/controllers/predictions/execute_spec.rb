@@ -1,19 +1,22 @@
 # coding: utf-8
 require 'rails_helper'
 
-describe AnalysesController, :type => :controller do
-  default_params = {:num_data => 1000, :num_tree => 100, :num_feature => 10, :state => 'processing'}
+describe PredictionsController, :type => :controller do
+  default_params = {
+    :model =>  Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/model.txt'))),
+    :test_data =>  Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/test_data.txt'))),
+  }
 
   describe '正常系' do
     before(:all) do
       RSpec::Mocks.with_temporary_scope do
-        allow(AnalysisJob).to receive(:perform_later).and_return(true)
-        @res = client.post('/analyses/learn', default_params)
+        allow(PredictionJob).to receive(:perform_later).and_return(true)
+        @res = client.post('/predictions', default_params)
         @pbody = JSON.parse(@res.body) rescue nil
       end
     end
 
-    after(:all) { Analysis.where(default_params).last.destroy }
+    after(:all) { Prediction.where(default_params).last.try(:destroy) }
 
     it_behaves_like 'ステータスコードが正しいこと', '200'
 
@@ -23,18 +26,17 @@ describe AnalysesController, :type => :controller do
   end
 
   describe '異常系' do
-    param_keys = default_params.keys - [:state]
     test_cases = [].tap do |tests|
-      (param_keys.size - 1).times {|i| tests << param_keys.combination(i + 1).to_a }
+      (default_params.keys.size - 1).times {|i| tests << default_params.keys.combination(i + 1).to_a }
     end.flatten(1)
 
     test_cases.each do |error_keys|
       context "#{error_keys.join(',')}がない場合" do
-        selected_keys = param_keys - error_keys
+        selected_keys = default_params.keys - error_keys
         before(:all) do
           RSpec::Mocks.with_temporary_scope do
-            allow(AnalysisJob).to receive(:perform_later).and_return(true)
-            @res = client.post('/analyses/learn', default_params.slice(*selected_keys))
+            allow(PredictionJob).to receive(:perform_later).and_return(true)
+            @res = client.post('/predictions', default_params.slice(*selected_keys))
             @pbody = JSON.parse(@res.body) rescue nil
           end
         end
@@ -47,10 +49,10 @@ describe AnalysesController, :type => :controller do
       context "#{error_keys.join(',')}が不正な場合" do
         before(:all) do
           RSpec::Mocks.with_temporary_scope do
-            allow(AnalysisJob).to receive(:perform_later).and_return(true)
+            allow(PredictionJob).to receive(:perform_later).and_return(true)
             params = default_params.dup
             error_keys.each {|key| params.merge!(key => 'invalid') }
-            @res = client.post('/analyses/learn', params)
+            @res = client.post('/predictions', params)
             @pbody = JSON.parse(@res.body) rescue nil
           end
         end
