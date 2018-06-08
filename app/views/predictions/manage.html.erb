@@ -3,12 +3,17 @@
     <div id='new-prediction' class='well tab-pane active'>
       <h3>レースを予測</h3>
       <%= form_for @prediction, :html => {:multipart => true}, :url => predictions_path, :remote => true do |f| %>
-        <% {:model => 'モデル', :test_data => 'テストデータ'}.each do |param, text| %>
-          <div class='form-group'>
-            <%= f.label param, text %><br>
-            <%= f.file_field param, {:class => 'form-control', :name => param, :required => true} %>
-          </div>
-        <% end %>
+        <div class='form-group'>
+          <%= f.label :model, 'モデル' %><br>
+          <%= f.file_field :model, {:class => 'form-control', :name => :model, :required => true} %>
+        </div>
+        <div class='form-group'>
+          <%= f.label :test_data, 'テストデータ' %>
+          <input type='radio' id='type_file' name='type' value='file' checked> <label for='type_file'>ファイル</label>
+          <input type='radio' id='type_url' name='type' value='url'> <label for='type_url'>URL</label>
+          <br>
+          <%= f.file_field :test_data, {:id => 'type', :class => 'form-control', :name => :test_data, :required => true} %>
+        </div>
         <%= f.submit '実行', :class => 'btn btn-primary btn-sm' %>
         <%= f.submit 'リセット', :type => 'reset', :class => 'btn btn-default btn-sm' %>
       <% end %>

@@ -15,4 +15,7 @@ $ ->
       message: '入力値を見直してください',
     })
     return
+
+  $('input[name="type"]:radio').on 'change', ->
+    $('#type').get(0).type = $(this).val()
   return
