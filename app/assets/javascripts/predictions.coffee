@@ -17,5 +17,5 @@ $ ->
     return
 
   $('input[name="type"]:radio').on 'change', ->
-    $('#type').get(0).type = $(this).val()
+    $('#prediction_test_data').get(0).type = $(this).val()
   return
