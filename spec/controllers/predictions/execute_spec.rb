@@ -50,6 +50,11 @@ describe PredictionsController, :type => :controller do
         it '400エラーが返ること' do
           is_asserted_by { @res.status == 400 }
         end
+
+        it 'エラーメッセージが正しいこと' do
+          error_codes = error_keys.map {|key| {'error_code' => "absent_param_#{key}"} }
+          is_asserted_by { JSON.parse(@res.body) == error_codes }
+        end
       end
 
       context "#{error_keys.join(',')}が不正な場合" do
@@ -65,6 +70,29 @@ describe PredictionsController, :type => :controller do
 
         it '400エラーが返ること' do
           is_asserted_by { @res.status == 400 }
+        end
+
+        it 'エラーメッセージが正しいこと' do
+          error_codes = error_keys.map {|key| {'error_code' => "invalid_param_#{key}"} }
+          is_asserted_by { JSON.parse(@res.body) == error_codes }
+        end
+      end
+
+      context 'テストデータのURLが不正な場合' do
+        before(:all) do
+          RSpec::Mocks.with_temporary_scope do
+            allow(PredictionJob).to receive(:perform_later).and_return(true)
+            @res = client.post('/predictions', default_params.merge(:test_data => 'invalid_url'))
+            @pbody = JSON.parse(@res.body) rescue nil
+          end
+        end
+
+        it '400エラーが返ること' do
+          is_asserted_by { @res.status == 400 }
+        end
+
+        it 'エラーメッセージが正しいこと' do
+          is_asserted_by { JSON.parse(@res.body) == [{'error_code' => 'invalid_param_test_data'}] }
         end
       end
     end
