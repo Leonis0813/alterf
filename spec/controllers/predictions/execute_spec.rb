@@ -2,26 +2,32 @@
 require 'rails_helper'
 
 describe PredictionsController, :type => :controller do
-  default_params = {
-    :model =>  Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/model.txt'))),
-    :test_data =>  Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/test_data.txt'))),
+  model = Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/model.txt')))
+  test_data = {
+    :file => Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/test_data.txt'))),
+    :url => 'http://example.com',
   }
+  default_params = {:model => model, :test_data => test_data[:file]}
 
   describe '正常系' do
-    before(:all) do
-      RSpec::Mocks.with_temporary_scope do
-        allow(PredictionJob).to receive(:perform_later).and_return(true)
-        @res = client.post('/predictions', default_params)
-        @pbody = JSON.parse(@res.body) rescue nil
+    %i[file url].each do |type|
+      context "テストデータの種類が#{type}の場合" do
+        before(:all) do
+          RSpec::Mocks.with_temporary_scope do
+            allow(PredictionJob).to receive(:perform_later).and_return(true)
+            @res = client.post('/predictions', default_params.merge(:test_data => test_data[type]))
+            @pbody = JSON.parse(@res.body) rescue nil
+          end
+        end
+
+        after(:all) { Prediction.destroy_all }
+
+        it_behaves_like 'ステータスコードが正しいこと', '200'
+
+        it 'レスポンスが空であること' do
+          is_asserted_by { @pbody == {} }
+        end
       end
-    end
-
-    after(:all) { Prediction.destroy_all }
-
-    it_behaves_like 'ステータスコードが正しいこと', '200'
-
-    it 'レスポンスが空であること' do
-      is_asserted_by { @pbody == {} }
     end
   end
 
