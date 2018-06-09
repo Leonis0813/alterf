@@ -31,6 +31,14 @@ class PredictionsController < ApplicationController
 
     prediction = Prediction.new(attributes.merge(:state => 'processing'))
     if prediction.save
+      params.slice(*prediction_params).values.each do |value|
+        if value.respond_to?(:original_filename)
+          File.open("#{Rails.root}/tmp/files/#{value.original_filename}", 'w+b') do |f|
+            f.write  value.read
+          end
+        end
+      end
+
       PredictionJob.perform_later(prediction.id)
       render :status => :ok, :json => {}
     else
