@@ -26,14 +26,16 @@ sql <- paste(
 training_data <- dbGetQuery(dbconnector, sql)
 training_data$direction <- as.factor(training_data$direction)
 training_data$place <- as.factor(training_data$place)
-training_data$grade <- as.factor(training_data$grade)
-training_data$month <- as.factor(training_data$month)
 training_data$track <- as.factor(training_data$track)
 training_data$weather <- as.factor(training_data$weather)
 training_data$won <- as.factor(training_data$won)
 
 library(randomForest)
 model <- randomForest(won~., data=training_data, ntree=ntree, mtry=mtry, na.action="na.omit")
+attributes(model)$levels_direction <- levels(training_data$direction)
+attributes(model)$levels_place <- levels(training_data$place)
+attributes(model)$levels_track <- levels(training_data$track)
+attributes(model)$levels_weather <- levels(training_data$weather)
 
 filename <- paste(paste("results/analysis", id, sep="_"), "yml", sep=".")
 write(paste("num_of_training_data:", num_training_data), file=filename)
@@ -47,13 +49,10 @@ attributes <- paste(
   training_data$number,
   training_data$place,
   training_data$round,
-  training_data$grade,
-  training_data$month,
   training_data$track,
   training_data$weather,
   training_data$burden_weight,
   training_data$weight,
-  training_data$weight_diff,
   training_data$won,
   sep=", "
 )
