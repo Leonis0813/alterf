@@ -33,7 +33,9 @@ class PredictionsController < ApplicationController
     if prediction.save
       params.slice(*prediction_params).values.each do |value|
         if value.respond_to?(:original_filename)
-          File.open("#{Rails.root}/tmp/files/#{value.original_filename}", 'w+b') do |f|
+          output_dir = "#{Rails.root}/tmp/files/#{prediction.id}"
+          FileUtils.mkdir_p(output_dir)
+          File.open("#{output_dir}/#{value.original_filename}", 'w+b') do |f|
             f.write  value.read
           end
         end
