@@ -1,3 +1,6 @@
+# 3.1.0 (2018/06/25)
+- [ADD] URL input form to get race data from remote server
+
 # 3.0.0 (2018/06/05)
 - [ADD] management view for prediction
 
