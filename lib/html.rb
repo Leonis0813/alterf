@@ -25,7 +25,7 @@ class HTML
       entry = []
       entry << attributes[4].match(/(\d+)\z/)[1].to_i
       entry << attributes[2].to_i
-      entry << attributes[14] == '計不' ? nil : attributes[14].match(/\A(\d+)/)[1].to_f rescue nil
+      entry << (attributes[14] == '計不' ? nil : attributes[14].match(/\A(\d+)/)[1].to_f rescue nil)
       entry << attributes[5].to_f
 
       entries << entry

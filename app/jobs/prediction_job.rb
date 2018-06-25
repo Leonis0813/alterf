@@ -26,11 +26,25 @@ class PredictionJob < ActiveJob::Base
   private
 
   def generate_test_data(url, output_path)
+    require "#{Rails.root}/lib/html"
+
     parsed_url = URI.parse(url)
     res = Net::HTTP.start(parsed_url.host, parsed_url.port) do |http|
       http.request Net::HTTP::Get.new(parsed_url)
     end
     parsed_body = HTML.parse(res.body)
-    YAML.dump(parsed_body, File.open(output_path, 'w'))
+    File.open(output_path, 'w') do |f|
+      f.puts "direction: #{parsed_body[:direction]}"
+      f.puts "distance: #{parsed_body[:distance]}"
+      f.puts "place: #{parsed_body[:place]}"
+      f.puts "round: #{parsed_body[:round]}"
+      f.puts "track: #{parsed_body[:track]}"
+      f.puts "weather: #{parsed_body[:weather]}"
+
+      f.puts 'test_data:'
+      parsed_body[:test_data].each do |test_data|
+        f.puts "  - #{test_data}"
+      end
+    end
   end
 end
