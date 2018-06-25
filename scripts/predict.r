@@ -40,5 +40,5 @@ result <- predict(model, test_data)
 
 timestamp <- format(Sys.time(), "%Y%m%d%H%M%S")
 for(i in 1:length(result)) {
-    write(paste(i, ": ", result[i], sep=""), file=paste("tmp/", id, "prediction.yml", sep="/"), append=T)
+    write(paste(i, ": ", result[i], sep=""), file=paste("tmp", id, "prediction.yml", sep="/"), append=T)
 }

@@ -37,7 +37,7 @@ attributes(model)$levels_place <- levels(training_data$place)
 attributes(model)$levels_track <- levels(training_data$track)
 attributes(model)$levels_weather <- levels(training_data$weather)
 
-filename <- paste(paste("results/analysis", id, sep="_"), "yml", sep=".")
+filename <- paste("tmp", id, "analysis.yml", sep="/")
 write(paste("num_of_training_data:", num_training_data), file=filename)
 write(paste("ntree:", ntree), file=filename, append=T)
 write(paste("mtry:", mtry), file=filename, append=T)
