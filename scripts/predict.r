@@ -5,10 +5,10 @@ id <- args[1]
 model <- args[2]
 test_data <- args[3]
 
-model_file <- paste("tmp", id, model, sep="/")
+model_file <- paste("tmp", "files", id, model, sep="/")
 load(model_file)
 
-test_data_file <- paste("tmp", id, test_data, sep="/")
+test_data_file <- paste("tmp", "files", id, test_data, sep="/")
 data <- yaml.load_file(test_data_file)
 data_size <- length(data$test_data)
 
@@ -40,5 +40,5 @@ result <- predict(model, test_data)
 
 timestamp <- format(Sys.time(), "%Y%m%d%H%M%S")
 for(i in 1:length(result)) {
-    write(paste(i, ": ", result[i], sep=""), file=paste("tmp", id, "prediction.yml", sep="/"), append=T)
+    write(paste(i, ": ", result[i], sep=""), file=paste("tmp", "files", id, "prediction.yml", sep="/"), append=T)
 }
