@@ -29,10 +29,9 @@ describe 'predictions/manage', :type => :view do
       form_panel_xpath,
       'form[action="/predictions"][data-remote=true][method="post"][@class="new_prediction"]',
     ].join('/')
+    input_xpath = "#{form_xpath}/div[@class='form-group']"
 
     %w[ model test_data ].each do |param|
-      input_xpath = "#{form_xpath}/div[@class='form-group']"
-
       it "prediction_#{param}を含む<label>タグがあること" do
         expect(@html).to have_selector("#{input_xpath}/label[for='prediction_#{param}']")
       end
@@ -40,6 +39,16 @@ describe 'predictions/manage', :type => :view do
       it "prediction_#{param}を含む<input>タグがあること" do
         expect(@html).to have_selector("#{input_xpath}/input[id='prediction_#{param}']")
       end
+    end
+
+    %w[file url].each do |type|
+      it "#{type}を選択するラジオボタンがあること" do
+        expect(@html).to have_selector("#{input_xpath}/label/input[id='type_#{type}']")
+      end
+    end
+
+    it 'ファイルが選択状態になっていること' do
+      expect(@html).to have_selector("#{input_xpath}/label/input[id='type_file'][checked]")
     end
 
     %w[ submit reset ].each do |type|
