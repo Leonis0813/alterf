@@ -57,4 +57,4 @@ attributes <- paste(
   sep=", "
 )
 write(paste("  - [", attributes, "]", sep=""), file=filename, append=T)
-save(model, file=paste("tmp/files/", id, ".rf", sep=""))
+save(model, file=paste("tmp", "files", id, "model.rf", sep="/"))
