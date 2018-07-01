@@ -177,6 +177,7 @@ GEM
     redis-namespace (1.6.0)
       redis (>= 3.0.4)
     ref (2.0.0)
+    remotipart (1.4.2)
     resque (1.27.4)
       mono_logger (~> 1.0)
       multi_json (~> 1.0)
@@ -295,6 +296,7 @@ DEPENDENCIES
   mysql2 (~> 0.3.20)
   pry
   rails (= 4.2.2)
+  remotipart
   resque
   rspec-power_assert
   rspec-rails
@@ -310,4 +312,4 @@ DEPENDENCIES
   web-console (~> 2.0)
 
 BUNDLED WITH
-   1.16.0
+   1.16.1

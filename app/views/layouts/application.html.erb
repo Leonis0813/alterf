@@ -1,14 +1,28 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Alterf</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-  <%= csrf_meta_tags %>
-</head>
-<body>
+  <head>
+    <title>Alterf</title>
+    <%= stylesheet_link_tag    'application', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
+    <%= csrf_meta_tags %>
+  </head>
+  <body>
 
-<%= yield %>
+    <div class='navbar navbar-default navbar-static-top'>
+      <div class='container'>
+        <span class='navbar-brand'>Horse-Race Estimator</span>
+        <div class='navbar-collapse collapse navbar-responsive-collapse'>
+          <ul class='nav navbar-nav'>
+            <li><%= link_to '分析画面', analyses_path %></li>
+            <li><%= link_to '予測画面', predictions_path %></li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
-</body>
+    <div id='main-content' class='container'>
+      <%= bootstrap_flash %>
+      <%= yield %>
+    </div>
+  </body>
 </html>

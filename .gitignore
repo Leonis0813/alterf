@@ -17,4 +17,5 @@
 /tmp
 
 vendor
-scripts/results
+results
+scripts/settings.yml

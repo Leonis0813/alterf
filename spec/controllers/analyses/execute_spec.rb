@@ -8,7 +8,7 @@ describe AnalysesController, :type => :controller do
     before(:all) do
       RSpec::Mocks.with_temporary_scope do
         allow(AnalysisJob).to receive(:perform_later).and_return(true)
-        @res = client.post('/analyses/learn', default_params)
+        @res = client.post('/analyses', default_params)
         @pbody = JSON.parse(@res.body) rescue nil
       end
     end
@@ -34,7 +34,7 @@ describe AnalysesController, :type => :controller do
         before(:all) do
           RSpec::Mocks.with_temporary_scope do
             allow(AnalysisJob).to receive(:perform_later).and_return(true)
-            @res = client.post('/analyses/learn', default_params.slice(*selected_keys))
+            @res = client.post('/analyses', default_params.slice(*selected_keys))
             @pbody = JSON.parse(@res.body) rescue nil
           end
         end
@@ -50,7 +50,7 @@ describe AnalysesController, :type => :controller do
             allow(AnalysisJob).to receive(:perform_later).and_return(true)
             params = default_params.dup
             error_keys.each {|key| params.merge!(key => 'invalid') }
-            @res = client.post('/analyses/learn', params)
+            @res = client.post('/analyses', params)
             @pbody = JSON.parse(@res.body) rescue nil
           end
         end

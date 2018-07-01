@@ -1,3 +1,16 @@
+# 3.1.0 (2018/06/25)
+- [ADD] URL input form to get race data from remote server
+
+# 3.0.0 (2018/06/05)
+- [ADD] management view for prediction
+
+# 2.2.1 (2018/04/03)
+- [ADD] grade, weight_diff and month as features
+
+# 2.2.0 (2018/04/02)
+- [UPDATE] mail body
+- [ADD] attachment for training data
+
 # 2.1.1 (2018/01/21)
 - [REMOVE] scripts except analyzing
 
