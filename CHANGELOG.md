@@ -1,3 +1,7 @@
+# 3.1.1 (2018/08/02)
+- [FIX] test data attribute to display URL
+- [FIX] bug to remove tmp directory
+
 # 3.1.0 (2018/06/25)
 - [ADD] URL input form to get race data from remote server
 

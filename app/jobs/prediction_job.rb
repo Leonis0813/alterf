@@ -7,6 +7,7 @@ class PredictionJob < ActiveJob::Base
   def perform(prediction_id)
     prediction = Prediction.find(prediction_id)
     data_dir = "#{Rails.root}/tmp/files/#{prediction_id}"
+    test_data = prediction.test_data
     if prediction.test_data.match(URI::regexp)
       begin
         generate_test_data(prediction.test_data, "#{data_dir}/#{TEST_DATA_FILE_NAME}")
@@ -14,13 +15,13 @@ class PredictionJob < ActiveJob::Base
         PredictionMailer.finished(prediction, false).deliver_now
         raise e
       end
-      prediction.test_data = TEST_DATA_FILE_NAME
+      test_data = TEST_DATA_FILE_NAME
     end
-    args = [prediction_id, prediction.model, prediction.test_data]
+    args = [prediction_id, prediction.model, test_data]
     ret = system "Rscript #{Rails.root}/scripts/predict.r #{args.join(' ')}"
-    FileUtils.rm_rf(data_dir)
     prediction.update!(:state => 'completed')
     PredictionMailer.finished(prediction, ret).deliver_now
+    FileUtils.rm_rf(data_dir)
   end
 
   private
