@@ -18,9 +18,9 @@ class PredictionJob < ActiveJob::Base
     end
     args = [prediction_id, prediction.model, prediction.test_data]
     ret = system "Rscript #{Rails.root}/scripts/predict.r #{args.join(' ')}"
-    FileUtils.rm_rf(data_dir)
     prediction.update!(:state => 'completed')
     PredictionMailer.finished(prediction, ret).deliver_now
+    FileUtils.rm_rf(data_dir)
   end
 
   private
