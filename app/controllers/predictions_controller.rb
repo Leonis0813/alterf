@@ -29,7 +29,7 @@ class PredictionsController < ApplicationController
       raise BadRequest.new(invalid_keys.map {|key| "invalid_param_#{key}" })
     end
 
-    prediction = Prediction.new(attributes.merge(:state => 'completed'))
+    prediction = Prediction.new(attributes.merge(:state => 'processing'))
     if prediction.save
       params.slice(*prediction_params).values.each do |value|
         if value.respond_to?(:original_filename)
