@@ -1,0 +1,5 @@
+<li class="page-item">
+  <span class="first">
+    <%= link_to_unless current_page.first?, raw(t 'views.pagination.first'), url, remote: remote, class: 'page-link' %>
+  </span>
+</li>
