@@ -1,6 +1,7 @@
-en:
+ja:
   views:
     pagination:
+      info: "%{total_count}件中%{from}〜%{to}件を表示"
       first: '◀◀'
       previous: '◀'
       next: '▶'
