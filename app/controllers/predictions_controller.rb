@@ -1,7 +1,7 @@
 class PredictionsController < ApplicationController
   def manage
     @prediction = Prediction.new
-    @predictions = Prediction.all.order(:created_at => :desc)
+    @predictions = Prediction.all.order(:created_at => :desc).page(params[:page])
   end
 
   def execute
