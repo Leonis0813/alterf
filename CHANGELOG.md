@@ -1,3 +1,6 @@
+# 3.2.0 (2018/08/04)
+- [ADD] paging to analysis and prediction view
+
 # 3.1.1 (2018/08/02)
 - [FIX] test data attribute to display URL
 - [FIX] bug to remove tmp directory
