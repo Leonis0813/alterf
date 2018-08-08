@@ -37,6 +37,7 @@ class PredictionJob < ActiveJob::Base
     File.open(output_path, 'w') do |f|
       f.puts "direction: #{parsed_body[:direction]}"
       f.puts "distance: #{parsed_body[:distance]}"
+      f.puts "grade: #{parsed_body[:grade]}"
       f.puts "place: #{parsed_body[:place]}"
       f.puts "round: #{parsed_body[:round]}"
       f.puts "track: #{parsed_body[:track]}"
