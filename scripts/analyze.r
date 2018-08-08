@@ -49,6 +49,7 @@ attributes <- paste(
   training_data$burden_weight,
   training_data$direction,
   training_data$distance,
+  training_data$grade,
   training_data$number,
   training_data$place,
   training_data$round,
