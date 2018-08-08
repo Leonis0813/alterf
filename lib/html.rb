@@ -9,6 +9,7 @@ class HTML
     place = html.scan(/<ul class="race_place.*?<\/ul>/).first
 
     race = {}
+    race[:grade] = race_data.match(/<h1>(.*?)</)[1].strip.match(/\((.*)\)$/)[1] rescue nil
     race[:track] = condition.first[0].sub('ダ', 'ダート')
     race[:direction] = condition.first[1]
     race[:distance] = condition.first.match(/(\d*)m$/)[1].to_i
@@ -24,9 +25,10 @@ class HTML
 
       entry = []
       entry << attributes[4].match(/(\d+)\z/)[1].to_i
+      entry << attributes[5].to_f
       entry << attributes[2].to_i
       entry << (attributes[14] == '計不' ? nil : attributes[14].match(/\A(\d+)/)[1].to_f rescue nil)
-      entry << attributes[5].to_f
+      entry << (attributes[14] == '計不' ? nil : attributes[14].match(/\((.+)\)$/)[1].to_f rescue nil)
 
       entries << entry
     end

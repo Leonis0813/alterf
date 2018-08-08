@@ -1,3 +1,6 @@
+# 3.2.1 (2018/08/08)
+- [ADD] grade and weight_diff as features
+
 # 3.2.0 (2018/08/04)
 - [ADD] paging to analysis and prediction view
 
