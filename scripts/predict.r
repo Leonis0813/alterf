@@ -25,7 +25,7 @@ colnames(test_data) <- c("age", "burden_weight", "number", "weight", "weight_dif
 
 test_data <- data.frame(
   age=as.integer(test_data$age),
-  burden_weight=as.numeric(test_data$burden_weight)
+  burden_weight=as.numeric(test_data$burden_weight),
   direction=factor(direction, levels = attributes(model)$levels_direction),
   distance=as.integer(distance),
   grade=factor(grade, levels = attributes(model)$levels_grade),
@@ -35,7 +35,7 @@ test_data <- data.frame(
   track=factor(track, levels = attributes(model)$levels_track),
   weather=factor(weather, levels = attributes(model)$levels_weather),
   weight=as.numeric(test_data$weight),
-  weight_diff=as.numeric(test_data$weight_diff),
+  weight_diff=as.numeric(test_data$weight_diff)
 )
 
 library(randomForest)
