@@ -3,6 +3,7 @@ require 'rails_helper'
 
 describe 'predictions/manage', :type => :view do
   per_page = 1
+  message_map = {'warning' => '実行中', 'success' => '完了'}
   row_xpath = '//div[@id="main-content"]/div[@class="row center-block"]'
 
   shared_context '予測ジョブを登録する' do |num|
@@ -119,12 +120,7 @@ describe 'predictions/manage', :type => :view do
 
     it '背景色が正しいこと', :if => expected_size > 0 do
       matched_data = @html.gsub("\n", '').match(/<tr\s*class='(?<color>.*?)'\s*>(?<data>.*?)<\/tr>/)
-      case matched_data[:color]
-      when 'warning'
-        is_asserted_by { matched_data[:data].include?('実行中') }
-      when 'success'
-        is_asserted_by { matched_data[:data].include?('完了') }
-      end
+      is_asserted_by { matched_data[:data].include?(message_map[matched_data[:color]]) }
     end
   end
 
