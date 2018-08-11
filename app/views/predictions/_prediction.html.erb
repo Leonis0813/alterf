@@ -2,9 +2,9 @@
   <td><%= prediction.created_at.strftime('%Y/%m/%d %H:%M:%S') %></td>
   <td><%= prediction.model %></td>
   <% if prediction.test_data.match(URI::regexp(%w[http https])) %>
-    <td><%= link_to prediction.test_data, prediction.test_data, :target => :_blank %></td>
+    <td class='td-test-data'><%= link_to prediction.test_data, prediction.test_data, :target => :_blank %></td>
   <% else %>
-    <td><%= prediction.test_data %></td>
+    <td class='td-test-data'><%= prediction.test_data %></td>
   <% end %>
-  <td><%= prediction.state == 'completed' ? '完了' : '実行中' %></td>
+  <td class='td-state'><%= prediction.state == 'completed' ? '完了' : '実行中' %></td>
 </tr>
