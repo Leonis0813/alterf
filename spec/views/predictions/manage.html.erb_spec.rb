@@ -3,12 +3,19 @@ require 'rails_helper'
 
 describe 'predictions/manage', :type => :view do
   per_page = 1
+  message_map = {'warning' => '実行中', 'success' => '完了'}
   row_xpath = '//div[@id="main-content"]/div[@class="row center-block"]'
 
   shared_context '予測ジョブを登録する' do |num|
     before(:all) do
-      param = {:model => 'model', :test_data => 'test_data'}
-      num.times { Prediction.create!(param.merge(:state => %w[processing completed].sample)) }
+      num.times do
+        param = {
+          :model => 'model',
+          :test_data => %w[ test_data http://example.com ].sample,
+          :state => %w[ processing completed ].sample,
+        }
+        Prediction.create!(param)
+      end
       @predictions = Prediction.order(:created_at => :desc).page(1)
     end
 
@@ -117,14 +124,26 @@ describe 'predictions/manage', :type => :view do
       expect(@html).to have_xpath(table_body_xpath, :count => expected_size)
     end
 
-    it '背景色が正しいこと', :if => expected_size > 0 do
-      matched_data = @html.gsub("\n", '').match(/<tr\s*class='(?<color>.*?)'\s*>(?<data>.*?)<\/tr>/)
-      case matched_data[:color]
-      when 'warning'
-        is_asserted_by { matched_data[:data].include?('実行中') }
-      when 'success'
-        is_asserted_by { matched_data[:data].include?('完了') }
+    it '背景色が正しいこと' do
+      html_lines = @html.lines.map(&:chomp).map(&:strip)
+
+      while true do
+        class_index = html_lines.index {|line| line.start_with?('<tr') }
+        state_index = html_lines.index {|line| line.match(/class='td-state'/) }
+        break unless class_index
+
+        html_class = html_lines[class_index].match(/class='(.*)'/)[1]
+        html_state = html_lines[state_index].match(/>(.*)</)[1]
+        is_asserted_by { html_state.include?(message_map[html_class]) }
+        html_lines = html_lines[state_index + 1 .. -1]
       end
+    end
+
+    it 'テストデータがURLの場合はリンクになっていること' do
+      html_lines = @html.lines.map(&:chomp).map(&:strip)
+      test_data_lines = html_lines.select {|line| line.match(URI::regexp(%w[http https])) }
+
+      is_asserted_by { test_data_lines.all? {|line| line.match(/<a target="_blank"/) } }
     end
   end
 
