@@ -1,3 +1,6 @@
+# 3.3.0 (2018/08/11)
+- [UPDATE] prediction view to create link if test data is URL
+
 # 3.2.1 (2018/08/08)
 - [ADD] grade and weight_diff as features
 
