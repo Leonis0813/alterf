@@ -1,7 +1,7 @@
 class AnalysesController < ApplicationController
   def manage
     @analysis = Analysis.new
-    @analyses = Analysis.all.order(:created_at => :desc)
+    @analyses = Analysis.all.order(:created_at => :desc).page(params[:page])
   end
 
   def execute

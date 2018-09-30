@@ -21,8 +21,11 @@
   </div>
 
   <div class='col-lg-8'>
-    <h4 style='padding: 10px'>ジョブ実行履歴</h4>
-
+    <h4 style='padding: 10px 0px'>ジョブ実行履歴</h4>
+    <% from = @predictions.total_count == 0 ? 0 : @predictions.offset_value + 1 %>
+    <% info = {:total_count => @predictions.total_count, :from => from, :to => @predictions.offset_value + @predictions.size} %>
+    <h4 style='padding: 10px 0px;display: inline'><%= t('views.pagination.info', info) %></h4>
+    <%= paginate @predictions %>
     <table class='table table-hover'>
       <thead>
         <% %w[ 実行開始日時 モデル テストデータ 状態 ].each do |header| %>

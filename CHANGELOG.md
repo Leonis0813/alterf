@@ -1,3 +1,16 @@
+# 3.3.0 (2018/08/11)
+- [UPDATE] prediction view to create link if test data is URL
+
+# 3.2.1 (2018/08/08)
+- [ADD] grade and weight_diff as features
+
+# 3.2.0 (2018/08/04)
+- [ADD] paging to analysis and prediction view
+
+# 3.1.1 (2018/08/02)
+- [FIX] test data attribute to display URL
+- [FIX] bug to remove tmp directory
+
 # 3.1.0 (2018/06/25)
 - [ADD] URL input form to get race data from remote server
 
