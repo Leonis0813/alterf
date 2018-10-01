@@ -1,3 +1,6 @@
+# 3.4.0 (2018/10/01)
+- [ADD] link to external service to fetch test data
+
 # 3.3.0 (2018/08/11)
 - [UPDATE] prediction view to create link if test data is URL
 
