@@ -145,8 +145,7 @@ describe 'predictions/manage', :type => :view do
     end
 
     it 'テストデータがURLの場合はリンクになっていること' do
-      html_lines = @html.lines.map(&:chomp).map(&:strip)
-      test_data_lines = html_lines.select do |line|
+      test_data_lines = @html.lines.map(&:chomp).map(&:strip).select do |line|
         line.match(/http:\/\/db.netkeiba.com\/race\/\d+/)
       end
 
