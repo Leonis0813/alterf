@@ -33,6 +33,11 @@ describe 'predictions/manage', :type => :view do
       expect(@html).to have_selector("#{form_panel_xpath}/h3", :text => 'レースを予測')
     end
 
+    it 'テストデータへのリンクが表示されていること' do
+      expect(@html).to have_selector("#{form_panel_xpath}/p")
+      expect(@html).to have_selector("#{form_panel_xpath}/p/a[href='http://db.netkeiba.com']", :text => 'こちら')
+    end
+
     form_xpath = [
       form_panel_xpath,
       'form[action="/predictions"][data-remote=true][method="post"][@class="new_prediction"]',
@@ -141,7 +146,9 @@ describe 'predictions/manage', :type => :view do
 
     it 'テストデータがURLの場合はリンクになっていること' do
       html_lines = @html.lines.map(&:chomp).map(&:strip)
-      test_data_lines = html_lines.select {|line| line.match(URI::regexp(%w[http https])) }
+      test_data_lines = html_lines.select do |line|
+        line.match(/http:\/\/db.netkeiba.com\/race\/\d+/)
+      end
 
       is_asserted_by { test_data_lines.all? {|line| line.match(/<a target="_blank"/) } }
     end
