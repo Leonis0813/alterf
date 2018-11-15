@@ -313,6 +313,7 @@ DEPENDENCIES
   resque
   rspec-power_assert
   rspec-rails
+  rubyzip
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
   selenium-webdriver (= 2.53.4)
@@ -325,4 +326,4 @@ DEPENDENCIES
   web-console (~> 2.0)
 
 BUNDLED WITH
-   1.16.2
+   1.16.6
