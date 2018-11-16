@@ -1,3 +1,6 @@
+# 3.5.0 (2018/11/17)
+- [UPDATE] mailer to compress output files
+
 # 3.4.0 (2018/10/01)
 - [ADD] link to external service to fetch test data
 
