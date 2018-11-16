@@ -6,7 +6,18 @@ class PredictionMailer < ApplicationMailer
     @prediction = prediction
     subject = is_success ? '予測が完了しました' : '予測中にエラーが発生しました'
     template_name = is_success ? 'success' : 'failer'
-    attachments['prediction.yml'] = File.read(File.join(Rails.root, "tmp/files/#{prediction.id}/prediction.yml"))
+    tmp_dir = File.join(Rails.root, "tmp/files/#{prediction.id}")
+
+    file_names = %w[ prediction.yml ]
+    zip_fie_name = File.join(tmp_dir, 'prediction.zip')
+
+    Zip::File.open(zip_file_name, Zip::File::CREATE) do |zip|
+      file_names.each do |file_name|
+        zip.add(file_name, File.join(tmp_dir, file_name))
+      end
+    end
+
+    attachments['prediction.zip'] = File.read(File.join(Rails.root, 'prediction.zip'))
     mail(:to => 'Leonis.0813@gmail.com', :subject => subject, :template_name => template_name)
   end
 end
