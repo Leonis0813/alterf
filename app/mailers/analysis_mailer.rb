@@ -17,7 +17,7 @@ class AnalysisMailer < ApplicationMailer
       end
     end
 
-    attachments['analysis.zip'] = File.read(File.join(tmp_dir, 'analysis.zip'))
+    attachments['analysis.zip'] = File.read(zip_file_name)
     mail(:to => 'Leonis.0813@gmail.com', :subject => subject, :template_name => template_name)
   end
 end

@@ -17,7 +17,7 @@ class PredictionMailer < ApplicationMailer
       end
     end
 
-    attachments['prediction.zip'] = File.read(File.join(Rails.root, 'prediction.zip'))
+    attachments['prediction.zip'] = File.read(zip_file_name)
     mail(:to => 'Leonis.0813@gmail.com', :subject => subject, :template_name => template_name)
   end
 end
