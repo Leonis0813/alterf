@@ -17,11 +17,16 @@ dbconnector <- dbConnect(
   port=as.integer(config$mysql$port)
 )
 
+sql <- "SELECT id FROM features WHERE `order` REGEXP '[0-9]+'"
+records <- dbGetQuery(dbconnector, sql)
+ids <- sample(records$id, as.integer(num_training_data))
+
 sql <- paste(
   "SELECT ",
   paste(config$features, collapse=","),
-  ", IF(`order` = '1', 1, 0) AS won FROM features WHERE `order` REGEXP '[0-9]+' LIMIT",
-  num_training_data
+  ", IF(`order` = '1', 1, 0) AS won FROM features WHERE id IN (",
+  paste(ids, collapse = ","),
+  ")"
 )
 training_data <- dbGetQuery(dbconnector, sql)
 training_data$direction <- as.factor(training_data$direction)
