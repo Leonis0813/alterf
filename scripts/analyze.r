@@ -17,18 +17,27 @@ dbconnector <- dbConnect(
   port=as.integer(config$mysql$port)
 )
 
-sql <- "SELECT id FROM features WHERE `order` REGEXP '[0-9]+'"
+sql <- "SELECT race_id FROM features WHERE `order` = '1'"
 records <- dbGetQuery(dbconnector, sql)
-ids <- sample(records$id, as.integer(num_training_data))
+
+race_ids <- records$race_id
+if(length(race_ids) >= as.integer(num_training_data) / 2) {
+  race_ids <- sample(race_ids, as.integer(num_training_data) / 2)
+}
 
 sql <- paste(
   "SELECT ",
   paste(config$features, collapse=","),
-  ", IF(`order` = '1', 1, 0) AS won FROM features WHERE id IN (",
-  paste(ids, collapse = ","),
+  ", IF(`order` = '1', 1, 0) AS won FROM features WHERE `order` REGEXP '[0-9]+' AND race_id IN (",
+  paste(race_ids, collapse = ","),
   ")"
 )
 training_data <- dbGetQuery(dbconnector, sql)
+positive <- training_data[training_data$won==1,]
+negative <- training_data[training_data$won==0,]
+negative <- negative[sample(nrow(negative), nrow(positive)), ]
+training_data <- rbind(positive, negative)
+
 training_data$direction <- as.factor(training_data$direction)
 training_data$grade <- as.factor(training_data$grade)
 training_data$place <- as.factor(training_data$place)
