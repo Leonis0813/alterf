@@ -33,8 +33,39 @@ sql <- paste(
   ")"
 )
 training_data <- dbGetQuery(dbconnector, sql)
-positive <- training_data[training_data$won==1,]
-negative <- training_data[training_data$won==0,]
+splited_data <- split(training_data, training_data$race_id)
+
+racewise_feature <- c("burden_weight", "weight", "weight_diff")
+scaled_data <- unsplit(
+  lapply(splited_data,
+    function(rw) {
+      data.frame(
+        won = rw$won,
+        age = rw$age,
+        direction = rw$direction,
+        distance = rw$distance,
+        grade = rw$grade,
+        number = rw$number,
+        place = rw$place,
+        round = rw$round,
+        track = rw$track,
+        weather = rw$weather,
+        scale(rw[,racewise_feature])
+      )
+    }
+  ),
+  training_data$race_id
+)
+
+scaled_data <- scaled_data[!is.na(scaled_data$burden_weight),]
+scaled_data <- scaled_data[!is.na(scaled_data$weight),]
+scaled_data <- scaled_data[!is.na(scaled_data$weight_diff),]
+scaled_data <- scaled_data[!is.nan(scaled_data$burden_weight),]
+scaled_data <- scaled_data[!is.nan(scaled_data$weight),]
+scaled_data <- scaled_data[!is.nan(scaled_data$weight_diff),]
+
+positive <- scaled_data[scaled_data$won==1,]
+negative <- scaled_data[scaled_data$won==0,]
 negative <- negative[sample(nrow(negative), nrow(positive)), ]
 training_data <- rbind(positive, negative)
 
@@ -44,6 +75,10 @@ training_data$place <- as.factor(training_data$place)
 training_data$track <- as.factor(training_data$track)
 training_data$weather <- as.factor(training_data$weather)
 training_data$won <- as.factor(training_data$won)
+
+if(nlevels(training_data$grade) <= 1) {
+  training_data <- training_data[, colnames(training_data) != "grade"]
+}
 
 library(randomForest)
 model <- randomForest(won~., data=training_data, ntree=ntree, mtry=mtry, na.action="na.omit")
