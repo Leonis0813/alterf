@@ -3,7 +3,7 @@
     <div id='new-analysis' class='well tab-pane active'>
       <h3>レースを分析</h3>
       <%= form_for @analysis, {:url => analyses_path, :remote => true} do |f| %>
-        <% {:num_data => '学習データ数', :num_tree => '決定木の数', :num_feature => '特徴量の数'}.each do |param, text| %>
+        <% {:num_data => '学習データ数', :num_tree => '決定木の数'}.each do |param, text| %>
           <div class='form-group'>
             <%= f.label param, text %><br>
             <%= f.text_field param, {:class => 'form-control', :name => param, :required => true} %>
