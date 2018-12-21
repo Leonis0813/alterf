@@ -21,6 +21,6 @@ class AnalysesController < ApplicationController
   private
 
   def analysis_params
-    %i[ num_data num_tree num_feature ]
+    %i[ num_data num_tree ]
   end
 end
