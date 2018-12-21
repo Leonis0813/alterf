@@ -2,7 +2,7 @@
 require 'rails_helper'
 
 describe AnalysesController, :type => :controller do
-  default_params = {:num_data => 1000, :num_tree => 100, :num_feature => 10, :state => 'processing'}
+  default_params = {:num_data => 1000, :num_tree => 100}
 
   describe '正常系' do
     before(:all) do
@@ -13,7 +13,7 @@ describe AnalysesController, :type => :controller do
       end
     end
 
-    after(:all) { Analysis.where(default_params).last.destroy }
+    after(:all) { Analysis.destroy_all }
 
     it_behaves_like 'ステータスコードが正しいこと', '200'
 
@@ -23,7 +23,7 @@ describe AnalysesController, :type => :controller do
   end
 
   describe '異常系' do
-    param_keys = default_params.keys - [:state]
+    param_keys = default_params.keys
     test_cases = [].tap do |tests|
       (param_keys.size - 1).times {|i| tests << param_keys.combination(i + 1).to_a }
     end.flatten(1)
@@ -39,9 +39,8 @@ describe AnalysesController, :type => :controller do
           end
         end
 
-        it '400エラーが返ること' do
-          is_asserted_by { @res.status == 400 }
-        end
+        it_behaves_like 'ステータスコードが正しいこと', '400'
+        it_behaves_like 'エラーコードが正しいこと', error_keys.map {|key| "absent_param_#{key}" }
       end
 
       context "#{error_keys.join(',')}が不正な場合" do
@@ -55,9 +54,8 @@ describe AnalysesController, :type => :controller do
           end
         end
 
-        it '400エラーが返ること' do
-          is_asserted_by { @res.status == 400 }
-        end
+        it_behaves_like 'ステータスコードが正しいこと', '400'
+        it_behaves_like 'エラーコードが正しいこと', error_keys.map {|key| "invalid_param_#{key}" }
       end
     end
   end
