@@ -1,3 +1,6 @@
+# 3.6.0 (2018/12/22)
+- [UPDATE] analysis algorithm to tune feature size automatically
+
 # 3.5.1 (2018/12/16)
 - [UPDATE] analysis script to improve precision
 
