@@ -22,7 +22,6 @@ describe 'ブラウザで分析する', :type => :request do
     before(:all) do
       @driver.find_element(:id, 'analysis_num_data').send_keys('invalid')
       @driver.find_element(:id, 'analysis_num_tree').send_keys(1)
-      @driver.find_element(:id, 'analysis_num_feature').send_keys(1)
       @driver.find_element(:xpath, '//form/input[@value="実行"]').click
       @wait.until { @driver.find_element(:class, 'modal-body').displayed? }
     end

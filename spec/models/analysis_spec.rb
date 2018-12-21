@@ -15,8 +15,23 @@ describe Analysis, :type => :model do
 
   describe '#validates' do
     describe '正常系' do
-      include_context 'Analysisオブジェクトを検証する', {:num_data => 1, :num_tree => 1, :num_feature => 1, :state => 'processing'}
-      it_behaves_like '検証結果が正しいこと', true
+      valid_params = {
+        :num_data => [1],
+        :num_tree => [1],
+        :num_feature => [1, nil],
+        :state => %w[ processing completed ],
+      }
+
+      test_cases = CommonHelper.generate_test_case(valid_params).select do |test_case|
+        test_case.keys == valid_params.keys
+      end
+
+      test_cases.each do |params|
+        context "フォームに#{params.keys.join(',')}を指定した場合" do
+          include_context 'Analysisオブジェクトを検証する', params
+          it_behaves_like '検証結果が正しいこと', true
+        end
+      end
     end
 
     describe '異常系' do

@@ -2,7 +2,6 @@ args = commandArgs(trailingOnly=T)
 id <- args[1]
 num_training_data <- args[2]
 ntree <- as.integer(args[3])
-mtry <- as.integer(args[4])
 
 library(yaml)
 config <- yaml.load_file("scripts/settings.yml")
@@ -33,6 +32,14 @@ sql <- paste(
   ")"
 )
 training_data <- dbGetQuery(dbconnector, sql)
+training_data$race_id <- as.factor(training_data$race_id)
+training_data$direction <- as.factor(training_data$direction)
+training_data$grade[is.na(training_data$grade)] <- "N"
+training_data$grade <- as.factor(training_data$grade)
+training_data$place <- as.factor(training_data$place)
+training_data$track <- as.factor(training_data$track)
+training_data$weather <- as.factor(training_data$weather)
+training_data$won <- as.factor(training_data$won)
 splited_data <- split(training_data, training_data$race_id)
 
 racewise_feature <- c("burden_weight", "weight", "weight_diff")
@@ -56,7 +63,6 @@ scaled_data <- unsplit(
   ),
   training_data$race_id
 )
-
 scaled_data <- scaled_data[!is.na(scaled_data$burden_weight),]
 scaled_data <- scaled_data[!is.na(scaled_data$weight),]
 scaled_data <- scaled_data[!is.na(scaled_data$weight_diff),]
@@ -69,19 +75,9 @@ negative <- scaled_data[scaled_data$won==0,]
 negative <- negative[sample(nrow(negative), nrow(positive)), ]
 training_data <- rbind(positive, negative)
 
-training_data$direction <- as.factor(training_data$direction)
-training_data$grade <- as.factor(training_data$grade)
-training_data$place <- as.factor(training_data$place)
-training_data$track <- as.factor(training_data$track)
-training_data$weather <- as.factor(training_data$weather)
-training_data$won <- as.factor(training_data$won)
-
-if(nlevels(training_data$grade) <= 1) {
-  training_data <- training_data[, colnames(training_data) != "grade"]
-}
-
 library(randomForest)
-model <- randomForest(won~., data=training_data, ntree=ntree, mtry=mtry, na.action="na.omit")
+model <- tuneRF(x=training_data[, colnames(training_data) != "won"], y=training_data$won, ntreeTry=ntree, doBest=T)
+
 attributes(model)$levels_direction <- levels(training_data$direction)
 attributes(model)$levels_grade <- levels(training_data$grade)
 attributes(model)$levels_place <- levels(training_data$place)
@@ -91,7 +87,7 @@ attributes(model)$levels_weather <- levels(training_data$weather)
 filename <- paste("tmp", "files", id, "analysis.yml", sep="/")
 write(paste("num_of_training_data:", num_training_data), file=filename)
 write(paste("ntree:", ntree), file=filename, append=T)
-write(paste("mtry:", mtry), file=filename, append=T)
+write(paste("mtry:", model$mtry), file=filename, append=T)
 write("training_data:", file=filename, append=T)
 attributes <- paste(
   training_data$age,
