@@ -1,3 +1,6 @@
+# 3.5.2 (2018/12/21)
+- [UPDATE] gems
+
 # 3.5.1 (2018/12/16)
 - [UPDATE] analysis script to improve precision
 
