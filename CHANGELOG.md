@@ -1,3 +1,6 @@
+# 3.6.1 (2018/12/22)
+- [UPDATE] gems
+
 # 3.6.0 (2018/12/22)
 - [UPDATE] analysis algorithm to tune feature size automatically
 
