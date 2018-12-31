@@ -1,3 +1,21 @@
+# 3.6.2 (2018/12/23)
+- [UPDATE] gems
+
+# 3.6.1 (2018/12/22)
+- [UPDATE] gems
+
+# 3.6.0 (2018/12/22)
+- [UPDATE] analysis algorithm to tune feature size automatically
+
+# 3.5.1 (2018/12/16)
+- [UPDATE] analysis script to improve precision
+
+# 3.5.0 (2018/11/17)
+- [UPDATE] mailer to compress output files
+
+# 3.4.0 (2018/10/01)
+- [ADD] link to external service to fetch test data
+
 # 3.3.0 (2018/08/11)
 - [UPDATE] prediction view to create link if test data is URL
 

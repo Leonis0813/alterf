@@ -7,7 +7,7 @@ describe 'analyses/manage', :type => :view do
 
   shared_context '分析ジョブを登録する' do |num|
     before(:all) do
-      param = {:num_data => 10000, :num_tree => 100, :num_feature => 100}
+      param = {:num_data => 10000, :num_tree => 100}
       num.times { Analysis.create!(param.merge(:state => %w[processing completed].sample)) }
       @analyses = Analysis.order(:created_at => :desc).page(1)
     end
@@ -31,7 +31,7 @@ describe 'analyses/manage', :type => :view do
       'form[action="/analyses"][data-remote=true][method="post"][@class="new_analysis"]',
     ].join('/')
 
-    %w[ num_data num_tree num_feature ].each do |param|
+    %w[ num_data num_tree ].each do |param|
       input_xpath = "#{form_xpath}/div[@class='form-group']"
 
       it "analysis_#{param}を含む<label>タグがあること" do
