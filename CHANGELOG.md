@@ -1,3 +1,6 @@
+# 3.7.1 (2019/01/13)
+- [UPDATE] gems
+
 # 3.7.0 (2019/01/06)
 - [ADD] rebuild button to analysis view
 
