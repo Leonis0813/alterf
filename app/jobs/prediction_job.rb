@@ -30,7 +30,7 @@ class PredictionJob < ActiveJob::Base
     require "#{Rails.root}/lib/html"
 
     parsed_url = URI.parse(url)
-    res = Net::HTTP.start(parsed_url.host, parsed_url.port) do |http|
+    res = Net::HTTP.start(parsed_url.host, parsed_url.port, :use_ssl => true) do |http|
       http.request Net::HTTP::Get.new(parsed_url)
     end
     parsed_body = HTML.parse(res.body)
