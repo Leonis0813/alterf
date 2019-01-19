@@ -31,7 +31,7 @@ class PredictionJob < ActiveJob::Base
     res = Net::HTTP.start(parsed_url.host, parsed_url.port, :use_ssl => true) do |http|
       http.request Net::HTTP::Get.new(parsed_url)
     end
-    html = Nokogiri::HTML.parse(res.body)
+    html = Nokogiri::HTML.parse(res.body.encode('UTF-8', 'EUC-JP'))
     feature = extract_feature(html)
 
     File.open(output_path, 'w') do |f|
@@ -58,12 +58,11 @@ class PredictionJob < ActiveJob::Base
       feature[:track] = track[0].sub('ダ', 'ダート')
       feature[:direction] = track[1]
       feature[:distance] = track.match(/(\d*)m/)[1].to_i
-      feature[:weather] = weather.match(/天候 : (.*)/)[1]
-
+      feature[:weather] = weather.match(/天候 : (.*)/)[1][0]
       feature[:grade] = race_data.search('h1').text.match(/\((.*)\)$/).try(:[], 1)
       feature[:place] = html.xpath('//ul[contains(@class, "race_place")]').first
                         .children[1].text.match(/<a.*class="active">(.*?)<\/a>/)[1]
-      feaure[:round] = race_data.search('dt').text.strip.match(/\A(\d*) R\z/)[1].to_i
+      feature[:round] = race_data.search('dt').text.strip.match(/^(\d*) R$/)[1].to_i
 
       _, *data = race_data.xpath('//table[contains(@class, "race_table")]').search('tr')
       feature[:test_data] = data.map do |entry|
