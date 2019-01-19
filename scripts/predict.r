@@ -15,6 +15,7 @@ data_size <- length(data$test_data)
 distance <- c(rep(data$distance, data_size))
 direction <- c(rep(data$direction, data_size))
 grade <- c(rep(data$grade, data_size))
+grade[is.null(grade)] <- "N"
 place <- c(rep(data$place, data_size))
 round <- c(rep(data$round, data_size))
 track <- c(rep(data$track, data_size))
@@ -41,7 +42,6 @@ test_data <- data.frame(
 library(randomForest)
 result <- predict(model, test_data)
 
-timestamp <- format(Sys.time(), "%Y%m%d%H%M%S")
 for(i in 1:length(result)) {
     write(paste(i, ": ", result[i], sep=""), file=paste("tmp", "files", id, "prediction.yml", sep="/"), append=T)
 }
