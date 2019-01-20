@@ -1,3 +1,6 @@
+# 3.7.5 (2019/01/20)
+- [FIX] bug due to nbsp
+
 # 3.7.4 (2019/01/19)
 - [FIX] bug for generating test data
 - [UPDATE] parser to use Nokogiri
