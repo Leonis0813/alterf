@@ -1,3 +1,6 @@
+# 3.7.6 (2019/02/02)
+- [UPDATE] ruby version to 2.3.7
+
 # 3.7.5 (2019/01/20)
 - [FIX] bug due to nbsp
 
