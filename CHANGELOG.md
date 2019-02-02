@@ -1,3 +1,6 @@
+# 3.7.7 (2019/02/03)
+- [UPDATE] rails version to 4.x
+
 # 3.7.6 (2019/02/02)
 - [UPDATE] ruby version to 2.3.7
 
