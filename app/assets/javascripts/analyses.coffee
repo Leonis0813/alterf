@@ -16,6 +16,9 @@ $ ->
     bootbox.alert({
       title: 'エラーが発生しました',
       message: '入力値を見直してください',
+      callback: ->
+        $('.btn-submit').prop('disabled', false)
+        return
     })
     return
 

@@ -1,3 +1,6 @@
+# 3.7.8 (2019/02/04)
+- [UPDATE] submit button not to push twice
+
 # 3.7.7 (2019/02/03)
 - [UPDATE] rails version to 4.x
 
