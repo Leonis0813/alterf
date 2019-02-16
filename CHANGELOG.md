@@ -1,3 +1,6 @@
+# 3.7.9 (2019/02/16)
+- [UPDATE] gems
+
 # 3.7.8 (2019/02/04)
 - [UPDATE] submit button not to push twice
 
