@@ -17,7 +17,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
-gem 'unicorn'
+gem 'unicorn', '~> 5.4.0'
 gem 'kaminari'
 gem 'rubyzip'
 
