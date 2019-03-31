@@ -6,6 +6,9 @@ $ ->
     bootbox.alert({
       title: '予測を開始しました',
       message: '終了後、メールにて結果を通知します',
+      callback: ->
+        $('.btn-submit').prop('disabled', false)
+        return
     })
     return
 
@@ -13,9 +16,13 @@ $ ->
     bootbox.alert({
       title: 'エラーが発生しました',
       message: '入力値を見直してください',
+      callback: ->
+        $('.btn-submit').prop('disabled', false)
+        return
     })
     return
 
   $('input[name="type"]:radio').on 'change', ->
     $('#prediction_test_data').get(0).type = $(this).val()
+    return
   return

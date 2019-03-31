@@ -104,19 +104,20 @@ describe 'analyses/manage', :type => :view do
       end
     end
 
+    it '再実行ボタンが配置されている列があること' do
+      xpath = "#{table_panel_xpath}/table[@class='table table-hover']/thead/th[@class='rebuild']"
+      expect(@html).to have_selector(xpath, :text => '')
+    end
+
     it 'データの数が正しいこと' do
       table_body_xpath = "#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr"
       expect(@html).to have_xpath(table_body_xpath, :count => expected_size)
     end
 
     it '背景色が正しいこと', :if => expected_size > 0 do
-      matched_data = @html.gsub("\n", '').match(/<tr\s*class='(?<color>.*?)'\s*>(?<data>.*?)<\/tr>/)
-      case matched_data[:color]
-      when 'warning'
-        is_asserted_by { matched_data[:data].include?('実行中') }
-      when 'success'
-        is_asserted_by { matched_data[:data].include?('完了') }
-      end
+      matched_data = @html.gsub("\n", '').match(/<td\s*class='(?<color>(warning|success))'\s*>(?<state>(実行中|完了))<\/td>/)
+      expected = {'warning' => '実行中', 'success' => '完了'}
+      is_asserted_by { expected[matched_data[:color]] == matched_data[:state] }
     end
   end
 

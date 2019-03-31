@@ -1,3 +1,43 @@
+# 3.7.11 (2019/03/30)
+- [UPDATE] gems
+
+# 3.7.10 (2019/03/02)
+- [UPDATE] gems
+
+# 3.7.9 (2019/02/16)
+- [UPDATE] gems
+
+# 3.7.8 (2019/02/04)
+- [UPDATE] submit button not to push twice
+
+# 3.7.7 (2019/02/03)
+- [UPDATE] rails version to 4.x
+
+# 3.7.6 (2019/02/02)
+- [UPDATE] ruby version to 2.3.7
+
+# 3.7.5 (2019/01/20)
+- [FIX] bug due to nbsp
+
+# 3.7.4 (2019/01/19)
+- [FIX] bug for generating test data
+- [UPDATE] parser to use Nokogiri
+
+# 3.7.3 (2019/01/18)
+- [UPDATE] gems
+
+# 3.7.2 (2019/01/14)
+- [UPDATE] gems
+
+# 3.7.1 (2019/01/13)
+- [UPDATE] gems
+
+# 3.7.0 (2019/01/06)
+- [ADD] rebuild button to analysis view
+
+# 3.6.3 (2019/01/05)
+- [UPDATE] gems
+
 # 3.6.2 (2018/12/23)
 - [UPDATE] gems
 
