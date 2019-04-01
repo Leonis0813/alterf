@@ -1,3 +1,6 @@
+# 4.0.1 (2019/04/21)
+- [UPDATE] gems
+
 # 4.0.0 (2019/04/20)
 - [ADD] new feature to evaluate model
 
