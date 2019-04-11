@@ -1,0 +1,40 @@
+<div class='row center-block'>
+  <div class='col-lg-4'>
+    <div id='new-evaluation' class='well tab-pane active'>
+      <h3>モデルを評価</h3>
+      <%= form_for @evaluation, :html => {:multipart => true}, :url => evaluations_path, :remote => true do |f| %>
+        <div class='form-group'>
+          <%= f.label :model, 'モデル' %><br>
+          <%= f.file_field :model, {:class => 'form-control', :name => :model, :required => true} %>
+        </div>
+        <div class='form-group'>
+          <%= f.label :test_data, 'テストデータ' %>
+          <label><%= radio_button_tag :type, 'file', :checked %> ファイル</label>
+          <label><%= radio_button_tag :type, 'url' %> URL</label>
+          <br>
+          <%= f.file_field :test_data, {:class => 'form-control', :name => :test_data, :required => true} %>
+        </div>
+        <%= f.submit '実行', :class => 'btn btn-primary btn-sm btn-submit' %>
+        <%= f.submit 'リセット', :type => 'reset', :class => 'btn btn-default btn-sm' %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class='col-lg-8'>
+    <h4 style='padding: 10px 0px'>ジョブ実行履歴</h4>
+    <% from = @evaluations.total_count == 0 ? 0 : @evaluations.offset_value + 1 %>
+    <% info = {:total_count => @evaluations.total_count, :from => from, :to => @evaluations.offset_value + @evaluations.size} %>
+    <h4 style='padding: 10px 0px;display: inline'><%= t('views.pagination.info', info) %></h4>
+    <%= paginate @evaluations %>
+    <table class='table table-hover'>
+      <thead>
+        <% %w[ 実行開始日時 モデル テストデータ 状態 ].each do |header| %>
+          <th><%= header %></th>
+        <% end %>
+      </thead>
+      <tbody>
+        <%= render @evaluations %>
+      </tbody>
+    </table>
+  </div>
+</div>
