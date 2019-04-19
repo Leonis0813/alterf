@@ -1,3 +1,5 @@
+require_relative '../../lib/clients/netkeiba_client'
+
 class PredictionJob < ActiveJob::Base
   queue_as :alterf
 
@@ -9,8 +11,9 @@ class PredictionJob < ActiveJob::Base
     if test_data.match(URI::regexp)
       begin
         race = NetkeibaClient.new.get_race(test_data)
-        file = File.open("#{data_dir}/#{Settings.prediction.tmp_file_name}", 'w')
-        YAML.dump(race, file)
+        File.open("#{data_dir}/#{Settings.prediction.tmp_file_name}", 'w') do |file|
+          YAML.dump(race.stringify_keys, file)
+        end
       rescue Exception => e
         PredictionMailer.finished(prediction, false).deliver_now
         raise e

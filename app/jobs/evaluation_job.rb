@@ -1,3 +1,5 @@
+require_relative '../../lib/clients/netkeiba_client'
+
 class EvaluationJob < ActiveJob::Base
   queue_as :alterf
 
@@ -9,8 +11,9 @@ class EvaluationJob < ActiveJob::Base
 
     client.get_race_top.each do |race_id|
       race = client.get_race("#{Settings.netkeiba.base_url}/race/#{race_id}")
-      file = File.open("#{data_dir}/#{Settings.prediction.tmp_file_name}", 'w')
-      YAML.dump(race, file)
+      File.open("#{data_dir}/#{Settings.prediction.tmp_file_name}", 'w') do
+        YAML.dump(race.stringify_keys, file)
+      end
 
       args = [evaluation_id, evaluation.model, Settings.evaluation.tmp_file_name]
       ret = system "Rscript #{Rails.root}/scripts/predict.r #{args.join(' ')}"
