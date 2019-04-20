@@ -21,6 +21,9 @@ class EvaluationJob < ActiveJob::Base
     end
 
     evaluation.update!(:state => 'completed')
+
+    FileUtils.rm_f("#{data_dir}/#{Settings.prediction.tmp_file_name}")
+    FileUtils.rm_f("#{data_dir}/#{evaluation.model}")
     EvaluationMailer.finished(evaluation, true).deliver_now
     FileUtils.rm_rf(data_dir)
   end
