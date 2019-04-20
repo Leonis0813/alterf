@@ -17,7 +17,7 @@ class NetkeibaClient < HTTPClient
       feature[:track] = track[0].sub('ダ', 'ダート')
       feature[:direction] = track[1]
       feature[:distance] = track.match(/(\d*)m/)[1].to_i
-      feature[:weather] = weather.match(/天候 : (.*)/)[1]
+      feature[:weather] = weather.match(/天候 : (.*)/)[1].strip
       feature[:grade] = race_data.search('h1').text.match(/\((.*)\)$/).try(:[], 1)
       feature[:place] = html.xpath('//ul[contains(@class, "race_place")]').first
                         .children[1].text.match(/<a.*class="active">(.*?)<\/a>/)[1]
