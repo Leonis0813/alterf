@@ -1,0 +1,8 @@
+netkeiba:
+  base_url: 'https://db.netkeiba.com'
+
+prediction:
+  tmp_file_name: 'test_data.yml'
+
+evaluation:
+  tmp_file_name: 'test_data.yml'
