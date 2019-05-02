@@ -38,4 +38,6 @@ group :development, :test do
   gem 'rspec-power_assert'
   gem 'selenium-webdriver', '2.53.4'
   gem 'spring'
+  gem 'simplecov'
+  gem 'simplecov-rcov'
 end
