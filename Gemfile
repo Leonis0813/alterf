@@ -24,6 +24,8 @@ gem 'uglifier', '>= 1.3.0'
 gem 'unicorn', '~> 5.4.0'
 
 group :development do
+  gem 'rubocop'
+  gem 'rubocop-performance'
   gem 'web-console', '~> 2.0'
 end
 
