@@ -13,7 +13,7 @@ class NetkeibaClient < HTTPClient
     {}.tap do |feature|
       race_data = html.xpath('//dl[contains(@class, "racedata")]')
 
-      track, weather, _ = race_data.search('span').text.split('/')
+      track, weather, = race_data.search('span').text.split('/')
       feature[:track] = track[0].sub('ダ', 'ダート')
       feature[:direction] = track[1]
       feature[:distance] = track.match(/(\d*)m/)[1].to_i
