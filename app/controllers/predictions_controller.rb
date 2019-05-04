@@ -30,22 +30,20 @@ class PredictionsController < ApplicationController
     end
 
     prediction = Prediction.new(attributes.merge(state: 'processing'))
-    if prediction.save
-      params.slice(*prediction_params).values.each do |value|
-        if value.respond_to?(:original_filename)
-          output_dir = "#{Rails.root}/tmp/files/#{prediction.id}"
-          FileUtils.mkdir_p(output_dir)
-          File.open("#{output_dir}/#{value.original_filename}", 'w+b') do |f|
-            f.write(value.read)
-          end
+    raise BadRequest, prediction.errors.messages.keys.map {|key| "invalid_param_#{key}" } unless prediction.save
+
+    params.slice(*prediction_params).values.each do |value|
+      if value.respond_to?(:original_filename)
+        output_dir = "#{Rails.root}/tmp/files/#{prediction.id}"
+        FileUtils.mkdir_p(output_dir)
+        File.open("#{output_dir}/#{value.original_filename}", 'w+b') do |f|
+          f.write(value.read)
         end
       end
-
-      PredictionJob.perform_later(prediction.id)
-      render status: :ok, json: {}
-    else
-      raise BadRequest, prediction.errors.messages.keys.map {|key| "invalid_param_#{key}" }
     end
+
+    PredictionJob.perform_later(prediction.id)
+    render status: :ok, json: {}
   end
 
   private

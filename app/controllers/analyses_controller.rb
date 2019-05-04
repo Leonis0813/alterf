@@ -10,12 +10,10 @@ class AnalysesController < ApplicationController
     raise BadRequest, absent_keys.map {|key| "absent_param_#{key}" } unless absent_keys.empty?
 
     analysis = Analysis.new(attributes.merge(state: 'processing'))
-    if analysis.save
-      AnalysisJob.perform_later(analysis.id)
-      render status: :ok, json: {}
-    else
-      raise BadRequest, analysis.errors.messages.keys.map {|key| "invalid_param_#{key}" }
-    end
+    raise BadRequest, analysis.errors.messages.keys.map {|key| "invalid_param_#{key}" } unless analysis.save
+
+    AnalysisJob.perform_later(analysis.id)
+    render status: :ok, json: {}
   end
 
   private

@@ -14,18 +14,16 @@ class EvaluationsController < ApplicationController
 
     attributes[:model] = model.original_filename
     evaluation = Evaluation.new(attributes.merge(state: 'processing'))
-    if evaluation.save
-      output_dir = "#{Rails.root}/tmp/files/#{evaluation.id}"
-      FileUtils.mkdir_p(output_dir)
-      File.open("#{output_dir}/#{model.original_filename}", 'w+b') do |f|
-        f.write(model.read)
-      end
+    raise BadRequest, evaluation.errors.messages.keys.map {|key| "invalid_param_#{key}" } unless evaluation.save
 
-      EvaluationJob.perform_later(evaluation.id)
-      render status: :ok, json: {}
-    else
-      raise BadRequest, evaluation.errors.messages.keys.map {|key| "invalid_param_#{key}" }
+    output_dir = "#{Rails.root}/tmp/files/#{evaluation.id}"
+    FileUtils.mkdir_p(output_dir)
+    File.open("#{output_dir}/#{model.original_filename}", 'w+b') do |f|
+      f.write(model.read)
     end
+
+    EvaluationJob.perform_later(evaluation.id)
+    render status: :ok, json: {}
   end
 
   private
