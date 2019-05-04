@@ -34,6 +34,6 @@ module Alterf
 
     config.active_job.queue_adapter = :resque
 
-    config.autoload_paths += %W(#{config.root}/lib/errors)
+    config.autoload_paths += ["#{config.root}/lib/errors"]
   end
 end
