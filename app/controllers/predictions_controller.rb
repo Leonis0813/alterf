@@ -33,12 +33,12 @@ class PredictionsController < ApplicationController
     raise BadRequest, prediction.errors.messages.keys.map {|key| "invalid_param_#{key}" } unless prediction.save
 
     params.slice(*prediction_params).values.each do |value|
-      if value.respond_to?(:original_filename)
-        output_dir = "#{Rails.root}/tmp/files/#{prediction.id}"
-        FileUtils.mkdir_p(output_dir)
-        File.open("#{output_dir}/#{value.original_filename}", 'w+b') do |f|
-          f.write(value.read)
-        end
+      next unless value.respond_to?(:original_filename)
+
+      output_dir = "#{Rails.root}/tmp/files/#{prediction.id}"
+      FileUtils.mkdir_p(output_dir)
+      File.open("#{output_dir}/#{value.original_filename}", 'w+b') do |f|
+        f.write(value.read)
       end
     end
 
