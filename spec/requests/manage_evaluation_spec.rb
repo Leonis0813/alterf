@@ -1,7 +1,7 @@
 # coding: utf-8
 require 'rails_helper'
 
-describe 'ブラウザで予測する', :type => :request do
+describe 'ブラウザで予測する', type: :request do
   include_context 'Webdriver起動'
 
   describe '評価画面を開く' do

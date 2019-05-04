@@ -1,13 +1,13 @@
 # coding: utf-8
 require 'rails_helper'
 
-describe PredictionsController, :type => :controller do
+describe PredictionsController, type: :controller do
   model = Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/model.txt')))
   test_data = {
-    :file => Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/test_data.txt'))),
-    :url => 'http://example.com',
+    file: Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/test_data.txt'))),
+    url: 'http://example.com',
   }
-  default_params = {:model => model, :test_data => test_data[:file]}
+  default_params = {model: model, test_data: test_data[:file]}
 
   describe '正常系' do
     %i[file url].each do |type|
@@ -15,7 +15,7 @@ describe PredictionsController, :type => :controller do
         before(:all) do
           RSpec::Mocks.with_temporary_scope do
             allow(PredictionJob).to receive(:perform_later).and_return(true)
-            @res = client.post('/predictions', default_params.merge(:test_data => test_data[type]))
+            @res = client.post('/predictions', default_params.merge(test_data: test_data[type]))
             @pbody = JSON.parse(@res.body) rescue nil
           end
         end
@@ -82,7 +82,7 @@ describe PredictionsController, :type => :controller do
         before(:all) do
           RSpec::Mocks.with_temporary_scope do
             allow(PredictionJob).to receive(:perform_later).and_return(true)
-            @res = client.post('/predictions', default_params.merge(:test_data => 'invalid_url'))
+            @res = client.post('/predictions', default_params.merge(test_data: 'invalid_url'))
             @pbody = JSON.parse(@res.body) rescue nil
           end
         end

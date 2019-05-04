@@ -1,7 +1,7 @@
 class PredictionsController < ApplicationController
   def manage
     @prediction = Prediction.new
-    @predictions = Prediction.all.order(:created_at => :desc).page(params[:page])
+    @predictions = Prediction.all.order(created_at: :desc).page(params[:page])
   end
 
   def execute
@@ -29,7 +29,7 @@ class PredictionsController < ApplicationController
       raise BadRequest, invalid_keys.map {|key| "invalid_param_#{key}" }
     end
 
-    prediction = Prediction.new(attributes.merge(:state => 'processing'))
+    prediction = Prediction.new(attributes.merge(state: 'processing'))
     if prediction.save
       params.slice(*prediction_params).values.each do |value|
         if value.respond_to?(:original_filename)
@@ -42,7 +42,7 @@ class PredictionsController < ApplicationController
       end
 
       PredictionJob.perform_later(prediction.id)
-      render :status => :ok, :json => {}
+      render status: :ok, json: {}
     else
       raise BadRequest, prediction.errors.messages.keys.map {|key| "invalid_param_#{key}" }
     end

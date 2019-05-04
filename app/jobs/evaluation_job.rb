@@ -20,7 +20,7 @@ class EvaluationJob < ActiveJob::Base
       FileUtils.mv("#{data_dir}/prediction.yml", "#{data_dir}/#{race_id}.yml")
     end
 
-    evaluation.update!(:state => 'completed')
+    evaluation.update!(state: 'completed')
 
     FileUtils.rm_f("#{data_dir}/#{Settings.prediction.tmp_file_name}")
     FileUtils.rm_f("#{data_dir}/#{evaluation.model}")

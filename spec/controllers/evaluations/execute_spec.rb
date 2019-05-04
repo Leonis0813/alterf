@@ -1,9 +1,9 @@
 # coding: utf-8
 require 'rails_helper'
 
-describe EvaluationsController, :type => :controller do
+describe EvaluationsController, type: :controller do
   model = Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/model.txt')))
-  default_params = {:model => model}
+  default_params = {model: model}
 
   describe '正常系' do
     before(:all) do
@@ -45,7 +45,7 @@ describe EvaluationsController, :type => :controller do
         before(:all) do
           RSpec::Mocks.with_temporary_scope do
             allow(EvaluationJob).to receive(:perform_later).and_return(true)
-            @res = client.post('/evaluations', {:model => 'invalid'})
+            @res = client.post('/evaluations', {model: 'invalid'})
             @pbody = JSON.parse(@res.body) rescue nil
           end
         end

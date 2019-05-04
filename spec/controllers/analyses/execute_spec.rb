@@ -1,8 +1,8 @@
 # coding: utf-8
 require 'rails_helper'
 
-describe AnalysesController, :type => :controller do
-  default_params = {:num_data => 1000, :num_tree => 100}
+describe AnalysesController, type: :controller do
+  default_params = {num_data: 1000, num_tree: 100}
 
   describe '正常系' do
     before(:all) do

@@ -1,7 +1,7 @@
 class AnalysesController < ApplicationController
   def manage
     @analysis = Analysis.new
-    @analyses = Analysis.all.order(:created_at => :desc).page(params[:page])
+    @analyses = Analysis.all.order(created_at: :desc).page(params[:page])
   end
 
   def execute
@@ -9,10 +9,10 @@ class AnalysesController < ApplicationController
     absent_keys = analysis_params - attributes.symbolize_keys.keys
     raise BadRequest, absent_keys.map {|key| "absent_param_#{key}" } unless absent_keys.empty?
 
-    analysis = Analysis.new(attributes.merge('state' => 'processing'))
+    analysis = Analysis.new(attributes.merge(state: 'processing'))
     if analysis.save
       AnalysisJob.perform_later(analysis.id)
-      render :status => :ok, :json => {}
+      render status: :ok, json: {}
     else
       raise BadRequest, analysis.errors.messages.keys.map {|key| "invalid_param_#{key}" }
     end

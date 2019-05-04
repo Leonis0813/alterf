@@ -11,10 +11,10 @@ class AnalysisJob < ActiveJob::Base
     yaml_file = File.join(output_dir, 'analysis.yml')
     if File.exists?(yaml_file)
       analysis_params = YAML.load_file(yaml_file)
-      analysis.update!(:num_feature => analysis_params['mtry'])
+      analysis.update!(num_feature: analysis_params['mtry'])
     end
 
-    analysis.update!(:state => 'completed')
+    analysis.update!(state: 'completed')
     AnalysisMailer.finished(analysis, ret).deliver_now
     FileUtils.rm_rf("#{Rails.root}/tmp/files/#{analysis_id}")
   end
