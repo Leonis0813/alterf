@@ -146,7 +146,7 @@ describe 'predictions/manage', type: :view do
 
     it 'テストデータがURLの場合はリンクになっていること' do
       test_data_lines = @html.lines.map(&:chomp).map(&:strip).select do |line|
-        line.match(/http:\/\/db.netkeiba.com\/race\/\d+/)
+        line.match(%r{http://db.netkeiba.com/race/\d+})
       end
 
       is_asserted_by { test_data_lines.all? {|line| line.match(/<a target="_blank"/) } }
