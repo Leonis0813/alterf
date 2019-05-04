@@ -20,7 +20,7 @@ class PredictionsController < ApplicationController
       test_data = attributes[:test_data]
       if test_data.respond_to?(:original_filename)
         attributes[:test_data] = test_data.original_filename
-      elsif not (test_data.kind_of?(String) and test_data.match(URI::regexp(%w[http https])))
+      elsif not (test_data.kind_of?(String) and test_data.match(URI.regexp(%w[http https])))
         keys << :test_data
       end
     end
