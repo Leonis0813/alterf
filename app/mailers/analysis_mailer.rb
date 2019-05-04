@@ -6,7 +6,7 @@ class AnalysisMailer < ApplicationMailer
     template_name = is_success ? 'success' : 'failer'
     tmp_dir = File.join(Rails.root, "tmp/files/#{analysis.id}")
 
-    file_names = %w[ analysis.yml model.rf ]
+    file_names = %w[analysis.yml model.rf]
     zip_file_name = File.join(tmp_dir, 'analysis.zip')
 
     Zip::File.open(zip_file_name, Zip::File::CREATE) do |zip|

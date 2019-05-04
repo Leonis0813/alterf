@@ -19,7 +19,7 @@ describe Analysis, type: :model do
         num_data: [1],
         num_tree: [1],
         num_feature: [1, nil],
-        state: %w[ processing completed ],
+        state: %w[processing completed],
       }
 
       test_cases = CommonHelper.generate_test_case(valid_params).select do |test_case|

@@ -11,7 +11,7 @@ describe 'evaluations/manage', type: :view do
       num.times do
         param = {
           model: 'model',
-          state: %w[ processing completed ].sample,
+          state: %w[processing completed].sample,
         }
         Evaluation.create!(param)
       end
@@ -38,7 +38,7 @@ describe 'evaluations/manage', type: :view do
     ].join('/')
     input_xpath = "#{form_xpath}/div[@class='form-group']"
 
-    %w[ model ].each do |param|
+    %w[model].each do |param|
       it "evaluation_#{param}を含む<label>タグがあること" do
         expect(@html).to have_selector("#{input_xpath}/label[for='evaluation_#{param}']")
       end
@@ -48,7 +48,7 @@ describe 'evaluations/manage', type: :view do
       end
     end
 
-    %w[ submit reset ].each do |type|
+    %w[submit reset].each do |type|
       it "typeが#{type}のボタンがあること" do
         expect(@html).to have_selector("#{form_xpath}/input[type='#{type}']")
       end
@@ -102,7 +102,7 @@ describe 'evaluations/manage', type: :view do
       expect(@html).to have_selector(xpath, text: I18n.t('views.pagination.last'))
     end
 
-    %w[ 実行開始日時 モデル 状態 ].each do |header|
+    %w[実行開始日時 モデル 状態].each do |header|
       it "ヘッダー(#{header})があること" do
         expect(@html).to have_selector("#{table_panel_xpath}/table[@class='table table-hover']/thead/th", text: header)
       end

@@ -29,6 +29,6 @@ class EvaluationsController < ApplicationController
   private
 
   def evaluation_params
-    %i[ model ]
+    %i[model]
   end
 end
