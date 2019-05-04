@@ -116,7 +116,7 @@ describe 'evaluations/manage', type: :view do
     it '背景色が正しいこと' do
       html_lines = @html.lines.map(&:chomp).map(&:strip)
 
-      while true do
+      while true
         class_index = html_lines.index {|line| line.start_with?('<tr') }
         state_index = html_lines.index {|line| line.match(/class='td-state'/) }
         break unless class_index
