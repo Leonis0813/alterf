@@ -15,10 +15,10 @@ class ResqueWorkerDaemon < DaemonSpawn::Base
   end
 end
 
-ResqueWorkerDaemon.spawn!({
+ResqueWorkerDaemon.spawn!(
   working_dir: Rails.root,
   pid_file: File.join(Rails.root, 'tmp', 'pids', 'worker.pid'),
   log_file: File.join(Rails.root, 'log', 'worker.log'),
   sync_log: true,
   singleton: true,
-})
+)

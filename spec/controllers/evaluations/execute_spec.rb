@@ -45,7 +45,7 @@ describe EvaluationsController, type: :controller do
         before(:all) do
           RSpec::Mocks.with_temporary_scope do
             allow(EvaluationJob).to receive(:perform_later).and_return(true)
-            @res = client.post('/evaluations', {model: 'invalid'})
+            @res = client.post('/evaluations', model: 'invalid')
             @pbody = JSON.parse(@res.body) rescue nil
           end
         end

@@ -15,7 +15,7 @@ describe Evaluation, type: :model do
 
   describe '#validates' do
     describe '正常系' do
-      include_context 'Evaluationオブジェクトを検証する', {model: 'model', state: 'processing'}
+      include_context 'Evaluationオブジェクトを検証する', model: 'model', state: 'processing'
       it_behaves_like '検証結果が正しいこと', true
     end
 
