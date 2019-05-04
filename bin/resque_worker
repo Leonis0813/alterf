@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require File.expand_path('../../config/application', __FILE__)
+require File.expand_path('../config/application', __dir__)
 Rails.application.require_environment!
 
 class ResqueWorkerDaemon < DaemonSpawn::Base

@@ -1,5 +1,5 @@
 namespace :analysis do
-  require File.expand_path('../../../config/application', __FILE__)
+  require File.expand_path('../../config/application', __dir__)
 
   desc 'Start learning'
   task :learn, [:num_training_data, :num_tree, :num_feature] => :environment do |task, args|
