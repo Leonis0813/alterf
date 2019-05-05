@@ -125,7 +125,7 @@ describe 'evaluations/manage', type: :view do
         html_class = html_lines[class_index].match(/class='(.*)'/)[1]
         html_state = html_lines[state_index].match(/>(.*)</)[1]
         is_asserted_by { html_state.include?(message_map[html_class]) }
-        html_lines = html_lines[state_index + 1 .. -1]
+        html_lines = html_lines[(state_index + 1)..-1]
       end
     end
   end
