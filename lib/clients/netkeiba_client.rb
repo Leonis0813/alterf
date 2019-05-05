@@ -15,7 +15,7 @@ class NetkeibaClient < HTTPClient
       race_data = html.xpath('//dl[contains(@class, "racedata")]')
 
       track, weather, = race_data.search('span').text.split('/')
-      feature.merge!{
+      feature.merge!(
         track: track[0].sub('ダ', 'ダート'),
         direction: track[1],
         distance: track.match(/(\d*)m/)[1].to_i,
@@ -24,7 +24,7 @@ class NetkeibaClient < HTTPClient
         place: html.xpath('//ul[contains(@class, "race_place")]').first
                    .children[1].text.match(%r{<a.*class="active">(.*?)</a>})[1],
         round: race_data.search('dt').text.strip.match(/^(\d*) R$/)[1].to_i,
-      }
+      )
 
       _, *data = race_data.xpath('//table[contains(@class, "race_table")]').search('tr')
       feature[:test_data] = data.map do |entry|

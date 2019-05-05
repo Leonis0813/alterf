@@ -122,7 +122,7 @@ describe 'analyses/manage', type: :view do
 
     it '背景色が正しいこと', if: expected_size > 0 do
       regexp =
-        %r{<td\s*class='(?<color>(warning|success))'\s*>(?<state>(実行中|完了))</td>})
+        %r{<td\s*class='(?<color>(warning|success))'\s*>(?<state>(実行中|完了))</td>}
       matched_data = @html.gsub("\n", '').match(regexp)
       expected = {'warning' => '実行中', 'success' => '完了'}
       is_asserted_by { expected[matched_data[:color]] == matched_data[:state] }
