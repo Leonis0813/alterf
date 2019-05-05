@@ -1,13 +1,13 @@
 # coding: utf-8
 
 class NetkeibaClient < HTTPClient
-  def get_race_top
+  def http_get_race_top
     res = HTTPClient.new.get("#{Settings.netkeiba.base_url}/?pid=race_top")
     html = Nokogiri::HTML.parse(res.body.encode('UTF-8', 'EUC-JP').gsub('&nbsp;', ' '))
     html.scan(%r{.*/race/(\d+)}).flatten
   end
 
-  def get_race(url)
+  def http_get_race(url)
     res = get(url)
     html = Nokogiri::HTML.parse(res.body.encode('UTF-8', 'EUC-JP').gsub('&nbsp;', ' '))
 

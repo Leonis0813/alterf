@@ -9,8 +9,8 @@ class EvaluationJob < ActiveJob::Base
 
     client = NetkeibaClient.new
 
-    client.get_race_top.each do |race_id|
-      race = client.get_race("#{Settings.netkeiba.base_url}/race/#{race_id}")
+    client.http_get_race_top.each do |race_id|
+      race = client.http_get_race("#{Settings.netkeiba.base_url}/race/#{race_id}")
       File.open("#{data_dir}/#{Settings.prediction.tmp_file_name}", 'w') do |file|
         YAML.dump(race.stringify_keys, file)
       end
