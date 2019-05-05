@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
     render status: :bad_request, json: e.errors
   end
 
-  rescue_from NotFound do |e|
+  rescue_from NotFound do
     head :not_found
   end
 end
