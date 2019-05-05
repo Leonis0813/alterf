@@ -145,9 +145,9 @@ describe 'evaluations/manage', type: :view do
     it_behaves_like 'ヘッダーが表示されていること'
     it_behaves_like '入力フォームが表示されていること'
     it_behaves_like 'ジョブ実行履歴が表示されていること',
-                      expected_size: 1,
-                      total: 10,
-                      from: 1,
-                      to: 1
+                    expected_size: 1,
+                    total: 10,
+                    from: 1,
+                    to: 1
   end
 end
