@@ -19,7 +19,7 @@ class PredictionsController < ApplicationController
       raise BadRequest, error_codes
     end
 
-    save_files
+    save_files(prediction.id)
     PredictionJob.perform_later(prediction.id)
     render status: :ok, json: {}
   end
@@ -46,11 +46,11 @@ class PredictionsController < ApplicationController
     raise BadRequest, error_codes
   end
 
-  def save_files
+  def save_files(prediction_id)
     params.slice(*prediction_params).values.each do |value|
       next unless value.respond_to?(:original_filename)
 
-      output_dir = "#{Rails.root}/tmp/files/#{prediction.id}"
+      output_dir = "#{Rails.root}/tmp/files/#{prediction_id}"
       FileUtils.mkdir_p(output_dir)
       File.open("#{output_dir}/#{value.original_filename}", 'w+b') do |f|
         f.write(value.read)

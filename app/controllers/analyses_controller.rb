@@ -5,7 +5,7 @@ class AnalysesController < ApplicationController
   end
 
   def execute
-    attributes = params.permit(*required_params)
+    attributes = params.permit(*analysis_params)
     check_absent_params(attributes, analysis_params)
 
     analysis = Analysis.new(attributes.merge(state: 'processing'))
