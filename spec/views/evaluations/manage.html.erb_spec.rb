@@ -29,7 +29,7 @@ describe 'evaluations/manage', type: :view do
       'div[@id="new-evaluation"]',
     ].join('/')
 
-    it 'タイトルが表示されていること'do
+    it 'タイトルが表示されていること' do
       expect(@html).to have_selector("#{form_panel_xpath}/h3", text: 'モデルを評価')
     end
 

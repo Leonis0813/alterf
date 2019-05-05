@@ -23,7 +23,7 @@ describe 'analyses/manage', type: :view do
       'div[@id="new-analysis"]',
     ].join('/')
 
-    it 'タイトルが表示されていること'do
+    it 'タイトルが表示されていること' do
       expect(@html).to have_selector("#{form_panel_xpath}/h3", text: 'レースを分析')
     end
 

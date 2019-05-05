@@ -30,7 +30,7 @@ describe 'predictions/manage', type: :view do
       'div[@id="new-prediction"]',
     ].join('/')
 
-    it 'タイトルが表示されていること'do
+    it 'タイトルが表示されていること' do
       expect(@html).to have_selector("#{form_panel_xpath}/h3", text: 'レースを予測')
     end
 
