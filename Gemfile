@@ -36,10 +36,10 @@ group :development, :test do
   gem 'fuubar'
   gem 'headless'
   gem 'pry'
-  gem 'rspec-rails'
   gem 'rspec-power_assert'
+  gem 'rspec-rails'
   gem 'selenium-webdriver', '2.53.4'
-  gem 'spring'
   gem 'simplecov'
   gem 'simplecov-rcov'
+  gem 'spring'
 end
