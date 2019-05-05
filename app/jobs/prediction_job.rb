@@ -8,7 +8,7 @@ class PredictionJob < ActiveJob::Base
     data_dir = "#{Rails.root}/tmp/files/#{prediction_id}"
     test_data = prediction.test_data
 
-    if test_data.match(URI.regexp)
+    if test_data.match(URI::DEFAULT_PARSER.make_regexp)
       begin
         race = NetkeibaClient.new.get_race(test_data)
         File.open("#{data_dir}/#{Settings.prediction.tmp_file_name}", 'w') do |file|
