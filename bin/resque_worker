@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
 
-require File.expand_path('../../config/application', __FILE__)
+require File.expand_path('../config/application', __dir__)
 Rails.application.require_environment!
 
 class ResqueWorkerDaemon < DaemonSpawn::Base
-  def start(args)
+  def start(_)
     @worker = Resque::Worker.new('alterf')
     @worker.verbose = true
     @worker.work
@@ -15,10 +15,10 @@ class ResqueWorkerDaemon < DaemonSpawn::Base
   end
 end
 
-ResqueWorkerDaemon.spawn!({
-  :working_dir => Rails.root,
-  :pid_file => File.join(Rails.root, 'tmp', 'pids', 'worker.pid'),
-  :log_file => File.join(Rails.root, 'log', 'worker.log'),
-  :sync_log => true,
-  :singleton => true
-})
+ResqueWorkerDaemon.spawn!(
+  working_dir: Rails.root,
+  pid_file: Rails.root.join('tmp', 'pids', 'worker.pid'),
+  log_file: Rails.root.join('log', 'worker.log'),
+  sync_log: true,
+  singleton: true,
+)

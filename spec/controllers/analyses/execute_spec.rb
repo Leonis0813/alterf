@@ -1,8 +1,9 @@
 # coding: utf-8
+
 require 'rails_helper'
 
-describe AnalysesController, :type => :controller do
-  default_params = {:num_data => 1000, :num_tree => 100}
+describe AnalysesController, type: :controller do
+  default_params = {num_data: 1000, num_tree: 100}
 
   describe '正常系' do
     before(:all) do
@@ -31,6 +32,7 @@ describe AnalysesController, :type => :controller do
     test_cases.each do |error_keys|
       context "#{error_keys.join(',')}がない場合" do
         selected_keys = param_keys - error_keys
+        error_codes = error_keys.map {|key| "absent_param_#{key}" }
         before(:all) do
           RSpec::Mocks.with_temporary_scope do
             allow(AnalysisJob).to receive(:perform_later).and_return(true)
@@ -40,10 +42,11 @@ describe AnalysesController, :type => :controller do
         end
 
         it_behaves_like 'ステータスコードが正しいこと', '400'
-        it_behaves_like 'エラーコードが正しいこと', error_keys.map {|key| "absent_param_#{key}" }
+        it_behaves_like 'エラーコードが正しいこと', error_codes
       end
 
       context "#{error_keys.join(',')}が不正な場合" do
+        error_codes = error_keys.map {|key| "invalid_param_#{key}" }
         before(:all) do
           RSpec::Mocks.with_temporary_scope do
             allow(AnalysisJob).to receive(:perform_later).and_return(true)
@@ -55,7 +58,7 @@ describe AnalysesController, :type => :controller do
         end
 
         it_behaves_like 'ステータスコードが正しいこと', '400'
-        it_behaves_like 'エラーコードが正しいこと', error_keys.map {|key| "invalid_param_#{key}" }
+        it_behaves_like 'エラーコードが正しいこと', error_codes
       end
     end
   end

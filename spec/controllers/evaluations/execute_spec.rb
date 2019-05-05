@@ -1,9 +1,11 @@
 # coding: utf-8
+
 require 'rails_helper'
 
-describe EvaluationsController, :type => :controller do
-  model = Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/model.txt')))
-  default_params = {:model => model}
+describe EvaluationsController, type: :controller do
+  model_file_path = Rails.root.join('spec', 'fixtures', 'model.txt')
+  model = Rack::Test::UploadedFile.new(File.open(model_file_path))
+  default_params = {model: model}
 
   describe '正常系' do
     before(:all) do
@@ -38,14 +40,15 @@ describe EvaluationsController, :type => :controller do
       end
 
       it 'エラーメッセージが正しいこと' do
-        is_asserted_by { JSON.parse(@res.body) == [{'error_code' => 'absent_param_model'}] }
+        error_codes = [{'error_code' => 'absent_param_model'}]
+        is_asserted_by { JSON.parse(@res.body) == error_codes }
       end
 
       context 'modelが不正な場合' do
         before(:all) do
           RSpec::Mocks.with_temporary_scope do
             allow(EvaluationJob).to receive(:perform_later).and_return(true)
-            @res = client.post('/evaluations', {:model => 'invalid'})
+            @res = client.post('/evaluations', model: 'invalid')
             @pbody = JSON.parse(@res.body) rescue nil
           end
         end
@@ -55,7 +58,8 @@ describe EvaluationsController, :type => :controller do
         end
 
         it 'エラーメッセージが正しいこと' do
-          is_asserted_by { JSON.parse(@res.body) == [{'error_code' => 'invalid_param_model'}] }
+          error_codes = [{'error_code' => 'invalid_param_model'}]
+          is_asserted_by { JSON.parse(@res.body) == error_codes }
         end
       end
     end

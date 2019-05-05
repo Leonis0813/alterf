@@ -1,7 +1,8 @@
 # coding: utf-8
+
 require 'rails_helper'
 
-describe 'ブラウザで分析する', :type => :request do
+describe 'ブラウザで分析する', type: :request do
   include_context 'Webdriver起動'
 
   describe '分析画面を開く' do
@@ -21,11 +22,15 @@ describe 'ブラウザで分析する', :type => :request do
     end
 
     it 'タイトルが正しいこと' do
-      is_asserted_by { @driver.find_element(:xpath, '//div[@class="modal-header"]/h4[@class="modal-title"]').text == 'エラーが発生しました' }
+      xpath = '//div[@class="modal-header"]/h4[@class="modal-title"]'
+      text = 'エラーが発生しました'
+      is_asserted_by { @driver.find_element(:xpath, xpath).text == text }
     end
 
     it 'エラーメッセージが正しいこと' do
-      is_asserted_by { @driver.find_element(:xpath, '//div[@class="modal-body"]/div').text == '入力値を見直してください' }
+      xpath = '//div[@class="modal-body"]/div'
+      text = '入力値を見直してください'
+      is_asserted_by { @driver.find_element(:xpath, xpath).text == text }
     end
   end
 end

@@ -5,12 +5,12 @@ class EvaluationJob < ActiveJob::Base
 
   def perform(evaluation_id)
     evaluation = Evaluation.find(evaluation_id)
-    data_dir = File.join(Rails.root, 'tmp/files', evaluation_id.to_s)
+    data_dir = Rails.root.join('tmp', 'files', evaluation_id.to_s)
 
     client = NetkeibaClient.new
 
-    client.get_race_top.each do |race_id|
-      race = client.get_race("#{Settings.netkeiba.base_url}/race/#{race_id}")
+    client.http_get_race_top.each do |race_id|
+      race = client.http_get_race("#{Settings.netkeiba.base_url}/race/#{race_id}")
       File.open("#{data_dir}/#{Settings.prediction.tmp_file_name}", 'w') do |file|
         YAML.dump(race.stringify_keys, file)
       end
@@ -20,7 +20,7 @@ class EvaluationJob < ActiveJob::Base
       FileUtils.mv("#{data_dir}/prediction.yml", "#{data_dir}/#{race_id}.yml")
     end
 
-    evaluation.update!(:state => 'completed')
+    evaluation.update!(state: 'completed')
 
     FileUtils.rm_f("#{data_dir}/#{Settings.prediction.tmp_file_name}")
     FileUtils.rm_f("#{data_dir}/#{evaluation.model}")

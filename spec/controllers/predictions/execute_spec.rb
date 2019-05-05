@@ -1,13 +1,16 @@
 # coding: utf-8
+
 require 'rails_helper'
 
-describe PredictionsController, :type => :controller do
-  model = Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/model.txt')))
+describe PredictionsController, type: :controller do
+  model_file_path = Rails.root.join('spec', 'fixtures', 'model.txt')
+  model = Rack::Test::UploadedFile.new(File.open(model_file_path))
+  test_data_file_path = Rails.root.join('spec', 'fixtures', 'test_data.txt')
   test_data = {
-    :file => Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/test_data.txt'))),
-    :url => 'http://example.com',
+    file: Rack::Test::UploadedFile.new(File.open(test_data_file_path)),
+    url: 'http://example.com',
   }
-  default_params = {:model => model, :test_data => test_data[:file]}
+  default_params = {model: model, test_data: test_data[:file]}
 
   describe '正常系' do
     %i[file url].each do |type|
@@ -15,7 +18,8 @@ describe PredictionsController, :type => :controller do
         before(:all) do
           RSpec::Mocks.with_temporary_scope do
             allow(PredictionJob).to receive(:perform_later).and_return(true)
-            @res = client.post('/predictions', default_params.merge(:test_data => test_data[type]))
+            body = default_params.merge(test_data: test_data[type])
+            @res = client.post('/predictions', body)
             @pbody = JSON.parse(@res.body) rescue nil
           end
         end
@@ -33,7 +37,9 @@ describe PredictionsController, :type => :controller do
 
   describe '異常系' do
     test_cases = [].tap do |tests|
-      (default_params.keys.size - 1).times {|i| tests << default_params.keys.combination(i + 1).to_a }
+      (default_params.keys.size - 1).times do |i|
+        tests << default_params.keys.combination(i + 1).to_a
+      end
     end.flatten(1)
 
     test_cases.each do |error_keys|
@@ -82,7 +88,8 @@ describe PredictionsController, :type => :controller do
         before(:all) do
           RSpec::Mocks.with_temporary_scope do
             allow(PredictionJob).to receive(:perform_later).and_return(true)
-            @res = client.post('/predictions', default_params.merge(:test_data => 'invalid_url'))
+            body = default_params.merge(test_data: 'invalid_url')
+            @res = client.post('/predictions', body)
             @pbody = JSON.parse(@res.body) rescue nil
           end
         end
@@ -92,7 +99,8 @@ describe PredictionsController, :type => :controller do
         end
 
         it 'エラーメッセージが正しいこと' do
-          is_asserted_by { JSON.parse(@res.body) == [{'error_code' => 'invalid_param_test_data'}] }
+          error_codes = [{'error_code' => 'invalid_param_test_data'}]
+          is_asserted_by { JSON.parse(@res.body) == error_codes }
         end
       end
     end

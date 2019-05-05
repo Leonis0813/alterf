@@ -1,3 +1,6 @@
+# 4.0.4 (2019/05/05)
+- [FIX] coding style
+
 # 4.0.3 (2019/05/02)
 - [UPDATE] ruby version to 2.4.4
 
