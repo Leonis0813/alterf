@@ -3,7 +3,8 @@
 require 'rails_helper'
 
 describe EvaluationsController, type: :controller do
-  model = Rack::Test::UploadedFile.new(File.open(Rails.root.join('spec', 'fixtures', 'model.txt')))
+  model_file_path = Rails.root.join('spec', 'fixtures', 'model.txt')
+  model = Rack::Test::UploadedFile.new(File.open(model_file_path))
   default_params = {model: model}
 
   describe '正常系' do
@@ -39,7 +40,8 @@ describe EvaluationsController, type: :controller do
       end
 
       it 'エラーメッセージが正しいこと' do
-        is_asserted_by { JSON.parse(@res.body) == [{'error_code' => 'absent_param_model'}] }
+        error_codes = [{'error_code' => 'absent_param_model'}]
+        is_asserted_by { JSON.parse(@res.body) == error_codes }
       end
 
       context 'modelが不正な場合' do
@@ -56,7 +58,8 @@ describe EvaluationsController, type: :controller do
         end
 
         it 'エラーメッセージが正しいこと' do
-          is_asserted_by { JSON.parse(@res.body) == [{'error_code' => 'invalid_param_model'}] }
+          error_codes = [{'error_code' => 'invalid_param_model'}]
+          is_asserted_by { JSON.parse(@res.body) == error_codes }
         end
       end
     end

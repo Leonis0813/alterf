@@ -33,10 +33,9 @@ describe 'evaluations/manage', type: :view do
       expect(@html).to have_selector("#{form_panel_xpath}/h3", text: 'モデルを評価')
     end
 
-    form_xpath = [
-      form_panel_xpath,
-      'form[action="/evaluations"][data-remote=true][method="post"][@class="new_evaluation"]',
-    ].join('/')
+    form_tag_xpath = 'form[action="/evaluations"][data-remote=true][method="post"]' \
+                     '[@class="new_evaluation"]'
+    form_xpath = [form_panel_xpath, form_tag_xpath].join('/')
     input_xpath = "#{form_xpath}/div[@class='form-group']"
 
     %w[model].each do |param|
@@ -56,7 +55,7 @@ describe 'evaluations/manage', type: :view do
     end
   end
 
-  shared_examples 'ジョブ実行履歴が表示されていること' do |expected_size: 0, total: 0, from: 0, to: 0|
+  shared_examples 'ジョブ実行履歴が表示されていること' do |expected: {}|
     table_panel_xpath = [
       row_xpath,
       'div[@class="col-lg-8"]',
@@ -68,19 +67,22 @@ describe 'evaluations/manage', type: :view do
 
     it '件数情報が表示されていること' do
       info_xpath = "#{table_panel_xpath}/h4"
-      expect(@html).to have_selector(info_xpath, text: "#{total}件中#{from}〜#{to}件を表示")
+      text = "#{expected[:total]}件中#{expected[:from]}〜#{expected[:to]}件を表示"
+      expect(@html).to have_selector(info_xpath, text: text)
     end
 
     paging_xpath = "#{table_panel_xpath}/nav/ul[@class='pagination']"
 
     it '先頭のページへのボタンが表示されていないこと' do
       xpath = "#{paging_xpath}/li[@class='pagination']/span[@class='first']/a"
-      expect(@html).not_to have_selector(xpath, text: I18n.t('views.list.pagination.first'))
+      text = I18n.t('views.list.pagination.first')
+      expect(@html).not_to have_selector(xpath, text: text)
     end
 
     it '前のページへのボタンが表示されていないこと' do
       xpath = "#{paging_xpath}/li[@class='pagination']/span[@class='prev']/a"
-      expect(@html).not_to have_selector(xpath, text: I18n.t('views.list.pagination.previous'))
+      text = I18n.t('views.list.pagination.previous')
+      expect(@html).not_to have_selector(xpath, text: text)
     end
 
     it '1ページ目が表示されていること' do
@@ -94,7 +96,8 @@ describe 'evaluations/manage', type: :view do
     end
 
     it '次のページへのボタンが表示されていること' do
-      xpath = "#{paging_xpath}/li[@class='page-item']/span[@class='next']/a[href='/evaluations?page=2']"
+      xpath = "#{paging_xpath}/li[@class='page-item']/span[@class='next']" \
+              '/a[href="/evaluations?page=2"]'
       expect(@html).to have_selector(xpath, text: I18n.t('views.pagination.next'))
     end
 
@@ -105,13 +108,14 @@ describe 'evaluations/manage', type: :view do
 
     %w[実行開始日時 モデル 状態].each do |header|
       it "ヘッダー(#{header})があること" do
-        expect(@html).to have_selector("#{table_panel_xpath}/table[@class='table table-hover']/thead/th", text: header)
+        xpath = "#{table_panel_xpath}/table[@class='table table-hover']/thead/th"
+        expect(@html).to have_selector(xpath, text: header)
       end
     end
 
     it 'データの数が正しいこと' do
-      table_body_xpath = "#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr"
-      expect(@html).to have_xpath(table_body_xpath, count: expected_size)
+      xpath = "#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr"
+      expect(@html).to have_xpath(xpath, count: expected[:size])
     end
 
     it '背景色が正しいこと' do
@@ -145,9 +149,6 @@ describe 'evaluations/manage', type: :view do
     it_behaves_like 'ヘッダーが表示されていること'
     it_behaves_like '入力フォームが表示されていること'
     it_behaves_like 'ジョブ実行履歴が表示されていること',
-                    expected_size: 1,
-                    total: 10,
-                    from: 1,
-                    to: 1
+                    expected: {size: 1, total: 10, from: 1, to: 1}
   end
 end

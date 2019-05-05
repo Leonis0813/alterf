@@ -12,7 +12,9 @@ describe 'ブラウザで予測する', type: :request do
       is_asserted_by { @driver.current_url == "#{base_url}/predictions" }
       is_asserted_by { @driver.find_element(:id, 'prediction_model') }
       is_asserted_by { @driver.find_element(:id, 'type_file').selected? }
-      is_asserted_by { @driver.find_element(:xpath, '//input[@id="prediction_test_data"][@type="file"]') }
+
+      xpath = '//input[@id="prediction_test_data"][@type="file"]'
+      is_asserted_by { @driver.find_element(:xpath, xpath) }
       is_asserted_by { @driver.find_element(:xpath, '//form/input[@value="実行"]') }
     end
 
@@ -21,7 +23,9 @@ describe 'ブラウザで予測する', type: :request do
 
       it 'URLを指定できること' do
         is_asserted_by { @driver.find_element(:id, 'type_url').selected? }
-        is_asserted_by { @driver.find_element(:xpath, '//input[@id="prediction_test_data"][@type="url"]') }
+
+        xpath = '//input[@id="prediction_test_data"][@type="url"]'
+        is_asserted_by { @driver.find_element(:xpath, xpath) }
       end
     end
   end
