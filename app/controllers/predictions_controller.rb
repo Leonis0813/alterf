@@ -5,22 +5,9 @@ class PredictionsController < ApplicationController
   end
 
   def execute
-    check_absent_param(prediction_params)
     attributes = params.permit(*prediction_params)
-
-    invalid_keys = [].tap do |keys|
-      keys << :model unless attributes[:model].respond_to?(:original_filename)
-
-      test_data = attributes[:test_data]
-      if test_data.is_a?(String) and not test_data.match(URI.regexp(%w[http https]))
-        keys << :test_data
-      end
-    end
-
-    unless invalid_keys.empty?
-      error_codes = invalid_keys.map {|key| "invalid_param_#{key}" }
-      raise BadRequest, error_codes
-    end
+    check_absent_params(attributes, prediction_params)
+    check_invalid_file_params(attributes)
 
     attributes[:model] = attributes[:model].original_filename
     if attributes[:test_data].respond_to?(:original_filename)
@@ -41,6 +28,22 @@ class PredictionsController < ApplicationController
 
   def prediction_params
     %i[model test_data]
+  end
+
+  def check_invalid_file_params(attributes)
+    invalid_keys = [].tap do |keys|
+      keys << :model unless attributes[:model].respond_to?(:original_filename)
+
+      test_data = attributes[:test_data]
+      if test_data.is_a?(String) and not test_data.match(URI.regexp(%w[http https]))
+        keys << :test_data
+      end
+    end
+
+    unless invalid_keys.empty?
+      error_codes = invalid_keys.map {|key| "invalid_param_#{key}" }
+      raise BadRequest, error_codes
+    end
   end
 
   def save_files
