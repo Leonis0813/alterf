@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 describe PredictionsController, type: :controller do
-  model = Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/model.txt')))
+  model = Rack::Test::UploadedFile.new(File.open(Rails.root.join('spec', 'fixtures', 'model.txt')))
   test_data = {
-    file: Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/test_data.txt'))),
+    file: Rack::Test::UploadedFile.new(File.open(Rails.root.join('spec', 'fixtures', 'test_data.txt'))),
     url: 'http://example.com',
   }
   default_params = {model: model, test_data: test_data[:file]}

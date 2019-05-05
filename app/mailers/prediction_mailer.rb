@@ -5,7 +5,7 @@ class PredictionMailer < ApplicationMailer
     @prediction = prediction
     subject = is_success ? '予測が完了しました' : '予測中にエラーが発生しました'
     template_name = is_success ? 'success' : 'failer'
-    tmp_dir = File.join(Rails.root, "tmp/files/#{prediction.id}")
+    tmp_dir = Rails.root.join('tmp', 'files', prediction.id.to_s)
 
     file_names = %w[prediction.yml]
     zip_file_name = File.join(tmp_dir, 'prediction.zip')

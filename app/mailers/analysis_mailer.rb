@@ -5,7 +5,7 @@ class AnalysisMailer < ApplicationMailer
     @analysis = analysis
     subject = is_success ? '分析が完了しました' : '分析中にエラーが発生しました'
     template_name = is_success ? 'success' : 'failer'
-    tmp_dir = File.join(Rails.root, "tmp/files/#{analysis.id}")
+    tmp_dir = Rails.root.join('tmp', 'files', analysis.id.to_s)
 
     file_names = %w[analysis.yml model.rf]
     zip_file_name = File.join(tmp_dir, 'analysis.zip')

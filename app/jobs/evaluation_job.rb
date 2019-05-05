@@ -5,7 +5,7 @@ class EvaluationJob < ActiveJob::Base
 
   def perform(evaluation_id)
     evaluation = Evaluation.find(evaluation_id)
-    data_dir = File.join(Rails.root, 'tmp/files', evaluation_id.to_s)
+    data_dir = Rails.root.join('tmp', 'files', evaluation_id.to_s)
 
     client = NetkeibaClient.new
 

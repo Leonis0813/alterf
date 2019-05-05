@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 describe EvaluationsController, type: :controller do
-  model = Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/fixtures/model.txt')))
+  model = Rack::Test::UploadedFile.new(File.open(Rails.root.join('spec', 'fixtures', 'model.txt')))
   default_params = {model: model}
 
   describe '正常系' do

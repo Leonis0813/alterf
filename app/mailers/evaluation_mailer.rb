@@ -5,7 +5,7 @@ class EvaluationMailer < ApplicationMailer
     @evaluation = evaluation
     subject = is_success ? '評価が完了しました' : '評価中にエラーが発生しました'
     template_name = is_success ? 'success' : 'failer'
-    tmp_dir = File.join(Rails.root, "tmp/files/#{evaluation.id}")
+    tmp_dir = Rails.root.join('tmp', 'files', evaluation.id.to_s)
 
     file_names = Dir[File.join(tmp_dir, '*')].map {|file| File.basename(file) }
     zip_file_name = File.join(tmp_dir, 'evaluation.zip')

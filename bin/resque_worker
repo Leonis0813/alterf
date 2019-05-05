@@ -17,8 +17,8 @@ end
 
 ResqueWorkerDaemon.spawn!(
   working_dir: Rails.root,
-  pid_file: File.join(Rails.root, 'tmp', 'pids', 'worker.pid'),
-  log_file: File.join(Rails.root, 'log', 'worker.log'),
+  pid_file: Rails.root.join('tmp', 'pids', 'worker.pid'),
+  log_file: Rails.root.join('log', 'worker.log'),
   sync_log: true,
   singleton: true,
 )
