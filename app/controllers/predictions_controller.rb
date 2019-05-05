@@ -5,25 +5,14 @@ class PredictionsController < ApplicationController
   end
 
   def execute
+    check_absent_param(prediction_params)
     attributes = params.permit(*prediction_params)
-    absent_keys = prediction_params - attributes.symbolize_keys.keys
-    unless absent_keys.empty?
-      error_codes = absent_keys.map {|key| "absent_param_#{key}" }
-      raise BadRequest, error_codes
-    end
 
     invalid_keys = [].tap do |keys|
-      model = attributes[:model]
-      if model.respond_to?(:original_filename)
-        attributes[:model] = model.original_filename
-      else
-        keys << :model
-      end
+      keys << :model unless attributes[:model].respond_to?(:original_filename)
 
       test_data = attributes[:test_data]
-      if test_data.respond_to?(:original_filename)
-        attributes[:test_data] = test_data.original_filename
-      elsif not (test_data.is_a?(String) and test_data.match(URI.regexp(%w[http https])))
+      if test_data.is_a?(String) and not test_data.match(URI.regexp(%w[http https]))
         keys << :test_data
       end
     end
@@ -33,12 +22,28 @@ class PredictionsController < ApplicationController
       raise BadRequest, error_codes
     end
 
+    attributes[:model] = attributes[:model].original_filename
+    if attributes[:test_data].respond_to?(:original_filename)
+      attributes[:test_data] = attributes[:test_data].original_filename
+    end
     prediction = Prediction.new(attributes.merge(state: 'processing'))
     unless prediction.save
       error_codes = prediction.errors.messages.keys.map {|key| "invalid_param_#{key}" }
       raise BadRequest, error_codes
     end
 
+    save_files
+    PredictionJob.perform_later(prediction.id)
+    render status: :ok, json: {}
+  end
+
+  private
+
+  def prediction_params
+    %i[model test_data]
+  end
+
+  def save_files
     params.slice(*prediction_params).values.each do |value|
       next unless value.respond_to?(:original_filename)
 
@@ -48,14 +53,5 @@ class PredictionsController < ApplicationController
         f.write(value.read)
       end
     end
-
-    PredictionJob.perform_later(prediction.id)
-    render status: :ok, json: {}
-  end
-
-  private
-
-  def prediction_params
-    %i[model test_data]
   end
 end
