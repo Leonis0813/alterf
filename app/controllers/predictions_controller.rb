@@ -40,10 +40,10 @@ class PredictionsController < ApplicationController
       end
     end
 
-    unless invalid_keys.empty?
-      error_codes = invalid_keys.map {|key| "invalid_param_#{key}" }
-      raise BadRequest, error_codes
-    end
+    return if invalid_keys.empty?
+
+    error_codes = invalid_keys.map {|key| "invalid_param_#{key}" }
+    raise BadRequest, error_codes
   end
 
   def save_files
