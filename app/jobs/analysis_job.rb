@@ -9,7 +9,7 @@ class AnalysisJob < ActiveJob::Base
     ret = system "Rscript #{Rails.root}/scripts/analyze.r #{args.join(' ')}"
 
     yaml_file = File.join(output_dir, 'analysis.yml')
-    if File.exists?(yaml_file)
+    if File.exist?(yaml_file)
       analysis_params = YAML.load_file(yaml_file)
       analysis.update!(num_feature: analysis_params['mtry'])
     end
