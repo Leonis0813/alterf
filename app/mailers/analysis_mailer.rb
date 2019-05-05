@@ -1,4 +1,5 @@
 # coding: utf-8
+
 class AnalysisMailer < ApplicationMailer
   def finished(analysis, is_success)
     @analysis = analysis

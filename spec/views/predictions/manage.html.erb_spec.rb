@@ -1,4 +1,5 @@
 # coding: utf-8
+
 require 'rails_helper'
 
 describe 'predictions/manage', type: :view do

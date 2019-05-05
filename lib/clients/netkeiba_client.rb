@@ -1,4 +1,5 @@
 # coding: utf-8
+
 class NetkeibaClient < HTTPClient
   def get_race_top
     res = HTTPClient.new.get("#{Settings.netkeiba.base_url}/?pid=race_top")
