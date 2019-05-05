@@ -7,10 +7,16 @@ class AnalysesController < ApplicationController
   def execute
     attributes = params.permit(*analysis_params)
     absent_keys = analysis_params - attributes.symbolize_keys.keys
-    raise BadRequest, absent_keys.map {|key| "absent_param_#{key}" } unless absent_keys.empty?
+    unless absent_keys.empty?
+      error_codes = absent_keys.map {|key| "absent_param_#{key}" }
+      raise BadRequest, error_codes
+    end
 
     analysis = Analysis.new(attributes.merge(state: 'processing'))
-    raise BadRequest, analysis.errors.messages.keys.map {|key| "invalid_param_#{key}" } unless analysis.save
+    unless analysis.save
+      error_codes = analysis.errors.messages.keys.map {|key| "invalid_param_#{key}" }
+      raise BadRequest, error_codes
+    end
 
     AnalysisJob.perform_later(analysis.id)
     render status: :ok, json: {}

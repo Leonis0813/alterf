@@ -7,14 +7,20 @@ class EvaluationsController < ApplicationController
   def execute
     attributes = params.permit(*evaluation_params)
     absent_keys = evaluation_params - attributes.symbolize_keys.keys
-    raise BadRequest, absent_keys.map {|key| "absent_param_#{key}" } unless absent_keys.empty?
+    unless absent_keys.empty?
+      error_codes = absent_keys.map {|key| "absent_param_#{key}" }
+      raise BadRequest, error_codes
+    end
 
     model = attributes[:model]
     raise BadRequest, 'invalid_param_model' unless model.respond_to?(:original_filename)
 
     attributes[:model] = model.original_filename
     evaluation = Evaluation.new(attributes.merge(state: 'processing'))
-    raise BadRequest, evaluation.errors.messages.keys.map {|key| "invalid_param_#{key}" } unless evaluation.save
+    unless evaluation.save
+      error_codes = evaluation.errors.messages.keys.map {|key| "invalid_param_#{key}" }
+      raise BadRequest, error_codes
+    end
 
     output_dir = "#{Rails.root}/tmp/files/#{evaluation.id}"
     FileUtils.mkdir_p(output_dir)

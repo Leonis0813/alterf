@@ -7,7 +7,10 @@ class PredictionsController < ApplicationController
   def execute
     attributes = params.permit(*prediction_params)
     absent_keys = prediction_params - attributes.symbolize_keys.keys
-    raise BadRequest, absent_keys.map {|key| "absent_param_#{key}" } unless absent_keys.empty?
+    unless absent_keys.empty?
+      error_codes = absent_keys.map {|key| "absent_param_#{key}" }
+      raise BadRequest, error_codes
+    end
 
     invalid_keys = [].tap do |keys|
       model = attributes[:model]
@@ -26,11 +29,15 @@ class PredictionsController < ApplicationController
     end
 
     unless invalid_keys.empty?
-      raise BadRequest, invalid_keys.map {|key| "invalid_param_#{key}" }
+      error_codes = invalid_keys.map {|key| "invalid_param_#{key}" }
+      raise BadRequest, error_codes
     end
 
     prediction = Prediction.new(attributes.merge(state: 'processing'))
-    raise BadRequest, prediction.errors.messages.keys.map {|key| "invalid_param_#{key}" } unless prediction.save
+    unless prediction.save
+      error_codes = prediction.errors.messages.keys.map {|key| "invalid_param_#{key}" }
+      raise BadRequest, error_codes
+    end
 
     params.slice(*prediction_params).values.each do |value|
       next unless value.respond_to?(:original_filename)
