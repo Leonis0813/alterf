@@ -14,7 +14,7 @@ class PredictionJob < ActiveJob::Base
         File.open("#{data_dir}/#{Settings.prediction.tmp_file_name}", 'w') do |file|
           YAML.dump(race.stringify_keys, file)
         end
-      rescue Exception => e
+      rescue StandardError => e
         PredictionMailer.finished(prediction, false).deliver_now
         raise e
       end
