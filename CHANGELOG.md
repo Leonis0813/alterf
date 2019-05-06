@@ -1,5 +1,6 @@
 # 4.1.0 (2019/05/11)
 - [UPDATE] prediction view to show results
+- [UPDATE] gems
 
 # 4.0.4 (2019/05/05)
 - [FIX] coding style
