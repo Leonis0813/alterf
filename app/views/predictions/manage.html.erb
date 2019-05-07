@@ -1,6 +1,6 @@
 <div class='row center-block'>
   <div class='col-lg-4'>
-    <div id='new-prediction' class='well tab-pane active'>
+    <div id='new-prediction' class='well'>
       <h3>レースを予測</h3>
       <p>テストデータは<a href='http://db.netkeiba.com' target='_brank'>こちら</a>から</p>
       <%= form_for @prediction, :html => {:multipart => true}, :url => predictions_path, :remote => true do |f| %>
@@ -21,17 +21,18 @@
     </div>
   </div>
 
-  <div class='col-lg-8'>
-    <h4 style='padding: 10px 0px'>ジョブ実行履歴</h4>
+  <div class='col-lg-8 well'>
+    <h3 style='padding: 10px 0px'>ジョブ実行履歴</h3>
     <% from = @predictions.total_count == 0 ? 0 : @predictions.offset_value + 1 %>
     <% info = {:total_count => @predictions.total_count, :from => from, :to => @predictions.offset_value + @predictions.size} %>
     <h4 style='padding: 10px 0px;display: inline'><%= t('views.pagination.info', info) %></h4>
     <%= paginate @predictions %>
     <table class='table table-hover'>
       <thead>
-        <% %w[ 実行開始日時 モデル テストデータ 状態 ].each do |header| %>
-          <th><%= header %></th>
-        <% end %>
+        <th width='150px'>実行開始日時</th>
+        <th>モデル</th>
+        <th width='20%'>テストデータ</th>
+        <th width='30%'>予測結果</th>
       </thead>
       <tbody>
         <%= render @predictions %>
