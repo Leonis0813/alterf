@@ -9,14 +9,9 @@ class PredictionJob < ActiveJob::Base
     test_data = prediction.test_data
 
     if test_data.match(URI::DEFAULT_PARSER.make_regexp)
-      begin
-        race = NetkeibaClient.new.get_race(test_data)
-        File.open("#{data_dir}/#{Settings.prediction.tmp_file_name}", 'w') do |file|
-          YAML.dump(race.stringify_keys, file)
-        end
-      rescue StandardError => e
-        PredictionMailer.finished(prediction, false).deliver_now
-        raise e
+      race = NetkeibaClient.new.get_race(test_data)
+      File.open("#{data_dir}/#{Settings.prediction.tmp_file_name}", 'w') do |file|
+        YAML.dump(race.stringify_keys, file)
       end
     end
 
@@ -24,7 +19,6 @@ class PredictionJob < ActiveJob::Base
     ret = system "Rscript #{Rails.root}/scripts/predict.r #{args.join(' ')}"
 
     prediction.update!(state: 'completed')
-    PredictionMailer.finished(prediction, ret).deliver_now
     FileUtils.rm_rf(data_dir)
   end
 end
