@@ -8,25 +8,15 @@ describe 'predictions/manage', type: :view do
   row_xpath = '//div[@id="main-content"]/div[@class="row center-block"]'
   table_panel_xpath = [row_xpath, 'div[@class="col-lg-8 well"]'].join('/')
 
-  shared_context 'HTML初期化' do
-    before(:all) { @html = nil }
-  end
-
-  shared_context '予測ジョブを登録する' do |num|
-    before(:all) do
-      num.times do
-        param = {
-          model: 'model',
-          test_data: %w[test_data http://db.netkeiba.com/race/12345678].sample,
-          state: %w[processing completed].sample,
-        }
-        prediction = Prediction.create!(param)
-        (rand(7) + 1).times { prediction.results.create!(number: rand(18) + 1) }
-      end
-      @predictions = Prediction.order(created_at: :desc).page(1)
-    end
-
-    after(:all) { Prediction.destroy_all }
+  shared_examples '画面共通テスト' do |expected: {}|
+    it_behaves_like 'ヘッダーが表示されていること'
+    it_behaves_like '入力フォームが表示されていること'
+    it_behaves_like '表示件数情報が表示されていること',
+                    total: expected[:total] || per_page,
+                    from: expected[:from] || 1,
+                    to: expected[:to] || per_page
+    it_behaves_like 'テーブルが表示されていること',
+                    rows: expected[:rows] || per_page
   end
 
   shared_examples '入力フォームが表示されていること' do
@@ -176,9 +166,20 @@ describe 'predictions/manage', type: :view do
       is_asserted_by { link_last.present? }
       is_asserted_by { link_last.text == I18n.t('views.pagination.last') }
     end
+
+    it '3点リーダが表示されていること' do
+      xpath = [
+        paging_xpath,
+        'li[@class="page-item disabled"]',
+        'a[@href="#"]',
+      ].join('/')
+      link_gap = @html.xpath(xpath)
+      is_asserted_by { link_gap.present? }
+      is_asserted_by { link_gap.text == '...' }
+    end
   end
 
-  shared_examples 'テーブルが表示されていること' do |size: 0|
+  shared_examples 'テーブルが表示されていること' do |rows: 0|
     before(:each) do
       @table = @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']")
     end
@@ -194,7 +195,7 @@ describe 'predictions/manage', type: :view do
     end
 
     it 'ジョブの数が正しいこと' do
-      is_asserted_by { @table.xpath('//tbody/tr').size == size }
+      is_asserted_by { @table.xpath('//tbody/tr').size == rows }
     end
   end
 
@@ -292,72 +293,79 @@ describe 'predictions/manage', type: :view do
     @html ||= Nokogiri::parse(response)
   end
 
-  describe "予測ジョブ情報が#{per_page}件の場合" do
-    before(:all) do
-      attribute = {
-        model: 'model',
-        test_data: 'http://db.netkeiba.com/race/12345678',
-        state: 'processing',
-      }
-      per_page.times { Prediction.create!(attribute) }
-      @predictions = Prediction.order(created_at: :desc).page(1)
+  context "予測ジョブ情報が#{per_page}件の場合" do
+    context '実行中の場合' do
+      before(:all) do
+        attribute = {
+          model: 'model',
+          test_data: 'http://db.netkeiba.com/race/12345678',
+          state: 'processing',
+        }
+        per_page.times { Prediction.create!(attribute) }
+        @predictions = Prediction.order(created_at: :desc).page(1)
+      end
+
+      after(:all) { Prediction.destroy_all }
+
+      include_context 'HTML初期化'
+      it_behaves_like '画面共通テスト'
+      it_behaves_like 'ページングボタンが表示されていないこと'
+      it_behaves_like 'テストデータがリンクになっていること'
+      it_behaves_like 'ジョブが実行中状態になっていること'
     end
 
-    after(:all) { Prediction.destroy_all }
+    context '完了している場合' do
+      attribute = {model: 'model', test_data: 'test_data', state: 'completed'}
 
-    include_context 'HTML初期化'
-    it_behaves_like 'ヘッダーが表示されていること'
-    it_behaves_like '入力フォームが表示されていること'
-    it_behaves_like '表示件数情報が表示されていること',
-                    total: per_page, from: 1, to: per_page
-    it_behaves_like 'ページングボタンが表示されていないこと'
-    it_behaves_like 'テーブルが表示されていること', size: per_page
-    it_behaves_like 'テストデータがリンクになっていること'
-    it_behaves_like 'ジョブが実行中状態になっていること'
+      context '番号の数が6個の場合' do
+        before(:all) do
+          per_page.times do
+            prediction = Prediction.create!(attribute)
+            6.times {|i| prediction.results.create!(number: i + 1) }
+          end
+          @predictions = Prediction.order(created_at: :desc).page(1)
+        end
+
+        after(:all) { Prediction.destroy_all }
+
+        include_context 'HTML初期化'
+        it_behaves_like '画面共通テスト'
+        it_behaves_like 'ページングボタンが表示されていないこと'
+        it_behaves_like 'テーブルに予測結果が表示されていること', numbers: 6
+      end
+
+      context '番号の数が7個の場合' do
+        before(:all) do
+          per_page.times do
+            prediction = Prediction.create!(attribute)
+            7.times {|i| prediction.results.create!(number: i + 1) }
+          end
+          @predictions = Prediction.order(created_at: :desc).page(1)
+        end
+
+        after(:all) { Prediction.destroy_all }
+
+        include_context 'HTML初期化'
+        it_behaves_like '画面共通テスト'
+        it_behaves_like 'ページングボタンが表示されていないこと'
+        it_behaves_like 'テーブルに予測結果が表示されていること', numbers: 7
+      end
+    end
   end
 
-  describe "予測ジョブ情報が#{per_page + 1}件の場合" do
+  describe "予測ジョブ情報が#{per_page * (Kaminari.config.window + 2)}件の場合" do
+    total = per_page * (Kaminari.config.window + 2)
+
     before(:all) do
-      attribute = {model: 'model', test_data: 'test_data', state: 'completed'}
-      (per_page + 1).times do
-        prediction = Prediction.create!(attribute)
-        6.times {|i| prediction.results.create!(number: i + 1) }
-      end
+      attribute = {model: 'model', test_data: 'test_data', state: 'processing'}
+      total.times { Prediction.create!(attribute) }
       @predictions = Prediction.order(created_at: :desc).page(1)
     end
 
     after(:all) { Prediction.destroy_all }
 
     include_context 'HTML初期化'
-    it_behaves_like 'ヘッダーが表示されていること'
-    it_behaves_like '入力フォームが表示されていること'
-    it_behaves_like '表示件数情報が表示されていること',
-                    total: per_page + 1, from: 1, to: per_page
+    it_behaves_like '画面共通テスト', expected: {total: total}
     it_behaves_like 'ページングボタンが表示されていること'
-    it_behaves_like 'テーブルが表示されていること', size: per_page
-    it_behaves_like 'テーブルに予測結果が表示されていること', numbers: 6
-  end
-
-  describe "予測ジョブ情報が#{per_page + Kaminari.config.window * 2 + 1}件の場合" do
-    total = per_page + Kaminari.config.window * 2 + 1
-    before(:all) do
-      attribute = {model: 'model', test_data: 'test_data', state: 'completed'}
-      total.times do
-        prediction = Prediction.create!(attribute)
-        7.times {|i| prediction.results.create!(number: i + 1) }
-      end
-      @predictions = Prediction.order(created_at: :desc).page(1)
-    end
-
-    after(:all) { Prediction.destroy_all }
-
-    include_context 'HTML初期化'
-    it_behaves_like 'ヘッダーが表示されていること'
-    it_behaves_like '入力フォームが表示されていること'
-    it_behaves_like '表示件数情報が表示されていること',
-                    total: total, from: 1, to: per_page
-    it_behaves_like 'ページングボタンが表示されていること'
-    it_behaves_like 'テーブルが表示されていること', size: per_page
-    it_behaves_like 'テーブルに予測結果が表示されていること', numbers: 7
   end
 end

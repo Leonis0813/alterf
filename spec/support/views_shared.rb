@@ -1,5 +1,9 @@
 # coding: utf-8
 
+shared_context 'HTML初期化' do
+  before(:all) { @html = nil }
+end
+
 shared_examples 'ヘッダーが表示されていること' do
   base_xpath =
     '//div[@class="navbar navbar-default navbar-static-top"]/div[@class="container"]'
