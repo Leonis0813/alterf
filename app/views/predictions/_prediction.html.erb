@@ -12,11 +12,11 @@
     <td class='td-test-data'><%= prediction.test_data %></td>
   <% end %>
   <% if prediction.state == 'processing' %>
-    <td class='td-state'>
-      <span style='padding-right:5px'>実行中</span><i class='fa fa-refresh fa-spin'></i>
+    <td class='td-result'>
+      <span class='processing'>実行中</span><i class='fa fa-refresh fa-spin'></i>
     </td>
   <% else %>
-    <td class='td-state' style='padding:4px'>
+    <td class='td-result' style='padding:4px'>
       <span title='<%= prediction.results.map(&:number).sort.join(',') %>'>
     <% prediction.results.sort_by(&:number).first(6).each_with_index do |result, i| %>
       <% color = case i
@@ -29,7 +29,7 @@
                  else
                    'black'
                  end %>
-      <span class='fa-stack' style='font-size: 1em;color:<%= color%>'>
+      <span class='fa-stack' style='font-size: 1em;color:<%= color %>'>
         <i class='fa fa-circle fa-stack-2x'></i>
         <i class='fa fa-stack-1x fa-inverse'><%= result.number %></i>
       </span>

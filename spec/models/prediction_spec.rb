@@ -43,20 +43,20 @@ describe Prediction, type: :model do
         attribute = {model: 'model', test_data: 'test_data', state: 'processing'}
         @prediction = Prediction.create!(attribute)
         @other_prediction = Prediction.create!(attribute)
-        @prediction.results.create!(:number => 1)
-        @other_prediction.results.create!(:number => 1)
+        @prediction.results.create!(number: 1)
+        @other_prediction.results.create!(number: 1)
         @prediction.destroy
       end
 
       it '紐づいているPrediction::Resultが削除されていること' do
         is_asserted_by do
-          not Prediction::Result.exists?(:prediction_id => @prediction.id)
+          not Prediction::Result.exists?(prediction_id: @prediction.id)
         end
       end
 
       it '紐づいていないPrediction::Resultが削除されていないこと' do
         is_asserted_by do
-          Prediction::Result.exists?(:prediction_id => @other_prediction.id)
+          Prediction::Result.exists?(prediction_id: @other_prediction.id)
         end
       end
     end
