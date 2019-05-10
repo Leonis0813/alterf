@@ -8,6 +8,8 @@ describe EvaluationsController, type: :controller do
   default_params = {model: model}
 
   describe '正常系' do
+    include_context 'トランザクション作成'
+
     before(:all) do
       RSpec::Mocks.with_temporary_scope do
         allow(EvaluationJob).to receive(:perform_later).and_return(true)
@@ -15,8 +17,6 @@ describe EvaluationsController, type: :controller do
         @pbody = JSON.parse(@res.body) rescue nil
       end
     end
-
-    after(:all) { Evaluation.destroy_all }
 
     it_behaves_like 'ステータスコードが正しいこと', '200'
 

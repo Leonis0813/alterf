@@ -228,13 +228,13 @@ describe 'analyses/manage', type: :view do
 
   context "分析ジョブ情報が#{per_page}件の場合" do
     context '実行中の場合' do
+      include_context 'トランザクション作成'
+
       before(:all) do
         attribute = {num_data: 10000, num_tree: 100, state: 'processing'}
         per_page.times { Analysis.create!(attribute) }
         @analyses = Analysis.order(created_at: :desc).page(1)
       end
-
-      after(:all) { Analysis.destroy_all }
 
       include_context 'HTML初期化'
       it_behaves_like '画面共通テスト'
@@ -243,13 +243,13 @@ describe 'analyses/manage', type: :view do
     end
 
     context '完了している場合' do
+      include_context 'トランザクション作成'
+
       before(:all) do
         attribute = {num_data: 10000, num_tree: 100, state: 'completed'}
         per_page.times { Analysis.create!(attribute) }
         @analyses = Analysis.order(created_at: :desc).page(1)
       end
-
-      after(:all) { Analysis.destroy_all }
 
       include_context 'HTML初期化'
       it_behaves_like '画面共通テスト'
@@ -261,13 +261,13 @@ describe 'analyses/manage', type: :view do
   context "分析ジョブ情報が#{per_page * (Kaminari.config.window + 2)}件の場合" do
     total = per_page * (Kaminari.config.window + 2)
 
+    include_context 'トランザクション作成'
+
     before(:all) do
       attribute = {num_data: 10000, num_tree: 100, state: 'processing'}
       total.times { Analysis.create!(attribute) }
       @analyses = Analysis.order(created_at: :desc).page(1)
     end
-
-    after(:all) { Analysis.destroy_all }
 
     include_context 'HTML初期化'
     it_behaves_like '画面共通テスト', expected: {total: total}

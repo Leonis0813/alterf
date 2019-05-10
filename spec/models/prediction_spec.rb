@@ -39,6 +39,8 @@ describe Prediction, type: :model do
 
   describe '#destroy' do
     describe '正常系' do
+      include_context 'トランザクション作成'
+
       before(:all) do
         attribute = {model: 'model', test_data: 'test_data', state: 'processing'}
         @prediction = Prediction.create!(attribute)

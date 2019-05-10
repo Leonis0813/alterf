@@ -15,6 +15,8 @@ describe PredictionsController, type: :controller do
   describe '正常系' do
     %i[file url].each do |type|
       context "テストデータの種類が#{type}の場合" do
+        include_context 'トランザクション作成'
+
         before(:all) do
           RSpec::Mocks.with_temporary_scope do
             allow(PredictionJob).to receive(:perform_later).and_return(true)
@@ -23,8 +25,6 @@ describe PredictionsController, type: :controller do
             @pbody = JSON.parse(@res.body) rescue nil
           end
         end
-
-        after(:all) { Prediction.destroy_all }
 
         it_behaves_like 'ステータスコードが正しいこと', '200'
 

@@ -6,6 +6,8 @@ describe AnalysesController, type: :controller do
   default_params = {num_data: 1000, num_tree: 100}
 
   describe '正常系' do
+    include_context 'トランザクション作成'
+
     before(:all) do
       RSpec::Mocks.with_temporary_scope do
         allow(AnalysisJob).to receive(:perform_later).and_return(true)
@@ -13,8 +15,6 @@ describe AnalysesController, type: :controller do
         @pbody = JSON.parse(@res.body) rescue nil
       end
     end
-
-    after(:all) { Analysis.destroy_all }
 
     it_behaves_like 'ステータスコードが正しいこと', '200'
 

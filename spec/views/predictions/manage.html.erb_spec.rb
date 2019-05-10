@@ -295,6 +295,8 @@ describe 'predictions/manage', type: :view do
 
   context "予測ジョブ情報が#{per_page}件の場合" do
     context '実行中の場合' do
+      include_context 'トランザクション作成'
+
       before(:all) do
         attribute = {
           model: 'model',
@@ -304,8 +306,6 @@ describe 'predictions/manage', type: :view do
         per_page.times { Prediction.create!(attribute) }
         @predictions = Prediction.order(created_at: :desc).page(1)
       end
-
-      after(:all) { Prediction.destroy_all }
 
       include_context 'HTML初期化'
       it_behaves_like '画面共通テスト'
@@ -318,6 +318,8 @@ describe 'predictions/manage', type: :view do
       attribute = {model: 'model', test_data: 'test_data', state: 'completed'}
 
       context '番号の数が6個の場合' do
+        include_context 'トランザクション作成'
+
         before(:all) do
           per_page.times do
             prediction = Prediction.create!(attribute)
@@ -326,8 +328,6 @@ describe 'predictions/manage', type: :view do
           @predictions = Prediction.order(created_at: :desc).page(1)
         end
 
-        after(:all) { Prediction.destroy_all }
-
         include_context 'HTML初期化'
         it_behaves_like '画面共通テスト'
         it_behaves_like 'ページングボタンが表示されていないこと'
@@ -335,6 +335,8 @@ describe 'predictions/manage', type: :view do
       end
 
       context '番号の数が7個の場合' do
+        include_context 'トランザクション作成'
+
         before(:all) do
           per_page.times do
             prediction = Prediction.create!(attribute)
@@ -342,8 +344,6 @@ describe 'predictions/manage', type: :view do
           end
           @predictions = Prediction.order(created_at: :desc).page(1)
         end
-
-        after(:all) { Prediction.destroy_all }
 
         include_context 'HTML初期化'
         it_behaves_like '画面共通テスト'
@@ -356,13 +356,13 @@ describe 'predictions/manage', type: :view do
   describe "予測ジョブ情報が#{per_page * (Kaminari.config.window + 2)}件の場合" do
     total = per_page * (Kaminari.config.window + 2)
 
+    include_context 'トランザクション作成'
+
     before(:all) do
       attribute = {model: 'model', test_data: 'test_data', state: 'processing'}
       total.times { Prediction.create!(attribute) }
       @predictions = Prediction.order(created_at: :desc).page(1)
     end
-
-    after(:all) { Prediction.destroy_all }
 
     include_context 'HTML初期化'
     it_behaves_like '画面共通テスト', expected: {total: total}
