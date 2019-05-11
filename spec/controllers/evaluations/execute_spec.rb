@@ -7,61 +7,34 @@ describe EvaluationsController, type: :controller do
   model = Rack::Test::UploadedFile.new(File.open(model_file_path))
   default_params = {model: model}
 
-  describe '正常系' do
+  shared_context 'リクエスト送信' do |body: default_params|
     before(:all) do
       RSpec::Mocks.with_temporary_scope do
         allow(EvaluationJob).to receive(:perform_later).and_return(true)
-        @res = client.post('/evaluations', default_params)
-        @pbody = JSON.parse(@res.body) rescue nil
+        response = client.post('/evaluations', body)
+        @response_status = response.status
+        @response_body = JSON.parse(response.body) rescue nil
       end
     end
+  end
 
-    after(:all) { Evaluation.destroy_all }
-
-    it_behaves_like 'ステータスコードが正しいこと', '200'
-
-    it 'レスポンスが空であること' do
-      is_asserted_by { @pbody == {} }
-    end
+  describe '正常系' do
+    include_context 'トランザクション作成'
+    include_context 'リクエスト送信'
+    it_behaves_like 'レスポンスが正常であること', status: 200, body: {}
   end
 
   describe '異常系' do
     context 'modelがない場合' do
-      before(:all) do
-        RSpec::Mocks.with_temporary_scope do
-          allow(EvaluationJob).to receive(:perform_later).and_return(true)
-          @res = client.post('/evaluations', {})
-          @pbody = JSON.parse(@res.body) rescue nil
-        end
-      end
+      body = [{'error_code' => 'absent_param_model'}]
+      include_context 'リクエスト送信', body: {}
+      it_behaves_like 'レスポンスが正常であること', status: 400, body: body
+    end
 
-      it '400エラーが返ること' do
-        is_asserted_by { @res.status == 400 }
-      end
-
-      it 'エラーメッセージが正しいこと' do
-        error_codes = [{'error_code' => 'absent_param_model'}]
-        is_asserted_by { JSON.parse(@res.body) == error_codes }
-      end
-
-      context 'modelが不正な場合' do
-        before(:all) do
-          RSpec::Mocks.with_temporary_scope do
-            allow(EvaluationJob).to receive(:perform_later).and_return(true)
-            @res = client.post('/evaluations', model: 'invalid')
-            @pbody = JSON.parse(@res.body) rescue nil
-          end
-        end
-
-        it '400エラーが返ること' do
-          is_asserted_by { @res.status == 400 }
-        end
-
-        it 'エラーメッセージが正しいこと' do
-          error_codes = [{'error_code' => 'invalid_param_model'}]
-          is_asserted_by { JSON.parse(@res.body) == error_codes }
-        end
-      end
+    context 'modelが不正な場合' do
+      body = [{'error_code' => 'invalid_param_model'}]
+      include_context 'リクエスト送信', body: {model: 'invalid'}
+      it_behaves_like 'レスポンスが正常であること', status: 400, body: body
     end
   end
 end

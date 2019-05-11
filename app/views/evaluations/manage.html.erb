@@ -1,6 +1,6 @@
 <div class='row center-block'>
   <div class='col-lg-4'>
-    <div id='new-evaluation' class='well tab-pane active'>
+    <div id='new-evaluation' class='well'>
       <h3>モデルを評価</h3>
       <%= form_for @evaluation, :html => {:multipart => true}, :url => evaluations_path, :remote => true do |f| %>
         <div class='form-group'>
@@ -13,8 +13,8 @@
     </div>
   </div>
 
-  <div class='col-lg-8'>
-    <h4 style='padding: 10px 0px'>ジョブ実行履歴</h4>
+  <div class='col-lg-8 well'>
+      <h3 style='padding: 10px 0px'>ジョブ実行履歴</h3>
     <% from = @evaluations.total_count == 0 ? 0 : @evaluations.offset_value + 1 %>
     <% info = {:total_count => @evaluations.total_count, :from => from, :to => @evaluations.offset_value + @evaluations.size} %>
     <h4 style='padding: 10px 0px;display: inline'><%= t('views.pagination.info', info) %></h4>
