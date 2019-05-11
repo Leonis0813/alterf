@@ -4,6 +4,14 @@ require 'rails_helper'
 
 describe 'evaluations/manage', type: :view do
   per_page = 1
+  default_attribute = {model: 'model', state: 'processing'}
+
+  shared_context '評価ジョブを作成する' do |total: per_page, attribute: {}|
+    before(:all) do
+      total.times { Evaluation.create!(attribute) }
+      @evaluations = Evaluation.order(created_at: :desc).page(1)
+    end
+  end
 
   shared_examples '画面共通テスト' do |expected: {}|
     it_behaves_like 'ヘッダーが表示されていること'
@@ -97,49 +105,29 @@ describe 'evaluations/manage', type: :view do
     @html ||= Nokogiri::parse(response)
   end
 
-  context "評価ジョブ情報が#{per_page}件の場合" do
-    context '実行中の場合' do
-      include_context 'トランザクション作成'
+  context '実行中の場合' do
+    include_context 'トランザクション作成'
+    include_context '評価ジョブを作成する', attribute: default_attribute
+    include_context 'HTML初期化'
+    it_behaves_like '画面共通テスト'
+    it_behaves_like 'ページングボタンが表示されていないこと'
+    it_behaves_like 'ジョブが実行中状態になっていること'
+  end
 
-      before(:all) do
-        attribute = {model: 'model', state: 'processing'}
-        per_page.times { Evaluation.create!(attribute) }
-        @evaluations = Evaluation.order(created_at: :desc).page(1)
-      end
-
-      include_context 'HTML初期化'
-      it_behaves_like '画面共通テスト'
-      it_behaves_like 'ページングボタンが表示されていないこと'
-      it_behaves_like 'ジョブが実行中状態になっていること'
-    end
-
-    context '完了している場合' do
-      include_context 'トランザクション作成'
-
-      before(:all) do
-        attribute = {model: 'model', state: 'completed'}
-        per_page.times { Evaluation.create!(attribute) }
-        @evaluations = Evaluation.order(created_at: :desc).page(1)
-      end
-
-      include_context 'HTML初期化'
-      it_behaves_like '画面共通テスト'
-      it_behaves_like 'ページングボタンが表示されていないこと'
-      it_behaves_like 'ジョブが完了状態になっていること'
-    end
+  context '完了している場合' do
+    attribute = default_attribute.merge(state: 'completed')
+    include_context 'トランザクション作成'
+    include_context '評価ジョブを作成する', attribute: attribute
+    include_context 'HTML初期化'
+    it_behaves_like '画面共通テスト'
+    it_behaves_like 'ページングボタンが表示されていないこと'
+    it_behaves_like 'ジョブが完了状態になっていること'
   end
 
   context "評価ジョブ情報が#{per_page * (Kaminari.config.window + 2)}件の場合" do
     total = per_page * (Kaminari.config.window + 2)
-
     include_context 'トランザクション作成'
-
-    before(:all) do
-      attribute = {model: 'model', state: 'processing'}
-      total.times { Evaluation.create!(attribute) }
-      @evaluations = Evaluation.order(created_at: :desc).page(1)
-    end
-
+    include_context '評価ジョブを作成する', total: total, attribute: default_attribute
     include_context 'HTML初期化'
     it_behaves_like '画面共通テスト', expected: {total: total}
     it_behaves_like 'ページングボタンが表示されていること', model: 'evaluation'
