@@ -43,87 +43,6 @@ describe 'analyses/manage', type: :view do
     end
   end
 
-  shared_examples 'ページングボタンが表示されていること' do
-    it '先頭のページへのボタンが表示されていないこと' do
-      xpath = [
-        paging_xpath,
-        'li[@class="pagination"]',
-        'span[@class="first"]',
-        'a',
-      ].join('/')
-      link_first = @html.xpath(xpath)
-      is_asserted_by { link_first.blank? }
-    end
-
-    it '前のページへのボタンが表示されていないこと' do
-      xpath = [
-        paging_xpath,
-        'li[@class="pagination"]',
-        'span[@class="prev"]',
-        'a',
-      ].join('/')
-      link_prev = @html.xpath(xpath)
-      is_asserted_by { link_prev.blank? }
-    end
-
-    it '1ページ目が表示されていること' do
-      xpath = [
-        paging_xpath,
-        'li[@class="page-item active"]',
-        'a[@class="page-link"]',
-      ].join('/')
-      link_one = @html.xpath(xpath)
-      is_asserted_by { link_one.present? }
-      is_asserted_by { link_one.text == '1' }
-    end
-
-    it '2ページ目へのリンクが表示されていること' do
-      xpath = [
-        paging_xpath,
-        'li[@class="page-item"]',
-        'a[@class="page-link"][@href="/analyses?page=2"]',
-      ].join('/')
-      link_two = @html.xpath(xpath)
-      is_asserted_by { link_two.present? }
-      is_asserted_by { link_two.text == '2' }
-    end
-
-    it '次のページへのボタンが表示されていること' do
-      xpath = [
-        paging_xpath,
-        'li[@class="page-item"]',
-        'span[@class="next"]',
-        'a[@class="page-link"][@href="/analyses?page=2"]',
-      ].join('/')
-      link_next = @html.xpath(xpath)
-      is_asserted_by { link_next.present? }
-      is_asserted_by { link_next.text == I18n.t('views.pagination.next') }
-    end
-
-    it '最後のページへのボタンが表示されていること' do
-      xpath = [
-        paging_xpath,
-        'li[@class="page-item"]',
-        'span[@class="last"]',
-        'a',
-      ].join('/')
-      link_last = @html.xpath(xpath)
-      is_asserted_by { link_last.present? }
-      is_asserted_by { link_last.text == I18n.t('views.pagination.last') }
-    end
-
-    it '3点リーダが表示されていること' do
-      xpath = [
-        paging_xpath,
-        'li[@class="page-item disabled"]',
-        'a[@href="#"]',
-      ].join('/')
-      link_gap = @html.xpath(xpath)
-      is_asserted_by { link_gap.present? }
-      is_asserted_by { link_gap.text == '...' }
-    end
-  end
-
   shared_examples 'テーブルが表示されていること' do |rows: 0|
     before(:each) do
       @table = @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']")
@@ -232,6 +151,6 @@ describe 'analyses/manage', type: :view do
 
     include_context 'HTML初期化'
     it_behaves_like '画面共通テスト', expected: {total: total}
-    it_behaves_like 'ページングボタンが表示されていること'
+    it_behaves_like 'ページングボタンが表示されていること', model: 'analysis'
   end
 end

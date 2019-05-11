@@ -52,3 +52,43 @@ shared_examples 'ページングボタンが表示されていないこと' do
     is_asserted_by { paging.blank? }
   end
 end
+
+shared_examples 'ページングボタンが表示されていること' do |model: nil|
+  it '先頭のページへのボタンが表示されていないこと' do
+    is_asserted_by { @html.xpath(link_first_xpath).blank? }
+  end
+
+  it '前のページへのボタンが表示されていないこと' do
+    is_asserted_by { @html.xpath(link_prev_xpath).blank? }
+  end
+
+  it '1ページ目が表示されていること' do
+    link_one = @html.xpath(link_one_xpath)
+    is_asserted_by { link_one.present? }
+    is_asserted_by { link_one.text == '1' }
+  end
+
+  it '2ページ目へのリンクが表示されていること' do
+    link_two = @html.xpath(link_two_xpath(model))
+    is_asserted_by { link_two.present? }
+    is_asserted_by { link_two.text == '2' }
+  end
+
+  it '次のページへのボタンが表示されていること' do
+    link_next = @html.xpath(link_next_xpath(model))
+    is_asserted_by { link_next.present? }
+    is_asserted_by { link_next.text == I18n.t('views.pagination.next') }
+  end
+
+  it '最後のページへのボタンが表示されていること' do
+    link_last = @html.xpath(link_last_xpath)
+    is_asserted_by { link_last.present? }
+    is_asserted_by { link_last.text == I18n.t('views.pagination.last') }
+  end
+
+  it '3点リーダが表示されていること' do
+    list_gap = @html.xpath(list_gap_xpath)
+    is_asserted_by { list_gap.present? }
+    is_asserted_by { list_gap.text == '...' }
+  end
+end
