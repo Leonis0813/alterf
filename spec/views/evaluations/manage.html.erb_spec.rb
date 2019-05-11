@@ -78,8 +78,8 @@ describe 'evaluations/manage', type: :view do
       rows =
         @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
 
-      @evaluations.each_with_index do |analysis, i|
-        is_asserted_by { rows[i].xpath('//td')[2].text == '実行中' }
+      rows.each do |row|
+        is_asserted_by { row.xpath('//td')[2].text == '実行中' }
       end
     end
   end
@@ -89,8 +89,8 @@ describe 'evaluations/manage', type: :view do
       rows =
         @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
 
-      @evaluations.each_with_index do |analysis, i|
-        is_asserted_by { rows[i].xpath('//td')[2].text == '完了' }
+      rows.each do |row|
+        is_asserted_by { row.xpath('//td')[2].text == '完了' }
       end
     end
   end
@@ -102,7 +102,7 @@ describe 'evaluations/manage', type: :view do
 
   before(:each) do
     render template: 'evaluations/manage', layout: 'layouts/application'
-    @html ||= Nokogiri::parse(response)
+    @html ||= Nokogiri.parse(response)
   end
 
   context '実行中の場合' do

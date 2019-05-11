@@ -119,7 +119,7 @@ describe 'predictions/manage', type: :view do
       rows =
         @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
 
-      @predictions.each_with_index do |prediction, i|
+      @predictions.each_with_index do |_, i|
         test_data = rows.xpath('//td[@class="td-result"]')[i]
         is_asserted_by { test_data.search('span').text == '実行中' }
         is_asserted_by { test_data.search('i[@class="fa fa-refresh fa-spin"]').present? }
@@ -191,7 +191,7 @@ describe 'predictions/manage', type: :view do
 
   before(:each) do
     render template: 'predictions/manage', layout: 'layouts/application'
-    @html ||= Nokogiri::parse(response)
+    @html ||= Nokogiri.parse(response)
   end
 
   context '実行中の場合' do
