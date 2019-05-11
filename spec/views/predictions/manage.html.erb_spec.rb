@@ -4,9 +4,6 @@ require 'rails_helper'
 
 describe 'predictions/manage', type: :view do
   per_page = 1
-  message_map = {'warning' => '実行中', 'success' => '完了'}
-  row_xpath = '//div[@id="main-content"]/div[@class="row center-block"]'
-  table_panel_xpath = [row_xpath, 'div[@class="col-lg-8 well"]'].join('/')
 
   shared_examples '画面共通テスト' do |expected: {}|
     it_behaves_like 'ヘッダーが表示されていること'
@@ -20,85 +17,56 @@ describe 'predictions/manage', type: :view do
   end
 
   shared_examples '入力フォームが表示されていること' do
-    form_panel_xpath = [
-      row_xpath,
-      'div[@class="col-lg-4"]',
-      'div[@id="new-prediction"]',
-    ].join('/')
-
     it 'タイトルが表示されていること' do
-      title = @html.xpath("#{form_panel_xpath}/h3")
+      title = @html.xpath("#{form_panel_xpath}/div[@id='new-prediction']/h3")
       is_asserted_by { title.present? }
       is_asserted_by { title.text == 'レースを予測' }
     end
 
     it 'テストデータへのリンクが表示されていること' do
-      link = @html.xpath("#{form_panel_xpath}/p/a[@href='http://db.netkeiba.com']")
+      link = @html.xpath("#{form_panel_xpath}/div[@id='new-prediction']/p" \
+                         '/a[@href="http://db.netkeiba.com"]')
       is_asserted_by { link.present? }
       is_asserted_by { link.text == 'こちら' }
     end
 
-    form_tag_xpath = 'form[@action="/predictions"][@data-remote="true"]' \
-                     '[@method="post"][@class="new_prediction"]'
-    form_xpath = [form_panel_xpath, form_tag_xpath].join('/')
-    input_xpath = "#{form_xpath}/div[@class='form-group']"
-
     %w[model test_data].each do |param|
       it "prediction_#{param}を含む<label>タグがあること" do
-        label = @html.xpath("#{input_xpath}/label[@for='prediction_#{param}']")
+        label =
+          @html.xpath("#{input_xpath('prediction')}/label[@for='prediction_#{param}']")
         is_asserted_by { label.present? }
       end
 
       it "prediction_#{param}を含む<input>タグがあること" do
-        input = @html.xpath("#{input_xpath}/label[@for='prediction_#{param}']")
+        input =
+          @html.xpath("#{input_xpath('prediction')}/label[@for='prediction_#{param}']")
         is_asserted_by { input.present? }
       end
     end
 
     %w[file url].each do |type|
       it "#{type}を選択するラジオボタンがあること" do
-        radio_button = @html.xpath("#{input_xpath}/label/input[@id='type_#{type}']")
+        radio_button =
+          @html.xpath("#{input_xpath('prediction')}/label/input[@id='type_#{type}']")
         is_asserted_by { radio_button.present? }
       end
     end
 
     it 'ファイルが選択状態になっていること' do
-      input = @html.xpath("#{input_xpath}/label/input[@id='type_file'][@checked]")
+      input = @html.xpath("#{input_xpath('prediction')}/label/input[@id='type_file']" \
+                          '[@checked]')
       is_asserted_by { input.present? }
     end
 
     %w[submit reset].each do |type|
       it "typeが#{type}のボタンがあること" do
-        button = @html.xpath("#{form_xpath}/input[@type='#{type}']")
+        button = @html.xpath("#{form_xpath('prediction')}/input[@type='#{type}']")
         is_asserted_by { button.present? }
       end
     end
   end
 
-  shared_examples '表示件数情報が表示されていること' do |total: 0, from: 0, to: 0|
-    it 'タイトルが表示されていること' do
-      title = @html.xpath("#{table_panel_xpath}/h3")
-      is_asserted_by { title.present? }
-      is_asserted_by { title.text == 'ジョブ実行履歴' }
-    end
-
-    it '件数情報が表示されていること' do
-      number = @html.xpath("#{table_panel_xpath}/h4")
-      is_asserted_by { number.present? }
-      is_asserted_by { number.text == "#{total}件中#{from}〜#{to}件を表示" }
-    end
-  end
-
-  shared_examples 'ページングボタンが表示されていないこと' do
-    it do
-      paging = @html.xpath("#{table_panel_xpath}/nav/ul[@class='pagination']")
-      is_asserted_by { paging.blank? }
-    end
-  end
-
   shared_examples 'ページングボタンが表示されていること' do
-    paging_xpath = [table_panel_xpath, 'nav', 'ul[@class="pagination"]'].join('/')
-
     it '先頭のページへのボタンが表示されていないこと' do
       xpath = [
         paging_xpath,
@@ -231,16 +199,19 @@ describe 'predictions/manage', type: :view do
 
   shared_examples 'テーブルに予測結果が表示されていること' do |numbers: 0|
     color = %w[orange skyblue magenta]
-    xpath = [
-      table_panel_xpath,
-      'table[@class="table table-hover"]',
-      'tbody',
-      'tr',
-      'td[@class="td-result"]',
-    ].join('/')
+
+    before(:each) do
+      @result = [
+        table_panel_xpath,
+        'table[@class="table table-hover"]',
+        'tbody',
+        'tr',
+        'td[@class="td-result"]',
+      ].join('/')
+    end
 
     it 'タイトルが表示されること' do
-      results = @html.xpath(xpath)
+      results = @html.xpath(@result)
 
       @predictions.each_with_index do |prediction, i|
         title = prediction.results.map(&:number).sort.join(',')
@@ -249,7 +220,7 @@ describe 'predictions/manage', type: :view do
     end
 
     it '番号が正しく表示されていること' do
-      results = @html.xpath(xpath)
+      results = @html.xpath(@result)
 
       @predictions.each_with_index do |prediction, i|
         results[i].search('span[@class="fa-stack"]').each_with_index do |result, j|
@@ -269,7 +240,7 @@ describe 'predictions/manage', type: :view do
     end
 
     it '3点リーダが表示されていないこと', if: numbers <= 6 do
-      @html.xpath(xpath).each do |result|
+      @html.xpath(@result).each do |result|
         is_asserted_by do
           result.children.search('span').none? {|span| span.text.strip == '...' }
         end
@@ -277,7 +248,7 @@ describe 'predictions/manage', type: :view do
     end
 
     it '3点リーダが表示されていること', if: numbers > 6 do
-      @html.xpath(xpath).each do |result|
+      @html.xpath(@result).each do |result|
         is_asserted_by { result.children.search('span').last.text == '...' }
       end
     end

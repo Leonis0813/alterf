@@ -4,8 +4,6 @@ require 'rails_helper'
 
 describe 'evaluations/manage', type: :view do
   per_page = 1
-  row_xpath = '//div[@id="main-content"]/div[@class="row center-block"]'
-  table_panel_xpath = [row_xpath, 'div[@class="col-lg-8"]'].join('/')
 
   shared_examples '画面共通テスト' do |expected: {}|
     it_behaves_like 'ヘッダーが表示されていること'
@@ -19,54 +17,31 @@ describe 'evaluations/manage', type: :view do
   end
 
   shared_examples '入力フォームが表示されていること' do
-    form_panel_xpath = [
-      row_xpath,
-      'div[@class="col-lg-4"]',
-      'div[@id="new-evaluation"]',
-    ].join('/')
-
     it 'タイトルが表示されていること' do
-      title = @html.xpath("#{form_panel_xpath}/h3")
+      title = @html.xpath("#{form_panel_xpath}/div[@id='new-evaluation']/h3")
       is_asserted_by { title.present? }
       is_asserted_by { title.text == 'モデルを評価' }
     end
 
-    form_tag_xpath = 'form[@action="/evaluations"][@data-remote="true"]' \
-                     '[@method="post"][@class="new_evaluation"]'
-    form_xpath = [form_panel_xpath, form_tag_xpath].join('/')
-    input_xpath = "#{form_xpath}/div[@class='form-group']"
-
     %w[model].each do |param|
       it "evaluation_#{param}を含む<label>タグがあること" do
-        label = @html.xpath("#{input_xpath}/label[@for='evaluation_#{param}']")
+        label =
+          @html.xpath("#{input_xpath('evaluation')}/label[@for='evaluation_#{param}']")
         is_asserted_by { label.present? }
       end
 
       it "evaluation_#{param}を含む<input>タグがあること" do
-        input = @html.xpath("#{input_xpath}/input[@id='evaluation_#{param}']")
+        input =
+          @html.xpath("#{input_xpath('evaluation')}/input[@id='evaluation_#{param}']")
         is_asserted_by { input.present? }
       end
     end
 
     %w[submit reset].each do |type|
       it "typeが#{type}のボタンがあること" do
-        button = @html.xpath("#{form_xpath}/input[@type='#{type}']")
+        button = @html.xpath("#{form_xpath('evaluation')}/input[@type='#{type}']")
         is_asserted_by { button.present? }
       end
-    end
-  end
-
-  shared_examples '表示件数情報が表示されていること' do |total: 0, from: 0, to: 0|
-    it 'タイトルが表示されていること' do
-      title = @html.xpath("#{table_panel_xpath}/h3")
-      is_asserted_by { title.present? }
-      is_asserted_by { title.text == 'ジョブ実行履歴' }
-    end
-
-    it '件数情報が表示されていること' do
-      number = @html.xpath("#{table_panel_xpath}/h4")
-      is_asserted_by { number.present? }
-      is_asserted_by { number.text == "#{total}件中#{from}〜#{to}件を表示" }
     end
   end
 
@@ -90,16 +65,7 @@ describe 'evaluations/manage', type: :view do
     end
   end
 
-  shared_examples 'ページングボタンが表示されていないこと' do
-    it do
-      paging = @html.xpath("#{table_panel_xpath}/nav/ul[@class='pagination']")
-      is_asserted_by { paging.blank? }
-    end
-  end
-
   shared_examples 'ページングボタンが表示されていること' do
-    paging_xpath = [table_panel_xpath, 'nav', 'ul[@class="pagination"]'].join('/')
-
     it '先頭のページへのボタンが表示されていないこと' do
       xpath = [
         paging_xpath,
