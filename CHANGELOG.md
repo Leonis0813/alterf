@@ -1,5 +1,6 @@
 # 4.1.1 (2019/05/12)
 - [FIX] bug for fetchgin race top
+- [FIX] prediction job not to move file if not exists
 
 # 4.1.0 (2019/05/11)
 - [UPDATE] prediction view to show results
