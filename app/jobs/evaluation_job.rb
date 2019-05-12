@@ -17,7 +17,9 @@ class EvaluationJob < ActiveJob::Base
 
       args = [evaluation_id, evaluation.model, Settings.evaluation.tmp_file_name]
       system "Rscript #{Rails.root}/scripts/predict.r #{args.join(' ')}"
-      FileUtils.mv("#{data_dir}/prediction.yml", "#{data_dir}/#{race_id}.yml")
+
+      result_file = File.join(data_dir, 'prediction.yml')
+      FileUtils.mv(result_file, "#{data_dir}/#{race_id}.yml") if File.exist?(result_file)
     end
 
     evaluation.update!(state: 'completed')
