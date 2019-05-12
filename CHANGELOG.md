@@ -1,3 +1,6 @@
+# 4.1.1 (2019/05/12)
+- [FIX] bug for fetchgin race top
+
 # 4.1.0 (2019/05/11)
 - [UPDATE] prediction view to show results
 - [UPDATE] gems
