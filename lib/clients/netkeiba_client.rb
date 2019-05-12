@@ -3,8 +3,7 @@
 class NetkeibaClient < HTTPClient
   def http_get_race_top
     res = get("#{Settings.netkeiba.base_url}/?pid=race_top")
-    html = Nokogiri::HTML.parse(res.body.encode('UTF-8', 'EUC-JP').gsub('&nbsp;', ' '))
-    html.scan(%r{.*/race/(\d+)}).flatten
+    res.body.scan(%r{.*/race/(\d+)}).flatten
   end
 
   def http_get_race(url)
