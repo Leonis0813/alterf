@@ -111,7 +111,7 @@ GEM
       dry-types (~> 0.14.0)
     erubis (2.7.0)
     execjs (2.7.0)
-    ffi (1.11.0)
+    ffi (1.11.1)
     font-awesome-rails (4.7.0.5)
       railties (>= 3.2, < 6.1)
     fuubar (2.3.2)
