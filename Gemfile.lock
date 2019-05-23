@@ -232,7 +232,7 @@ GEM
       redis (>= 3.0.4)
     ref (2.0.0)
     regexp_parser (1.5.0)
-    remotipart (1.4.2)
+    remotipart (1.4.3)
     resque (2.0.0)
       mono_logger (~> 1.0)
       multi_json (~> 1.0)
