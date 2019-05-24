@@ -5,70 +5,80 @@ ntree <- as.integer(args[3])
 
 library(yaml)
 config <- yaml.load_file("scripts/settings.yml")
+
 library(RMySQL)
 driver <- dbDriver("MySQL")
 dbconnector <- dbConnect(
   driver,
-  dbname="denebola",
-  user=config$mysql$user,
-  password=config$mysql$password,
-  host=config$mysql$host,
-  port=as.integer(config$mysql$port)
+  dbname = config$mysql$database,
+  user = config$mysql$user,
+  password = config$mysql$password,
+  host = config$mysql$host,
+  port = config$mysql$port
 )
 
-sql <- "SELECT race_id FROM features WHERE `order` = '1'"
+sql <- "SELECT race_id FROM features WHERE won = 1"
 records <- dbGetQuery(dbconnector, sql)
+
+sql <- "desc features"
+description <- dbGetQuery(dbconnector, sql)
 
 race_ids <- records$race_id
 if(length(race_ids) >= as.integer(num_training_data) / 2) {
   race_ids <- sample(race_ids, as.integer(num_training_data) / 2)
 }
 
+not_feature_names <- c("id", "jockey", "horse_id", "created_at", "updated_at")
+features <- description[-which(description$Field %in% not_feature_names),]
+
 sql <- paste(
   "SELECT ",
-  paste(config$features, collapse=","),
-  ", IF(`order` = '1', 1, 0) AS won FROM features WHERE `order` REGEXP '[0-9]+' AND race_id IN (",
+  paste(features$Field, collapse=","),
+  " FROM features WHERE race_id IN (",
   paste(race_ids, collapse = ","),
   ")"
 )
-training_data <- dbGetQuery(dbconnector, sql)
-training_data$race_id <- as.factor(training_data$race_id)
-training_data$direction <- as.factor(training_data$direction)
-training_data$grade[is.na(training_data$grade)] <- "N"
-training_data$grade <- as.factor(training_data$grade)
-training_data$place <- as.factor(training_data$place)
-training_data$track <- as.factor(training_data$track)
-training_data$weather <- as.factor(training_data$weather)
-training_data$won <- as.factor(training_data$won)
-splited_data <- split(training_data, training_data$race_id)
+records <- dbGetQuery(dbconnector, sql)
 
-racewise_feature <- c("burden_weight", "weight", "weight_diff")
+for(i in 1:nrow(features)) {
+  feature_name <- features[i, "Field"]
+
+  if(grepl("varchar", features[i, "Type"]) || feature_name == "won") {
+    records[, feature_name] <- as.factor(records[, feature_name])
+  }
+}
+
+splited_data <- split(records, records$race_id)
 scaled_data <- unsplit(
   lapply(splited_data,
     function(rw) {
       data.frame(
         won = rw$won,
         age = rw$age,
+        blank = rw$blank,
         direction = rw$direction,
         distance = rw$distance,
+        distance_diff = rw$distance_diff,
+        entry_times = rw$entry_times,
         grade = rw$grade,
+        last_race_order = rw$last_race_order,
+        month = rw$month,
         number = rw$number,
         place = rw$place,
         round = rw$round,
+        running_style = rw$running_style,
+        second_last_race_order = rw$second_last_race_order,
+        sex = rw$sex,
         track = rw$track,
         weather = rw$weather,
-        scale(rw[,racewise_feature])
+        scale(rw[,config$racewise_features])
       )
     }
   ),
-  training_data$race_id
+  records$race_id
 )
-scaled_data <- scaled_data[!is.na(scaled_data$burden_weight),]
-scaled_data <- scaled_data[!is.na(scaled_data$weight),]
-scaled_data <- scaled_data[!is.na(scaled_data$weight_diff),]
-scaled_data <- scaled_data[!is.nan(scaled_data$burden_weight),]
-scaled_data <- scaled_data[!is.nan(scaled_data$weight),]
-scaled_data <- scaled_data[!is.nan(scaled_data$weight_diff),]
+
+scaled_data[is.nan(scaled_data$burden_weight),]$burden_weight <- 0
 
 positive <- scaled_data[scaled_data$won==1,]
 negative <- scaled_data[scaled_data$won==0,]
@@ -76,34 +86,48 @@ negative <- negative[sample(nrow(negative), nrow(positive)), ]
 training_data <- rbind(positive, negative)
 
 library(randomForest)
-model <- tuneRF(x=training_data[, colnames(training_data) != "won"], y=training_data$won, ntreeTry=ntree, doBest=T)
+model <- tuneRF(
+  x=training_data[, colnames(training_data) != "won"],
+  y=training_data$won,
+  ntreeTry=ntree,
+  doBest=T
+)
 
-attributes(model)$levels_direction <- levels(training_data$direction)
-attributes(model)$levels_grade <- levels(training_data$grade)
-attributes(model)$levels_place <- levels(training_data$place)
-attributes(model)$levels_track <- levels(training_data$track)
-attributes(model)$levels_weather <- levels(training_data$weather)
+for(i in 1:nrow(features)) {
+  feature_name <- features[i, "Field"]
+
+  if(grepl("varchar", features[i, "Type"]) && feature_name != "race_id") {
+    text <- paste(
+      "attributes(model)$levels_",
+      feature_name,
+      " <- levels(training_data$",
+      feature_name,
+      ")",
+      sep=""
+    )
+    eval(parse(text=text))
+  }
+}
 
 filename <- paste("tmp", "files", id, "analysis.yml", sep="/")
-write(paste("num_of_training_data:", num_training_data), file=filename)
+write(paste("num of races:", num_training_data), file=filename)
+write("num of features:", file=filename, append=T)
+write(paste("  positive:", nrow(positive)), file=filename, append=T)
+write(paste("  negative:", nrow(negative)), file=filename, append=T)
 write(paste("ntree:", ntree), file=filename, append=T)
 write(paste("mtry:", model$mtry), file=filename, append=T)
-write("training_data:", file=filename, append=T)
-attributes <- paste(
-  training_data$age,
-  training_data$burden_weight,
-  training_data$direction,
-  training_data$distance,
-  training_data$grade,
-  training_data$number,
-  training_data$place,
-  training_data$round,
-  training_data$track,
-  training_data$weather,
-  training_data$weight,
-  training_data$weight_diff,
-  training_data$won,
-  sep=", "
-)
-write(paste("  - [", attributes, "]", sep=""), file=filename, append=T)
+write("levels:", file=filename, append=T)
+for(i in 1:nrow(features)) {
+  feature_name <- features[i, "Field"]
+
+  if(grepl("varchar", features[i, "Type"]) && feature_name != "race_id") {
+    text <- paste("attributes(model)$levels_", feature_name, sep="")
+    levels <- paste(eval(parse(text=text)), collapse=", ")
+    write(paste("  ", feature_name, ": [", levels, "]", sep=""), file=filename, append=T)
+  }
+}
+write("importance:", file=filename, append=T)
+for(i in 1:nrow(model$importance)) {
+  write(paste("  ", rownames(model$importance)[i], ": ", model$importance[i], sep=""), file=filename, append=T)
+}
 save(model, file=paste("tmp", "files", id, "model.rf", sep="/"))
