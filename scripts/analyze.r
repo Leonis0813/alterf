@@ -71,7 +71,7 @@ scaled_data <- unsplit(
         sex = rw$sex,
         track = rw$track,
         weather = rw$weather,
-        scale(rw[,config$racewise_features])
+        scale(rw[,config$analysis$racewise_features])
       )
     }
   ),
