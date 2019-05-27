@@ -9,9 +9,8 @@ class PredictionJob < ActiveJob::Base
     test_data = prediction.test_data
 
     if test_data.match(URI::DEFAULT_PARSER.make_regexp)
-      race = NetkeibaClient.new.http_get_race(test_data)
       File.open("#{data_dir}/#{Settings.prediction.tmp_file_name}", 'w') do |file|
-        YAML.dump(race.stringify_keys, file)
+        YAML.dump(create_feature(test_data).deep_stringify_keys, file)
       end
     end
 
@@ -23,5 +22,40 @@ class PredictionJob < ActiveJob::Base
     end
     FileUtils.rm_rf(data_dir)
     prediction.update!(state: 'completed')
+  end
+
+  private
+
+  def create_feature(race_url)
+    client = NetkeibaClient.new
+    feature = client.http_get_race(race_url)
+    feature[:entries].each do |entry|
+      horse_url = "https://db.netkeiba.com#{entry[:horse_link]}"
+      horse_feature = client.http_get_horse(horse_url)
+      entry.delete(:horse_link)
+
+      entry[:running_style] = horse_feature[:running_style]
+
+      race_id = race_url.match(%r{/race/(\d+)})[1]
+      target_race_index = horse_feature[:results].index {|result| result[:race_id] == race_id }
+      target_results = horse_feature[:results][target_race_index..-1]
+
+      sum_prize_money = target_results.map {|result| result[:prize_money] }.inject(:+)
+      entry[:average_prize_money] = sum_prize_money / target_results.size.to_f
+      entry[:blank] = (target_results.first[:date] - target_results.second[:date]).to_i
+
+      sum_distance = target_results.map {|result| result[:distance] }.inject(:+)
+      average_distance = sum_distance / target_results.size.to_f
+      entry[:distance_diff] = (feature[:distance] - average_distance).abs / target_results.size
+      entry[:entry_times] = target_results.size
+      entry[:last_race_order] = target_results.second[:order]
+
+      times_within_third = target_results.select {|result| result[:order] <= 3 }.size
+      entry[:rate_within_third] = times_within_third / target_results.size.to_f
+      entry[:second_last_race_order] = target_results.third[:order]
+      entry[:win_times] = target_results.select {|result| result[:order] == 1 }.size
+    end
+
+    feature
   end
 end
