@@ -37,7 +37,7 @@ class NetkeibaClient < HTTPClient
       distance: track.match(/(\d*)m/)[1].to_i,
       grade: race_data.search('h1').text.match(/\(([^\(\)]*)\)$/).try(:[], 1) || 'N',
       month: race_date[2].to_i,
-      place: place.children[1].text.match(%r{<a.*class="active">(.*?)</a>})[1],
+      place: place.children.search('a[@class="active"]').text,
       round: race_data.search('dt').text.strip.match(/^(\d*) R$/)[1].to_i,
       track: track[0].sub('ダ', 'ダート'),
       weather: weather.match(/天候 : (.*)/)[1].strip,
@@ -45,7 +45,7 @@ class NetkeibaClient < HTTPClient
   end
 
   def entries(race_data)
-    race_data.xpath('//table[contains(@class, "race_table")]/tr').map do |entry|
+    race_data.xpath('//table[contains(@class, "race_table")]/tr')[1..-1].map do |entry|
       row = entry.search('td')
       attributes = row.map(&:text).map(&:strip)
       links = row.children.search('a').map {|a| a.attribute('href').value }
@@ -93,8 +93,9 @@ class NetkeibaClient < HTTPClient
   end
 
   def results(table)
-    table.children.search('tr').map do |row|
+    table.children.search('tbody').children.search('tr').map do |row|
       td = row.children.search('td')
+
       {
         race_id: td[4].children.search('a').attribute('href').value.match(%r{/race/(\d+)})[1],
         date: Date.parse(td[0].text.strip),
