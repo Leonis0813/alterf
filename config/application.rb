@@ -16,6 +16,10 @@ module Alterf
     config.i18n.default_locale = :ja
     config.active_record.raise_in_transactional_callbacks = true
     config.active_job.queue_adapter = :resque
-    config.autoload_paths += ["#{config.root}/lib/errors"]
+    config.autoload_paths += [
+      "#{config.root}/lib/clients",
+      "#{config.root}/lib/errors",
+      "#{config.root}/lib/utils",
+    ]
   end
 end
