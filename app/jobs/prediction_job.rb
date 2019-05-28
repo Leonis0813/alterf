@@ -53,11 +53,15 @@ class PredictionJob < ActiveJob::Base
       average_distance = sum_distance / target_results.size.to_f
       entry[:distance_diff] = (feature[:distance] - average_distance).abs / target_results.size
       entry[:entry_times] = target_results.size
-      entry[:last_race_order] = target_results.second[:order]
+
+      last_race = target_results.second
+      entry[:last_race_order] = last_race ? last_race[:order] : 0
 
       times_within_third = target_results.select {|result| result[:order] <= 3 }.size
       entry[:rate_within_third] = times_within_third / target_results.size.to_f
-      entry[:second_last_race_order] = target_results.third[:order]
+
+      second_last_race = target_results.third
+      entry[:second_last_race_order] = second_last_race ? second_last_race[:order] : 0
       entry[:win_times] = target_results.select {|result| result[:order] == 1 }.size
 
       feature[:entries] << %i[age average_prize_money blank burden_weight distance_diff
