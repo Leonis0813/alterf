@@ -12,7 +12,7 @@ load(model_file)
 
 test_data_file <- paste("tmp", "files", id, test_data, sep="/")
 data <- yaml.load_file(test_data_file)
-data_size <- length(data$test_data)
+data_size <- length(data$entries)
 
 distance <- c(rep(data$distance, data_size))
 direction <- c(rep(data$direction, data_size))
@@ -25,7 +25,7 @@ weather <- c(rep(data$weather, data_size))
 
 horse_features <- config$prediction$horse_features
 test_data <- as.data.frame(
-  t(matrix(unlist(data$test_data), length(horse_features), data_size))
+  t(matrix(unlist(data$entries), length(horse_features), data_size))
 )
 colnames(test_data) <- horse_features
 

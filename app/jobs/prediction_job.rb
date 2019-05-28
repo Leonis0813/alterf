@@ -28,8 +28,13 @@ class PredictionJob < ActiveJob::Base
 
   def create_feature(race_url)
     client = NetkeibaClient.new
-    feature = client.http_get_race(race_url)
-    feature[:entries].each do |entry|
+    race = client.http_get_race(race_url)
+
+    race_features = %i[direction distance grade month place round track weather]
+    feature = race.slice(*race_features)
+    feature[:entries] = []
+
+    race[:entries].each do |entry|
       horse_url = "https://db.netkeiba.com#{entry[:horse_link]}"
       horse_feature = client.http_get_horse(horse_url)
       entry.delete(:horse_link)
@@ -54,6 +59,12 @@ class PredictionJob < ActiveJob::Base
       entry[:rate_within_third] = times_within_third / target_results.size.to_f
       entry[:second_last_race_order] = target_results.third[:order]
       entry[:win_times] = target_results.select {|result| result[:order] == 1 }.size
+
+      feature[:entries] << %i[age average_prize_money blank burden_weight distance_diff
+        entry_times last_race_order number rate_within_third running_style
+        second_last_race_order sex weight weight_diff weight_per win_times].map do |name|
+        entry[name]
+      end
     end
 
     feature
