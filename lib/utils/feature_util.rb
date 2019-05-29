@@ -14,7 +14,7 @@ class FeatureUtil
 
       entry[:running_style] = horse_feature[:running_style]
 
-      race_id = race_url.match(%r{/race/(\d+)})[1]
+      race_id = race_path.match(%r{/race/(\d+)})[1]
       target_race_index = horse_feature[:results].index do |result|
         result[:race_id] == race_id
       end
