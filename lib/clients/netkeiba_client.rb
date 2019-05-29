@@ -6,7 +6,8 @@ class NetkeibaClient < HTTPClient
     res.body.scan(%r{.*/race/(\d+)}).flatten
   end
 
-  def http_get_race(url)
+  def http_get_race(path)
+    url = Settings.netkeiba.base_url + path
     html =
       Nokogiri::HTML.parse(get(url).body.encode('UTF-8', 'EUC-JP').gsub('&nbsp;', ' '))
 
@@ -18,7 +19,8 @@ class NetkeibaClient < HTTPClient
     race_feature(place, race_data, race_date).merge(entries: entries(race_data))
   end
 
-  def http_get_horse(url)
+  def http_get_horse(path)
+    url = Settings.netkeiba.base_url + path
     html =
       Nokogiri::HTML.parse(get(url).body.encode('UTF-8', 'EUC-JP').gsub('&nbsp;', ' '))
 
@@ -97,7 +99,8 @@ class NetkeibaClient < HTTPClient
       td = row.children.search('td')
 
       {
-        race_id: td[4].children.search('a').attribute('href').value.match(%r{/race/(\d+)})[1],
+        race_id: td[4].children.search('a').attribute('href').value
+                      .match(%r{/race/(\d+)})[1],
         date: Date.parse(td[0].text.strip),
         order: td[11].text.strip.to_i,
         distance: td[14].text.strip.match(/(\d+)\z/)[1].to_i,

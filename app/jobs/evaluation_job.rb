@@ -11,8 +11,8 @@ class EvaluationJob < ActiveJob::Base
 
     client.http_get_race_top.each do |race_id|
       File.open("#{data_dir}/#{Settings.prediction.tmp_file_name}", 'w') do |file|
-        race_url = "#{Settings.netkeiba.base_url}/race/#{race_id}"
-        YAML.dump(Featureutil.create_feature(race_url).deep_stringify_keys, file)
+        feature = Featureutil.create_feature("/race/#{race_id}").deep_stringify_keys
+        YAML.dump(feature, file)
       end
 
       args = [evaluation_id, evaluation.model, Settings.evaluation.tmp_file_name]

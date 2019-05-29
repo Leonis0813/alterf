@@ -4,7 +4,7 @@ num_training_data <- args[2]
 ntree <- as.integer(args[3])
 
 library(yaml)
-config <- yaml.load_file("scripts/settings.yml")
+config <- yaml.load_file("config/settings.yml")
 
 library(RMySQL)
 driver <- dbDriver("MySQL")

@@ -10,7 +10,8 @@ class PredictionJob < ActiveJob::Base
 
     if test_data.match(URI::DEFAULT_PARSER.make_regexp)
       File.open("#{data_dir}/#{Settings.prediction.tmp_file_name}", 'w') do |file|
-        YAML.dump(FeatureUtil.create_feature(test_data).deep_stringify_keys, file)
+        path = URI.parse(test_data).path
+        YAML.dump(FeatureUtil.create_feature(path).deep_stringify_keys, file)
       end
     end
 

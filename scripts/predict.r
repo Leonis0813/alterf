@@ -5,7 +5,7 @@ id <- args[1]
 model <- args[2]
 test_data <- args[3]
 
-config <- yaml.load_file("scripts/settings.yml")
+config <- yaml.load_file("config/settings.yml")
 
 model_file <- paste("tmp", "files", id, model, sep="/")
 load(model_file)
@@ -23,7 +23,7 @@ round <- c(rep(data$round, data_size))
 track <- c(rep(data$track, data_size))
 weather <- c(rep(data$weather, data_size))
 
-horse_features <- config$prediction$horse_features
+horse_features <- config$prediction$feature$horses
 test_data <- as.data.frame(
   t(matrix(unlist(data$entries), length(horse_features), data_size))
 )
