@@ -1,5 +1,6 @@
 # 4.2.0 (2019/06/09)
 - [UPDATE] views to notify error
+- [UPDATE] gems
 
 # 4.1.2 (2019/05/29)
 - [UPDATE] prediction script to add new features
