@@ -1,5 +1,6 @@
 # 4.1.2 (2019/05/29)
 - [UPDATE] prediction script to add new features
+- [UPDATE] gems
 
 # 4.1.1 (2019/05/12)
 - [FIX] bug for fetchgin race top
