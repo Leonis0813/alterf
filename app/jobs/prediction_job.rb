@@ -1,5 +1,3 @@
-require_relative '../../lib/utils/feature_util'
-
 class PredictionJob < ActiveJob::Base
   queue_as :alterf
 
