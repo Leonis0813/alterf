@@ -1,5 +1,3 @@
-require_relative '../../lib/clients/netkeiba_client'
-
 class EvaluationJob < ActiveJob::Base
   queue_as :alterf
 
@@ -10,9 +8,9 @@ class EvaluationJob < ActiveJob::Base
     client = NetkeibaClient.new
 
     client.http_get_race_top.each do |race_id|
-      race = client.http_get_race("#{Settings.netkeiba.base_url}/race/#{race_id}")
       File.open("#{data_dir}/#{Settings.prediction.tmp_file_name}", 'w') do |file|
-        YAML.dump(race.stringify_keys, file)
+        feature = FeatureUtil.create_feature("/race/#{race_id}").deep_stringify_keys
+        YAML.dump(feature, file)
       end
 
       args = [evaluation_id, evaluation.model, Settings.evaluation.tmp_file_name]

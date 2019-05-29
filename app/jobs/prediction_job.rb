@@ -1,5 +1,3 @@
-require_relative '../../lib/clients/netkeiba_client'
-
 class PredictionJob < ActiveJob::Base
   queue_as :alterf
 
@@ -9,9 +7,9 @@ class PredictionJob < ActiveJob::Base
     test_data = prediction.test_data
 
     if test_data.match(URI::DEFAULT_PARSER.make_regexp)
-      race = NetkeibaClient.new.http_get_race(test_data)
       File.open("#{data_dir}/#{Settings.prediction.tmp_file_name}", 'w') do |file|
-        YAML.dump(race.stringify_keys, file)
+        path = URI.parse(test_data).path
+        YAML.dump(FeatureUtil.create_feature(path).deep_stringify_keys, file)
       end
     end
 
