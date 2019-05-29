@@ -11,7 +11,7 @@ class EvaluationJob < ActiveJob::Base
 
     client.http_get_race_top.each do |race_id|
       File.open("#{data_dir}/#{Settings.prediction.tmp_file_name}", 'w') do |file|
-        feature = Featureutil.create_feature("/race/#{race_id}").deep_stringify_keys
+        feature = FeatureUtil.create_feature("/race/#{race_id}").deep_stringify_keys
         YAML.dump(feature, file)
       end
 
