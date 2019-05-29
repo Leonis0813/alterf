@@ -21,7 +21,7 @@ class FeatureUtil
       target_results = horse_feature[:results][target_race_index..-1]
       entry.merge!(extra_feature(target_results, feature))
 
-      feature[:entries] << Settings.prediction.feature.horse.map(&:to_sym).map do |name|
+      feature[:entries] << Settings.prediction.feature.horses.map(&:to_sym).map do |name|
         entry[name]
       end
     end
