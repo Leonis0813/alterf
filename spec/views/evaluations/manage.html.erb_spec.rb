@@ -6,8 +6,9 @@ describe 'evaluations/manage', type: :view do
   per_page = 1
   default_attribute = {model: 'model', state: 'processing'}
 
-  shared_context '評価ジョブを作成する' do |total: per_page, attribute: {}|
+  shared_context '評価ジョブを作成する' do |total: per_page, update_attribute: {}|
     before(:all) do
+      attribute = default_attribute.merge(update_attribute)
       total.times { Evaluation.create!(attribute) }
       @evaluations = Evaluation.order(created_at: :desc).page(1)
     end
@@ -73,24 +74,13 @@ describe 'evaluations/manage', type: :view do
     end
   end
 
-  shared_examples 'ジョブが実行中状態になっていること' do
+  shared_examples 'ジョブの状態が正しいこと' do |state|
     it do
       rows =
         @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
 
       rows.each do |row|
-        is_asserted_by { row.xpath('//td')[2].text == '実行中' }
-      end
-    end
-  end
-
-  shared_examples 'ジョブが完了状態になっていること' do
-    it do
-      rows =
-        @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
-
-      rows.each do |row|
-        is_asserted_by { row.xpath('//td')[2].text == '完了' }
+        is_asserted_by { row.xpath('//td')[2].text.strip == state }
       end
     end
   end
@@ -107,27 +97,35 @@ describe 'evaluations/manage', type: :view do
 
   context '実行中の場合' do
     include_context 'トランザクション作成'
-    include_context '評価ジョブを作成する', attribute: default_attribute
+    include_context '評価ジョブを作成する'
     include_context 'HTML初期化'
     it_behaves_like '画面共通テスト'
     it_behaves_like 'ページングボタンが表示されていないこと'
-    it_behaves_like 'ジョブが実行中状態になっていること'
+    it_behaves_like 'ジョブの状態が正しいこと', '実行中'
   end
 
   context '完了している場合' do
-    attribute = default_attribute.merge(state: 'completed')
     include_context 'トランザクション作成'
-    include_context '評価ジョブを作成する', attribute: attribute
+    include_context '評価ジョブを作成する', update_attribute: {state: 'completed'}
     include_context 'HTML初期化'
     it_behaves_like '画面共通テスト'
     it_behaves_like 'ページングボタンが表示されていないこと'
-    it_behaves_like 'ジョブが完了状態になっていること'
+    it_behaves_like 'ジョブの状態が正しいこと', '完了'
+  end
+
+  context 'エラーの場合' do
+    include_context 'トランザクション作成'
+    include_context '評価ジョブを作成する', update_attribute: {state: 'error'}
+    include_context 'HTML初期化'
+    it_behaves_like '画面共通テスト'
+    it_behaves_like 'ページングボタンが表示されていないこと'
+    it_behaves_like 'ジョブの状態が正しいこと', 'エラー'
   end
 
   context "評価ジョブ情報が#{per_page * (Kaminari.config.window + 2)}件の場合" do
     total = per_page * (Kaminari.config.window + 2)
     include_context 'トランザクション作成'
-    include_context '評価ジョブを作成する', total: total, attribute: default_attribute
+    include_context '評価ジョブを作成する', total: total
     include_context 'HTML初期化'
     it_behaves_like '画面共通テスト', expected: {total: total}
     it_behaves_like 'ページングボタンが表示されていること', model: 'evaluation'
