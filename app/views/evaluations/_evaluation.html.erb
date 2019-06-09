@@ -1,5 +1,5 @@
-<tr class='<%= evaluation.state == 'completed' ? 'success' : 'warning' %>'>
-  <td><%= evaluation.created_at.strftime('%Y/%m/%d %H:%M:%S') %></td>
+<tr class='<%= state_to_class(evaluation.state) %>'>
+  <td><%= time_to_string(evaluation.created_at) %></td>
   <td><%= evaluation.model %></td>
-  <td class='td-state'><%= evaluation.state == 'completed' ? '完了' : '実行中' %></td>
+  <td class='td-state'><%= state_to_title(evaluation.state) %></td>
 </tr>
