@@ -15,7 +15,10 @@ class AnalysisJob < ActiveJob::Base
     end
 
     analysis.update!(state: 'completed')
-    AnalysisMailer.finished(analysis, ret).deliver_now
+    AnalysisMailer.completed(analysis).deliver_now
     FileUtils.rm_rf("#{Rails.root}/tmp/files/#{analysis_id}")
+  rescue StandardError
+    analysis.update!(state: 'error')
+    AnalysisMailer.error(analysis).deliver_now
   end
 end
