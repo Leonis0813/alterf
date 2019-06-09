@@ -4,5 +4,5 @@ class Analysis < ActiveRecord::Base
   validates :num_feature,
             allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :state, inclusion: {in: %w[processing completed]}
+  validates :state, inclusion: {in: %w[processing completed error]}
 end
