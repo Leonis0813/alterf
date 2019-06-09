@@ -14,9 +14,9 @@ class AnalysisJob < ActiveJob::Base
       analysis.update!(num_feature: analysis_params['mtry'])
     end
 
-    analysis.update!(state: 'completed')
     AnalysisMailer.completed(analysis).deliver_now
     FileUtils.rm_rf("#{Rails.root}/tmp/files/#{analysis_id}")
+    analysis.update!(state: 'completed')
   rescue StandardError
     analysis.update!(state: 'error')
     AnalysisMailer.error(analysis).deliver_now
