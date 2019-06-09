@@ -1,10 +1,19 @@
-<% state_class = analysis.state == 'completed' ? 'success' : 'warning' %>
 <tr>
-  <td class='<%= state_class %>'><%= analysis.created_at.strftime('%Y/%m/%d %H:%M:%S') %></td>
-  <td class='<%= state_class %>'><%= analysis.num_data %></td>
-  <td class='<%= state_class %>'><%= analysis.num_tree %></td>
-  <td class='<%= state_class %>'><%= analysis.num_feature %></td>
-  <td class='<%= state_class %>'><%= analysis.state == 'completed' ? '完了' : '実行中' %></td>
+  <td class='<%= state_to_class(analysis.state) %>'>
+    <%= time_to_string(analysis.created_at) %>
+  </td>
+  <td class='<%= state_to_class(analysis.state) %>'>
+    <%= analysis.num_data %>
+  </td>
+  <td class='<%= state_to_class(analysis.state) %>'>
+    <%= analysis.num_tree %>
+  </td>
+  <td class='<%= state_to_class(analysis.state) %>'>
+    <%= analysis.num_feature %>
+  </td>
+  <td class='<%= state_to_class(analysis.state) %>'>
+    <%= state_to_title(analysis.state) %>
+  </td>
   <td class='rebuild'>
     <%= button_tag(:type => 'button', :class => 'btn btn-default rebuild') do %>
       <span class='glyphicon glyphicon-repeat' />
