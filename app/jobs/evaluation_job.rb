@@ -14,17 +14,20 @@ class EvaluationJob < ActiveJob::Base
       end
 
       args = [evaluation_id, evaluation.model, Settings.evaluation.tmp_file_name]
-      system "Rscript #{Rails.root}/scripts/predict.r #{args.join(' ')}"
+      success = system "Rscript #{Rails.root}/scripts/predict.r #{args.join(' ')}"
+      raise StandardError unless success
 
       result_file = File.join(data_dir, 'prediction.yml')
       FileUtils.mv(result_file, "#{data_dir}/#{race_id}.yml") if File.exist?(result_file)
     end
 
-    evaluation.update!(state: 'completed')
-
     FileUtils.rm_f("#{data_dir}/#{Settings.prediction.tmp_file_name}")
     FileUtils.rm_f("#{data_dir}/#{evaluation.model}")
-    EvaluationMailer.finished(evaluation, true).deliver_now
+    EvaluationMailer.completed(evaluation).deliver_now
     FileUtils.rm_rf(data_dir)
+    evaluation.update!(state: 'completed')
+  rescue StandardError
+    evaluation.update!(state: 'error')
+    EvaluationMailer.error(evaluation).deliver_now
   end
 end

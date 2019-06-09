@@ -3,8 +3,7 @@
 class EvaluationMailer < ApplicationMailer
   def finished(evaluation, is_success)
     @evaluation = evaluation
-    subject = is_success ? '評価が完了しました' : '評価中にエラーが発生しました'
-    template_name = is_success ? 'success' : 'failer'
+
     tmp_dir = Rails.root.join('tmp', 'files', evaluation.id.to_s)
 
     file_names = Dir[File.join(tmp_dir, '*')].map {|file| File.basename(file) }
@@ -17,6 +16,20 @@ class EvaluationMailer < ApplicationMailer
     end
 
     attachments['evaluation.zip'] = File.read(zip_file_name)
-    mail(to: 'Leonis.0813@gmail.com', subject: subject, template_name: template_name)
+    mail(
+      to: 'Leonis.0813@gmail.com',
+      subject: '評価が完了しました',
+      template_name: 'success',
+    )
+  end
+
+  def error(evaluation)
+    @evaluation = evaluation
+
+    mail(
+      to: 'Leonis.0813@gmail.com',
+      subject: '評価中にエラーが発生しました',
+      template_name: 'failer',
+    )
   end
 end

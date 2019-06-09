@@ -6,8 +6,9 @@ describe 'predictions/manage', type: :view do
   per_page = 1
   default_attribute = {model: 'model', test_data: 'test_data', state: 'processing'}
 
-  shared_context '予測ジョブを作成する' do |total: per_page, attribute: {}, results: 0|
+  shared_context '予測ジョブを作成する' do |total: per_page, update_attribute: {}, results: 0|
     before(:all) do
+      attribute = default_attribute.merge(update_attribute)
       total.times do
         prediction = Prediction.create!(attribute)
         results.times {|i| prediction.results.create!(number: i + 1) }
@@ -127,6 +128,19 @@ describe 'predictions/manage', type: :view do
     end
   end
 
+  shared_examples 'ジョブがエラー状態になっていること' do
+    it do
+      rows =
+        @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
+
+      @predictions.each_with_index do |_, i|
+        error_span = rows.xpath('//td[@class="td-result"]')[i].children
+                         .search('span[@class="glyphicon glyphicon-remove"]')
+        is_asserted_by { error_span.present? }
+      end
+    end
+  end
+
   shared_examples 'テーブルに予測結果が表示されていること' do |numbers: 0|
     color = %w[orange skyblue magenta]
 
@@ -195,9 +209,9 @@ describe 'predictions/manage', type: :view do
   end
 
   context '実行中の場合' do
-    attribute = default_attribute.merge(test_data: 'https://db.netkeiba.com/race/123456')
+    attribute = {test_data: 'https://db.netkeiba.com/race/123456'}
     include_context 'トランザクション作成'
-    include_context '予測ジョブを作成する', attribute: attribute
+    include_context '予測ジョブを作成する', update_attribute: attribute
     include_context 'HTML初期化'
     it_behaves_like '画面共通テスト'
     it_behaves_like 'ページングボタンが表示されていないこと'
@@ -206,11 +220,11 @@ describe 'predictions/manage', type: :view do
   end
 
   context '完了している場合' do
-    attribute = default_attribute.merge(state: 'completed')
+    attribute = {state: 'completed'}
 
     context '番号の数が6個の場合' do
       include_context 'トランザクション作成'
-      include_context '予測ジョブを作成する', attribute: attribute, results: 6
+      include_context '予測ジョブを作成する', update_attribute: attribute, results: 6
       include_context 'HTML初期化'
       it_behaves_like '画面共通テスト'
       it_behaves_like 'ページングボタンが表示されていないこと'
@@ -219,7 +233,7 @@ describe 'predictions/manage', type: :view do
 
     context '番号の数が7個の場合' do
       include_context 'トランザクション作成'
-      include_context '予測ジョブを作成する', attribute: attribute, results: 7
+      include_context '予測ジョブを作成する', update_attribute: attribute, results: 7
       include_context 'HTML初期化'
       it_behaves_like '画面共通テスト'
       it_behaves_like 'ページングボタンが表示されていないこと'
@@ -227,10 +241,19 @@ describe 'predictions/manage', type: :view do
     end
   end
 
-  describe "予測ジョブ情報が#{per_page * (Kaminari.config.window + 2)}件の場合" do
+  context 'エラーの場合' do
+    include_context 'トランザクション作成'
+    include_context '予測ジョブを作成する', update_attribute: {state: 'error'}
+    include_context 'HTML初期化'
+    it_behaves_like '画面共通テスト'
+    it_behaves_like 'ページングボタンが表示されていないこと'
+    it_behaves_like 'ジョブがエラー状態になっていること'
+  end
+
+  context "予測ジョブ情報が#{per_page * (Kaminari.config.window + 2)}件の場合" do
     total = per_page * (Kaminari.config.window + 2)
     include_context 'トランザクション作成'
-    include_context '予測ジョブを作成する', total: total, attribute: default_attribute
+    include_context '予測ジョブを作成する', total: total
     include_context 'HTML初期化'
     it_behaves_like '画面共通テスト', expected: {total: total}
     it_behaves_like 'ページングボタンが表示されていること', model: 'prediction'

@@ -16,8 +16,21 @@ describe Evaluation, type: :model do
 
   describe '#validates' do
     describe '正常系' do
-      include_context 'Evaluationオブジェクトを検証する', model: 'model', state: 'processing'
-      it_behaves_like '検証結果が正しいこと', true
+      valid_params = {
+        model: %w[model],
+        state: %w[processing completed error],
+      }
+
+      test_cases = CommonHelper.generate_test_case(valid_params).select do |test_case|
+        test_case.keys == valid_params.keys
+      end
+
+      test_cases.each do |params|
+        context "フォームに#{params.keys.join(',')}を指定した場合" do
+          include_context 'Evaluationオブジェクトを検証する', params
+          it_behaves_like '検証結果が正しいこと', true
+        end
+      end
     end
 
     describe '異常系' do

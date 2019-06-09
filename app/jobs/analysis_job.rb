@@ -6,7 +6,8 @@ class AnalysisJob < ActiveJob::Base
     args = [analysis_id, analysis.num_data, analysis.num_tree]
     output_dir = Rails.root.join('tmp', 'files', analysis_id.to_s)
     FileUtils.mkdir_p(output_dir)
-    ret = system "Rscript #{Rails.root}/scripts/analyze.r #{args.join(' ')}"
+    success = system "Rscript #{Rails.root}/scripts/analyze.r #{args.join(' ')}"
+    raise StandardError unless success
 
     yaml_file = File.join(output_dir, 'analysis.yml')
     if File.exist?(yaml_file)
@@ -14,8 +15,11 @@ class AnalysisJob < ActiveJob::Base
       analysis.update!(num_feature: analysis_params['mtry'])
     end
 
-    analysis.update!(state: 'completed')
-    AnalysisMailer.finished(analysis, ret).deliver_now
+    AnalysisMailer.completed(analysis).deliver_now
     FileUtils.rm_rf("#{Rails.root}/tmp/files/#{analysis_id}")
+    analysis.update!(state: 'completed')
+  rescue StandardError
+    analysis.update!(state: 'error')
+    AnalysisMailer.error(analysis).deliver_now
   end
 end

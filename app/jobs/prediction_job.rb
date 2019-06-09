@@ -14,12 +14,15 @@ class PredictionJob < ActiveJob::Base
     end
 
     args = [prediction_id, prediction.model, Settings.prediction.tmp_file_name]
-    system "Rscript #{Rails.root}/scripts/predict.r #{args.join(' ')}"
+    is_success = system "Rscript #{Rails.root}/scripts/predict.r #{args.join(' ')}"
+    raise StandardError unless is_success
 
     YAML.load_file(Rails.root.join(data_dir, 'prediction.yml')).each do |number, result|
       prediction.results.create!(number: number) if result == 1
     end
     FileUtils.rm_rf(data_dir)
     prediction.update!(state: 'completed')
+  rescue StandardError
+    prediction.update!(state: 'error')
   end
 end
