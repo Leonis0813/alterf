@@ -1,5 +1,8 @@
 class Prediction < ActiveRecord::Base
-  validates :state, inclusion: {in: %w[processing completed error]}
+  validates :model, :test_data, :state,
+            presence: {message: 'absent'}
+  validates :state,
+            inclusion: {in: %w[processing completed error], message: 'invalid'}
 
-  has_many :results, dependent: :destroy
+  has_many :results, as: :predictable, dependent: :destroy
 end
