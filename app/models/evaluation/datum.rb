@@ -1,5 +1,5 @@
 class Evaluation
-  class Data < ActiveRecord::Base
+  class Datum < ActiveRecord::Base
     validates :race_name, :race_url, :ground_truth,
               presence: {message: 'absent'}
     validates :ground_truth,
