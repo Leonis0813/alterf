@@ -21,9 +21,12 @@
     <%= paginate @evaluations %>
     <table class='table table-hover'>
       <thead>
-        <% %w[ 実行開始日時 モデル 状態 ].each do |header| %>
-          <th><%= header %></th>
-        <% end %>
+        <th width='150'>実行開始日時</th>
+        <th>モデル</th>
+        <th width='80'>状態</th>
+        <th width='80'>精度</th>
+        <th width='50' style='border: none'></th>
+        <th width='80' style='border: none'></th>
       </thead>
       <tbody>
         <%= render @evaluations %>
