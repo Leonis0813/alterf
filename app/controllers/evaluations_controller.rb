@@ -32,6 +32,11 @@ class EvaluationsController < ApplicationController
     render status: :ok, json: {}
   end
 
+  def show
+    @evaluation = Evaluation.find_by(evaluation_id: params[:id])
+    raise NotFound unless @evaluation
+  end
+
   private
 
   def evaluation_params
