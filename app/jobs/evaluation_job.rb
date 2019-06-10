@@ -10,6 +10,11 @@ class EvaluationJob < ActiveJob::Base
     client.http_get_race_top.each do |race_id|
       File.open("#{data_dir}/#{Settings.prediction.tmp_file_name}", 'w') do |file|
         feature = FeatureUtil.create_feature("/race/#{race_id}").deep_stringify_keys
+        data = evaluation.data.create!(
+          race_name: feature[:race_name],
+          race_url: "#{Settings.netkeiba.base_url}/race/#{race_id}",
+          ground_truth: feature[:entries].find {|entry| entry[:order] == 1 }[:number],
+        )
         YAML.dump(feature, file)
       end
 
@@ -17,13 +22,11 @@ class EvaluationJob < ActiveJob::Base
       success = system "Rscript #{Rails.root}/scripts/predict.r #{args.join(' ')}"
       raise StandardError unless success
 
-      result_file = File.join(data_dir, 'prediction.yml')
-      FileUtils.mv(result_file, "#{data_dir}/#{race_id}.yml") if File.exist?(result_file)
+      YAML.load_file(Rails.root.join(data_dir, 'prediction.yml')).each do |number, result|
+        data.prediction_results.create!(number: number) if result == 1
+      end
     end
 
-    FileUtils.rm_f("#{data_dir}/#{Settings.prediction.tmp_file_name}")
-    FileUtils.rm_f("#{data_dir}/#{evaluation.model}")
-    EvaluationMailer.completed(evaluation).deliver_now
     FileUtils.rm_rf(data_dir)
     evaluation.update!(state: 'completed')
   rescue StandardError
