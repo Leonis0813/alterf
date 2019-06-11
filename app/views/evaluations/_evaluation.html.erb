@@ -10,6 +10,9 @@
     <i class='fa fa-refresh fa-spin'></i>
     <% end %>
   </td>
+  <td class='<%= state_to_class(evaluation.state) %>'>
+    <%= evaluation.precision.to_s %>
+  </td>
   <td style='border-style: none' align='center'>
     <% if evaluation.state == 'completed' %>
     <span class='glyphicon glyphicon-arrow-right'></span>
@@ -17,10 +20,12 @@
   </td>
   <td style='border-style: none;padding: 2px;vertical-align: middle'>
     <% if evaluation.state == 'completed' %>
-    <button class='btn btn-success' style='padding: 5px 10px 4px 10px'>
-      詳細
-      <span class='glyphicon glyphicon-new-window' style='padding-left: 4px'></span>
-    </button>
+    <%= link_to evaluation_path(evaluation.evaluation_id), {target: :_blank} do %>
+      <button class='btn btn-success btn-result' style='padding: 5px 10px 4px 10px'>
+        詳細
+        <span class='glyphicon glyphicon-new-window' style='padding-left: 4px'></span>
+      </button>
+    <% end %>
     <% end %>
   </td>
 </tr>
