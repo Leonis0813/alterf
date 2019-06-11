@@ -15,8 +15,12 @@ class EvaluationsController < ApplicationController
     model = attributes[:model]
     raise BadRequest, 'invalid_param_model' unless model.respond_to?(:original_filename)
 
-    attributes[:model] = model.original_filename
-    evaluation = Evaluation.new(attributes.merge(state: 'processing'))
+    attributes.merge!(
+      evaluation_id: SecureRandom.hex,
+      model: model.original_filename,
+      state: 'processing',
+    )
+    evaluation = Evaluation.new(attributes)
     unless evaluation.save
       error_codes = evaluation.errors.messages.keys.map {|key| "invalid_param_#{key}" }
       raise BadRequest, error_codes

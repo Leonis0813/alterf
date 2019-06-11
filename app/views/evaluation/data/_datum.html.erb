@@ -1,5 +1,5 @@
 <% numbers = datum.prediction_results.map(&:number).sort %>
-<tr class='<%= row_class(numbers, datun.ground_truth) %>'>
+<tr class='<%= row_class(numbers, datum.ground_truth) %>'>
   <td>
     <%= link_to datum.race_name, {target: :_blank} do %>
       <%= datum.race_url %>

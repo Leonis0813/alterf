@@ -11,21 +11,23 @@
     <% end %>
   </td>
   <td class='<%= state_to_class(evaluation.state) %>'>
-    <%= evaluation.precision.to_s %>
+  <% if evaluation.state == 'completed' %>
+    <%= "#{evaluation.precision}%" %>
+  <% end %>
   </td>
   <td style='border-style: none' align='center'>
-    <% if evaluation.state == 'completed' %>
+  <% if evaluation.state == 'completed' %>
     <span class='glyphicon glyphicon-arrow-right'></span>
-    <% end %>
+  <% end %>
   </td>
   <td style='border-style: none;padding: 2px;vertical-align: middle'>
-    <% if evaluation.state == 'completed' %>
+  <% if evaluation.state == 'completed' %>
     <%= link_to evaluation_path(evaluation.evaluation_id), {target: :_blank} do %>
       <button class='btn btn-success btn-result' style='padding: 5px 10px 4px 10px'>
         詳細
         <span class='glyphicon glyphicon-new-window' style='padding-left: 4px'></span>
       </button>
     <% end %>
-    <% end %>
+  <% end %>
   </td>
 </tr>
