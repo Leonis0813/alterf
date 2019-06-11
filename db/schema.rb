@@ -23,10 +23,12 @@ ActiveRecord::Schema.define(version: 20190610112503) do
   end
 
   create_table "evaluation_data", force: :cascade do |t|
-    t.integer "evaluation_id", limit: 4,   null: false
-    t.string  "race_name",     limit: 255, null: false
-    t.string  "race_url",      limit: 255, null: false
-    t.integer "ground_truth",  limit: 4,   null: false
+    t.integer  "evaluation_id", limit: 4,   null: false
+    t.string   "race_name",     limit: 255, null: false
+    t.string   "race_url",      limit: 255, null: false
+    t.integer  "ground_truth",  limit: 4,   null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
   create_table "evaluations", force: :cascade do |t|

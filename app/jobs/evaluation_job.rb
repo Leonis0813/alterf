@@ -14,22 +14,18 @@ class EvaluationJob < ActiveJob::Base
         feature = FeatureUtil.create_feature("/race/#{race_id}").deep_stringify_keys
         evaluation.data.create!(
           race_name: feature[:race_name],
-          race_url: race_url
+          race_url: race_url,
           ground_truth: feature[:entries].find {|entry| entry[:order] == 1 }[:number],
         )
         YAML.dump(feature, file)
       end
 
-      data = evaluation.data.find_by(race_url: race_url)
-
       args = [evaluation_id, evaluation.model, Settings.evaluation.tmp_file_name]
       success = system "Rscript #{Rails.root}/scripts/predict.r #{args.join(' ')}"
       raise StandardError unless success
 
-      result_file = Rails.root.join(data_dir, 'prediction.yml')
-      YAML.load_file(result_file).each do |number, result|
-        data.prediction_results.create!(number: number) if result == 1
-      end
+      data = evaluation.data.find_by(race_url: race_url)
+      data.import_prediction_results(Rails.root.join(data_dir, 'prediction.yml'))
     end
 
     FileUtils.rm_rf(data_dir)

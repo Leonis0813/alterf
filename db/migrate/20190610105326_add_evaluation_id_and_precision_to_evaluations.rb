@@ -1,6 +1,8 @@
 class AddEvaluationIdAndPrecisionToEvaluations < ActiveRecord::Migration
   def change
-    add_column :evaluations, :evaluation_id, :string, null: false, after: :id
-    add_column :evaluations, :precision, :float, after: :state
+    change_table :evaluations, bulk: true do |t|
+      t.string :evaluation_id, null: false, after: :id
+      t.float :precision, after: :state
+    end
   end
 end
