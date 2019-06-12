@@ -3,46 +3,39 @@
 require 'rails_helper'
 
 describe Evaluation, type: :model do
-  shared_context 'Evaluationオブジェクトを検証する' do |params|
-    before(:all) do
-      @evaluation = Evaluation.new(params)
-      @evaluation.validate
-    end
-  end
-
-  shared_examples '検証結果が正しいこと' do |result|
-    it_is_asserted_by { @evaluation.errors.empty? == result }
-  end
-
   describe '#validates' do
     describe '正常系' do
-      valid_params = {
+      valid_attribute = {
+        evaluation_id: ['0' * 16],
         model: %w[model],
         state: %w[processing completed error],
       }
 
-      test_cases = CommonHelper.generate_test_case(valid_params).select do |test_case|
-        test_case.keys == valid_params.keys
+      test_cases = CommonHelper.generate_test_case(valid_attribute).select do |test_case|
+        test_case.keys == valid_attribute.keys
       end
 
-      test_cases.each do |params|
-        context "フォームに#{params.keys.join(',')}を指定した場合" do
-          include_context 'Evaluationオブジェクトを検証する', params
-          it_behaves_like '検証結果が正しいこと', true
+      test_cases.each do |attribute|
+        context "フォームに#{attribute.keys.join(',')}を指定した場合" do
+          include_context 'オブジェクトを検証する', attribute
+          it_behaves_like 'エラーが発生していないこと'
         end
       end
     end
 
     describe '異常系' do
-      invalid_params = {
-        model: [1.0, 0, true, [], {}],
-        state: ['invalid', 1.0, 0, true, [], {}],
+      invalid_attribute = {
+        evaluation_id: ['invalid', 'G' * 16, 1.0, 0, true, nil],
+        model: [1.0, 0, true, nil],
+        state: ['invalid', 1.0, 0, true, nil],
       }
 
-      CommonHelper.generate_test_case(invalid_params).each do |params|
-        context "フォームに#{params.keys.join(',')}を指定した場合" do
-          include_context 'Evaluationオブジェクトを検証する', params
-          it_behaves_like '検証結果が正しいこと', false
+      CommonHelper.generate_test_case(invalid_attribute).each do |attribute|
+        context "フォームに#{attribute.keys.join(',')}を指定した場合" do
+          include_context 'オブジェクトを検証する', attribute
+          it_behaves_like 'エラーが発生していること',
+                          absent_keys: invalid_attribute.keys - attribute.keys,
+                          invalid_keys: attribute.keys - %i[model]
         end
       end
     end

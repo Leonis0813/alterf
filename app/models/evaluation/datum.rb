@@ -10,10 +10,13 @@ class Evaluation
              class_name: 'Prediction::Result',
              as: :predictable,
              dependent: :destroy,
-             inverse_of: :datum
+             inverse_of: :predictable
 
     def import_prediction_results(result_file)
-      YAML.load_file(result_file).each do |number, result|
+      race_result = YAML.load_file(result_file)
+      raise ActiveRecord::RecordInvalid, self unless race_result.is_a?(Hash)
+
+      race_result.each do |number, result|
         prediction_results.create!(number: number) if result == 1
       end
     end

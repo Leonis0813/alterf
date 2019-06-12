@@ -3,34 +3,28 @@
 require 'rails_helper'
 
 describe Prediction::Result, type: :model do
-  shared_context 'Prediction::Resultオブジェクトを検証する' do |params|
-    before(:all) do
-      @prediction_result = Prediction::Result.new(params)
-      @prediction_result.validate
-    end
-  end
-
-  shared_examples '検証結果が正しいこと' do |result|
-    it_is_asserted_by { @prediction_result.errors.empty? == result }
-  end
-
   describe '#validates' do
     describe '正常系' do
-      include_context 'Prediction::Resultオブジェクトを検証する',
-                      prediction_id: 1, number: 1
-      it_behaves_like '検証結果が正しいこと', true
+      include_context 'オブジェクトを検証する',
+                      predictable_id: 1, predictable_type: 'Prediction', number: 1
+      it_behaves_like 'エラーが発生していないこと'
     end
 
     describe '異常系' do
-      invalid_params = {
-        number: ['invalid', 1.0, 0, true, [], {}],
+      invalid_attribute = {
+        number: ['invalid', 1.0, 0, true, nil],
       }
 
-      CommonHelper.generate_test_case(invalid_params).each do |params|
-        context "#{params.keys.join(',')}を指定した場合" do
-          include_context 'Prediction::Resultオブジェクトを検証する', params
-          it_behaves_like '検証結果が正しいこと', false
+      CommonHelper.generate_test_case(invalid_attribute).each do |attribute|
+        context "#{attribute.keys.join(',')}を指定した場合" do
+          include_context 'オブジェクトを検証する', attribute
+          it_behaves_like 'エラーが発生していること', invalid_keys: [:number]
         end
+      end
+
+      context 'numberを指定しない場合' do
+        include_context 'オブジェクトを検証する', {}
+        it_behaves_like 'エラーが発生していること', absent_keys: [:number]
       end
     end
   end
