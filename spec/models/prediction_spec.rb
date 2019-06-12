@@ -9,11 +9,11 @@ describe Prediction, type: :model do
     before(:all) { @prediction = Prediction.create!(attribute) }
   end
 
-  shared_examples '結果をインポートすると例外が発生すること' do |file, klass|
+  shared_examples '結果をインポートすると例外が発生すること' do |file, e|
     it_is_asserted_by do
       begin
         @prediction.import_results(file)
-      rescue klass
+      rescue e
         true
       end
     end
@@ -70,21 +70,13 @@ describe Prediction, type: :model do
       end
 
       it '紐づいているPrediction::Resultが削除されていること' do
-        is_asserted_by do
-          not Prediction::Result.exists?(
-                predictable_id: @prediction.id,
-                predictable_type: 'Prediction',
-              )
-        end
+        query = {predictable_id: @prediction.id, predictable_type: 'Prediction'}
+        is_asserted_by { not Prediction::Result.exists?(query) }
       end
 
       it '紐づいていないPrediction::Resultが削除されていないこと' do
-        is_asserted_by do
-          Prediction::Result.exists?(
-            predictable_id: @other_prediction.id,
-            predictable_type: 'Prediction',
-          )
-        end
+        query = {predictable_id: @other_prediction.id, predictable_type: 'Prediction'}
+        is_asserted_by { Prediction::Result.exists?(query) }
       end
     end
   end

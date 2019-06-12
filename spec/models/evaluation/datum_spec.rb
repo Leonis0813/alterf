@@ -14,11 +14,11 @@ describe Evaluation::Datum, type: :model do
     before(:all) { @evaluation_datum = Evaluation::Datum.create!(attribute) }
   end
 
-  shared_examples '結果をインポートすると例外が発生すること' do |file, klass|
+  shared_examples '結果をインポートすると例外が発生すること' do |file, e|
     it_is_asserted_by do
       begin
         @evaluation_datum.import_prediction_results(file)
-      rescue klass
+      rescue e
         true
       end
     end
@@ -76,19 +76,21 @@ describe Evaluation::Datum, type: :model do
 
       it '紐づいているPrediction::Resultが削除されていること' do
         is_asserted_by do
-          not Prediction::Result.exists?(
-                predictable_id: @evaluation_datum.id,
-                predictable_type: 'Evaluation::Datum',
-              )
+          query = {
+            predictable_id: @evaluation_datum.id,
+            predictable_type: 'Evaluation::Datum',
+          }
+          not Prediction::Result.exists?(query)
         end
       end
 
       it '紐づいていないPrediction::Resultが削除されていないこと' do
         is_asserted_by do
-          Prediction::Result.exists?(
+          query = {
             predictable_id: @other_evaluation_datum.id,
             predictable_type: 'Evaluation::Datum',
-          )
+          }
+          Prediction::Result.exists?(query)
         end
       end
     end
