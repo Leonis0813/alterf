@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe 'evaluations/manage', type: :view do
   per_page = 1
-  default_attribute = {model: 'model', state: 'processing'}
+  default_attribute = {evaluation_id: '0' * 32, model: 'model', state: 'processing'}
 
   shared_context '評価ジョブを作成する' do |total: per_page, update_attribute: {}|
     before(:all) do
@@ -59,11 +59,11 @@ describe 'evaluations/manage', type: :view do
       @table = @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']")
     end
 
-    it '3列のテーブルが表示されていること' do
-      is_asserted_by { @table.xpath('//thead/th').size == 3 }
+    it '6列のテーブルが表示されていること' do
+      is_asserted_by { @table.xpath('//thead/th').size == 6 }
     end
 
-    %w[実行開始日時 モデル 状態].each_with_index do |text, i|
+    %w[実行開始日時 モデル 状態 精度].each_with_index do |text, i|
       it "#{i + 1}列目のヘッダーが#{text}であること" do
         is_asserted_by { @table.xpath('//thead/th')[i].text == text }
       end

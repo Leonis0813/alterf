@@ -31,7 +31,7 @@ describe PredictionsController, type: :controller do
         include_context 'リクエスト送信', body: body
         it_behaves_like 'レスポンスが正常であること', status: 200, body: {}
         it_behaves_like 'DBにレコードが追加されていること',
-                        Prediction, {model: model.original_filename}
+                        Prediction, model: model.original_filename
       end
     end
   end
@@ -50,7 +50,7 @@ describe PredictionsController, type: :controller do
         include_context 'リクエスト送信', body: default_params.slice(*selected_keys)
         it_behaves_like 'レスポンスが正常であること', status: 400, body: body
         it_behaves_like 'DBにレコードが追加されていないこと',
-                        Prediction, {model: model.original_filename}
+                        Prediction, model: model.original_filename
       end
 
       context "#{error_keys.join(',')}が不正な場合" do
@@ -59,7 +59,7 @@ describe PredictionsController, type: :controller do
         include_context 'リクエスト送信', body: default_params.merge(invalid_params)
         it_behaves_like 'レスポンスが正常であること', status: 400, body: body
         it_behaves_like 'DBにレコードが追加されていないこと',
-                        Prediction, {model: model.original_filename}
+                        Prediction, model: model.original_filename
       end
     end
   end
