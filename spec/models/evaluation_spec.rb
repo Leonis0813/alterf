@@ -6,7 +6,7 @@ describe Evaluation, type: :model do
   describe '#validates' do
     describe '正常系' do
       valid_attribute = {
-        evaluation_id: ['0' * 16],
+        evaluation_id: ['0' * 32],
         model: %w[model],
         state: %w[processing completed error],
       }
@@ -25,7 +25,7 @@ describe Evaluation, type: :model do
 
     describe '異常系' do
       invalid_attribute = {
-        evaluation_id: ['invalid', 'G' * 16, 1.0, 0, true, nil],
+        evaluation_id: ['invalid', 'g' * 32, 1.0, 0, true, nil],
         model: [1.0, 0, true, nil],
         state: ['invalid', 1.0, 0, true, nil],
       }

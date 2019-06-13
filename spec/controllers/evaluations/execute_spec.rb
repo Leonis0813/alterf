@@ -22,6 +22,8 @@ describe EvaluationsController, type: :controller do
     include_context 'トランザクション作成'
     include_context 'リクエスト送信'
     it_behaves_like 'レスポンスが正常であること', status: 200, body: {}
+    it_behaves_like 'DBにレコードが追加されていること',
+                    Evaluation, {model: model.original_filename}
   end
 
   describe '異常系' do
@@ -29,12 +31,16 @@ describe EvaluationsController, type: :controller do
       body = [{'error_code' => 'absent_param_model'}]
       include_context 'リクエスト送信', body: {}
       it_behaves_like 'レスポンスが正常であること', status: 400, body: body
+      it_behaves_like 'DBにレコードが追加されていないこと',
+                      Evaluation, {model: model.original_filename}
     end
 
     context 'modelが不正な場合' do
       body = [{'error_code' => 'invalid_param_model'}]
       include_context 'リクエスト送信', body: {model: 'invalid'}
       it_behaves_like 'レスポンスが正常であること', status: 400, body: body
+      it_behaves_like 'DBにレコードが追加されていないこと',
+                      Evaluation, {model: model.original_filename}
     end
   end
 end
