@@ -50,6 +50,7 @@ describe Evaluation, type: :model do
         {numbers: [2, 4], ground_truth: 1},
       ]
 
+      include_context 'トランザクション作成'
       before(:all) do
         attribute = {evaluation_id: '0' * 32, model: 'model', state: 'completed'}
         @evaluation = Evaluation.create!(attribute)
