@@ -1,8 +1,8 @@
 <% numbers = datum.prediction_results.map(&:number).sort %>
 <tr class='<%= row_class(numbers, datum.ground_truth) %>'>
   <td>
-    <%= link_to datum.race_name, {target: :_blank} do %>
-      <%= datum.race_url %>
+    <%= link_to datum.race_url, {target: :_blank} do %>
+      <%= datum.race_name %>
       <span class='glyphicon glyphicon-new-window' style='padding-left: 4px'></span>
     <% end %>
   </td>
