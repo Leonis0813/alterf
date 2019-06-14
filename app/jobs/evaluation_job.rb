@@ -11,13 +11,13 @@ class EvaluationJob < ActiveJob::Base
       race_url = "#{Settings.netkeiba.base_url}/race/#{race_id}"
 
       File.open("#{data_dir}/#{Settings.prediction.tmp_file_name}", 'w') do |file|
-        feature = FeatureUtil.create_feature("/race/#{race_id}").deep_stringify_keys
+        feature = FeatureUtil.create_feature("/race/#{race_id}")
         evaluation.data.create!(
           race_name: feature[:race_name],
           race_url: race_url,
-          ground_truth: feature[:entries].find {|entry| entry[:order] == 1 }[:number],
+          ground_truth: feature[:entries].find {|entry| entry.last == 1 }[7],
         )
-        YAML.dump(feature, file)
+        YAML.dump(feature.deep_stringify_keys, file)
       end
 
       args = [evaluation_id, evaluation.model, Settings.evaluation.tmp_file_name]
@@ -29,6 +29,7 @@ class EvaluationJob < ActiveJob::Base
     end
 
     FileUtils.rm_rf(data_dir)
+    evaluation.calculate_precision!
     evaluation.update!(state: 'completed')
   rescue StandardError
     evaluation.update!(state: 'error')
