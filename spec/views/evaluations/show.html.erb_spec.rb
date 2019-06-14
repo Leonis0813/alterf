@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 describe 'evaluations/show', type: :view do
-  default_attribute = {evaluation_id: '0' * 32, model: 'model', state: 'processing'}
-
   def table_panel_xpath
     [
       '//div[@id="main-content"]',
@@ -29,7 +27,7 @@ describe 'evaluations/show', type: :view do
     end
   end
 
-  shared_examples '画面共通テスト' do |expected: {}|
+  shared_examples '画面共通テスト' do
     it_behaves_like 'ヘッダーが表示されていること'
     it_behaves_like 'テーブルが表示されていること'
 
