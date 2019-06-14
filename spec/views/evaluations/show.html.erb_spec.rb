@@ -16,7 +16,7 @@ describe 'evaluations/show', type: :view do
         evaluation_id: '0' * 32,
         model: 'model',
         state: 'completed',
-        precision: 75.0,
+        precision: 0.75,
       )
       datum = @evaluation.data.create!(
         race_name: 'テスト',
@@ -38,7 +38,9 @@ describe 'evaluations/show', type: :view do
 
     it '精度が表示されていること' do
       xpath = [table_panel_xpath, 'h4'].join('/')
-      is_asserted_by { @html.xpath(xpath).text.strip == "精度: #{@evaluation.precision}%" }
+      is_asserted_by do
+        @html.xpath(xpath).text.strip == "精度: #{@evaluation.precision * 100}%"
+      end
     end
   end
 

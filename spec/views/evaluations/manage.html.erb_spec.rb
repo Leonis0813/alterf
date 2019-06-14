@@ -94,7 +94,7 @@ describe 'evaluations/manage', type: :view do
     it '精度が表示されていること' do
       @evaluations.each_with_index do |evaluation, i|
         precision = @rows[i].children.search('td')[3]
-        is_asserted_by { precision.text.strip == "#{evaluation.precision}%" }
+        is_asserted_by { precision.text.strip == "#{evaluation.precision * 100}%" }
       end
     end
 
@@ -147,7 +147,7 @@ describe 'evaluations/manage', type: :view do
   context '完了している場合' do
     include_context 'トランザクション作成'
     include_context '評価ジョブを作成する',
-                    update_attribute: {state: 'completed', precision: 75.0}
+                    update_attribute: {state: 'completed', precision: 0.75}
     include_context 'HTML初期化'
     it_behaves_like '画面共通テスト'
     it_behaves_like 'ページングボタンが表示されていないこと'
