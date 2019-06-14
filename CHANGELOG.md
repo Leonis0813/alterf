@@ -1,3 +1,6 @@
+# 4.3.0 (2019/06/15)
+- [ADD] evaluation result view
+
 # 4.2.0 (2019/06/09)
 - [UPDATE] views to notify error
 - [UPDATE] gems
