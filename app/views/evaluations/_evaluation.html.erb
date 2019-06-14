@@ -12,7 +12,7 @@
   </td>
   <td class='<%= state_to_class(evaluation.state) %>'>
   <% if evaluation.state == 'completed' %>
-    <%= "#{evaluation.precision}%" %>
+    <%= "#{evaluation.precision * 100}%" %>
   <% end %>
   </td>
   <td style='border-style: none' align='center'>
