@@ -109,7 +109,7 @@ describe 'predictions/manage', type: :view do
         link = test_data.xpath("//a[@href='#{prediction.test_data}']")
         is_asserted_by { link.present? }
 
-        icon = link.xpath('//span[@class="glyphicon glyphicon-new-window"]')
+        icon = link.xpath('//span[@class="glyphicon glyphicon-new-window new-window"]')
         is_asserted_by { icon.present? }
       end
     end

@@ -118,7 +118,8 @@ describe 'evaluations/manage', type: :view do
         is_asserted_by { button.text.strip == '詳細' }
         is_asserted_by do
           button.children
-                .search('span[@class="glyphicon glyphicon-new-window"]').present?
+                .search('span[@class="glyphicon glyphicon-new-window new-window"]')
+                .present?
         end
       end
     end

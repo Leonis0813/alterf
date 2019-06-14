@@ -94,12 +94,12 @@ describe 'evaluations/show', type: :view do
         span_stacks = @rows[i].children.search('td')[1].children.search('span')
 
         datum.prediction_results.each_with_index do |result, j|
-          is_asserted_by { span_stacks[j].attribute('class').value == 'fa-stack' }
+          is_asserted_by do
+            span_stacks[j].attribute('class').value == 'fa-stack prediction-result'
+          end
 
           color = result.number == datum.ground_truth ? 'limegreen' : 'gray'
-          is_asserted_by do
-            span_stacks[j].attribute('style').value == "font-size: 1em;color: #{color}"
-          end
+          is_asserted_by { span_stacks[j].attribute('style').value == "color: #{color}" }
 
           circle, number = span_stacks[j].children.search('i')
           is_asserted_by do
@@ -116,10 +116,10 @@ describe 'evaluations/show', type: :view do
     it '正解が表示されていること' do
       @evaluation.data.each_with_index do |datum, i|
         span_stack = @rows[i].children.search('td')[2].children.search('span')
-        is_asserted_by { span_stack.attribute('class').value == 'fa-stack' }
         is_asserted_by do
-          span_stack.attribute('style').value == 'font-size: 1em;color: limegreen'
+          span_stack.attribute('class').value == 'fa-stack prediction-result'
         end
+        is_asserted_by { span_stack.attribute('style').value == 'color: limegreen' }
 
         circle, number = span_stack.children.search('i')
         is_asserted_by { circle.attribute('class').value == 'fa fa-circle fa-stack-2x' }
