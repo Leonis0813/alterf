@@ -6,6 +6,7 @@ class FeatureUtil
     race = client.http_get_race(race_path)
 
     feature = race.slice(*Settings.prediction.feature.races.map(&:to_sym))
+    feature[:race_name] = race[:race_name]
     feature[:entries] = []
 
     race[:entries].each do |entry|
@@ -21,9 +22,10 @@ class FeatureUtil
       target_results = horse_feature[:results][target_race_index..-1]
       entry.merge!(extra_feature(target_results, feature))
 
-      feature[:entries] << Settings.prediction.feature.horses.map(&:to_sym).map do |name|
+      horse_features = Settings.prediction.feature.horses.map(&:to_sym).map do |name|
         entry[name]
       end
+      feature[:entries] << horse_features + [entry[:order]]
     end
 
     feature

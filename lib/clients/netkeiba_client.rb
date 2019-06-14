@@ -40,6 +40,7 @@ class NetkeibaClient < HTTPClient
       grade: race_data.search('h1').text.match(/\(([^\(\)]*)\)$/).try(:[], 1) || 'N',
       month: race_date[2].to_i,
       place: place.children.search('a[@class="active"]').text,
+      race_name: race_data.search('dd/h1').text.strip,
       round: race_data.search('dt').text.strip.match(/^(\d*) R$/)[1].to_i,
       track: track[0].sub('ダ', 'ダート'),
       weather: weather.match(/天候 : (.*)/)[1].strip,
@@ -58,6 +59,7 @@ class NetkeibaClient < HTTPClient
       {
         age: attributes[4].match(/(\d+)\z/)[1].to_i,
         burden_weight: burden_weight,
+        order: attributes[0].to_i,
         number: attributes[2].to_i,
         sex: attributes[4].match(/\A([^\d]*)\d+/)[1],
         weight: weight,

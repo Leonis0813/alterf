@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe 'evaluations/manage', type: :view do
   per_page = 1
-  default_attribute = {model: 'model', state: 'processing'}
+  default_attribute = {evaluation_id: '0' * 32, model: 'model', state: 'processing'}
 
   shared_context '評価ジョブを作成する' do |total: per_page, update_attribute: {}|
     before(:all) do
@@ -59,11 +59,11 @@ describe 'evaluations/manage', type: :view do
       @table = @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']")
     end
 
-    it '3列のテーブルが表示されていること' do
-      is_asserted_by { @table.xpath('//thead/th').size == 3 }
+    it '6列のテーブルが表示されていること' do
+      is_asserted_by { @table.xpath('//thead/th').size == 6 }
     end
 
-    %w[実行開始日時 モデル 状態].each_with_index do |text, i|
+    %w[実行開始日時 モデル 状態 精度].each_with_index do |text, i|
       it "#{i + 1}列目のヘッダーが#{text}であること" do
         is_asserted_by { @table.xpath('//thead/th')[i].text == text }
       end
@@ -81,6 +81,46 @@ describe 'evaluations/manage', type: :view do
 
       rows.each do |row|
         is_asserted_by { row.xpath('//td')[2].text.strip == state }
+      end
+    end
+  end
+
+  shared_examples '評価結果情報が表示されていること' do
+    before(:each) do
+      @rows =
+        @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
+    end
+
+    it '精度が表示されていること' do
+      @evaluations.each_with_index do |evaluation, i|
+        precision = @rows[i].children.search('td')[3]
+        is_asserted_by { precision.text.strip == "#{evaluation.precision}%" }
+      end
+    end
+
+    it '矢印が表示されていること' do
+      @evaluations.each_with_index do |_, i|
+        cell = @rows[i].children.search('td')[4].children
+        is_asserted_by do
+          cell.search('span[@class="glyphicon glyphicon-arrow-right"]').present?
+        end
+      end
+    end
+
+    it '結果画面へのボタンが表示されていること' do
+      @evaluations.each_with_index do |evaluation, i|
+        cell = @rows[i].children.search('td')[5].children
+        href = "/evaluations/#{evaluation.evaluation_id}"
+        is_asserted_by { cell.search('a').attribute('href').value == href }
+
+        button = cell.search('a/button[@class="btn btn-success btn-result"]')
+        is_asserted_by { button.present? }
+        is_asserted_by { button.text.strip == '詳細' }
+        is_asserted_by do
+          button.children
+                .search('span[@class="glyphicon glyphicon-new-window new-window"]')
+                .present?
+        end
       end
     end
   end
@@ -106,11 +146,13 @@ describe 'evaluations/manage', type: :view do
 
   context '完了している場合' do
     include_context 'トランザクション作成'
-    include_context '評価ジョブを作成する', update_attribute: {state: 'completed'}
+    include_context '評価ジョブを作成する',
+                    update_attribute: {state: 'completed', precision: 75.0}
     include_context 'HTML初期化'
     it_behaves_like '画面共通テスト'
     it_behaves_like 'ページングボタンが表示されていないこと'
     it_behaves_like 'ジョブの状態が正しいこと', '完了'
+    it_behaves_like '評価結果情報が表示されていること'
   end
 
   context 'エラーの場合' do

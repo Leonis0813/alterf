@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190506060800) do
+ActiveRecord::Schema.define(version: 20190610112503) do
 
   create_table "analyses", force: :cascade do |t|
     t.integer  "num_data",    limit: 4
@@ -22,18 +22,30 @@ ActiveRecord::Schema.define(version: 20190506060800) do
     t.datetime "updated_at",              null: false
   end
 
+  create_table "evaluation_data", force: :cascade do |t|
+    t.integer  "evaluation_id", limit: 4,   null: false
+    t.string   "race_name",     limit: 255, null: false
+    t.string   "race_url",      limit: 255, null: false
+    t.integer  "ground_truth",  limit: 4,   null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
   create_table "evaluations", force: :cascade do |t|
-    t.string   "model",      limit: 255
-    t.string   "state",      limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.string   "evaluation_id", limit: 255, null: false
+    t.string   "model",         limit: 255
+    t.string   "state",         limit: 255
+    t.float    "precision",     limit: 24
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
   create_table "prediction_results", force: :cascade do |t|
-    t.integer  "prediction_id", limit: 4
-    t.integer  "number",        limit: 4, null: false
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.integer  "predictable_id",   limit: 4,   null: false
+    t.string   "predictable_type", limit: 255, null: false
+    t.integer  "number",           limit: 4,   null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
   end
 
   create_table "predictions", force: :cascade do |t|

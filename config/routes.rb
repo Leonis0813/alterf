@@ -7,4 +7,5 @@ Rails.application.routes.draw do
 
   get '/evaluations' => 'evaluations#manage'
   post '/evaluations' => 'evaluations#execute'
+  resources :evaluations, only: %i[show]
 end

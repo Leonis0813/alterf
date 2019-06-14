@@ -1,0 +1,23 @@
+<% numbers = datum.prediction_results.map(&:number).sort %>
+<tr class='<%= row_class(numbers, datum.ground_truth) %>'>
+  <td>
+    <%= link_to datum.race_url, {target: :_blank} do %>
+      <%= datum.race_name %>
+      <span class='glyphicon glyphicon-new-window new-window'></span>
+    <% end %>
+  </td>
+  <td style='padding: 4px'>
+  <% numbers.each do |number| %>
+    <span class='fa-stack prediction-result' style='color: <%= span_color(number, datum.ground_truth) %>'>
+      <i class='fa fa-circle fa-stack-2x'></i>
+      <i class='fa fa-stack-1x fa-inverse'><%= number %></i>
+    </span>
+  <% end %>
+  </td>
+  <td style='padding: 4px'>
+    <span class='fa-stack prediction-result' style='color: limegreen'>
+      <i class='fa fa-circle fa-stack-2x'></i>
+      <i class='fa fa-stack-1x fa-inverse'><%= datum.ground_truth %></i>
+    </span>
+  </td>
+</tr>
