@@ -30,7 +30,7 @@ prediction: &prediction
       - 'round'
       - 'track'
       - 'weather'
-    entries:
+    horses:
       - 'age'
       - 'average_prize_money'
       - 'blank'
