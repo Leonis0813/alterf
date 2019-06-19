@@ -39,7 +39,10 @@ describe 'ブラウザで予測する', type: :request do
       end
 
       describe 'テストデータ形式を変更する' do
-        before(:all) { @driver.find_element(:id, 'type_url').click }
+        before(:all) do
+          @driver.get("#{base_url}/predictions")
+          @driver.find_element(:id, 'type_url').click
+        end
 
         it 'URLを指定できること' do
           is_asserted_by { @driver.find_element(:id, 'type_url').selected? }
