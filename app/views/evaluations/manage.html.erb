@@ -5,7 +5,7 @@
       <%= form_for @evaluation, :html => {:multipart => true}, :url => evaluations_path, :remote => true do |f| %>
         <div class='form-group'>
           <%= f.label :model, 'モデル' %><br>
-          <%= f.file_field :model, {:class => 'form-control', :name => :model, :required => true} %>
+          <%= f.file_field :model, {:class => 'form-control', :name => :model} %>
         </div>
         <%= f.submit '実行', :class => 'btn btn-primary btn-sm btn-submit' %>
         <%= f.submit 'リセット', :type => 'reset', :class => 'btn btn-default btn-sm' %>

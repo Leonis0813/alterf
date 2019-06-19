@@ -44,6 +44,7 @@ pipeline {
 
       steps {
         sh "rvm ${RUBY_VERSION} do env COVERAGE=on bundle exec rake spec:models"
+        sh "rvm ${RUBY_VERSION} do env COVERAGE=on bundle exec rake spec:libs"
       }
     }
 
