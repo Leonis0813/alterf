@@ -27,6 +27,9 @@ gem 'unicorn', '~> 5.4.0'
 group :development do
   gem 'pronto'
   gem 'pronto-rubocop', require: false
+  gem 'pronto-erb_lint', require: false
+  gem 'pronto-coffeelint', require: false
+  gem 'pronto-stylelint', require: false
   gem 'rubocop'
   gem 'rubocop-performance'
   gem 'web-console', '~> 2.0'
