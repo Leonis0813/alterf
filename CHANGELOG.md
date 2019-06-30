@@ -1,5 +1,6 @@
 # 4.3.2 (2019/06/30)
 - [ADD] gems for pronto
+- [UPDATE] gems
 
 # 4.3.1 (2019/06/19)
 - [FIX] views for invalid inputs
