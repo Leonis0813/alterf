@@ -1,14 +1,12 @@
 # coding: utf-8
+
 class AnalysisMailer < ApplicationMailer
-  default :from => 'Leonis.0813@gmail.com'
-
-  def finished(analysis, is_success)
+  def completed(analysis)
     @analysis = analysis
-    subject = is_success ? '分析が完了しました' : '分析中にエラーが発生しました'
-    template_name = is_success ? 'success' : 'failer'
-    tmp_dir = File.join(Rails.root, "tmp/files/#{analysis.id}")
 
-    file_names = %w[ analysis.yml model.rf ]
+    tmp_dir = Rails.root.join('tmp', 'files', analysis.id.to_s)
+
+    file_names = %w[analysis.yml model.rf]
     zip_file_name = File.join(tmp_dir, 'analysis.zip')
 
     Zip::File.open(zip_file_name, Zip::File::CREATE) do |zip|
@@ -18,6 +16,20 @@ class AnalysisMailer < ApplicationMailer
     end
 
     attachments['analysis.zip'] = File.read(zip_file_name)
-    mail(:to => 'Leonis.0813@gmail.com', :subject => subject, :template_name => template_name)
+    mail(
+      to: 'Leonis.0813@gmail.com',
+      subject: '分析が完了しました',
+      template_name: 'success',
+    )
+  end
+
+  def error(analysis)
+    @analysis = analysis
+
+    mail(
+      to: 'Leonis.0813@gmail.com',
+      subject: '分析中にエラーが発生しました',
+      template_name: 'failer',
+    )
   end
 end

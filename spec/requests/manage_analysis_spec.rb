@@ -1,14 +1,9 @@
 # coding: utf-8
+
 require 'rails_helper'
 
-describe 'ブラウザで分析する', :type => :request do
-  user_id, password = 'test_user_id', 'test_user_pass'
-  before(:all) do
-    @driver = Selenium::WebDriver.for :firefox
-    @driver.get("#{base_url}/404_path")
-    @driver.manage.add_cookie(:name => 'algieba', :value => Base64.strict_encode64("#{user_id}:#{password}"))
-    @wait = Selenium::WebDriver::Wait.new(:timeout => 30)
-  end
+describe 'ブラウザで分析する', type: :request do
+  include_context 'Webdriver起動'
 
   describe '分析画面を開く' do
     before(:all) { @driver.get("#{base_url}/analyses") }
@@ -27,11 +22,37 @@ describe 'ブラウザで分析する', :type => :request do
     end
 
     it 'タイトルが正しいこと' do
-      is_asserted_by { @driver.find_element(:xpath, '//div[@class="modal-header"]/h4[@class="modal-title"]').text == 'エラーが発生しました' }
+      xpath = '//div[@class="modal-header"]/h4[@class="modal-title"]'
+      text = 'エラーが発生しました'
+      is_asserted_by { @driver.find_element(:xpath, xpath).text == text }
     end
 
     it 'エラーメッセージが正しいこと' do
-      is_asserted_by { @driver.find_element(:xpath, '//div[@class="modal-body"]/div').text == '入力値を見直してください' }
+      xpath = '//div[@class="modal-body"]/div'
+      text = '入力値を見直してください'
+      is_asserted_by { @driver.find_element(:xpath, xpath).text == text }
+    end
+
+    describe '分析を実行する' do
+      before(:all) do
+        @driver.get("#{base_url}/analyses")
+        @driver.find_element(:id, 'analysis_num_data').send_keys(100)
+        @driver.find_element(:id, 'analysis_num_tree').send_keys(10)
+        @driver.find_element(:xpath, '//form/input[@value="実行"]').click
+        @wait.until { @driver.find_element(:class, 'modal-body').displayed? }
+      end
+
+      it 'タイトルが正しいこと' do
+        xpath = '//div[@class="modal-header"]/h4[@class="modal-title"]'
+        text = '分析を開始しました'
+        is_asserted_by { @driver.find_element(:xpath, xpath).text == text }
+      end
+
+      it 'エラーメッセージが正しいこと' do
+        xpath = '//div[@class="modal-body"]/div'
+        text = '終了後、メールにて結果を通知します'
+        is_asserted_by { @driver.find_element(:xpath, xpath).text == text }
+      end
     end
   end
 end

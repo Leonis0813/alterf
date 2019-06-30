@@ -1,0 +1,52 @@
+netkeiba:
+  base_url: 'https://db.netkeiba.com'
+
+mysql:
+  database: 'denebola'
+  host: 'localhost'
+  port: 3306
+  user: 'root'
+  password: 'password'
+
+analysis:
+  racewise_features:
+    - 'average_prize_money'
+    - 'burden_weight'
+    - 'rate_within_third'
+    - 'weight'
+    - 'weight_diff'
+    - 'weight_per'
+    - 'win_times'
+
+prediction: &prediction
+  tmp_file_name: 'test_data.yml'
+  feature:
+    races:
+      - 'distance'
+      - 'direction'
+      - 'grade'
+      - 'month'
+      - 'place'
+      - 'round'
+      - 'track'
+      - 'weather'
+    horses:
+      - 'age'
+      - 'average_prize_money'
+      - 'blank'
+      - 'burden_weight'
+      - 'distance_diff'
+      - 'entry_times'
+      - 'last_race_order'
+      - 'number'
+      - 'rate_within_third'
+      - 'running_style'
+      - 'second_last_race_order'
+      - 'sex'
+      - 'weight'
+      - 'weight_diff'
+      - 'weight_per'
+      - 'win_times'
+
+evaluation:
+  <<: *prediction

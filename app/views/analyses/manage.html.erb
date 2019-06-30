@@ -1,6 +1,6 @@
 <div class='row center-block'>
   <div class='col-lg-4'>
-    <div id='new-analysis' class='well tab-pane active'>
+    <div id='new-analysis' class='well'>
       <h3>レースを分析</h3>
       <%= form_for @analysis, {:url => analyses_path, :remote => true} do |f| %>
         <% {:num_data => '学習データ数', :num_tree => '決定木の数'}.each do |param, text| %>
@@ -15,16 +15,16 @@
     </div>
   </div>
 
-  <div class='col-lg-8'>
-    <h3 style='padding: 10px 0px'>ジョブ実行履歴</h3>
+  <div class='col-lg-8 well'>
+    <h3 class='table-title'>ジョブ実行履歴</h3>
     <% from = @analyses.total_count == 0 ? 0 : @analyses.offset_value + 1 %>
     <% info = {:total_count => @analyses.total_count, :from => from, :to => @analyses.offset_value + @analyses.size} %>
-    <h4 style='padding: 10px 0px;display: inline'><%= t('views.pagination.info', info) %></h4>
+    <h4 class='pagination-info'><%= t('views.pagination.info', info) %></h4>
     <%= paginate @analyses %>
     <table class='table table-hover'>
       <thead>
         <% {'実行開始日時' => 25, '学習データ数' => 30, '決定木の数' => 15, '特徴量の数' => 15, '状態' => 15}.each do |header, width| %>
-          <th style='width:<%= width %>%'><%= header %></th>
+          <th width='<%= width %>%'><%= header %></th>
         <% end %>
         <th class='rebuild'></th>
       </thead>

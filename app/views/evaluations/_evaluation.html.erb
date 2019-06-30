@@ -1,0 +1,33 @@
+<tr>
+  <td class='<%= state_to_class(evaluation.state) %>'>
+    <%= time_to_string(evaluation.created_at) %></td>
+  <td class='<%= state_to_class(evaluation.state) %>'>
+    <%= evaluation.model %>
+  </td>
+  <td class='td-state <%= state_to_class(evaluation.state) %>'>
+    <span class='processing'><%= state_to_title(evaluation.state) %></span>
+    <% if evaluation.state == 'processing' %>
+    <i class='fa fa-refresh fa-spin'></i>
+    <% end %>
+  </td>
+  <td class='<%= state_to_class(evaluation.state) %>'>
+  <% if evaluation.state == 'completed' %>
+    <%= "#{evaluation.precision * 100}%" %>
+  <% end %>
+  </td>
+  <td style='border-style: none' align='center'>
+  <% if evaluation.state == 'completed' %>
+    <span class='glyphicon glyphicon-arrow-right'></span>
+  <% end %>
+  </td>
+  <td style='border-style: none;padding: 2px;vertical-align: middle'>
+  <% if evaluation.state == 'completed' %>
+    <%= link_to evaluation_path(evaluation.evaluation_id), {target: :_blank} do %>
+      <button class='btn btn-success btn-result'>
+        詳細
+        <span class='glyphicon glyphicon-new-window new-window'></span>
+      </button>
+    <% end %>
+  <% end %>
+  </td>
+</tr>

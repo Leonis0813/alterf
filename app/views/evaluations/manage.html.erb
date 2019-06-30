@@ -1,0 +1,36 @@
+<div class='row center-block'>
+  <div class='col-lg-4'>
+    <div id='new-evaluation' class='well'>
+      <h3>モデルを評価</h3>
+      <%= form_for @evaluation, :html => {:multipart => true}, :url => evaluations_path, :remote => true do |f| %>
+        <div class='form-group'>
+          <%= f.label :model, 'モデル' %><br>
+          <%= f.file_field :model, {:class => 'form-control', :name => :model} %>
+        </div>
+        <%= f.submit '実行', :class => 'btn btn-primary btn-sm btn-submit' %>
+        <%= f.submit 'リセット', :type => 'reset', :class => 'btn btn-default btn-sm' %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class='col-lg-8 well'>
+      <h3 class='table-title'>ジョブ実行履歴</h3>
+    <% from = @evaluations.total_count == 0 ? 0 : @evaluations.offset_value + 1 %>
+    <% info = {:total_count => @evaluations.total_count, :from => from, :to => @evaluations.offset_value + @evaluations.size} %>
+    <h4 class='pagination-info'><%= t('views.pagination.info', info) %></h4>
+    <%= paginate @evaluations %>
+    <table class='table table-hover'>
+      <thead>
+        <th width='150'>実行開始日時</th>
+        <th>モデル</th>
+        <th width='80'>状態</th>
+        <th width='80'>精度</th>
+        <th width='50' style='border: none'></th>
+        <th width='80' style='border: none'></th>
+      </thead>
+      <tbody>
+        <%= render @evaluations %>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,6 +1,6 @@
 namespace :resque do
   namespace :worker do
-    require File.expand_path('../../../config/application', __FILE__)
+    require File.expand_path('../../config/application', __dir__)
 
     desc 'Start rescue'
     task :start do

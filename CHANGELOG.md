@@ -1,3 +1,47 @@
+# 4.3.2 (2019/06/30)
+- [ADD] gems for pronto
+- [UPDATE] gems
+
+# 4.3.1 (2019/06/19)
+- [FIX] views for invalid inputs
+- [UPDATE] gems
+
+# 4.3.0 (2019/06/15)
+- [ADD] evaluation result view
+- [UPDATE] gems
+
+# 4.2.0 (2019/06/09)
+- [UPDATE] views to notify error
+- [UPDATE] gems
+
+# 4.1.2 (2019/05/29)
+- [UPDATE] prediction script to add new features
+- [UPDATE] gems
+
+# 4.1.1 (2019/05/12)
+- [FIX] bug for fetchgin race top
+- [FIX] prediction job not to move file if not exists
+
+# 4.1.0 (2019/05/11)
+- [UPDATE] prediction view to show results
+- [UPDATE] gems
+
+# 4.0.4 (2019/05/05)
+- [FIX] coding style
+- [UPDATE] gems
+
+# 4.0.3 (2019/05/02)
+- [UPDATE] ruby version to 2.4.4
+
+# 4.0.2 (2019/04/29)
+- [UPDATE] gems
+
+# 4.0.1 (2019/04/21)
+- [UPDATE] gems
+
+# 4.0.0 (2019/04/20)
+- [ADD] new feature to evaluate model
+
 # 3.7.11 (2019/03/30)
 - [UPDATE] gems
 

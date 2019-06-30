@@ -4,10 +4,18 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
 
   rescue_from BadRequest do |e|
-    render :status => :bad_request, :json => e.errors
+    render status: :bad_request, json: e.errors
   end
 
-  rescue_from NotFound do |e|
+  rescue_from NotFound do
     head :not_found
+  end
+
+  def check_absent_params(request_params, required_params)
+    absent_keys = required_params - request_params.symbolize_keys.keys
+    return if absent_keys.empty?
+
+    error_codes = absent_keys.map {|key| "absent_param_#{key}" }
+    raise BadRequest, error_codes
   end
 end
