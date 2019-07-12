@@ -141,7 +141,7 @@ GEM
     fuubar (2.4.1)
       rspec-core (~> 3.0)
       ruby-progressbar (~> 1.4)
-    gitlab (4.11.0)
+    gitlab (4.12.0)
       httparty (~> 0.14, >= 0.14.0)
       terminal-table (~> 1.5, >= 1.5.1)
     globalid (0.4.2)
