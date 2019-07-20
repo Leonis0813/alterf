@@ -238,9 +238,6 @@ GEM
     pronto-rubocop (0.10.0)
       pronto (~> 0.10.0)
       rubocop (~> 0.50, >= 0.49.1)
-    pronto-stylelint (0.10.0)
-      pronto (~> 0.10.0)
-      rugged (~> 0.24, >= 0.23.0)
     pry (0.12.2)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
@@ -326,6 +323,9 @@ GEM
       unicode-display_width (>= 1.4.0, < 1.7)
     rubocop-performance (1.4.0)
       rubocop (>= 0.71.0)
+    rubocop-rails (2.2.1)
+      rack (>= 1.1)
+      rubocop (>= 0.72.0)
     ruby-progressbar (1.10.1)
     rubyzip (1.2.3)
     rugged (0.28.2)
@@ -435,7 +435,6 @@ DEPENDENCIES
   pronto-coffeelint
   pronto-erb_lint
   pronto-rubocop
-  pronto-stylelint
   pry
   rails (~> 4.0)
   remotipart
@@ -444,6 +443,7 @@ DEPENDENCIES
   rspec-rails
   rubocop
   rubocop-performance
+  rubocop-rails
   rubyzip
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
