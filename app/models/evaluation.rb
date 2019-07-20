@@ -12,6 +12,6 @@ class Evaluation < ActiveRecord::Base
     positives = data.select do |datum|
       datum.prediction_results.map(&:number).include?(datum.ground_truth)
     end
-    update!(precision: (positives.size.to_f / data.size.to_f).round(1))
+    update!(precision: (positives.size.to_f / data.size).round(1))
   end
 end
