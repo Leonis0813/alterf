@@ -2,15 +2,15 @@
   <div class='col-lg-4'>
     <div id='new-analysis' class='well'>
       <h3>レースを分析</h3>
-      <%= form_for @analysis, {:url => analyses_path, :remote => true} do |f| %>
-        <% {:num_data => '学習データ数', :num_tree => '決定木の数'}.each do |param, text| %>
+      <%= form_for @analysis, {url: analyses_path, remote: true} do |f| %>
+        <% {num_data: '学習データ数', num_tree: '決定木の数'}.each do |param, text| %>
           <div class='form-group'>
             <%= f.label param, text %><br>
-            <%= f.text_field param, {:class => 'form-control', :name => param, :required => true} %>
+            <%= f.text_field param, {class: 'form-control', name: param, required: true} %>
           </div>
         <% end %>
-        <%= f.submit '実行', :class => 'btn btn-primary btn-sm btn-submit' %>
-        <%= f.submit 'リセット', :type => 'reset', :class => 'btn btn-default btn-sm' %>
+        <%= f.submit '実行', class: 'btn btn-primary btn-sm btn-submit' %>
+        <%= f.submit 'リセット', type: 'reset', class: 'btn btn-default btn-sm' %>
       <% end %>
     </div>
   </div>
@@ -18,7 +18,7 @@
   <div class='col-lg-8 well'>
     <h3 class='table-title'>ジョブ実行履歴</h3>
     <% from = @analyses.total_count == 0 ? 0 : @analyses.offset_value + 1 %>
-    <% info = {:total_count => @analyses.total_count, :from => from, :to => @analyses.offset_value + @analyses.size} %>
+    <% info = {total_count: @analyses.total_count, from: from, to: @analyses.offset_value + @analyses.size} %>
     <h4 class='pagination-info'><%= t('views.pagination.info', info) %></h4>
     <%= paginate @analyses %>
     <table class='table table-hover'>
