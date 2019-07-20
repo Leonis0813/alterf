@@ -8,9 +8,12 @@ default: &default
 
 development:
   <<: *default
+  username: development
 
 test:
   <<: *default
+  username: test
 
 production:
   <<: *default
+  username: production
