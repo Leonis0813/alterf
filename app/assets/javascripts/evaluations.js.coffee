@@ -1,6 +1,3 @@
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://coffeescript.org/
 $ ->
   $('#new_evaluation').on 'ajax:success', (event, xhr, status, error) ->
     bootbox.alert({
@@ -20,5 +17,12 @@ $ ->
         $('.btn-submit').prop('disabled', false)
         return
     })
+    return
+
+  $('#data_source').on 'change', ->
+    $('.form-data-source').prop('disabled', true)
+    $('.form-data-source').addClass('not-selected')
+    $('#evaluation_data_' + $(this).val()).prop('disabled', false)
+    $('#evaluation_data_' + $(this).val()).removeClass('not-selected')
     return
   return

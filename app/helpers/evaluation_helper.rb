@@ -9,11 +9,11 @@ module EvaluationHelper
     number == ground_truth ? 'limegreen' : 'gray'
   end
 
-  def source_option
+  def data_source_option
     {
       'Top20' => 'remote',
       'ファイル' => 'file',
-      '直接入力' => 'textarea',
+      '直接入力' => 'text',
     }
   end
 end
