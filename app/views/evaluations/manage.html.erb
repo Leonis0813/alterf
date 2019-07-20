@@ -4,7 +4,7 @@
       <h3>モデルを評価</h3>
       <%= form_for @evaluation, html: {multipart: true}, url: evaluations_path, remote: true do |f| %>
         <div class='form-group'>
-          <%= f.label :model, 'モデル' %><br>
+          <%= f.label :model, 'モデル' %><br />
           <%= f.file_field :model, class: 'form-control', name: :model %>
         </div>
         <div class='form-group'>
@@ -14,8 +14,9 @@
             <%= label_tag :data_source, '指定方法:' %>
             <%= select_tag :data_source, options_for_select(data_source_option) %>
           </span>
-          <%= f.file_field :data, id: 'evaluation_data_file', class: 'form-control form-data-source not-selected', name: :data, disabled: true %>
-          <%= f.text_area :data, id: 'evaluation_data_text', class: 'form-control form-data-source not-selected', name: :data, value: nil, disabled: true, style: 'resize:vertical' %>
+          <% params = {class: 'form-control form-data-source not-selected', name: :data, disabled: true} %>
+          <%= f.file_field :data, params.merge(id: 'evaluation_data_file') %>
+          <%= f.text_area :data, params.merge(id: 'evaluation_data_text', value: '', style: 'resize:vertical') %>
         </div>
         <%= f.submit '実行', class: 'btn btn-primary btn-sm btn-submit' %>
         <%= f.submit 'リセット', type: 'reset', class: 'btn btn-default btn-sm' %>
@@ -25,7 +26,7 @@
 
   <div class='col-lg-8 well'>
     <h3 class='table-title'>ジョブ実行履歴</h3>
-    <% from = @evaluations.total_count == 0 ? 0 : @evaluations.offset_value + 1 %>
+    <% from = @evaluations.total_count.zero? ? 0 : @evaluations.offset_value + 1 %>
     <% to = @evaluations.offset_value + @evaluations.size %>
     <% info = {total_count: @evaluations.total_count, from: from, to: to} %>
     <h4 class='pagination-info'><%= t('views.pagination.info', info) %></h4>
