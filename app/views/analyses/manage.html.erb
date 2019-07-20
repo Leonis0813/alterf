@@ -2,11 +2,11 @@
   <div class='col-lg-4'>
     <div id='new-analysis' class='well'>
       <h3>レースを分析</h3>
-      <%= form_for @analysis, {url: analyses_path, remote: true} do |f| %>
+      <%= form_for @analysis, url: analyses_path, remote: true do |f| %>
         <% {num_data: '学習データ数', num_tree: '決定木の数'}.each do |param, text| %>
           <div class='form-group'>
             <%= f.label param, text %><br>
-            <%= f.text_field param, {class: 'form-control', name: param, required: true} %>
+            <%= f.text_field param, class: 'form-control', name: param, required: true %>
           </div>
         <% end %>
         <%= f.submit '実行', class: 'btn btn-primary btn-sm btn-submit' %>

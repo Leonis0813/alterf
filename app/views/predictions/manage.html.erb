@@ -6,14 +6,14 @@
       <%= form_for @prediction, html: {multipart: true}, url: predictions_path, remote: true do |f| %>
         <div class='form-group'>
           <%= f.label :model, 'モデル' %><br>
-          <%= f.file_field :model, {class: 'form-control', name: :model} %>
+          <%= f.file_field :model, class: 'form-control', name: :model %>
         </div>
         <div class='form-group'>
           <%= f.label :test_data, 'テストデータ' %>
           <label><%= radio_button_tag :type, 'file', :checked %> ファイル</label>
           <label><%= radio_button_tag :type, 'url' %> URL</label>
           <br>
-          <%= f.file_field :test_data, {class: 'form-control', name: :test_data} %>
+          <%= f.file_field :test_data, class: 'form-control', name: :test_data %>
         </div>
         <%= f.submit '実行', class: 'btn btn-primary btn-sm btn-submit' %>
         <%= f.submit 'リセット', type: 'reset', class: 'btn btn-default btn-sm' %>
@@ -24,7 +24,8 @@
   <div class='col-lg-8 well'>
     <h3 class='table-title'>ジョブ実行履歴</h3>
     <% from = @predictions.total_count == 0 ? 0 : @predictions.offset_value + 1 %>
-    <% info = {total_count: @predictions.total_count, from: from, to: @predictions.offset_value + @predictions.size} %>
+    <% to = @predictions.offset_value + @predictions.size %>
+    <% info = {total_count: @predictions.total_count, from: from, to: to} %>
     <h4 class='pagination-info'><%= t('views.pagination.info', info) %></h4>
     <%= paginate @predictions %>
     <table class='table table-hover'>
