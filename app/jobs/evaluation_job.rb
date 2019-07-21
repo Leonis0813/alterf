@@ -7,17 +7,31 @@ class EvaluationJob < ActiveJob::Base
 
     client = NetkeibaClient.new
 
-    client.http_get_race_top.each do |race_id|
+    race_ids = if evaluation.data_source == 'remote'
+                 client.http_get_race_top
+               else
+                 file_path = Rails.root.join(
+                   data_dir,
+                   Settings.evaluation.race_list_filename,
+                 )
+                 File.read(file_path).lines.map(&:chomp)
+               end
+
+    race_ids.each do |race_id|
       race_url = "#{Settings.netkeiba.base_url}/race/#{race_id}"
+      race_name = client.http_get_race_name(race_id)
+      feature = FeatureUtil.create_feature(race_id)
+
+      evaluation.data.create!(
+        race_name: race_name,
+        race_url: race_url,
+        ground_truth: feature['entries'].find {|entry| entry['won'] }['number'],
+      )
+
+      feature['entries'].each {|entry| entry.except!('won') }
 
       File.open("#{data_dir}/#{Settings.prediction.tmp_file_name}", 'w') do |file|
-        feature = FeatureUtil.create_feature("/race/#{race_id}")
-        evaluation.data.create!(
-          race_name: feature[:race_name],
-          race_url: race_url,
-          ground_truth: feature[:entries].find {|entry| entry.last == 1 }[7],
-        )
-        YAML.dump(feature.deep_stringify_keys, file)
+        YAML.dump(feature, file)
       end
 
       args = [evaluation_id, evaluation.model, Settings.evaluation.tmp_file_name]
