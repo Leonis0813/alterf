@@ -51,7 +51,7 @@ class EvaluationsController < ApplicationController
     return unless %w[file text].include?(evaluation_param[:data_source])
 
     raise BadRequest, 'invalid_param_data' if race_ids.empty?
-    raise BadRequest, 'invalid_param_data' if race_ids.any? {|race_id| race_id.empty? }
+    raise BadRequest, 'invalid_param_data' if race_ids.any?(&:empty?)
   end
 
   def race_ids

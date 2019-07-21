@@ -13,6 +13,20 @@ class Evaluation < ActiveRecord::Base
 
   has_many :data, dependent: :destroy
 
+  def fetch_data
+    if data_source == 'remote'
+      NetkeibaClient.new.http_get_race_top
+    else
+      file_path = Rails.root.join(
+        'tmp',
+        'files',
+        id.to_s,
+        Settings.evaluation.race_list_filename,
+      )
+      File.read(file_path).lines.map(&:chomp)
+    end
+  end
+
   def calculate_precision!
     positives = data.select do |datum|
       datum.prediction_results.map(&:number).include?(datum.ground_truth)
