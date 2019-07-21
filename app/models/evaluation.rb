@@ -1,12 +1,13 @@
 class Evaluation < ActiveRecord::Base
   DATA_SOURCE_LIST = %w[file remote text].freeze
 
-  validates :evaluation_id, :model, :data_source, :state,
+  validates :evaluation_id, :model, :state,
             presence: {message: 'absent'}
   validates :evaluation_id,
             format: {with: /\A[0-9a-f]{32}\z/, message: 'invalid'}
   validates :data_source,
-            inclusion: {in: DATA_SOURCE_LIST, message: 'invalid'}
+            inclusion: {in: DATA_SOURCE_LIST, message: 'invalid'},
+            allow_nil: true
   validates :state,
             inclusion: {in: %w[processing completed error], message: 'invalid'}
 

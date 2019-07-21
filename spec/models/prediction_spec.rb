@@ -27,12 +27,8 @@ describe Prediction, type: :model do
         state: %w[processing completed error],
       }
 
-      test_cases = CommonHelper.generate_test_case(valid_attribute).select do |attribute|
-        attribute.keys.sort == valid_attribute.keys.sort
-      end
-
-      test_cases.each do |attribute|
-        context "フォームに#{attribute.keys.join(',')}を指定した場合" do
+      CommonHelper.generate_test_case(valid_attribute).each do |attribute|
+        context "フォームに#{attribute}を指定した場合" do
           include_context 'オブジェクトを検証する', attribute
           it_behaves_like 'エラーが発生していないこと'
         end
@@ -43,7 +39,7 @@ describe Prediction, type: :model do
       invalid_attribute = {
         model: [1.0, 0, true, nil],
         test_data: [1.0, 0, true, nil],
-        state: ['invalid', 1.0, 0, true, nil],
+        state: ['invalid', nil],
       }
 
       CommonHelper.generate_test_case(invalid_attribute).each do |attribute|

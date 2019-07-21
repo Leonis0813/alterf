@@ -32,11 +32,7 @@ describe Evaluation::Datum, type: :model do
         ground_truth: [1],
       }
 
-      test_cases = CommonHelper.generate_test_case(valid_attribute).select do |test_case|
-        test_case.keys == valid_attribute.keys
-      end
-
-      test_cases.each do |attribute|
+      CommonHelper.generate_test_case(valid_attribute).each do |attribute|
         context "フォームに#{attribute.keys.join(',')}を指定した場合" do
           include_context 'オブジェクトを検証する', attribute
           it_behaves_like 'エラーが発生していないこと'
