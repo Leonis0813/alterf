@@ -28,6 +28,8 @@ describe NetkeibaClient do
   end
 
   describe '#http_get_race_name' do
+    expected = '第86回東京優駿(G1)'
+
     describe '正常系' do
       before(:all) do
         RSpec::Mocks.with_temporary_scope do
@@ -36,13 +38,12 @@ describe NetkeibaClient do
           struct = Struct.new(:body)
           response = struct.new(race)
           allow(client).to receive(:get).and_return(response)
-          @response = client.http_get_race('dummy')
+          @response = client.http_get_race_name('dummy')
         end
       end
 
       it 'レスポンスが正しいこと' do
-        expected_yml = Rails.root.join('spec', 'fixtures', 'expected_race.yml')
-        is_asserted_by { @response == YAML.load_file(expected_yml).deep_symbolize_keys }
+        is_asserted_by { @response == expected }
       end
     end
   end
