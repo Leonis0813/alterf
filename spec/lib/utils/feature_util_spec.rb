@@ -39,7 +39,7 @@ describe FeatureUtil do
     horse_id = '2017103903'
     race_id = '201809030811'
     expected = feature.except(:entries).merge(
-      :entries => feature[:entries].map(&:values),
+      entries: feature[:entries].map(&:values),
     ).stringify_keys
 
     describe '正常系' do

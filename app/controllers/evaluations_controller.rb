@@ -5,11 +5,10 @@ class EvaluationsController < ApplicationController
   end
 
   def execute
-    check_absent_param(%i[model data_source])
+    check_absent_param(evaluation_param, %i[model data_source])
+    check_invalid_param
 
     model = evaluation_param[:model]
-    raise BadRequest, 'invalid_param_model' unless model.respond_to?(:original_filename)
-
     evaluation = Evaluation.new(
       evaluation_id: SecureRandom.hex,
       model: model.original_filename,
@@ -28,13 +27,6 @@ class EvaluationsController < ApplicationController
     end
 
     if %w[file text].include?(evaluation.data_source)
-      race_ids = case evaluation.data_source
-                 when 'file'
-                   evaluation_param[:data].read.lines.map(&:chomp)
-                 when 'text'
-                   evaluation_param[:data].lines.map(&:chomp)
-                 end
-
       file_path = File.join(output_dir, Settings.evaluation.race_list_filename)
       File.open(file_path, 'w') do |f|
         race_ids.each {|race_id| f.puts(race_id) }
@@ -52,12 +44,23 @@ class EvaluationsController < ApplicationController
 
   private
 
-  def check_absent_param(required_keys)
-    absent_keys = required_keys - evaluation_param.symbolize_keys.keys
-    return if absent_keys.empty?
+  def check_invalid_param
+    model = evaluation_param[:model]
+    raise BadRequest, 'invalid_param_model' unless model.respond_to?(:original_filename)
 
-    error_codes = absent_keys.map {|key| "absent_param_#{key}" }
-    raise BadRequest, error_codes
+    return unless %w[file text].include?(evaluation_param[:data_source])
+
+    raise BadRequest, 'invalid_param_data' if race_ids.empty?
+    raise BadRequest, 'invalid_param_data' if race_ids.any? {|race_id| race_id.empty? }
+  end
+
+  def race_ids
+    @race_ids ||= case evaluation_param[:data_source]
+                  when 'file'
+                    evaluation_param[:data].read.lines.map(&:chomp)
+                  when 'text'
+                    evaluation_param[:data].lines.map(&:chomp)
+                  end
   end
 
   def evaluation_param
