@@ -11,10 +11,10 @@ class EvaluationJob < ActiveJob::Base
       data = evaluation.data.create!(
         race_name: NetkeibaClient.new.http_get_race_name(race_id),
         race_url: "#{Settings.netkeiba.base_url}/race/#{race_id}",
-        ground_truth: feature['entries'].find {|entry| entry['won'] }[7],
+        ground_truth: feature['entries'].find {|entry| entry[-1] }[7],
       )
 
-      feature['entries'].each {|entry| entry.except!('won') }
+      feature['entries'].each {|entry| entry.delete_at(-1) }
 
       File.open(File.join(data_dir, Settings.prediction.tmp_file_name), 'w') do |file|
         YAML.dump(feature, file)
