@@ -29,9 +29,9 @@ group :development do
   gem 'pronto-coffeelint', require: false
   gem 'pronto-erb_lint', require: false
   gem 'pronto-rubocop', require: false
-  gem 'pronto-stylelint', require: false
   gem 'rubocop'
   gem 'rubocop-performance'
+  gem 'rubocop-rails'
   gem 'web-console', '~> 2.0'
 end
 

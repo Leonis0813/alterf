@@ -8,15 +8,12 @@ describe Evaluation, type: :model do
       valid_attribute = {
         evaluation_id: ['0' * 32],
         model: %w[model],
+        data_source: %w[file remote text] + [nil],
         state: %w[processing completed error],
       }
 
-      test_cases = CommonHelper.generate_test_case(valid_attribute).select do |test_case|
-        test_case.keys == valid_attribute.keys
-      end
-
-      test_cases.each do |attribute|
-        context "フォームに#{attribute.keys.join(',')}を指定した場合" do
+      CommonHelper.generate_test_case(valid_attribute).each do |attribute|
+        context "フォームに#{attribute}を指定した場合" do
           include_context 'オブジェクトを検証する', attribute
           it_behaves_like 'エラーが発生していないこと'
         end
@@ -26,8 +23,9 @@ describe Evaluation, type: :model do
     describe '異常系' do
       invalid_attribute = {
         evaluation_id: ['invalid', 'g' * 32, 1.0, 0, true, nil],
-        model: [1.0, 0, true, nil],
-        state: ['invalid', 1.0, 0, true, nil],
+        model: [nil],
+        data_source: %w[invalid],
+        state: ['invalid', nil],
       }
 
       CommonHelper.generate_test_case(invalid_attribute).each do |attribute|

@@ -33,6 +33,8 @@ pipeline {
         script {
           sh 'sudo rm -rf coverage'
           sh "rvm ${RUBY_VERSION} do bundle install --path=vendor/bundle"
+          sh "rvm ${RUBY_VERSION} do env RAILS_ENV=test bundle exec rake db:drop"
+          sh "rvm ${RUBY_VERSION} do env RAILS_ENV=test bundle exec rake db:setup"
         }
       }
     }
@@ -44,7 +46,7 @@ pipeline {
 
       steps {
         sh "rvm ${RUBY_VERSION} do env COVERAGE=on bundle exec rake spec:models"
-        sh "rvm ${RUBY_VERSION} do env COVERAGE=on bundle exec rake spec:libs"
+        sh "rvm ${RUBY_VERSION} do env COVERAGE=on bundle exec rake spec:lib"
       }
     }
 

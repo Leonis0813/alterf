@@ -31,6 +31,46 @@ describe 'ブラウザで予測する', type: :request do
         text = '入力値を見直してください'
         is_asserted_by { @driver.find_element(:xpath, xpath).text == text }
       end
+
+      describe '評価データを指定方法をファイルに変更する' do
+        before(:all) do
+          @driver.get("#{base_url}/evaluations")
+          @wait.until do
+            @driver.find_element(:id, 'data_source').click rescue false
+          end
+          @wait.until do
+            @driver.find_element(:xpath, '//option[@value="file"]').click rescue false
+          end
+        end
+
+        it 'ファイルを指定可能になっていること' do
+          element = @driver.find_element(:xpath, '//input[@id="evaluation_data_file"]')
+
+          is_asserted_by { @wait.until { element.enabled? } }
+          is_asserted_by do
+            element.attribute('class') == 'form-control form-data-source'
+          end
+        end
+      end
+
+      describe '評価データを指定方法を直接入力に変更する' do
+        before(:all) do
+          @driver.find_element(:id, 'data_source').click
+          @wait.until do
+            @driver.find_element(:xpath, '//option[@value="text"]').click rescue false
+          end
+        end
+
+        it 'テキストを入力可能になっていること' do
+          element =
+            @driver.find_element(:xpath, '//textarea[@id="evaluation_data_text"]')
+
+          is_asserted_by { @wait.until { element.enabled? } }
+          is_asserted_by do
+            element.attribute('class') == 'form-control form-data-source'
+          end
+        end
+      end
     end
   end
 end
