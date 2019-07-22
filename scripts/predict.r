@@ -16,6 +16,9 @@ data_size <- length(data$entries)
 
 distance <- c(rep(data$distance, data_size))
 direction <- c(rep(data$direction, data_size))
+if(data$grade == FALSE) {
+  data$grade <- "N"
+}
 grade <- c(rep(data$grade, data_size))
 month <- c(rep(data$month, data_size))
 place <- c(rep(data$place, data_size))
@@ -24,6 +27,8 @@ track <- c(rep(data$track, data_size))
 weather <- c(rep(data$weather, data_size))
 
 horse_features <- config$prediction$feature$horses
+horse_features <- horse_features[-which(horse_features %in% "won")]
+
 test_data <- as.data.frame(
   t(matrix(unlist(data$entries), length(horse_features), data_size))
 )

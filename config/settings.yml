@@ -47,6 +47,8 @@ prediction: &prediction
       - 'weight_diff'
       - 'weight_per'
       - 'win_times'
+      - 'won'
 
 evaluation:
   <<: *prediction
+  race_list_filename: 'race_list.txt'

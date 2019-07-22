@@ -1,3 +1,6 @@
+# 4.4.0 (2019/07/22)
+- [UPDATE] evaluation view to add form for data source
+
 # 4.3.2 (2019/06/30)
 - [ADD] gems for pronto
 - [UPDATE] gems

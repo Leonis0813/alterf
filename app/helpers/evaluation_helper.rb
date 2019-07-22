@@ -8,4 +8,12 @@ module EvaluationHelper
   def span_color(number, ground_truth)
     number == ground_truth ? 'limegreen' : 'gray'
   end
+
+  def data_source_option
+    {
+      'Top20' => 'remote',
+      'ファイル' => 'file',
+      '直接入力' => 'text',
+    }
+  end
 end

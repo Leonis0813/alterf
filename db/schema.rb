@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190610112503) do
+ActiveRecord::Schema.define(version: 20190720151828) do
 
   create_table "analyses", force: :cascade do |t|
     t.integer  "num_data",    limit: 4
@@ -32,12 +32,13 @@ ActiveRecord::Schema.define(version: 20190610112503) do
   end
 
   create_table "evaluations", force: :cascade do |t|
-    t.string   "evaluation_id", limit: 255, null: false
+    t.string   "evaluation_id", limit: 255,                    null: false
     t.string   "model",         limit: 255
+    t.string   "data_source",   limit: 255, default: "remote", null: false
     t.string   "state",         limit: 255
     t.float    "precision",     limit: 24
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
   end
 
   create_table "prediction_results", force: :cascade do |t|

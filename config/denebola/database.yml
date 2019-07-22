@@ -4,7 +4,7 @@ default: &default
   pool: 5
   host: localhost
   password:
-  database: alterf
+  database: denebola
 
 development:
   <<: *default
@@ -13,7 +13,7 @@ development:
 test:
   <<: *default
   username: test
-  database: alterf_test
+  database: denebola_test
 
 production:
   <<: *default

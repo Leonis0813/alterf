@@ -2,11 +2,13 @@
 
 shared_examples 'レスポンスが正常であること' do |status: nil, body: nil|
   it 'ステータスコードが正しいこと' do
-    is_asserted_by { @response_status == (status || @status) }
+    expected = (status || @status)
+    is_asserted_by { @response_status == expected }
   end
 
   it 'レスポンスボディが正しいこと' do
-    is_asserted_by { @response_body == (body || @body) }
+    expected = (body || @body)
+    is_asserted_by { @response_body == expected }
   end
 end
 
