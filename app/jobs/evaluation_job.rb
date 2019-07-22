@@ -24,7 +24,9 @@ class EvaluationJob < ActiveJob::Base
       success = system "Rscript #{Rails.root}/scripts/predict.r #{args.join(' ')}"
       raise StandardError unless success
 
-      data.import_prediction_results(File.join(data_dir, 'prediction.yml'))
+      result_file = File.join(data_dir, 'prediction.yml')
+      data.import_prediction_results(result_file)
+      FileUtils.rm(result_file)
     end
 
     FileUtils.rm_rf(data_dir)
