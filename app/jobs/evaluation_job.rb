@@ -11,7 +11,7 @@ class EvaluationJob < ActiveJob::Base
       data = evaluation.data.create!(
         race_name: NetkeibaClient.new.http_get_race_name(race_id),
         race_url: "#{Settings.netkeiba.base_url}/race/#{race_id}",
-        ground_truth: feature['entries'].find {|entry| entry['won'] }['number'],
+        ground_truth: feature['entries'].find {|entry| entry['won'] }[7],
       )
 
       feature['entries'].each {|entry| entry.except!('won') }
