@@ -32,18 +32,53 @@ describe 'evaluations/manage', type: :view do
       is_asserted_by { title.text == 'モデルを評価' }
     end
 
-    %w[model].each do |param|
+    %w[model data].each do |param|
       it "evaluation_#{param}を含む<label>タグがあること" do
         label =
           @html.xpath("#{input_xpath('evaluation')}/label[@for='evaluation_#{param}']")
         is_asserted_by { label.present? }
       end
+    end
 
-      it "evaluation_#{param}を含む<input>タグがあること" do
-        input =
-          @html.xpath("#{input_xpath('evaluation')}/input[@id='evaluation_#{param}']")
-        is_asserted_by { input.present? }
+    it 'evaluation_modelを含む<input>タグがあること' do
+      input =
+        @html.xpath("#{input_xpath('evaluation')}/input[@id='evaluation_model']")
+      is_asserted_by { input.present? }
+    end
+
+    it 'data_sourceを含む<label>タグがあること' do
+      xpath = "#{input_xpath('evaluation')}/span/label[@for='data_source']"
+      is_asserted_by { @html.xpath(xpath).present? }
+    end
+
+    it 'data_sourceを含む<select>タグがあること' do
+      xpath = "#{input_xpath('evaluation')}/span/select[@id='data_source']"
+      is_asserted_by { @html.xpath(xpath).present? }
+    end
+
+    [
+      %w[remote Top20],
+      %w[file ファイル],
+      %w[text 直接入力],
+    ].each do |value, text|
+      it "valueが#{value}の<option>タグがあること" do
+        xpath = "#{input_xpath('evaluation')}/span/select[@id='data_source']" \
+                "/option[@value='#{value}']"
+        is_asserted_by { @html.xpath(xpath).present? }
+        is_asserted_by { @html.xpath(xpath).text == text }
       end
+    end
+
+    it '非表示で無効になっている<input>タグがあること' do
+      xpath = "#{input_xpath('evaluation')}/input[@id='evaluation_data_file']" \
+              "[@class='form-control form-data-source not-selected'][@disabled]"
+      is_asserted_by { @html.xpath(xpath).present? }
+    end
+
+    it '非表示で無効になっている<textarea>タグがあること' do
+      xpath = "#{input_xpath('evaluation')}/textarea[@id='evaluation_data_text']" \
+              "[@class='form-control form-data-source not-selected'][@disabled]"
+      is_asserted_by { @html.xpath(xpath).present? }
     end
 
     %w[submit reset].each do |type|
