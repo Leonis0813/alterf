@@ -44,11 +44,9 @@ describe 'ブラウザで予測する', type: :request do
         end
 
         it 'ファイルを指定可能になっていること' do
-          element = @wait.until do
-            @driver.find_element(:xpath, '//input[@id="evaluation_data_file"]')
-          end
+          element = @driver.find_element(:xpath, '//input[@id="evaluation_data_file"]')
 
-          is_asserted_by { element.enabled? }
+          is_asserted_by { @wait.until { element.enabled? } }
           is_asserted_by do
             element.attribute('class') == 'form-control form-data-source'
           end
@@ -63,12 +61,11 @@ describe 'ブラウザで予測する', type: :request do
           end
         end
 
-        it 'ファイルを指定可能になっていること' do
-          element = @wait.until do
+        it 'テキストを入力可能になっていること' do
+          element =
             @driver.find_element(:xpath, '//textarea[@id="evaluation_data_text"]')
-          end
 
-          is_asserted_by { element.enabled? }
+          is_asserted_by { @wait.until { element.enabled? } }
           is_asserted_by do
             element.attribute('class') == 'form-control form-data-source'
           end
