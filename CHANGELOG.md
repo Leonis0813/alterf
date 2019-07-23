@@ -1,3 +1,6 @@
+# 4.4.1 (2019/07/23)
+- [UPDATE] gems
+
 # 4.4.0 (2019/07/22)
 - [UPDATE] evaluation view to add form for data source
 - [UPDATE] gems
