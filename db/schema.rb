@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190720151828) do
+ActiveRecord::Schema.define(version: 20190726171816) do
 
   create_table "analyses", force: :cascade do |t|
     t.integer  "num_data",    limit: 4
@@ -42,11 +42,12 @@ ActiveRecord::Schema.define(version: 20190720151828) do
   end
 
   create_table "prediction_results", force: :cascade do |t|
-    t.integer  "predictable_id",   limit: 4,   null: false
-    t.string   "predictable_type", limit: 255, null: false
-    t.integer  "number",           limit: 4,   null: false
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+    t.integer  "predictable_id",   limit: 4,                   null: false
+    t.string   "predictable_type", limit: 255,                 null: false
+    t.integer  "number",           limit: 4,                   null: false
+    t.boolean  "won",                          default: false, null: false
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
   end
 
   create_table "predictions", force: :cascade do |t|
