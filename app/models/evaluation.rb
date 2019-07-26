@@ -36,23 +36,23 @@ class Evaluation < ActiveRecord::Base
 
   def calculate!
     true_positive = data.inject(0) do |tp, datum|
-      tp + datum.prediction_results.won.where(number: datum.ground_truth).size
+      tp + datum.prediction_results.won.where(number: datum.ground_truth).count
     end.to_f
 
     false_positive = data.inject(0) do |fp, datum|
-      fp + datum.prediction_results.won.where.not(number: datum.ground_truth).size
+      fp + datum.prediction_results.won.where.not(number: datum.ground_truth).count
     end.to_f
 
     false_negative = data.inject(0) do |fn, datum|
-      fn + datum.prediction_results.lost.where(number: datum.ground_truth).size
+      fn + datum.prediction_results.lost.where(number: datum.ground_truth).count
     end.to_f
 
     precision = true_positive / (true_positive + false_positive)
     recall = true_positive / (true_positive + false_negative)
     update!(
-      precision: precision.round(3),
-      recall: recall.round(3),
-      f_measure: ((2 * precision * recall) / (precision + recall)).round(3),
+      precision: precision,
+      recall: recall,
+      f_measure: (2 * precision * recall) / (precision + recall),
     )
   end
 end
