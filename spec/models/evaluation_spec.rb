@@ -71,7 +71,7 @@ describe Evaluation, type: :model do
       end
 
       it 'F値が正しいこと' do
-        is_asserted_by { @evaluation.f_measure == 0.444 }
+        is_asserted_by { @evaluation.f_measure.round(3) == 0.444 }
       end
     end
   end
