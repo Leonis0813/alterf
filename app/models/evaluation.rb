@@ -10,6 +10,13 @@ class Evaluation < ActiveRecord::Base
             allow_nil: true
   validates :state,
             inclusion: {in: %w[processing completed error], message: 'invalid'}
+  validates :precision, :recall, :f_measure,
+            numericality: {
+              greater_than_or_equal_to: 0,
+              less_than_or_equal_to: 1,
+              message: 'invalid',
+            },
+            allow_nil: true
 
   has_many :data, dependent: :destroy
 
@@ -28,16 +35,16 @@ class Evaluation < ActiveRecord::Base
   end
 
   def calculate!
-    true_positive = data.inject do |tp, datum|
-      tp + datum.prediction_results.where(number: datum.ground_truth, won: true).size
+    true_positive = data.inject(0) do |tp, datum|
+      tp + datum.prediction_results.won.where(number: datum.ground_truth).size
     end.to_f
 
-    false_positive = data.inject do |fp, datum|
-      fp + datum.prediction_results.where.not(number: datum.ground_truth, won: true).size
+    false_positive = data.inject(0) do |fp, datum|
+      fp + datum.prediction_results.won.where.not(number: datum.ground_truth).size
     end.to_f
 
-    false_negative = data.inject do |fn, datum|
-      fn + datum.prediction_results.where(number: datum.ground_truth, won: false).size
+    false_negative = data.inject(0) do |fn, datum|
+      fn + datum.prediction_results.lost.where(number: datum.ground_truth).size
     end.to_f
 
     precision = true_positive / (true_positive + false_positive)

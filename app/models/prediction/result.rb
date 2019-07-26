@@ -7,5 +7,8 @@ class Prediction
               inclusion: {in: [true, false], message: 'invalid'}
 
     belongs_to :predictable, polymorphic: true
+
+    scope :won, -> { where(won: true) }
+    scope :lost, -> { where(won: false) }
   end
 end
