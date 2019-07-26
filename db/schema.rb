@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190726171816) do
+ActiveRecord::Schema.define(version: 20190726172330) do
 
   create_table "analyses", force: :cascade do |t|
     t.integer  "num_data",    limit: 4
@@ -37,6 +37,8 @@ ActiveRecord::Schema.define(version: 20190726171816) do
     t.string   "data_source",   limit: 255, default: "remote", null: false
     t.string   "state",         limit: 255
     t.float    "precision",     limit: 24
+    t.float    "recall",        limit: 24
+    t.float    "f_measure",     limit: 24
     t.datetime "created_at",                                   null: false
     t.datetime "updated_at",                                   null: false
   end
