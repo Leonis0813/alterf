@@ -30,7 +30,7 @@ class EvaluationJob < ActiveJob::Base
     end
 
     FileUtils.rm_rf(data_dir)
-    evaluation.calculate_precision!
+    evaluation.calculate!
     evaluation.update!(state: 'completed')
   rescue StandardError
     evaluation.update!(state: 'error')

@@ -27,10 +27,25 @@ class Evaluation < ActiveRecord::Base
     end
   end
 
-  def calculate_precision!
-    positives = data.select do |datum|
-      datum.prediction_results.map(&:number).include?(datum.ground_truth)
-    end
-    update!(precision: (positives.size.to_f / data.size).round(3))
+  def calculate!
+    true_positive = data.inject do |tp, datum|
+      tp + datum.prediction_results.where(number: datum.ground_truth, won: true).size
+    end.to_f
+
+    false_positive = data.inject do |fp, datum|
+      fp + datum.prediction_results.where.not(number: datum.ground_truth, won: true).size
+    end.to_f
+
+    false_negative = data.inject do |fn, datum|
+      fn + datum.prediction_results.where(number: datum.ground_truth, won: false).size
+    end.to_f
+
+    precision = true_positive / (true_positive + false_positive)
+    recall = true_positive / (true_positive + false_negative)
+    update!(
+      precision: precision.round(3),
+      recall: recall.round(3),
+      f_measure: ((2 * precision * recall) / (precision + recall)).round(3),
+    )
   end
 end
