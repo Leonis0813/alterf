@@ -32,29 +32,17 @@ describe Evaluation::Datum, type: :model do
         ground_truth: [1],
       }
 
-      CommonHelper.generate_test_case(valid_attribute).each do |attribute|
-        context "フォームに#{attribute.keys.join(',')}を指定した場合" do
-          include_context 'オブジェクトを検証する', attribute
-          it_behaves_like 'エラーが発生していないこと'
-        end
-      end
+      it_behaves_like '正常な値を指定した場合のテスト', valid_attribute
     end
 
     describe '異常系' do
       invalid_attribute = {
-        race_name: [1.0, 0, true, nil],
-        race_url: [1.0, 0, true, nil],
-        ground_truth: ['invalid', 1.0, 0, true, nil],
+        ground_truth: [1.0, 0, nil],
       }
+      absent_keys = %i[race_name race_url ground_truth]
 
-      CommonHelper.generate_test_case(invalid_attribute).each do |attribute|
-        context "フォームに#{attribute.keys.join(',')}を指定した場合" do
-          include_context 'オブジェクトを検証する', attribute
-          it_behaves_like 'エラーが発生していること',
-                          absent_keys: invalid_attribute.keys - attribute.keys,
-                          invalid_keys: attribute.keys - %i[race_name race_url]
-        end
-      end
+      it_behaves_like '必須パラメーターがない場合のテスト', absent_keys
+      it_behaves_like '不正な値を指定した場合のテスト', invalid_attribute
     end
   end
 
@@ -100,8 +88,13 @@ describe Evaluation::Datum, type: :model do
       before(:all) { @evaluation_datum.import_prediction_results(file) }
 
       it '予測結果情報が登録されていること' do
+        won = [3, 5, 11, 17]
+        results = @evaluation_datum.prediction_results
+
+        is_asserted_by { results.where(won: true).pluck(:number).sort == won }
+
         is_asserted_by do
-          @evaluation_datum.prediction_results.map(&:number).sort == [3, 5, 11, 17]
+          results.where(won: false).pluck(:number).sort == (1..18).to_a - won
         end
       end
     end

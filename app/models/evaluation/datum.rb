@@ -17,7 +17,7 @@ class Evaluation
       raise ActiveRecord::RecordInvalid, self unless race_result.is_a?(Hash)
 
       race_result.each do |number, result|
-        prediction_results.create!(number: number) if result == 1
+        prediction_results.create!(number: number, won: (result == 1))
       end
     end
   end

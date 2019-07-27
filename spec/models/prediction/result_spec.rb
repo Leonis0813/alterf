@@ -5,27 +5,22 @@ require 'rails_helper'
 describe Prediction::Result, type: :model do
   describe '#validates' do
     describe '正常系' do
-      include_context 'オブジェクトを検証する',
-                      predictable_id: 1, predictable_type: 'Prediction', number: 1
-      it_behaves_like 'エラーが発生していないこと'
+      valid_attribute = {
+        number: [1],
+        won: [true, false],
+      }
+
+      it_behaves_like '正常な値を指定した場合のテスト', valid_attribute
     end
 
     describe '異常系' do
       invalid_attribute = {
-        number: ['invalid', 1.0, 0, true, nil],
+        number: [1.0, 0, nil],
+        won: [nil],
       }
 
-      CommonHelper.generate_test_case(invalid_attribute).each do |attribute|
-        context "#{attribute.keys.join(',')}を指定した場合" do
-          include_context 'オブジェクトを検証する', attribute
-          it_behaves_like 'エラーが発生していること', invalid_keys: [:number]
-        end
-      end
-
-      context 'numberを指定しない場合' do
-        include_context 'オブジェクトを検証する', {}
-        it_behaves_like 'エラーが発生していること', absent_keys: [:number]
-      end
+      it_behaves_like '必須パラメーターがない場合のテスト', %i[number]
+      it_behaves_like '不正な値を指定した場合のテスト', invalid_attribute
     end
   end
 end

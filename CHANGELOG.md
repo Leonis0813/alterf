@@ -1,3 +1,6 @@
+# 4.5.0 (2019/07/27)
+- [UPDATE] evaluation view to show recall and f-measure
+
 # 4.4.0 (2019/07/22)
 - [UPDATE] evaluation view to add form for data source
 - [UPDATE] gems

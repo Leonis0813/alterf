@@ -10,20 +10,24 @@ describe 'evaluations/show', type: :view do
     ].join('/')
   end
 
-  shared_context '評価データを作成する' do |numbers: []|
+  shared_context '評価データを作成する' do |wons: []|
     before(:all) do
       @evaluation = Evaluation.create!(
         evaluation_id: '0' * 32,
         model: 'model',
         state: 'completed',
         precision: 0.75,
+        recall: 0.5,
+        f_measure: 0.6,
       )
       datum = @evaluation.data.create!(
         race_name: 'テスト',
         race_url: 'http://example.com',
         ground_truth: 1,
       )
-      numbers.each {|number| datum.prediction_results.create!(number: number) }
+      (1..18).each do |i|
+        datum.prediction_results.create!(number: i, won: wons.include?(i))
+      end
     end
   end
 
@@ -36,10 +40,10 @@ describe 'evaluations/show', type: :view do
       is_asserted_by { @html.xpath(xpath).text.strip == '評価結果詳細' }
     end
 
-    it '精度が表示されていること' do
+    it 'F値が表示されていること' do
       xpath = [table_panel_xpath, 'h4'].join('/')
       is_asserted_by do
-        @html.xpath(xpath).text.strip == "精度: #{@evaluation.precision * 100}%"
+        @html.xpath(xpath).text.strip == "F値: #{@evaluation.f_measure.round(3)}"
       end
     end
   end
@@ -95,7 +99,7 @@ describe 'evaluations/show', type: :view do
       @evaluation.data.each_with_index do |datum, i|
         span_stacks = @rows[i].children.search('td')[1].children.search('span')
 
-        datum.prediction_results.each_with_index do |result, j|
+        datum.prediction_results.won.each_with_index do |result, j|
           is_asserted_by do
             span_stacks[j].attribute('class').value == 'fa-stack prediction-result'
           end
@@ -138,7 +142,7 @@ describe 'evaluations/show', type: :view do
 
   context '予測が当たっている場合' do
     include_context 'トランザクション作成'
-    include_context '評価データを作成する', numbers: [1, 3, 9]
+    include_context '評価データを作成する', wons: [1, 3, 9]
     include_context 'HTML初期化'
     it_behaves_like '画面共通テスト'
     it_behaves_like '予測結果の行のデザインが正しいこと'
@@ -146,7 +150,7 @@ describe 'evaluations/show', type: :view do
 
   context '予測が外れている場合' do
     include_context 'トランザクション作成'
-    include_context '評価データを作成する', numbers: [4, 10, 15]
+    include_context '評価データを作成する', wons: [4, 10, 15]
     include_context 'HTML初期化'
     it_behaves_like '画面共通テスト'
     it_behaves_like '予測結果の行のデザインが正しいこと', tr_class: 'danger'
