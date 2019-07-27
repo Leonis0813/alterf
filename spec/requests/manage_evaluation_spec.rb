@@ -35,16 +35,13 @@ describe 'ブラウザで予測する', type: :request do
       describe '評価データを指定方法をファイルに変更する' do
         before(:all) do
           @driver.get("#{base_url}/evaluations")
-          @wait.until do
-            @driver.find_element(:id, 'data_source').click rescue false
-          end
-          @wait.until do
-            @driver.find_element(:xpath, '//option[@value="file"]').click rescue false
-          end
+          element = @wait.until { @driver.find_element(:id, 'data_source') }
+          select = Selenium::WebDriver::Support::Select.new(element)
+          @wait.until { select.select_by(:value, 'file') }
         end
 
         it 'ファイルを指定可能になっていること' do
-          element = @driver.find_element(:xpath, '//input[@id="evaluation_data_file"]')
+          element = @driver.find_element(:id, 'evaluation_data_file')
 
           is_asserted_by { @wait.until { element.enabled? } }
           is_asserted_by do
@@ -55,15 +52,13 @@ describe 'ブラウザで予測する', type: :request do
 
       describe '評価データを指定方法を直接入力に変更する' do
         before(:all) do
-          @driver.find_element(:id, 'data_source').click
-          @wait.until do
-            @driver.find_element(:xpath, '//option[@value="text"]').click rescue false
-          end
+          element = @wait.until { @driver.find_element(:id, 'data_source') }
+          select = Selenium::WebDriver::Support::Select.new(element)
+          @wait.until { select.select_by(:value, 'text') }
         end
 
         it 'テキストを入力可能になっていること' do
-          element =
-            @driver.find_element(:xpath, '//textarea[@id="evaluation_data_text"]')
+          element = @driver.find_element(:id, 'evaluation_data_text')
 
           is_asserted_by { @wait.until { element.enabled? } }
           is_asserted_by do
