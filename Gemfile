@@ -40,6 +40,7 @@ group :development, :test do
   gem 'capybara'
   gem 'capybara-mechanize'
   gem 'danger'
+  gem 'danger-simplecov_json'
   gem 'database_cleaner'
   gem 'factory_bot_rails'
   gem 'fuubar'
