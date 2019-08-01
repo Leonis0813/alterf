@@ -390,6 +390,9 @@ GEM
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.2)
+    simplecov-json (0.2)
+      json
+      simplecov
     simplecov-rcov (0.2.3)
       simplecov (>= 0.4.1)
     sinatra (1.4.8)
@@ -486,6 +489,7 @@ DEPENDENCIES
   sdoc (~> 0.4.0)
   selenium-webdriver (= 2.53.4)
   simplecov
+  simplecov-json
   simplecov-rcov
   spring
   therubyracer

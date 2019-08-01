@@ -48,7 +48,8 @@ group :development, :test do
   gem 'rspec-power_assert'
   gem 'rspec-rails'
   gem 'selenium-webdriver', '2.53.4'
-  gem 'simplecov'
-  gem 'simplecov-rcov'
+  gem 'simplecov', require: false
+  gem 'simplecov-json', require: false
+  gem 'simplecov-rcov', require: false
   gem 'spring'
 end
