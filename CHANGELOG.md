@@ -1,3 +1,6 @@
+# 4.5.1 (2019/08/02)
+- [UPDATE] ruby version to 2.5.5
+
 # 4.5.0 (2019/07/27)
 - [UPDATE] evaluation view to show recall and f-measure
 
