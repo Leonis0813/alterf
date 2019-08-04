@@ -15,11 +15,11 @@ describe FeatureUtil do
     entries: [
       {
         age: 3,
-        average_prize_money: 100,
         blank: 7,
         burden_weight: 56,
         distance_diff: 0.123,
         entry_times: 3,
+        horse_average_prize_money: 100,
         last_race_order: 10,
         number: 5,
         rate_within_third: 0.33,
@@ -31,6 +31,9 @@ describe FeatureUtil do
         weight_per: 0.139303,
         win_times: 1,
         won: true,
+        jockey_average_prize_money: 1000,
+        jockey_win_rate: 0.3,
+        jockey_win_rate_last_four_races: 0.2,
       },
     ],
   }

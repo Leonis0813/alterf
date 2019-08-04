@@ -5,17 +5,17 @@ class FeatureUtil
     features = Denebola::Feature.where(race_id: race_id)
 
     race_feature = features.first.slice(*Settings.prediction.feature.races)
-    entry_features = features.map do |feature|
-      feature.slice(*Settings.prediction.feature.horses)
-    end
+
+    entry_attributes = Settings.prediction.feature.horses +
+                       Settings.prediction.feature.jockeys
+
+    entry_features = features.map {|feature| feature.slice(*entry_attributes) }
 
     race_feature.tap do |feature|
       feature['entries'] = []
 
       entry_features.each do |entry_feature|
-        feature['entries'] << Settings.prediction.feature.horses.map do |name|
-          entry_feature[name]
-        end
+        feature['entries'] << entry_attributes.map {|name| entry_feature[name] }
       end
     end
   end

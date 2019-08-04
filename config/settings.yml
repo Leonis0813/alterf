@@ -22,8 +22,8 @@ prediction: &prediction
   tmp_file_name: 'test_data.yml'
   feature:
     races:
-      - 'distance'
       - 'direction'
+      - 'distance'
       - 'grade'
       - 'month'
       - 'place'
@@ -32,11 +32,11 @@ prediction: &prediction
       - 'weather'
     horses:
       - 'age'
-      - 'horse_average_prize_money'
       - 'blank'
       - 'burden_weight'
       - 'distance_diff'
       - 'entry_times'
+      - 'horse_average_prize_money'
       - 'last_race_order'
       - 'number'
       - 'rate_within_third'
