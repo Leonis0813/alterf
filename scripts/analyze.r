@@ -28,7 +28,7 @@ if(length(race_ids) >= as.integer(num_training_data) / 2) {
   race_ids <- sample(race_ids, as.integer(num_training_data) / 2)
 }
 
-not_feature_names <- c("id", "jockey", "horse_id", "created_at", "updated_at")
+not_feature_names <- c("id", "horse_id", "created_at", "updated_at")
 features <- description[-which(description$Field %in% not_feature_names),]
 
 sql <- paste(
@@ -61,6 +61,9 @@ scaled_data <- unsplit(
         distance_diff = rw$distance_diff,
         entry_times = rw$entry_times,
         grade = rw$grade,
+        jockey_average_prize_money = rw$jockey_average_prize_money,
+        jockey_win_rate = rw$jockey_win_rate,
+        jockey_win_rate_last_four_races = rw$jockey_win_rate_last_four_races,
         last_race_order = rw$last_race_order,
         month = rw$month,
         number = rw$number,
