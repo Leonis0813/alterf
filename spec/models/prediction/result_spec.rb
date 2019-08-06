@@ -15,7 +15,7 @@ describe Prediction::Result, type: :model do
 
     describe '異常系' do
       invalid_attribute = {
-        number: [1.0, 0, nil],
+        number: [0],
         won: [nil],
       }
 

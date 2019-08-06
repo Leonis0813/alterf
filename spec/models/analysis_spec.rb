@@ -17,10 +17,10 @@ describe Analysis, type: :model do
 
     describe '異常系' do
       invalid_attribute = {
-        num_data: [1.0, 0, nil],
-        num_tree: [1.0, 0, nil],
-        num_feature: [1.0, 0],
-        state: ['invalid', nil],
+        num_data: [0],
+        num_tree: [0],
+        num_feature: [0],
+        state: %w[invalid],
       }
       absent_keys = invalid_attribute.keys - %i[num_feature]
 
