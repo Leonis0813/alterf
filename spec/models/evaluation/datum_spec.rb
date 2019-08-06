@@ -37,7 +37,7 @@ describe Evaluation::Datum, type: :model do
 
     describe '異常系' do
       invalid_attribute = {
-        ground_truth: [1.0, 0, nil],
+        ground_truth: [0],
       }
       absent_keys = %i[race_name race_url ground_truth]
 

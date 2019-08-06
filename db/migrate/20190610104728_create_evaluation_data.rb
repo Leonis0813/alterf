@@ -1,4 +1,4 @@
-class CreateEvaluationData < ActiveRecord::Migration
+class CreateEvaluationData < ActiveRecord::Migration[4.2]
   def change
     create_table :evaluation_data do |t|
       t.references :evaluation, null: false

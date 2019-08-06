@@ -1,4 +1,4 @@
-class AddEvaluationIdAndPrecisionToEvaluations < ActiveRecord::Migration
+class AddEvaluationIdAndPrecisionToEvaluations < ActiveRecord::Migration[4.2]
   def change
     change_table :evaluations, bulk: true do |t|
       t.string :evaluation_id, null: false, after: :id

@@ -14,7 +14,6 @@ Bundler.require(*Rails.groups)
 module Alterf
   class Application < Rails::Application
     config.i18n.default_locale = :ja
-    config.active_record.raise_in_transactional_callbacks = true
     config.active_job.queue_adapter = :resque
     config.autoload_paths += [
       "#{config.root}/lib/clients",

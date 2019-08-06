@@ -3,7 +3,8 @@ class Evaluation
     validates :race_name, :race_url, :ground_truth,
               presence: {message: 'absent'}
     validates :ground_truth,
-              numericality: {only_integer: true, greater_than: 0, message: 'invalid'}
+              numericality: {only_integer: true, greater_than: 0, message: 'invalid'},
+              allow_nil: true
 
     belongs_to :evaluation
     has_many :prediction_results,

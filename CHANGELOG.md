@@ -1,3 +1,6 @@
+# 4.5.2 (2019/08/06)
+- [UPDATE] rails version to 5.0.x
+
 # 4.5.1 (2019/08/02)
 - [UPDATE] ruby version to 2.5.5
 
