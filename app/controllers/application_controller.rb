@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   end
 
   def check_absent_param(request_param, required_param_keys)
-    absent_keys = required_param_keys - request_param.symbolize_keys.keys
+    absent_keys = required_param_keys - request_param.keys.map(&:to_sym)
     return if absent_keys.empty?
 
     error_codes = absent_keys.map {|key| "absent_param_#{key}" }
