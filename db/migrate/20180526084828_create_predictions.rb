@@ -1,4 +1,4 @@
-class CreatePredictions < ActiveRecord::Migration
+class CreatePredictions < ActiveRecord::Migration[4.2]
   def change
     create_table :predictions do |t|
       t.string :model

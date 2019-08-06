@@ -1,4 +1,4 @@
-class AddDataSourceToEvaluations < ActiveRecord::Migration
+class AddDataSourceToEvaluations < ActiveRecord::Migration[4.2]
   def change
     add_column :evaluations,
                :data_source,

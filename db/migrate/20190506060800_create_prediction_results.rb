@@ -1,4 +1,4 @@
-class CreatePredictionResults < ActiveRecord::Migration
+class CreatePredictionResults < ActiveRecord::Migration[4.2]
   def change
     create_table :prediction_results do |t|
       t.references :prediction
