@@ -38,7 +38,7 @@ describe FeatureUtil do
     ],
   }
 
-  describe '.create_feature' do
+  describe '.create_feature_from_denebola' do
     horse_id = '2017103903'
     race_id = '201809030811'
     expected = feature.except(:entries).merge(

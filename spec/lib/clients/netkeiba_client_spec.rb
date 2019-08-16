@@ -47,4 +47,44 @@ describe NetkeibaClient do
       end
     end
   end
+
+  describe '#http_get_race' do
+    describe '正常系' do
+      before(:all) do
+        RSpec::Mocks.with_temporary_scope do
+          client = NetkeibaClient.new
+          race = File.read(Rails.root.join('spec', 'fixtures', 'race.html'))
+          struct = Struct.new(:body)
+          response = struct.new(race)
+          allow(client).to receive(:get).and_return(response)
+          @response = client.http_get_race('dummy')
+        end
+      end
+
+      it 'レスポンスが正しいこと' do
+        expected_yml = Rails.root.join('spec', 'fixtures', 'expected_race.yml')
+        is_asserted_by { @response == YAML.load_file(expected_yml).deep_symbolize_keys }
+      end
+    end
+  end
+
+  describe '#http_get_horse' do
+    describe '正常系' do
+      before(:all) do
+        RSpec::Mocks.with_temporary_scope do
+          client = NetkeibaClient.new
+          race = File.read(Rails.root.join('spec', 'fixtures', 'horse.html'))
+          struct = Struct.new(:body)
+          response = struct.new(race)
+          allow(client).to receive(:get).and_return(response)
+          @response = client.http_get_horse('dummy')
+        end
+      end
+
+      it 'レスポンスが正しいこと' do
+        expected_yml = Rails.root.join('spec', 'fixtures', 'expected_horse.yml')
+        is_asserted_by { @response == YAML.load_file(expected_yml).deep_symbolize_keys }
+      end
+    end
+  end
 end
