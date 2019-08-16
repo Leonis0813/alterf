@@ -82,6 +82,8 @@ scaled_data <- unsplit(
 )
 
 scaled_data[is.nan(scaled_data$burden_weight),]$burden_weight <- 0
+scaled_data[is.nan(scaled_data$weight_diff),]$weight_diff <- 0
+scaled_data[is.nan(scaled_data$win_times),]$win_times <- 0
 
 positive <- scaled_data[scaled_data$won==1,]
 negative <- scaled_data[scaled_data$won==0,]
