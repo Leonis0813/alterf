@@ -6,7 +6,7 @@ class EvaluationJob < ActiveJob::Base
     data_dir = Rails.root.join('tmp', 'files', evaluation_id.to_s)
 
     evaluation.fetch_data.each do |race_id|
-      feature = FeatureUtil.create_feature(race_id)
+      feature = FeatureUtil.create_feature_from_denebola(race_id)
 
       data = evaluation.data.create!(
         race_name: NetkeibaClient.new.http_get_race_name(race_id),
