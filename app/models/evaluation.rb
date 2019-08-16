@@ -1,4 +1,4 @@
-class Evaluation < ActiveRecord::Base
+class Evaluation < ApplicationRecord
   DATA_SOURCE_LIST = %w[file remote text].freeze
 
   validates :evaluation_id, :model, :state,

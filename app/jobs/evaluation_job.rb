@@ -1,4 +1,4 @@
-class EvaluationJob < ActiveJob::Base
+class EvaluationJob < ApplicationJob
   queue_as :alterf
 
   def perform(evaluation_id)

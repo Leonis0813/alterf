@@ -1,4 +1,4 @@
-class Analysis < ActiveRecord::Base
+class Analysis < ApplicationRecord
   validates :num_data, :num_tree, :state,
             presence: {message: 'absent'}
   validates :num_data, :num_tree,

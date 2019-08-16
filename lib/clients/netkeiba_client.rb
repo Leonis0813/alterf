@@ -7,36 +7,37 @@ class NetkeibaClient < HTTPClient
   end
 
   def http_get_race_name(race_id)
-    url = "#{Settings.netkeiba.base_url}/race/#{race_id}"
-    html =
-      Nokogiri::HTML.parse(get(url).body.encode('UTF-8', 'EUC-JP').gsub('&nbsp;', ' '))
+    html = send_request("#{Settings.netkeiba.base_url}/race/#{race_id}")
     html.xpath('//dl[contains(@class, "racedata")]/dd/h1').text.strip
   end
 
   def http_get_race(path)
-    url = Settings.netkeiba.base_url + path
-    html =
-      Nokogiri::HTML.parse(get(url).body.encode('UTF-8', 'EUC-JP').gsub('&nbsp;', ' '))
-
+    html = send_request(Settings.netkeiba.base_url + path)
     place = html.xpath('//ul[contains(@class, "race_place")]').first
     race_data = html.xpath('//dl[contains(@class, "racedata")]')
     race_date = html.xpath('//li[@class="result_link"]').text
                     .match(/(\d*)年(\d*)月(\d*)日のレース結果/)
-
     race_feature(place, race_data, race_date).merge(entries: entries(race_data))
   end
 
   def http_get_horse(path)
-    url = Settings.netkeiba.base_url + path
-    html =
-      Nokogiri::HTML.parse(get(url).body.encode('UTF-8', 'EUC-JP').gsub('&nbsp;', ' '))
-
+    html = send_request(Settings.netkeiba.base_url + path)
     tekisei_table = html.xpath('//table[contains(@class, "tekisei_table")]')
     result_table = html.xpath('//table[contains(@class, "db_h_race_results")]')
-    horse_feature(tekisei_table).merge(results: results(result_table))
+    horse_feature(tekisei_table).merge(results: horse_results(result_table))
+  end
+
+  def http_get_jockey(path)
+    html = send_request(Settings.netkeiba.base_url + path)
+    result_table = html.xpath('//table[contains(@class, "race_table_01")]')
+    {results: jockey_results(result_table)}
   end
 
   private
+
+  def send_request(url)
+    Nokogiri::HTML.parse(get(url).body.encode('UTF-8', 'EUC-JP').gsub('&nbsp;', ' '))
+  end
 
   def race_feature(place, race_data, race_date)
     track, weather, = race_data.search('span').text.split('/')
@@ -73,6 +74,7 @@ class NetkeibaClient < HTTPClient
         weight_diff: attributes[14].match(/\((.+)\)$/).try(:[], 1).to_f,
         weight_per: burden_weight / weight,
         horse_link: links.find {|link| link.match(%r{/horse}) },
+        jockey_link: links.find {|link| link.match(%r{/jockey}) },
       }
     end
   end
@@ -98,12 +100,10 @@ class NetkeibaClient < HTTPClient
                       '逃げ'
                     end
 
-    {
-      running_style: running_style,
-    }
+    {running_style: running_style}
   end
 
-  def results(table)
+  def horse_results(table)
     table.children.search('tbody').children.search('tr').map do |row|
       td = row.children.search('td')
 
@@ -114,6 +114,19 @@ class NetkeibaClient < HTTPClient
         order: td[11].text.strip.to_i,
         distance: td[14].text.strip.match(/(\d+)\z/)[1].to_i,
         prize_money: td[27].text.strip.delete(',').to_i * 10000,
+      }
+    end
+  end
+
+  def jockey_results(table)
+    table.children.search('tbody').children.search('tr').map do |row|
+      td = row.children.search('td')
+
+      {
+        race_id: td[4].children.search('a').attribute('href').value
+                      .match(%r{/race/(\d+)})[1],
+        order: td[11].text.strip.to_i,
+        prize_money: td[23].text.strip.delete(',').to_i * 10000,
       }
     end
   end
