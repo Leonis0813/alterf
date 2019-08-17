@@ -25,8 +25,9 @@ class FeatureUtil
 
         entry.merge!(extra_horse_feature(target_horse_results, feature))
         entry.merge!(extra_jockey_feature(target_jockey_results))
-        entry[:won] = entry[:order] == 1
-        entry_features = entry_attributes.map(&:to_sym).map {|name| entry[name] }
+        entry_features = (entry_attributes.map(&:to_sym) - [:won]).map do |name|
+          entry[name]
+        end
 
         feature[:entries] << entry_features
       end

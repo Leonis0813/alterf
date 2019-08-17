@@ -57,7 +57,6 @@ describe FeatureUtil do
           race[:entries].first[:weight_diff],
           race[:entries].first[:weight_per],
           0,
-          false,
           (45000000 + 0) / 2.0,
           0,
           0,
