@@ -8,7 +8,6 @@ class FeatureUtil
       race = client.http_get_race(race_path)
 
       feature = race.slice(*Settings.prediction.feature.races.map(&:to_sym))
-      feature[:race_name] = race[:race_name]
       feature[:entries] = []
 
       race[:entries].each do |entry|
@@ -17,20 +16,16 @@ class FeatureUtil
 
         entry[:running_style] = horse_feature[:running_style]
 
-        target_race_index = race_index(horse_feature[:results], race_id)
-        target_horse_results = horse_feature[:results][target_race_index..-1]
+        target_horse_results = target_results(horse_feature[:results], race_id)
 
         jockey_feature = client.http_get_jockey(entry[:jockey_link])
         entry.delete(:jockey_link)
 
-        target_race_index = race_index(jockey_feature[:results], race_id)
-        target_jockey_results = jockey_feature[:results][target_race_index..-1]
+        target_jockey_results = target_results(jockey_feature[:results], race_id)
 
-        entry.merge!(extra_feature(target_horse_results, target_jockey_results, feature))
-        entry.merge!(won: entry[:order] == 1)
-
-        entry_attributes = Settings.prediction.feature.horses +
-                           Settings.prediction.feature.jockeys
+        entry.merge!(extra_horse_feature(target_horse_results, feature))
+        entry.merge!(extra_jockey_feature(target_jockey_results))
+        entry[:won] = entry[:order] == 1
         entry_features = entry_attributes.map(&:to_sym).map {|name| entry[name] }
 
         feature[:entries] << entry_features
@@ -43,10 +38,6 @@ class FeatureUtil
       features = Denebola::Feature.where(race_id: race_id)
 
       race_feature = features.first.slice(*Settings.prediction.feature.races)
-
-      entry_attributes = Settings.prediction.feature.horses +
-                         Settings.prediction.feature.jockeys
-
       entry_features = features.map {|feature| feature.slice(*entry_attributes) }
 
       race_feature.tap do |feature|
@@ -60,26 +51,43 @@ class FeatureUtil
 
     private
 
-    def extra_feature(horse_results, jockey_results, race)
-      sum_prize_money = horse_results.map {|result| result[:prize_money] }.inject(:+)
-      sum_distance = horse_results.map {|result| result[:distance] }.inject(:+)
-      average_distance = sum_distance / horse_results.size.to_f
-      times_within_third = horse_results.select {|result| result[:order] <= 3 }.size
+    def extra_horse_feature(results, race)
+      sum_prize_money = results.map {|result| result[:prize_money] }.inject(:+)
+      sum_distance = results.map {|result| result[:distance] }.inject(:+)
+      average_distance = sum_distance / results.size.to_f
+      times_within_third = results.count {|result| result[:order].between?(1, 3) }
 
       {
-        horse_average_prize_money: sum_prize_money / horse_results.size.to_f,
-        blank: (horse_results.first[:date] - horse_results.second[:date]).to_i,
-        distance_diff: (race[:distance] - average_distance).abs / horse_results.size,
-        entry_times: horse_results.size,
-        last_race_order: horse_results.second ? horse_results.second[:order] : 0,
-        rate_within_third: times_within_third / horse_results.size.to_f,
-        second_last_race_order: horse_results.third ? horse_results.third[:order] : 0,
-        win_times: horse_results.select {|result| result[:order] == 1 }.size,
+        blank: (results.first[:date] - results.second[:date]).to_i,
+        distance_diff: (race[:distance] - average_distance).abs / results.size,
+        entry_times: results.size,
+        horse_average_prize_money: sum_prize_money / results.size.to_f,
+        last_race_order: results.second ? results.second[:order] : 0,
+        rate_within_third: times_within_third / results.size.to_f,
+        second_last_race_order: results.third ? results.third[:order] : 0,
+        win_times: results.count {|result| result[:order] == 1 },
       }
     end
 
-    def race_index(results, race_id)
-      results.index {|result| result[:race_id] == race_id } || 0
+    def extra_jockey_feature(results)
+      sum_prize_money = results.map {|result| result[:prize_money] }.inject(:+)
+      win_times_last_four_races = results[0, 4].count {|result| result[:order] == 1 }
+      entry_times = results.size.to_f
+
+      {
+        jockey_average_prize_money: sum_prize_money / entry_times,
+        jockey_win_rate: results.count {|result| result[:order] == 1 } / entry_times,
+        jockey_win_rate_last_four_races: win_times_last_four_races / entry_times,
+      }
+    end
+
+    def target_results(results, race_id)
+      target_race_index = results.index {|result| result[:race_id] == race_id } || 0
+      results[target_race_index..-1]
+    end
+
+    def entry_attributes
+      Settings.prediction.feature.horses + Settings.prediction.feature.jockeys
     end
   end
 end

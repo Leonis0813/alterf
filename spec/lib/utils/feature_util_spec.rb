@@ -72,7 +72,6 @@ describe FeatureUtil do
       grade: 'G1',
       month: 5,
       place: '中京',
-      race_name: 'テスト',
       round: 11,
       track: '芝',
       weather: '晴',
@@ -112,7 +111,18 @@ describe FeatureUtil do
     }
 
     jockey = {
-
+      results: [
+        {
+          race_id: '201809030811',
+          order: 3,
+          prize_money: 45000000,
+        },
+        {
+          race_id: '201809030810',
+          order: 5,
+          prize_money: 0,
+        },
+      ],
     }
 
     expected = race.except(:entries).merge(
@@ -135,6 +145,9 @@ describe FeatureUtil do
           race[:entries].first[:weight_per],
           0,
           false,
+          (45000000 + 0) / 2.0,
+          0,
+          0,
         ],
       ],
     )
