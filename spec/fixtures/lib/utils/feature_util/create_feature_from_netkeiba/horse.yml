@@ -1,0 +1,12 @@
+running_style: '逃げ'
+results:
+  - race_id: '201809030811'
+    date: !ruby/object:Date 2018-12-23
+    order: 3
+    distance: 1800
+    prize_money: 45000000
+  - race_id: '201809030810'
+    date: !ruby/object:Date 2018-12-16
+    order: 5
+    distance: 1400
+    prize_money: 0
