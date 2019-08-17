@@ -1,5 +1,5 @@
 class Prediction
-  class Result < ActiveRecord::Base
+  class Result < ApplicationRecord
     validates :number,
               presence: {message: 'absent'}
     validates :number,

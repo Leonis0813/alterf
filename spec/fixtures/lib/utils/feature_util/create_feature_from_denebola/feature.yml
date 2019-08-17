@@ -1,0 +1,29 @@
+direction: '左'
+distance: 1800
+grade: 'G1'
+month: 5
+place: '中京'
+round: 11
+track: '芝'
+weather: '晴'
+entries:
+  - age: 3
+    blank: 7
+    burden_weight: 56
+    distance_diff: 0.123
+    entry_times: 3
+    horse_average_prize_money: 100
+    last_race_order: 10
+    number: 5
+    rate_within_third: 0.33
+    running_style: '逃げ'
+    second_last_race_order: 2
+    sex: '牝'
+    weight: 402
+    weight_diff: -8
+    weight_per: 0.139303
+    win_times: 1
+    won: true
+    jockey_average_prize_money: 1000
+    jockey_win_rate: 0.3
+    jockey_win_rate_last_four_races: 0.2

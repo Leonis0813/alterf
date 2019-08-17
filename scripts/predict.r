@@ -27,16 +27,16 @@ track <- c(rep(data$track, data_size))
 weather <- c(rep(data$weather, data_size))
 
 horse_features <- config$prediction$feature$horses
-horse_features <- horse_features[-which(horse_features %in% "won")]
+entry_features <- horse_features[-which(horse_features %in% "won")]
+entry_features <- c(entry_features, config$prediction$feature$jockeys)
 
 test_data <- as.data.frame(
-  t(matrix(unlist(data$entries), length(horse_features), data_size))
+  t(matrix(unlist(data$entries), length(entry_features), data_size))
 )
-colnames(test_data) <- horse_features
+colnames(test_data) <- entry_features
 
 test_data <- data.frame(
   age = as.integer(test_data$age),
-  average_prize_money = as.numeric(test_data$average_prize_money),
   blank = as.integer(test_data$blank),
   burden_weight = as.numeric(test_data$burden_weight),
   direction = factor(direction, levels = attributes(model)$levels_direction),
@@ -44,6 +44,10 @@ test_data <- data.frame(
   distance_diff = as.numeric(test_data$distance_diff),
   entry_times = as.integer(test_data$entry_times),
   grade = factor(grade, levels = attributes(model)$levels_grade),
+  horse_average_prize_money = as.numeric(test_data$horse_average_prize_money),
+  jockey_average_prize_money = as.numeric(test_data$jockey_average_prize_money),
+  jockey_win_rate = as.numeric(test_data$jockey_win_rate),
+  jockey_win_rate_last_four_races = as.numeric(test_data$jockey_win_rate_last_four_races),
   last_race_order = as.integer(test_data$last_race_order),
   month = as.integer(month),
   number = as.integer(test_data$number),

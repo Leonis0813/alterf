@@ -1,4 +1,4 @@
-class Prediction < ActiveRecord::Base
+class Prediction < ApplicationRecord
   validates :model, :test_data, :state,
             presence: {message: 'absent'}
   validates :state,

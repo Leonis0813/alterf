@@ -1,3 +1,7 @@
+# 4.5.3 (2019/08/17)
+- [UPDATE] scripts for new features
+- [FIX] prediction job
+
 # 4.5.2 (2019/08/06)
 - [UPDATE] rails version to 5.0.x
 

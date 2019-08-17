@@ -10,8 +10,8 @@ mysql:
 
 analysis:
   racewise_features:
-    - 'average_prize_money'
     - 'burden_weight'
+    - 'horse_average_prize_money'
     - 'rate_within_third'
     - 'weight'
     - 'weight_diff'
@@ -22,8 +22,8 @@ prediction: &prediction
   tmp_file_name: 'test_data.yml'
   feature:
     races:
-      - 'distance'
       - 'direction'
+      - 'distance'
       - 'grade'
       - 'month'
       - 'place'
@@ -32,11 +32,11 @@ prediction: &prediction
       - 'weather'
     horses:
       - 'age'
-      - 'average_prize_money'
       - 'blank'
       - 'burden_weight'
       - 'distance_diff'
       - 'entry_times'
+      - 'horse_average_prize_money'
       - 'last_race_order'
       - 'number'
       - 'rate_within_third'
@@ -48,6 +48,10 @@ prediction: &prediction
       - 'weight_per'
       - 'win_times'
       - 'won'
+    jockeys:
+      - 'jockey_average_prize_money'
+      - 'jockey_win_rate'
+      - 'jockey_win_rate_last_four_races'
 
 evaluation:
   <<: *prediction

@@ -11,11 +11,9 @@ describe Prediction, type: :model do
 
   shared_examples '結果をインポートすると例外が発生すること' do |file, e|
     it_is_asserted_by do
-      begin
-        @prediction.import_results(file)
-      rescue e
-        true
-      end
+      @prediction.import_results(file)
+    rescue e
+      true
     end
   end
 

@@ -16,11 +16,9 @@ describe Evaluation::Datum, type: :model do
 
   shared_examples '結果をインポートすると例外が発生すること' do |file, e|
     it_is_asserted_by do
-      begin
-        @evaluation_datum.import_prediction_results(file)
-      rescue e
-        true
-      end
+      @evaluation_datum.import_prediction_results(file)
+    rescue e
+      true
     end
   end
 

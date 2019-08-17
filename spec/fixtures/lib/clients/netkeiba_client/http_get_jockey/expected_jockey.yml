@@ -1,0 +1,61 @@
+results:
+  - race_id: "201930081511"
+    order: 1
+    prize_money: 31000000
+  - race_id: "201904020612"
+    order: 5
+    prize_money: 750000
+  - race_id: "201904020611"
+    order: 4
+    prize_money: 5900000
+  - race_id: "201904020610"
+    order: 3
+    prize_money: 4640000
+  - race_id: "201904020609"
+    order: 10
+    prize_money: 0
+  - race_id: "201904020607"
+    order: 1
+    prize_money: 7500000
+  - race_id: "201904020606"
+    order: 6
+    prize_money: 0
+  - race_id: "201904020605"
+    order: 10
+    prize_money: 0
+  - race_id: "201904020601"
+    order: 2
+    prize_money: 2000000
+  - race_id: "201904020512"
+    order: 2
+    prize_money: 4400000
+  - race_id: "201904020511"
+    order: 2
+    prize_money: 7410000
+  - race_id: "201904020510"
+    order: 2
+    prize_money: 6080000
+  - race_id: "201904020509"
+    order: 1
+    prize_money: 10870000
+  - race_id: "201904020508"
+    order: 15
+    prize_money: 0
+  - race_id: "201904020507"
+    order: 5
+    prize_money: 750000
+  - race_id: "201904020506"
+    order: 5
+    prize_money: 500000
+  - race_id: "201904020505"
+    order: 4
+    prize_money: 1100000
+  - race_id: "201904020502"
+    order: 3
+    prize_money: 1300000
+  - race_id: "201904020412"
+    order: 9
+    prize_money: 0
+  - race_id: "201904020411"
+    order: 6
+    prize_money: 0
