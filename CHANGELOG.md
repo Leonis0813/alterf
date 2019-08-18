@@ -1,3 +1,6 @@
+# 4.5.4 (2019/08/18)
+- [UPDATE] gems
+
 # 4.5.3 (2019/08/17)
 - [UPDATE] scripts for new features
 - [FIX] prediction job
