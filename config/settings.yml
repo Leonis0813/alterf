@@ -6,7 +6,7 @@ mysql:
   host: 'localhost'
   port: 3306
   user: 'root'
-  password: 'password'
+  password: '7QiSlC?4'
 
 analysis:
   racewise_features:
@@ -18,10 +18,10 @@ analysis:
     - 'weight_per'
     - 'win_times'
 
-prediction: &prediction
-  tmp_file_name: 'test_data.yml'
+prediction:
+  tmp_file_name: &tmp_file_name 'test_data.yml'
   feature:
-    races:
+    races: &races
       - 'direction'
       - 'distance'
       - 'grade'
@@ -47,12 +47,32 @@ prediction: &prediction
       - 'weight_diff'
       - 'weight_per'
       - 'win_times'
-      - 'won'
-    jockeys:
+    jockeys: &jockeys
       - 'jockey_average_prize_money'
       - 'jockey_win_rate'
       - 'jockey_win_rate_last_four_races'
 
 evaluation:
-  <<: *prediction
+  tmp_file_name: *tmp_file_name
+  feature:
+    races: *races
+    horses:
+      - 'age'
+      - 'blank'
+      - 'burden_weight'
+      - 'distance_diff'
+      - 'entry_times'
+      - 'horse_average_prize_money'
+      - 'last_race_order'
+      - 'number'
+      - 'rate_within_third'
+      - 'running_style'
+      - 'second_last_race_order'
+      - 'sex'
+      - 'weight'
+      - 'weight_diff'
+      - 'weight_per'
+      - 'win_times'
+      - 'won'
+    jockeys: *jockeys
   race_list_filename: 'race_list.txt'

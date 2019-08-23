@@ -4,7 +4,6 @@ import numpy as np
 import os
 import pandas as pd
 import pickle
-import random
 import sys
 import yaml
 
@@ -32,7 +31,7 @@ if (len(race_ids) >= num_training_data / 2):
 
 cursor.execute('desc features')
 fields = pd.DataFrame(cursor.fetchall())['Field']
-non_feature_names = ['id', 'horse_id', 'created_at', 'updated_at']
+non_feature_names = ['id', 'race_id', 'horse_id', 'created_at', 'updated_at']
 feature_names = np.setdiff1d(fields, non_feature_names)
 
 sql = 'SELECT ' + ','.join(feature_names) \
@@ -50,7 +49,7 @@ training_data = pd.concat([positive, negative])
 classifier = RandomForestClassifier(n_estimators=ntree, random_state=0)
 classifier.fit(training_data.drop('won', axis=1), training_data['won'])
 
-file = open(workdir + 'metadata.yml', 'w+')
+file = open(workdir + '/../tmp/files/' + analysis_id + '/metadata.yml', 'w+')
 importance_values = classifier.feature_importances_.astype(type('float', (float,), {}))
 importance = {}
 for i in range(len(training_data.columns) - 1):
