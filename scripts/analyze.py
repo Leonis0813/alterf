@@ -56,12 +56,12 @@ for i in range(len(training_data.columns) - 1):
     importance[training_data.columns[i]] = importance_values[i]
 
 metadata = {
-    'num_of_races': num_training_data,
-    'num_of_features': {
+    'num_training_data': {
         'positive': len(positive),
         'negative': len(negative)
     },
-    'num_of_tree': ntree,
+    'num_tree': ntree,
+    'num_feature': classifier.n_features_,
     'importance': importance
 }
 file.write(yaml.dump(metadata))

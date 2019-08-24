@@ -9,10 +9,10 @@ class AnalysisJob < ApplicationJob
     args = [analysis_id, analysis.num_data, analysis.num_tree]
     execute_script('analyze.py', args)
 
-    yaml_file = File.join(output_dir, 'analysis.yml')
+    yaml_file = File.join(output_dir, 'metadata.yml')
     if File.exist?(yaml_file)
       analysis_params = YAML.load_file(yaml_file)
-      analysis.update!(num_feature: analysis_params['mtry'])
+      analysis.update!(num_feature: analysis_params['num_feature'])
     end
 
     AnalysisMailer.completed(analysis).deliver_now
