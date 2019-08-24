@@ -15,8 +15,7 @@ class PredictionJob < ApplicationJob
     end
 
     args = [prediction_id, prediction.model, Settings.prediction.tmp_file_name]
-    is_success = system "Rscript #{Rails.root}/scripts/predict.r #{args.join(' ')}"
-    raise StandardError unless is_success
+    execute_script('predict.py', args)
 
     prediction.import_results(Rails.root.join(data_dir, 'prediction.yml'))
     FileUtils.rm_rf(data_dir)
