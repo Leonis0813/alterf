@@ -23,7 +23,6 @@ entries:
     weight_diff: -8
     weight_per: 0.139303
     win_times: 1
-    won: true
     jockey_average_prize_money: 1000
     jockey_win_rate: 0.3
     jockey_win_rate_last_four_races: 0.2
