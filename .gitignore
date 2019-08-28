@@ -19,3 +19,4 @@
 coverage
 vendor
 results
+.python-version
