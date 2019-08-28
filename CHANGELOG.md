@@ -1,5 +1,6 @@
 # 4.5.4 (2019/08/28)
 - [UPDATE] scripts for implementation by python
+- [UPDATE] gems
 
 # 4.5.3 (2019/08/17)
 - [UPDATE] scripts for new features
