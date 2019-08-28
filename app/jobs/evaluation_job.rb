@@ -21,8 +21,7 @@ class EvaluationJob < ApplicationJob
       end
 
       args = [evaluation_id, evaluation.model, Settings.evaluation.tmp_file_name]
-      success = system "Rscript #{Rails.root}/scripts/predict.r #{args.join(' ')}"
-      raise StandardError unless success
+      execute_script('predict.py', args)
 
       result_file = File.join(data_dir, 'prediction.yml')
       data.import_prediction_results(result_file)
