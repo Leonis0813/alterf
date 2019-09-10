@@ -37,7 +37,7 @@ describe 'ブラウザで予測する', type: :request do
           @driver.get("#{base_url}/evaluations")
           element = @wait.until { @driver.find_element(:id, 'data_source') }
           select = Selenium::WebDriver::Support::Select.new(element)
-          @wait.until { select.select_by(:value, 'file') }
+          @wait.until { select.select_by(:value, 'file') || true rescue false }
         end
 
         it 'ファイルを指定可能になっていること' do
@@ -54,7 +54,7 @@ describe 'ブラウザで予測する', type: :request do
         before(:all) do
           element = @wait.until { @driver.find_element(:id, 'data_source') }
           select = Selenium::WebDriver::Support::Select.new(element)
-          @wait.until { select.select_by(:value, 'text') }
+          @wait.until { select.select_by(:value, 'text') || true rescue false }
         end
 
         it 'テキストを入力可能になっていること' do
