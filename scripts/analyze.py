@@ -50,6 +50,7 @@ for name in mapping:
   feature[name] = feature[name].map(mapping[name]).astype(int)
 
 feature = feature.groupby('race_id').apply(normalize_racewise_feature)
+feature = feature.drop('race_id', axis=1)
 feature = feature.dropna()
 
 positive = feature[feature['won'] == 1]
