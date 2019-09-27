@@ -38,7 +38,17 @@ for name in mapping:
   feature[name] = feature[name].map(mapping[name]).astype(int)
 
 racewise = feature[config['analysis']['racewise_features']]
+unnormalizable_feature_names = racewise.loc[:, racewise.max() == racewise.min()].columns
+normalizable_feature_names = np.setdiff1d(
+  config['analysis']['racewise_features'],
+  disnormalizable_feature_names
+)
+racewise = racewise[normalizable_feature_names]
 normalized = (racewise - racewise.min()) / (racewise.max() - racewise.min())
+
+for name in disnormalizable_feature_names:
+  normalized[name] = 0.5
+
 for name in config['analysis']['racewise_features']:
   feature[name] = normalized[name]
 
