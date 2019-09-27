@@ -17,7 +17,7 @@ class EvaluationJob < ApplicationJob
       feature['entries'].each {|entry| entry.delete_at(-1) }
 
       File.open(File.join(data_dir, Settings.prediction.tmp_file_name), 'w') do |file|
-        YAML.dump(feature, file)
+        YAML.dump(feature.to_hash.deep_stringify_keys, file)
       end
 
       args = [evaluation_id, evaluation.model, Settings.evaluation.tmp_file_name]
