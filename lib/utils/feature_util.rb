@@ -26,8 +26,8 @@ class FeatureUtil
         entry.merge!(extra_horse_feature(target_horse_results, feature))
         entry.merge!(extra_jockey_feature(target_jockey_results))
         entry_attributes = Settings.prediction.feature.horses +
-          Settings.prediction.feature.jockeys
-        entry_features = (entry_attributes.map(&:to_sym) - [:won]).map do |name|
+                           Settings.prediction.feature.jockeys
+        entry_features = entry_attributes.map(&:to_sym).map do |name|
           entry[name]
         end
 
@@ -42,8 +42,8 @@ class FeatureUtil
 
       race_feature = features.first.slice(*Settings.prediction.feature.races)
       entry_attributes = Settings.evaluation.feature.horses +
-        Settings.evaluation.feature.jockeys -
-        ['won']
+                         Settings.evaluation.feature.jockeys -
+                         ['won']
       entry_features = features.map {|feature| feature.slice(*entry_attributes) }
 
       race_feature.tap do |feature|
