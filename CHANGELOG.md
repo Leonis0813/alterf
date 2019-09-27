@@ -1,4 +1,6 @@
-# 4.5.6 (2019/09/26)
+# 4.5.6 (2019/09/27)
+- [UPDATE] scripts to apply normalize function to racewise features
+- [FIX] evaluation job
 - [UPDATE] gems
 
 # 4.5.5 (2019/09/10)
