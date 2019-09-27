@@ -6,18 +6,15 @@ class EvaluationJob < ApplicationJob
     data_dir = Rails.root.join('tmp', 'files', evaluation_id.to_s)
 
     evaluation.fetch_data.each do |race_id|
-      feature = FeatureUtil.create_feature_from_denebola(race_id)
-
       data = evaluation.data.create!(
         race_name: NetkeibaClient.new.http_get_race_name(race_id),
         race_url: "#{Settings.netkeiba.base_url}/race/#{race_id}",
-        ground_truth: feature['entries'].find {|entry| entry[-1] }[7],
+        ground_truth: Denebola::Feature.find_by(race_id: race_id, won: true).number,
       )
 
-      feature['entries'].each {|entry| entry.delete_at(-1) }
-
       File.open(File.join(data_dir, Settings.prediction.tmp_file_name), 'w') do |file|
-        YAML.dump(feature, file)
+        feature = FeatureUtil.create_feature_from_denebola(race_id)
+        YAML.dump(feature.to_hash.deep_stringify_keys, file)
       end
 
       args = [evaluation_id, evaluation.model, Settings.evaluation.tmp_file_name]

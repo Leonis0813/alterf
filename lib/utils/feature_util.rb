@@ -25,7 +25,9 @@ class FeatureUtil
 
         entry.merge!(extra_horse_feature(target_horse_results, feature))
         entry.merge!(extra_jockey_feature(target_jockey_results))
-        entry_features = (entry_attributes.map(&:to_sym) - [:won]).map do |name|
+        entry_attributes = Settings.prediction.feature.horses +
+                           Settings.prediction.feature.jockeys
+        entry_features = entry_attributes.map(&:to_sym).map do |name|
           entry[name]
         end
 
@@ -39,6 +41,9 @@ class FeatureUtil
       features = Denebola::Feature.where(race_id: race_id)
 
       race_feature = features.first.slice(*Settings.prediction.feature.races)
+      entry_attributes = Settings.evaluation.feature.horses +
+                         Settings.evaluation.feature.jockeys -
+                         ['won']
       entry_features = features.map {|feature| feature.slice(*entry_attributes) }
 
       race_feature.tap do |feature|
@@ -85,10 +90,6 @@ class FeatureUtil
     def target_results(results, race_id)
       target_race_index = results.index {|result| result[:race_id] == race_id } || 0
       results[target_race_index..-1]
-    end
-
-    def entry_attributes
-      Settings.prediction.feature.horses + Settings.prediction.feature.jockeys
     end
   end
 end

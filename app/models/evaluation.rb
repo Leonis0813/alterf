@@ -35,24 +35,36 @@ class Evaluation < ApplicationRecord
   end
 
   def calculate!
-    true_positive = data.inject(0) do |tp, datum|
+    precision = recall = f_measure = 0.0
+    unless (true_positive + false_positive).zero?
+      precision = true_positive / (true_positive + false_positive)
+    end
+    unless (true_positive + false_negative).zero?
+      recall = true_positive / (true_positive + false_negative)
+    end
+    unless (precision + recall).zero?
+      f_measure = (2 * precision * recall) / (precision + recall)
+    end
+    update!(precision: precision, recall: recall, f_measure: f_measure)
+  end
+
+  private
+
+  def true_positive
+    data.inject(0) do |tp, datum|
       tp + datum.prediction_results.won.where(number: datum.ground_truth).count
     end.to_f
+  end
 
-    false_positive = data.inject(0) do |fp, datum|
+  def false_positive
+    data.inject(0) do |fp, datum|
       fp + datum.prediction_results.won.where.not(number: datum.ground_truth).count
     end.to_f
+  end
 
-    false_negative = data.inject(0) do |fn, datum|
+  def false_negative
+    data.inject(0) do |fn, datum|
       fn + datum.prediction_results.lost.where(number: datum.ground_truth).count
     end.to_f
-
-    precision = true_positive / (true_positive + false_positive)
-    recall = true_positive / (true_positive + false_negative)
-    update!(
-      precision: precision,
-      recall: recall,
-      f_measure: (2 * precision * recall) / (precision + recall),
-    )
   end
 end

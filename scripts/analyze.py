@@ -15,6 +15,13 @@ ntree = int(args[3])
 workdir = os.path.dirname(os.path.abspath(args[0]))
 config = yaml.load(open(workdir + '/../config/settings.yml', 'r+'))
 
+def normalize_racewise_feature(group):
+  features = group[config['analysis']['racewise_features']]
+  normalized = (features - features.min()) / (features.max() - features.min())
+  for name in config['analysis']['racewise_features']:
+    group[name] = normalized[name]
+  return group
+
 connection = mysql.connect(
   host = config['mysql']['host'],
   user = config['mysql']['user'],
@@ -27,20 +34,24 @@ cursor.execute('SELECT race_id FROM features WHERE won = 1')
 race_ids = pd.DataFrame(cursor.fetchall())['race_id']
 
 if (len(race_ids) >= num_training_data / 2):
-    race_ids = np.random.choice(race_ids, int(num_training_data / 2), replace=False)
+  race_ids = np.random.choice(race_ids, int(num_training_data / 2), replace=False)
 
 cursor.execute('desc features')
 fields = pd.DataFrame(cursor.fetchall())['Field']
-non_feature_names = ['id', 'race_id', 'horse_id', 'created_at', 'updated_at']
+non_feature_names = ['id', 'horse_id', 'created_at', 'updated_at']
 feature_names = np.setdiff1d(fields, non_feature_names)
 
 sql = 'SELECT ' + ','.join(feature_names) \
-      + ' FROM features WHERE race_id IN (' + ','.join(race_ids) + ')'
+  + ' FROM features WHERE race_id IN (' + ','.join(race_ids) + ')'
 cursor.execute(sql)
 feature = pd.DataFrame(cursor.fetchall())
 mapping = yaml.load(open(workdir + '/mapping.yml', 'r+'))
 for name in mapping:
-    feature[name] = feature[name].map(mapping[name]).astype(int)
+  feature[name] = feature[name].map(mapping[name]).astype(int)
+
+feature = feature.groupby('race_id').apply(normalize_racewise_feature)
+feature = feature.drop('race_id', axis=1)
+feature = feature.dropna()
 
 positive = feature[feature['won'] == 1]
 negative = feature[feature['won'] == 0].sample(n=len(positive))
@@ -53,16 +64,16 @@ file = open(workdir + '/../tmp/files/' + analysis_id + '/metadata.yml', 'w+')
 importance_values = classifier.feature_importances_.astype(type('float', (float,), {}))
 importance = {}
 for i in range(len(training_data.columns) - 1):
-    importance[training_data.columns[i]] = importance_values[i]
+  importance[training_data.columns[i]] = importance_values[i]
 
 metadata = {
-    'num_training_data': {
-        'positive': len(positive),
-        'negative': len(negative)
-    },
-    'num_tree': ntree,
-    'num_feature': classifier.n_features_,
-    'importance': importance
+  'num_training_data': {
+    'positive': len(positive),
+    'negative': len(negative)
+  },
+  'num_tree': ntree,
+  'num_feature': classifier.n_features_,
+  'importance': importance
 }
 file.write(yaml.dump(metadata))
 
