@@ -47,12 +47,21 @@ class Evaluation < ApplicationRecord
       fn + datum.prediction_results.lost.where(number: datum.ground_truth).count
     end.to_f
 
-    precision = true_positive / (true_positive + false_positive)
-    recall = true_positive / (true_positive + false_negative)
-    update!(
-      precision: precision,
-      recall: recall,
-      f_measure: (2 * precision * recall) / (precision + recall),
-    )
+    precision = if (true_positive + false_positive).zero?
+                  0.0
+                else
+                  true_positive / (true_positive + false_positive)
+                end
+    recall = if (true_positive + false_negative).zero?
+               0.0
+             else
+               true_positive / (true_positive + false_negative)
+             end
+    f_measure = if (precision + recall).zero?
+                  0.0
+                else
+                  (2 * precision * recall) / (precision + recall)
+                end
+    update!(precision: precision, recall: recall, f_measure: f_measure)
   end
 end
