@@ -1,3 +1,4 @@
+from dtreeviz.trees import dtreeviz
 from sklearn.ensemble import RandomForestClassifier
 import mysql.connector as mysql
 import numpy as np
@@ -79,3 +80,14 @@ file.write(yaml.dump(metadata))
 
 model_path = workdir + '/../tmp/files/' + analysis_id + '/model.rf'
 pickle.dump(classifier, open(model_path, 'wb'))
+
+for i, estimator in enumerate(clf.estimators_):
+  tree = dtreeviz(
+    estimator,
+    training_data.drop('won', axis=1),
+    training_data['won'],
+    target_name='Result',
+    feature_names=training_data.drop('won', axis=1).columns,
+    class_names=['won', 'lost'],
+  )
+  tree.save(workdir + '/../tmp/files/' + analysis_id + '/tree_' + i + '.svg')
