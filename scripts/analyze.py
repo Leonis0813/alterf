@@ -81,7 +81,7 @@ file.write(yaml.dump(metadata))
 model_path = workdir + '/../tmp/files/' + analysis_id + '/model.rf'
 pickle.dump(classifier, open(model_path, 'wb'))
 
-for i, estimator in enumerate(clf.estimators_):
+for i, estimator in enumerate(classifier.estimators_):
   tree = dtreeviz(
     estimator,
     training_data.drop('won', axis=1),
