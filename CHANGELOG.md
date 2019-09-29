@@ -1,3 +1,6 @@
+# 4.6.0 (2019/09/29)
+- [UPDATE] analysis script to output tree images and attach to email
+
 # 4.5.6 (2019/09/27)
 - [UPDATE] scripts to apply normalize function to racewise features
 - [FIX] evaluation job
