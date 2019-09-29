@@ -88,6 +88,6 @@ for i, estimator in enumerate(clf.estimators_):
     training_data['won'],
     target_name='Result',
     feature_names=training_data.drop('won', axis=1).columns,
-    class_names=['won', 'lost'],
+    class_names=['lost', 'won'],
   )
-  tree.save(workdir + '/../tmp/files/' + analysis_id + '/tree_' + i + '.svg')
+  tree.save(workdir + '/../tmp/files/' + analysis_id + '/tree_' + str(i) + '.svg')
