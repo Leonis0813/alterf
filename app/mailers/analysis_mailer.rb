@@ -6,12 +6,14 @@ class AnalysisMailer < ApplicationMailer
 
     tmp_dir = Rails.root.join('tmp', 'files', analysis.id.to_s)
 
-    file_names = %w[metadata.yml model.rf]
+    file_names = %w[metadata.yml model.rf *.png]
     zip_file_name = File.join(tmp_dir, 'analysis.zip')
 
     Zip::File.open(zip_file_name, Zip::File::CREATE) do |zip|
       file_names.each do |file_name|
-        zip.add(file_name, File.join(tmp_dir, file_name))
+        Dir[File.join(tmp_dir, file_name)].each do |file_path|
+          zip.add(File.basename(file_path), file_path)
+        end
       end
     end
 

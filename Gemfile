@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'bootbox-rails'
+gem 'cairo'
 gem 'coffee-rails'
 gem 'config'
 gem 'daemon-spawn', require: 'daemon_spawn'
@@ -15,6 +16,7 @@ gem 'mysql2', '~> 0.3.20'
 gem 'rails', '~> 5.0.0'
 gem 'remotipart'
 gem 'resque'
+gem 'rsvg2'
 gem 'rubyzip'
 gem 'sass-rails', '~> 5.0'
 gem 'sdoc', group: :doc
