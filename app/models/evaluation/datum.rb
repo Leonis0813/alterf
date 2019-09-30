@@ -1,9 +1,10 @@
 class Evaluation
-  class Datum < ActiveRecord::Base
+  class Datum < ApplicationRecord
     validates :race_name, :race_url, :ground_truth,
               presence: {message: 'absent'}
     validates :ground_truth,
-              numericality: {only_integer: true, greater_than: 0, message: 'invalid'}
+              numericality: {only_integer: true, greater_than: 0, message: 'invalid'},
+              allow_nil: true
 
     belongs_to :evaluation
     has_many :prediction_results,
@@ -17,7 +18,7 @@ class Evaluation
       raise ActiveRecord::RecordInvalid, self unless race_result.is_a?(Hash)
 
       race_result.each do |number, result|
-        prediction_results.create!(number: number) if result == 1
+        prediction_results.create!(number: number, won: (result == 1))
       end
     end
   end

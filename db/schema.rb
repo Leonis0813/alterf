@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,49 +10,53 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190610112503) do
+ActiveRecord::Schema.define(version: 20190726172330) do
 
-  create_table "analyses", force: :cascade do |t|
-    t.integer  "num_data",    limit: 4
-    t.integer  "num_tree",    limit: 4
-    t.integer  "num_feature", limit: 4
-    t.string   "state",       limit: 255
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+  create_table "analyses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "num_data"
+    t.integer  "num_tree"
+    t.integer  "num_feature"
+    t.string   "state"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
-  create_table "evaluation_data", force: :cascade do |t|
-    t.integer  "evaluation_id", limit: 4,   null: false
-    t.string   "race_name",     limit: 255, null: false
-    t.string   "race_url",      limit: 255, null: false
-    t.integer  "ground_truth",  limit: 4,   null: false
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+  create_table "evaluation_data", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "evaluation_id", null: false
+    t.string   "race_name",     null: false
+    t.string   "race_url",      null: false
+    t.integer  "ground_truth",  null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
   end
 
-  create_table "evaluations", force: :cascade do |t|
-    t.string   "evaluation_id", limit: 255, null: false
-    t.string   "model",         limit: 255
-    t.string   "state",         limit: 255
+  create_table "evaluations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "evaluation_id",                               null: false
+    t.string   "model"
+    t.string   "data_source",              default: "remote", null: false
+    t.string   "state"
     t.float    "precision",     limit: 24
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.float    "recall",        limit: 24
+    t.float    "f_measure",     limit: 24
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
   end
 
-  create_table "prediction_results", force: :cascade do |t|
-    t.integer  "predictable_id",   limit: 4,   null: false
-    t.string   "predictable_type", limit: 255, null: false
-    t.integer  "number",           limit: 4,   null: false
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+  create_table "prediction_results", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "predictable_id",                   null: false
+    t.string   "predictable_type",                 null: false
+    t.integer  "number",                           null: false
+    t.boolean  "won",              default: false, null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
   end
 
-  create_table "predictions", force: :cascade do |t|
-    t.string   "model",      limit: 255
-    t.string   "test_data",  limit: 255
-    t.string   "state",      limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+  create_table "predictions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "model"
+    t.string   "test_data"
+    t.string   "state"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end

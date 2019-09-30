@@ -32,18 +32,53 @@ describe 'evaluations/manage', type: :view do
       is_asserted_by { title.text == 'モデルを評価' }
     end
 
-    %w[model].each do |param|
+    %w[model data].each do |param|
       it "evaluation_#{param}を含む<label>タグがあること" do
         label =
           @html.xpath("#{input_xpath('evaluation')}/label[@for='evaluation_#{param}']")
         is_asserted_by { label.present? }
       end
+    end
 
-      it "evaluation_#{param}を含む<input>タグがあること" do
-        input =
-          @html.xpath("#{input_xpath('evaluation')}/input[@id='evaluation_#{param}']")
-        is_asserted_by { input.present? }
+    it 'evaluation_modelを含む<input>タグがあること' do
+      input =
+        @html.xpath("#{input_xpath('evaluation')}/input[@id='evaluation_model']")
+      is_asserted_by { input.present? }
+    end
+
+    it 'data_sourceを含む<label>タグがあること' do
+      xpath = "#{input_xpath('evaluation')}/span/label[@for='data_source']"
+      is_asserted_by { @html.xpath(xpath).present? }
+    end
+
+    it 'data_sourceを含む<select>タグがあること' do
+      xpath = "#{input_xpath('evaluation')}/span/select[@id='data_source']"
+      is_asserted_by { @html.xpath(xpath).present? }
+    end
+
+    [
+      %w[remote Top20],
+      %w[file ファイル],
+      %w[text 直接入力],
+    ].each do |value, text|
+      it "valueが#{value}の<option>タグがあること" do
+        xpath = "#{input_xpath('evaluation')}/span/select[@id='data_source']" \
+                "/option[@value='#{value}']"
+        is_asserted_by { @html.xpath(xpath).present? }
+        is_asserted_by { @html.xpath(xpath).text == text }
       end
+    end
+
+    it '非表示で無効になっている<input>タグがあること' do
+      xpath = "#{input_xpath('evaluation')}/input[@id='evaluation_data_file']" \
+              "[@class='form-control form-data-source not-selected'][@disabled]"
+      is_asserted_by { @html.xpath(xpath).present? }
+    end
+
+    it '非表示で無効になっている<textarea>タグがあること' do
+      xpath = "#{input_xpath('evaluation')}/textarea[@id='evaluation_data_text']" \
+              "[@class='form-control form-data-source not-selected'][@disabled]"
+      is_asserted_by { @html.xpath(xpath).present? }
     end
 
     %w[submit reset].each do |type|
@@ -59,11 +94,11 @@ describe 'evaluations/manage', type: :view do
       @table = @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']")
     end
 
-    it '6列のテーブルが表示されていること' do
-      is_asserted_by { @table.xpath('//thead/th').size == 6 }
+    it '8列のテーブルが表示されていること' do
+      is_asserted_by { @table.xpath('//thead/th').size == 8 }
     end
 
-    %w[実行開始日時 モデル 状態 精度].each_with_index do |text, i|
+    %w[実行開始日時 モデル 状態 適合率 再現率 F値].each_with_index do |text, i|
       it "#{i + 1}列目のヘッダーが#{text}であること" do
         is_asserted_by { @table.xpath('//thead/th')[i].text == text }
       end
@@ -91,16 +126,30 @@ describe 'evaluations/manage', type: :view do
         @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
     end
 
-    it '精度が表示されていること' do
+    it '適合率が表示されていること' do
       @evaluations.each_with_index do |evaluation, i|
         precision = @rows[i].children.search('td')[3]
-        is_asserted_by { precision.text.strip == "#{evaluation.precision * 100}%" }
+        is_asserted_by { precision.text.strip == evaluation.precision.round(3).to_s }
+      end
+    end
+
+    it '再現率が表示されていること' do
+      @evaluations.each_with_index do |evaluation, i|
+        precision = @rows[i].children.search('td')[4]
+        is_asserted_by { precision.text.strip == evaluation.recall.round(3).to_s }
+      end
+    end
+
+    it 'F値が表示されていること' do
+      @evaluations.each_with_index do |evaluation, i|
+        precision = @rows[i].children.search('td')[5]
+        is_asserted_by { precision.text.strip == evaluation.f_measure.round(3).to_s }
       end
     end
 
     it '矢印が表示されていること' do
       @evaluations.each_with_index do |_, i|
-        cell = @rows[i].children.search('td')[4].children
+        cell = @rows[i].children.search('td')[6].children
         is_asserted_by do
           cell.search('span[@class="glyphicon glyphicon-arrow-right"]').present?
         end
@@ -109,7 +158,7 @@ describe 'evaluations/manage', type: :view do
 
     it '結果画面へのボタンが表示されていること' do
       @evaluations.each_with_index do |evaluation, i|
-        cell = @rows[i].children.search('td')[5].children
+        cell = @rows[i].children.search('td')[7].children
         href = "/evaluations/#{evaluation.evaluation_id}"
         is_asserted_by { cell.search('a').attribute('href').value == href }
 
@@ -145,9 +194,9 @@ describe 'evaluations/manage', type: :view do
   end
 
   context '完了している場合' do
+    update_attribute = {state: 'completed', precision: 0.75, recall: 0.5, f_measure: 0.6}
     include_context 'トランザクション作成'
-    include_context '評価ジョブを作成する',
-                    update_attribute: {state: 'completed', precision: 0.75}
+    include_context '評価ジョブを作成する', update_attribute: update_attribute
     include_context 'HTML初期化'
     it_behaves_like '画面共通テスト'
     it_behaves_like 'ページングボタンが表示されていないこと'

@@ -11,11 +11,9 @@ describe Prediction, type: :model do
 
   shared_examples '結果をインポートすると例外が発生すること' do |file, e|
     it_is_asserted_by do
-      begin
-        @prediction.import_results(file)
-      rescue e
-        true
-      end
+      @prediction.import_results(file)
+    rescue e
+      true
     end
   end
 
@@ -27,33 +25,16 @@ describe Prediction, type: :model do
         state: %w[processing completed error],
       }
 
-      test_cases = CommonHelper.generate_test_case(valid_attribute).select do |attribute|
-        attribute.keys.sort == valid_attribute.keys.sort
-      end
-
-      test_cases.each do |attribute|
-        context "フォームに#{attribute.keys.join(',')}を指定した場合" do
-          include_context 'オブジェクトを検証する', attribute
-          it_behaves_like 'エラーが発生していないこと'
-        end
-      end
+      it_behaves_like '正常な値を指定した場合のテスト', valid_attribute
     end
 
     describe '異常系' do
       invalid_attribute = {
-        model: [1.0, 0, true, nil],
-        test_data: [1.0, 0, true, nil],
-        state: ['invalid', 1.0, 0, true, nil],
+        state: ['invalid', nil],
       }
 
-      CommonHelper.generate_test_case(invalid_attribute).each do |attribute|
-        context "フォームに#{attribute.keys.join(',')}を指定した場合" do
-          include_context 'オブジェクトを検証する', attribute
-          it_behaves_like 'エラーが発生していること',
-                          absent_keys: invalid_attribute.keys - attribute.keys,
-                          invalid_keys: attribute.keys - %i[model test_data]
-        end
-      end
+      it_behaves_like '必須パラメーターがない場合のテスト', %i[model test_data state]
+      it_behaves_like '不正な値を指定した場合のテスト', invalid_attribute
     end
   end
 
@@ -88,8 +69,15 @@ describe Prediction, type: :model do
       include_context '予測ジョブ情報を作成する'
       before(:all) { @prediction.import_results(file) }
 
-      it '予測結果情報が登録されていること' do
-        is_asserted_by { @prediction.results.map(&:number).sort == [3, 5, 11, 17] }
+      it '予測結果情報が正しく登録されていること' do
+        won = [3, 5, 11, 17]
+        is_asserted_by do
+          @prediction.results.where(won: true).map(&:number).sort == won
+        end
+
+        is_asserted_by do
+          @prediction.results.where(won: false).map(&:number).sort == (1..18).to_a - won
+        end
       end
     end
 

@@ -11,7 +11,9 @@ describe 'predictions/manage', type: :view do
       attribute = default_attribute.merge(update_attribute)
       total.times do
         prediction = Prediction.create!(attribute)
-        results.times {|i| prediction.results.create!(number: i + 1) }
+        (1..18).each do |i|
+          prediction.results.create!(number: i, won: i <= results)
+        end
       end
       @predictions = Prediction.order(created_at: :desc).page(1)
     end
@@ -158,7 +160,7 @@ describe 'predictions/manage', type: :view do
       results = @html.xpath(@result)
 
       @predictions.each_with_index do |prediction, i|
-        title = prediction.results.map(&:number).sort.join(',')
+        title = prediction.results.won.map(&:number).sort.join(',')
         is_asserted_by { results[i].search("span[@title='#{title}']").present? }
       end
     end

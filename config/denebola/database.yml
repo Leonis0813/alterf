@@ -1,0 +1,20 @@
+default: &default
+  adapter: mysql2
+  encoding: utf8
+  pool: 5
+  host: localhost
+  password:
+  database: denebola
+
+development:
+  <<: *default
+  username: development
+
+test:
+  <<: *default
+  username: test
+  database: denebola_test
+
+production:
+  <<: *default
+  username: production

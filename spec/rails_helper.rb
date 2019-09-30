@@ -5,8 +5,12 @@ ENV['COVERAGE'] ||= 'off'
 
 if ENV['COVERAGE'] == 'on'
   require 'simplecov'
+  require 'simplecov-json'
   require 'simplecov-rcov'
-  SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
+  SimpleCov.formatters = [
+    SimpleCov::Formatter::RcovFormatter,
+    SimpleCov::Formatter::JSONFormatter,
+  ]
   SimpleCov.start 'rails' do
     SimpleCov.command_name Time.now.utc.to_s
   end
@@ -69,6 +73,7 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
   config.run_all_when_everything_filtered = true
   config.include CommonHelper
+  config.include FactoryBot::Syntax::Methods
   config.include ViewHelper, type: :view
 
   config.before(:suite) do

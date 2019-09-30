@@ -1,3 +1,35 @@
+# 4.6.0 (2019/09/29)
+- [UPDATE] analysis script to output tree images and attach to email
+
+# 4.5.6 (2019/09/27)
+- [UPDATE] scripts to apply normalize function to racewise features
+- [FIX] evaluation job
+- [UPDATE] gems
+
+# 4.5.5 (2019/09/10)
+- [UPDATE] gems
+
+# 4.5.4 (2019/08/28)
+- [UPDATE] scripts for implementation by python
+- [UPDATE] gems
+
+# 4.5.3 (2019/08/17)
+- [UPDATE] scripts for new features
+- [FIX] prediction job
+
+# 4.5.2 (2019/08/06)
+- [UPDATE] rails version to 5.0.x
+
+# 4.5.1 (2019/08/02)
+- [UPDATE] ruby version to 2.5.5
+
+# 4.5.0 (2019/07/27)
+- [UPDATE] evaluation view to show recall and f-measure
+
+# 4.4.0 (2019/07/22)
+- [UPDATE] evaluation view to add form for data source
+- [UPDATE] gems
+
 # 4.3.2 (2019/06/30)
 - [ADD] gems for pronto
 - [UPDATE] gems

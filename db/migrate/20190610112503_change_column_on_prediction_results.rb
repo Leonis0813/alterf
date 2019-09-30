@@ -1,4 +1,4 @@
-class ChangeColumnOnPredictionResults < ActiveRecord::Migration
+class ChangeColumnOnPredictionResults < ActiveRecord::Migration[4.2]
   def up
     change_table :prediction_results, bulk: true do |t|
       t.remove :prediction_id
