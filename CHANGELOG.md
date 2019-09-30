@@ -1,3 +1,6 @@
+# 4.6.1 (2019/09/30)
+- [UPDATE] gems
+
 # 4.6.0 (2019/09/29)
 - [UPDATE] analysis script to output tree images and attach to email
 
