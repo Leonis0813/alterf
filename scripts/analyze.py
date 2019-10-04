@@ -14,6 +14,7 @@ num_training_data = int(args[2])
 ntree = int(args[3])
 
 workdir = os.path.dirname(os.path.abspath(args[0]))
+outputdir = workdir + '/../tmp/files/' + analysis_id
 config = yaml.load(open(workdir + '/../config/settings.yml', 'r+'))
 
 def normalize_racewise_feature(group):
@@ -50,6 +51,7 @@ mapping = yaml.load(open(workdir + '/mapping.yml', 'r+'))
 for name in mapping:
   feature[name] = feature[name].map(mapping[name]).astype(int)
 
+feature.to_csv(outputdir + '/feature.csv', index=False)
 feature = feature.groupby('race_id').apply(normalize_racewise_feature)
 feature = feature.drop('race_id', axis=1)
 feature = feature.dropna()
@@ -57,11 +59,12 @@ feature = feature.dropna()
 positive = feature[feature['won'] == 1]
 negative = feature[feature['won'] == 0].sample(n=len(positive))
 training_data = pd.concat([positive, negative])
+training_data.to_csv(outputdir + '/training_data.csv', index=False)
 
 classifier = RandomForestClassifier(n_estimators=ntree, random_state=0)
 classifier.fit(training_data.drop('won', axis=1), training_data['won'])
 
-file = open(workdir + '/../tmp/files/' + analysis_id + '/metadata.yml', 'w+')
+file = open(outputdir + '/metadata.yml', 'w+')
 importance_values = classifier.feature_importances_.astype(type('float', (float,), {}))
 importance = {}
 for i in range(len(training_data.columns) - 1):
@@ -78,8 +81,7 @@ metadata = {
 }
 file.write(yaml.dump(metadata))
 
-model_path = workdir + '/../tmp/files/' + analysis_id + '/model.rf'
-pickle.dump(classifier, open(model_path, 'wb'))
+pickle.dump(classifier, open(outputdir + '/model.rf', 'wb'))
 
 for i, estimator in enumerate(classifier.estimators_):
   tree = dtreeviz(
@@ -90,4 +92,4 @@ for i, estimator in enumerate(classifier.estimators_):
     feature_names=training_data.drop('won', axis=1).columns,
     class_names=['lost', 'won'],
   )
-  tree.save(workdir + '/../tmp/files/' + analysis_id + '/tree_' + str(i) + '.svg')
+  tree.save(outputdir + '/tree_' + str(i) + '.svg')
