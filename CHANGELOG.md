@@ -1,4 +1,5 @@
-# 4.6.1 (2019/10/04)
+# 4.7.0 (2019/10/05)
+- [UPDATE] learning script to output training data
 - [UPDATE] gems
 
 # 4.6.0 (2019/09/29)
