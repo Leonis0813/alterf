@@ -1,3 +1,6 @@
+# 4.7.0 (2019/10/05)
+- [UPDATE] learning script to output training data
+
 # 4.6.0 (2019/09/29)
 - [UPDATE] analysis script to output tree images and attach to email
 
