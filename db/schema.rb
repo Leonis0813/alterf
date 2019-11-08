@@ -10,12 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190726172330) do
+ActiveRecord::Schema.define(version: 20191108101914) do
 
   create_table "analyses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "num_data"
     t.integer  "num_tree"
     t.integer  "num_feature"
+    t.integer  "num_entry"
     t.string   "state"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
