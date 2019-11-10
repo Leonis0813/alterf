@@ -19,21 +19,30 @@ outputdir = workdir + '/../tmp/files/' + analysis_id
 config = yaml.load(open(workdir + '/../config/settings.yml', 'r+'))
 
 def create_race_feature(group):
-  group = group.sort_value('number')
-  race_feature = pd.DataFrame()
-  for name in config['analysis']['feature']['races']:
-    race_feature[name] = group[0][name]
+  group = group.sort_values('number')
+  feature = pd.DataFrame()
 
-  for i, entry in enumerate(group):
+  for name in config['analysis']['feature']['races']:
+    feature[name] = group[name].head(1)
+
+  for i in range(nentry):
     for name in config['analysis']['feature']['horses']:
-      race_feature[name + '_' + str(i)] = entry[name]
+      feature[name + '_' + str(i)] = group.iloc[i][name]
 
     for name in config['analysis']['feature']['jockeys']:
-      race_feature[name + '_' + str(i)] = entry[name]
+      feature[name + '_' + str(i)] = group.iloc[i][name]
 
-    race_feature['won_' + str(i)] = entry['won']
+    feature['won_' + str(i)] = group.iloc[i]['won']
 
-  return race_feature
+  wons = pd.Series()
+  for i in range(nentry):
+    wons = wons.append(feature['won_' + str(i)], ignore_index=True)
+    feature['won'] = wons.where(wons == 1).first_valid_index()
+
+  for i in range(nentry):
+    feature = feature.drop('won_' + str(i), axis=1)
+
+  return feature
 
 connection = mysql.connect(
   host = config['mysql']['host'],
@@ -45,7 +54,7 @@ cursor = connection.cursor(dictionary=True)
 
 sql = 'SELECT race_id, COUNT(*) as nentry' \
   + ' FROM features' \
-  + ' GROUP BY race_id HAVING nentry = ' + nentry
+  + ' GROUP BY race_id HAVING nentry = ' + str(nentry)
 cursor.execute(sql)
 race_ids = pd.DataFrame(cursor.fetchall())['race_id']
 if (len(race_ids) > num_training_data):
@@ -65,17 +74,8 @@ for name in mapping:
   feature[name] = feature[name].map(mapping[name]).astype(int)
 
 feature.to_csv(outputdir + '/feature.csv', index=False)
-feature = feature.groupby('race_id').apply(create_race_feature)
-
-for race in feature:
-  for i in range(nentry):
-    if race['won_' + str(i)] == 1:
-      race['won'] = i
-
-for i in range(nentry):
-  feature.drop('won_' + str(i)])
-
-feature.to_csv(outputdir + '/training_data.csv', index=False)
+training_data = feature.groupby('race_id').apply(create_race_feature)
+training_data.to_csv(outputdir + '/training_data.csv', index=False)
 
 classifier = RandomForestClassifier(n_estimators=ntree, random_state=0)
 classifier.fit(training_data.drop('won', axis=1), training_data['won'])
@@ -87,10 +87,7 @@ for i in range(len(training_data.columns) - 1):
   importance[training_data.columns[i]] = importance_values[i]
 
 metadata = {
-  'num_training_data': {
-    'positive': len(positive),
-    'negative': len(negative)
-  },
+  'num_training_data': len(training_data),
   'num_tree': ntree,
   'num_feature': classifier.n_features_,
   'importance': importance
@@ -106,6 +103,6 @@ for i, estimator in enumerate(classifier.estimators_):
     training_data['won'],
     target_name='Result',
     feature_names=training_data.drop('won', axis=1).columns,
-    class_names=['lost', 'won'],
+    class_names=range(nentry),
   )
   tree.save(outputdir + '/tree_' + str(i) + '.svg')
