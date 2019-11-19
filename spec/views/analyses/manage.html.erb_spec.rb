@@ -89,7 +89,22 @@ describe 'analyses/manage', type: :view do
         @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
 
       rows.each do |row|
-        is_asserted_by { row.xpath('//td')[4].text.strip == state }
+        is_asserted_by { row.search('td')[4].text.strip == state }
+      end
+    end
+
+    it '実行中の場合はアイコンが表示されていること', if: state == '実行中' do
+      rows =
+        @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
+
+      rows.each do |row|
+        td_children = row.search('td')[4].children
+
+        is_asserted_by { td_children.search('span[@class="processing"]').present? }
+
+        is_asserted_by do
+          td_children.search('i[@class="fa fa-refresh fa-spin"]').present?
+        end
       end
     end
   end
