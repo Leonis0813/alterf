@@ -54,11 +54,11 @@ describe 'evaluations/show', type: :view do
       @table = @html.xpath(xpath)
     end
 
-    it '3列のテーブルが表示されていること' do
-      is_asserted_by { @table.xpath('//thead/th').size == 3 }
+    it '4列のテーブルが表示されていること' do
+      is_asserted_by { @table.xpath('//thead/th').size == 4 }
     end
 
-    %w[レース名 予測結果 正解].each_with_index do |text, i|
+    %w[No レース名 予測結果 正解].each_with_index do |text, i|
       it "#{i + 1}列目のヘッダーが#{text}であること" do
         is_asserted_by { @table.xpath('//thead/th')[i].text == text }
       end
@@ -75,6 +75,12 @@ describe 'evaluations/show', type: :view do
         @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
     end
 
+    it 'Noが正しいこと' do
+      @evaluation.data.size.times do |i|
+        is_asserted_by { @rows[i].children.search('td')[0].text.strip == (i + 1).to_s }
+      end
+    end
+
     it '行の色が正しいこと' do
       @evaluation.data.size.times do |i|
         is_asserted_by { @rows[i].attribute('class').value == tr_class }
@@ -83,21 +89,21 @@ describe 'evaluations/show', type: :view do
 
     it 'レース名が正しいこと' do
       @evaluation.data.each_with_index do |datum, i|
-        race_name = @rows[i].children.search('td')[0]
+        race_name = @rows[i].children.search('td')[1]
         is_asserted_by { race_name.text.strip == datum.race_name }
       end
     end
 
     it 'レース名がリンクになっていること' do
       @evaluation.data.each_with_index do |datum, i|
-        race_url = @rows[i].children.search('td')[0].children.search('a')
+        race_url = @rows[i].children.search('td')[1].children.search('a')
         is_asserted_by { race_url.attribute('href').value == datum.race_url }
       end
     end
 
     it '予測結果が表示されていること' do
       @evaluation.data.each_with_index do |datum, i|
-        span_stacks = @rows[i].children.search('td')[1].children.search('span')
+        span_stacks = @rows[i].children.search('td')[2].children.search('span')
 
         datum.prediction_results.won.each_with_index do |result, j|
           is_asserted_by do
@@ -121,7 +127,7 @@ describe 'evaluations/show', type: :view do
 
     it '正解が表示されていること' do
       @evaluation.data.each_with_index do |datum, i|
-        span_stack = @rows[i].children.search('td')[2].children.search('span')
+        span_stack = @rows[i].children.search('td')[3].children.search('span')
         is_asserted_by do
           span_stack.attribute('class').value == 'fa-stack prediction-result'
         end
