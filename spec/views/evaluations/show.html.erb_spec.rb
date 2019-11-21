@@ -75,6 +75,12 @@ describe 'evaluations/show', type: :view do
         @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
     end
 
+    it 'Noが正しいこと' do
+      @evaluation.data.size.times do |i|
+        is_asserted_by { @rows[i].children.search('td')[0].text.strip == (i + 1).to_s }
+      end
+    end
+
     it '行の色が正しいこと' do
       @evaluation.data.size.times do |i|
         is_asserted_by { @rows[i].attribute('class').value == tr_class }
