@@ -1,3 +1,6 @@
+# 4.8.1 (2019/11/23)
+- [UPDATE] gems
+
 # 4.8.0 (2019/11/21)
 - [UPDATE] evaluation result view to add sequencial numbers to table rows
 
