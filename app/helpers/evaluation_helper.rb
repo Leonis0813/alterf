@@ -8,10 +8,14 @@ module EvaluationHelper
     when 'error'
       'エラー'
     else
-      completed_data_size = evaluation.data.to_a.count do |datum|
-        datum.prediction_results.present?
+      if evaluation.data.empty?
+        '0%完了'
+      else
+        completed_data_size = evaluation.data.to_a.count do |datum|
+          datum.prediction_results.present?
+        end
+        "#{(100 * completed_data_size / evaluation.data.size.to_f).round(0)}%完了"
       end
-      "#{(100 * completed_data_size / evaluation.data.size.to_f).round(0)}%完了"
     end
   end
 
