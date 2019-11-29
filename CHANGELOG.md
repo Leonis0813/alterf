@@ -1,3 +1,6 @@
+# 4.9.0 (2019/11/30)
+- [UPDATE] evaluation views to show progress
+
 # 4.8.0 (2019/11/21)
 - [UPDATE] evaluation result view to add sequencial numbers to table rows
 
