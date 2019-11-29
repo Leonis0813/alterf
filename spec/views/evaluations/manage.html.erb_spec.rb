@@ -201,7 +201,7 @@ describe 'evaluations/manage', type: :view do
     @html ||= Nokogiri.parse(response)
   end
 
-  context '実行中の場合', :wip do
+  context '実行中の場合' do
     include_context 'トランザクション作成'
     include_context '評価ジョブを作成する'
     include_context 'HTML初期化'

@@ -15,8 +15,10 @@ module EvaluationHelper
     end
   end
 
-  def row_class(numbers, ground_truth)
-    numbers.include?(ground_truth) ? 'success' : 'danger'
+  def row_class(numbers, datum)
+    return 'warning' if datum.prediction_results.empty?
+
+    numbers.include?(datum.ground_truth) ? 'success' : 'danger'
   end
 
   def span_color(number, ground_truth)
