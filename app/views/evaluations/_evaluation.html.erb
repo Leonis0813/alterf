@@ -27,7 +27,7 @@
   <% end %>
   </td>
   <td style='border-style: none' align='center'>
-  <% if evaluation.state == 'completed' %>
+  <% if %w[processing completed].include?(evaluation.state) %>
     <span class='glyphicon glyphicon-arrow-right'></span>
   <% end %>
   </td>
