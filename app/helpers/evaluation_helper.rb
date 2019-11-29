@@ -1,6 +1,15 @@
 # coding: utf-8
 
 module EvaluationHelper
+  def progress(evaluation)
+    return '完了' if evaluation.state == 'completed'
+
+    completed_data_size = evaluation.data.count do |datum|
+      datum.prediction_results.present?
+    end
+    "#{(100 * completed_data_size / evaluation.data.size.to_f).round(0)}%完了"
+  end
+
   def row_class(numbers, ground_truth)
     numbers.include?(ground_truth) ? 'success' : 'danger'
   end

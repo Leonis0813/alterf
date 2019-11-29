@@ -1,11 +1,12 @@
 <tr>
   <td class='<%= state_to_class(evaluation.state) %>'>
-    <%= time_to_string(evaluation.created_at) %></td>
+    <%= time_to_string(evaluation.created_at) %>
+  </td>
   <td class='<%= state_to_class(evaluation.state) %>'>
     <%= evaluation.model %>
   </td>
   <td class='td-state <%= state_to_class(evaluation.state) %>'>
-    <span class='processing'><%= state_to_title(evaluation.state) %></span>
+    <span class='processing'><%= progress(evaluation) %></span>
     <% if evaluation.state == 'processing' %>
     <i class='fa fa-refresh fa-spin'></i>
     <% end %>
@@ -31,9 +32,9 @@
   <% end %>
   </td>
   <td style='border-style: none;padding: 2px;vertical-align: middle'>
-  <% if evaluation.state == 'completed' %>
+  <% if %w[processing completed].include?(evaluation.state) %>
     <%= link_to evaluation_path(evaluation.evaluation_id), {target: :_blank} do %>
-      <button class='btn btn-success btn-result'>
+      <button class='<%= "btn btn-#{state_to_class(evaluation.state)} btn-result" %>'>
         詳細
         <span class='glyphicon glyphicon-new-window new-window'></span>
       </button>
