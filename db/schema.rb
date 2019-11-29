@@ -22,13 +22,13 @@ ActiveRecord::Schema.define(version: 20191129143746) do
   end
 
   create_table "evaluation_data", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.integer  "evaluation_id", null: false
-    t.string   "race_id",       null: false
-    t.string   "race_name",     null: false
-    t.string   "race_url",      null: false
-    t.integer  "ground_truth",  null: false
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.integer  "evaluation_id",              null: false
+    t.string   "race_id",       default: "", null: false
+    t.string   "race_name",                  null: false
+    t.string   "race_url",                   null: false
+    t.integer  "ground_truth",               null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   create_table "evaluations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
