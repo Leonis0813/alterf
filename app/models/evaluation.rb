@@ -20,7 +20,7 @@ class Evaluation < ApplicationRecord
 
   has_many :data, dependent: :destroy
 
-  def fetch_data
+  def fetch_data!
     race_ids = if data_source == 'remote'
                  NetkeibaClient.new.http_get_race_top
                else

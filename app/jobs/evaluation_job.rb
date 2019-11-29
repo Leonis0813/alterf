@@ -4,6 +4,7 @@ class EvaluationJob < ApplicationJob
   def perform(evaluation_id)
     evaluation = Evaluation.find(evaluation_id)
     data_dir = Rails.root.join('tmp', 'files', evaluation_id.to_s)
+    evaluation.fetch_data!
 
     evaluation.data.each do |datum|
       File.open(File.join(data_dir, Settings.prediction.tmp_file_name), 'w') do |file|
