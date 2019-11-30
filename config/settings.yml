@@ -9,19 +9,8 @@ mysql:
   password: 'password'
 
 analysis:
-  racewise_features:
-    - 'burden_weight'
-    - 'horse_average_prize_money'
-    - 'rate_within_third'
-    - 'weight'
-    - 'weight_diff'
-    - 'weight_per'
-    - 'win_times'
-
-prediction:
-  tmp_file_name: &tmp_file_name 'test_data.yml'
   feature:
-    races: &races
+    races: &race
       - 'direction'
       - 'distance'
       - 'grade'
@@ -30,7 +19,7 @@ prediction:
       - 'round'
       - 'track'
       - 'weather'
-    horses:
+    horses: &horses
       - 'age'
       - 'blank'
       - 'burden_weight'
@@ -51,6 +40,21 @@ prediction:
       - 'jockey_average_prize_money'
       - 'jockey_win_rate'
       - 'jockey_win_rate_last_four_races'
+  racewise_features:
+    - 'burden_weight'
+    - 'horse_average_prize_money'
+    - 'rate_within_third'
+    - 'weight'
+    - 'weight_diff'
+    - 'weight_per'
+    - 'win_times'
+
+prediction:
+  tmp_file_name: &tmp_file_name 'test_data.yml'
+  feature:
+    races: *races
+    horses: *horses
+    jockeys: *jockeys
 
 evaluation:
   tmp_file_name: *tmp_file_name
