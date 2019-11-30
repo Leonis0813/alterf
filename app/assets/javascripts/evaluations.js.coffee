@@ -4,7 +4,7 @@ $ ->
       title: '評価を開始しました',
       message: '終了後、メールにて結果を通知します',
       callback: ->
-        $('.btn-submit').prop('disabled', false)
+        location.reload()
         return
     })
     return

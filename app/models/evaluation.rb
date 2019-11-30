@@ -20,17 +20,26 @@ class Evaluation < ApplicationRecord
 
   has_many :data, dependent: :destroy
 
-  def fetch_data
-    if data_source == 'remote'
-      NetkeibaClient.new.http_get_race_top
-    else
-      file_path = Rails.root.join(
-        'tmp',
-        'files',
-        id.to_s,
-        Settings.evaluation.race_list_filename,
+  def fetch_data!
+    race_ids = if data_source == 'remote'
+                 NetkeibaClient.new.http_get_race_top
+               else
+                 file_path = Rails.root.join(
+                   'tmp',
+                   'files',
+                   id.to_s,
+                   Settings.evaluation.race_list_filename,
+                 )
+                 File.read(file_path).lines.map(&:chomp)
+               end
+
+    race_ids.each do |race_id|
+      data.create!(
+        race_id: race_id,
+        race_name: Denebola::Race.find_by(race_id: race_id).race_name,
+        race_url: "#{Settings.netkeiba.base_url}/race/#{race_id}",
+        ground_truth: Denebola::Feature.find_by(race_id: race_id, won: true).number,
       )
-      File.read(file_path).lines.map(&:chomp)
     end
   end
 

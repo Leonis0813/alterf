@@ -10,7 +10,7 @@ describe 'evaluations/show', type: :view do
     ].join('/')
   end
 
-  shared_context '評価データを作成する' do |wons: []|
+  shared_context '評価データを作成する' do |wons: [], result_size: 18|
     before(:all) do
       @evaluation = Evaluation.create!(
         evaluation_id: '0' * 32,
@@ -21,12 +21,13 @@ describe 'evaluations/show', type: :view do
         f_measure: 0.6,
       )
       datum = @evaluation.data.create!(
+        race_id: '1' * 8,
         race_name: 'テスト',
         race_url: 'http://example.com',
         ground_truth: 1,
       )
-      (1..18).each do |i|
-        datum.prediction_results.create!(number: i, won: wons.include?(i))
+      result_size.times do |i|
+        datum.prediction_results.create!(number: i + 1, won: wons.include?(i + 1))
       end
     end
   end
@@ -101,7 +102,7 @@ describe 'evaluations/show', type: :view do
       end
     end
 
-    it '予測結果が表示されていること' do
+    it '予測結果が表示されていること', unless: tr_class == 'warning' do
       @evaluation.data.each_with_index do |datum, i|
         span_stacks = @rows[i].children.search('td')[2].children.search('span')
 
@@ -168,5 +169,13 @@ describe 'evaluations/show', type: :view do
     include_context 'HTML初期化'
     it_behaves_like '画面共通テスト'
     it_behaves_like '予測結果の行のデザインが正しいこと', tr_class: 'danger'
+  end
+
+  context 'ジョブが完了していない場合' do
+    include_context 'トランザクション作成'
+    include_context '評価データを作成する', result_size: 0
+    include_context 'HTML初期化'
+    it_behaves_like '画面共通テスト'
+    it_behaves_like '予測結果の行のデザインが正しいこと', tr_class: 'warning'
   end
 end
