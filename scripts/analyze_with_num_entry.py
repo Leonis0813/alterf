@@ -96,13 +96,13 @@ file.write(yaml.dump(metadata))
 
 pickle.dump(classifier, open(outputdir + '/model.rf', 'wb'))
 
-for i, estimator in enumerate(classifier.estimators_):
-  tree = dtreeviz(
-    estimator,
-    training_data.drop('won', axis=1),
-    training_data['won'],
-    target_name='Result',
-    feature_names=training_data.drop('won', axis=1).columns,
-    class_names=range(nentry),
-  )
-  tree.save(outputdir + '/tree_' + str(i) + '.svg')
+#for i, estimator in enumerate(classifier.estimators_):
+#  tree = dtreeviz(
+#    estimator,
+#    training_data.drop('won', axis=1),
+#    training_data['won'],
+#    target_name='Result',
+#    feature_names=training_data.drop('won', axis=1).columns,
+#    class_names=range(nentry),
+#  )
+#  tree.save(outputdir + '/tree_' + str(i) + '.svg')
