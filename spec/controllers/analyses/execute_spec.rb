@@ -48,8 +48,8 @@ describe AnalysesController, type: :controller do
 
     accepted_keys = required_keys + [:num_entry]
     test_cases = [].tap do |tests|
-      (required_keys.size - 1).times do |i|
-        tests << required_keys.combination(i + 1).to_a
+      (accepted_keys.size - 1).times do |i|
+        tests << accepted_keys.combination(i + 1).to_a
       end
     end.flatten(1)
 
