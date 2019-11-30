@@ -1,3 +1,14 @@
+# 4.9.0 (2019/11/30)
+- [UPDATE] evaluation views to show progress
+- [UPDATE] gems
+
+# 4.8.0 (2019/11/21)
+- [UPDATE] evaluation result view to add sequencial numbers to table rows
+
+# 4.7.1 (2019/11/19)
+- [UPDATE] analysis view to add icon when processing
+- [UPDATE] gems
+
 # 4.7.0 (2019/10/05)
 - [UPDATE] learning script to output training data
 - [UPDATE] gems

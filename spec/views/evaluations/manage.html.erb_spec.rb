@@ -9,7 +9,15 @@ describe 'evaluations/manage', type: :view do
   shared_context '評価ジョブを作成する' do |total: per_page, update_attribute: {}|
     before(:all) do
       attribute = default_attribute.merge(update_attribute)
-      total.times { Evaluation.create!(attribute) }
+      total.times do
+        evaluation = Evaluation.create!(attribute)
+        evaluation.data.create!(
+          race_id: '1' * 8,
+          race_name: 'race_name',
+          race_url: 'race_url',
+          ground_truth: 1,
+        )
+      end
       @evaluations = Evaluation.order(created_at: :desc).page(1)
     end
   end
@@ -147,6 +155,15 @@ describe 'evaluations/manage', type: :view do
       end
     end
 
+    it_behaves_like '詳細ボタンが表示されていること'
+  end
+
+  shared_examples '詳細ボタンが表示されていること' do |button_class = 'success'|
+    before(:each) do
+      @rows ||=
+        @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
+    end
+
     it '矢印が表示されていること' do
       @evaluations.each_with_index do |_, i|
         cell = @rows[i].children.search('td')[6].children
@@ -162,7 +179,7 @@ describe 'evaluations/manage', type: :view do
         href = "/evaluations/#{evaluation.evaluation_id}"
         is_asserted_by { cell.search('a').attribute('href').value == href }
 
-        button = cell.search('a/button[@class="btn btn-success btn-result"]')
+        button = cell.search("a/button[@class='btn btn-#{button_class} btn-result']")
         is_asserted_by { button.present? }
         is_asserted_by { button.text.strip == '詳細' }
         is_asserted_by do
@@ -190,7 +207,8 @@ describe 'evaluations/manage', type: :view do
     include_context 'HTML初期化'
     it_behaves_like '画面共通テスト'
     it_behaves_like 'ページングボタンが表示されていないこと'
-    it_behaves_like 'ジョブの状態が正しいこと', '実行中'
+    it_behaves_like 'ジョブの状態が正しいこと', '0%完了'
+    it_behaves_like '詳細ボタンが表示されていること', 'warning'
   end
 
   context '完了している場合' do
