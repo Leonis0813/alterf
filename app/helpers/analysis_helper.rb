@@ -7,8 +7,8 @@ module AnalysisHelper
       {name: '学習データ数', width: 15},
       {name: '決定木の数', width: 15},
       {name: '特徴量の数', width: 15},
-      {name: 'エントリー数', width: 20},
-      {name: '状態', width: 10},
+      {name: 'エントリー数', width: 15},
+      {name: '状態', width: 15},
     ]
   end
 end

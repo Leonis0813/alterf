@@ -1,5 +1,5 @@
 <div class='row center-block'>
-  <div class='col-lg-4'>
+  <div class='col-lg-3'>
     <div id='new-analysis' class='well'>
       <h3>レースを分析</h3>
       <%= form_for @analysis, url: analyses_path, remote: true do |f| %>
@@ -21,7 +21,7 @@
     </div>
   </div>
 
-  <div class='col-lg-8 well'>
+  <div class='col-lg-9 well'>
     <h3 class='table-title'>ジョブ実行履歴</h3>
     <% from = @analyses.total_count == 0 ? 0 : @analyses.offset_value + 1 %>
     <% info = {total_count: @analyses.total_count, from: from, to: @analyses.offset_value + @analyses.size} %>
