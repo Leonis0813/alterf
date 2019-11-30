@@ -10,7 +10,7 @@ mysql:
 
 analysis:
   feature:
-    races: &race
+    races: &races
       - 'direction'
       - 'distance'
       - 'grade'
