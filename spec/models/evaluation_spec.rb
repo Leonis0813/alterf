@@ -49,6 +49,7 @@ describe Evaluation, type: :model do
 
         data.each do |datum|
           evaluation_datum = @evaluation.data.create!(
+            race_id: '1' * 8,
             race_name: 'race_name',
             race_url: 'http://example.com',
             ground_truth: datum[:ground_truth],
