@@ -1,3 +1,6 @@
+# 4.10.0 (2019/12/01)
+- [UPDATE] analysis view to specify the number of entry
+
 # 4.9.0 (2019/11/30)
 - [UPDATE] evaluation views to show progress
 - [UPDATE] gems
