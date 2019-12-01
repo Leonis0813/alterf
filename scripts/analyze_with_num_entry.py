@@ -12,17 +12,37 @@ args = sys.argv
 analysis_id = args[1]
 num_training_data = int(args[2])
 ntree = int(args[3])
+nentry = int(args[4])
 
 workdir = os.path.dirname(os.path.abspath(args[0]))
 outputdir = workdir + '/../tmp/files/' + analysis_id
 config = yaml.load(open(workdir + '/../config/settings.yml', 'r+'))
 
-def normalize_racewise_feature(group):
-  features = group[config['analysis']['racewise_features']]
-  normalized = (features - features.min()) / (features.max() - features.min())
-  for name in config['analysis']['racewise_features']:
-    group[name] = normalized[name]
-  return group
+def create_race_feature(group):
+  group = group.sort_values('number')
+  feature = pd.DataFrame()
+
+  for name in config['analysis']['feature']['races']:
+    feature[name] = group[name].head(1)
+
+  for i in range(nentry):
+    for name in config['analysis']['feature']['horses']:
+      feature[name + '_' + str(i)] = group.iloc[i][name]
+
+    for name in config['analysis']['feature']['jockeys']:
+      feature[name + '_' + str(i)] = group.iloc[i][name]
+
+    feature['won_' + str(i)] = group.iloc[i]['won']
+
+  wons = pd.Series()
+  for i in range(nentry):
+    wons = wons.append(feature['won_' + str(i)], ignore_index=True)
+    feature['won'] = wons.where(wons == 1).first_valid_index()
+
+  for i in range(nentry):
+    feature = feature.drop('won_' + str(i), axis=1)
+
+  return feature
 
 connection = mysql.connect(
   host = config['mysql']['host'],
@@ -32,11 +52,13 @@ connection = mysql.connect(
 )
 cursor = connection.cursor(dictionary=True)
 
-cursor.execute('SELECT race_id FROM features WHERE won = 1')
+sql = 'SELECT race_id, COUNT(*) as nentry' \
+  + ' FROM features' \
+  + ' GROUP BY race_id HAVING nentry = ' + str(nentry)
+cursor.execute(sql)
 race_ids = pd.DataFrame(cursor.fetchall())['race_id']
-
-if (len(race_ids) >= num_training_data / 2):
-  race_ids = np.random.choice(race_ids, int(num_training_data / 2), replace=False)
+if (len(race_ids) > num_training_data):
+  race_ids = np.random.choice(race_ids, int(num_training_data), replace=False)
 
 cursor.execute('desc features')
 fields = pd.DataFrame(cursor.fetchall())['Field']
@@ -52,13 +74,7 @@ for name in mapping:
   feature[name] = feature[name].map(mapping[name]).astype(int)
 
 feature.to_csv(outputdir + '/feature.csv', index=False)
-feature = feature.groupby('race_id').apply(normalize_racewise_feature)
-feature = feature.drop('race_id', axis=1)
-feature = feature.dropna()
-
-positive = feature[feature['won'] == 1]
-negative = feature[feature['won'] == 0].sample(n=len(positive))
-training_data = pd.concat([positive, negative])
+training_data = feature.groupby('race_id').apply(create_race_feature)
 training_data.to_csv(outputdir + '/training_data.csv', index=False)
 
 classifier = RandomForestClassifier(n_estimators=ntree, random_state=0)
@@ -71,10 +87,7 @@ for i in range(len(training_data.columns) - 1):
   importance[training_data.columns[i]] = importance_values[i]
 
 metadata = {
-  'num_training_data': {
-    'positive': len(positive),
-    'negative': len(negative)
-  },
+  'num_training_data': len(training_data),
   'num_tree': ntree,
   'num_feature': classifier.n_features_,
   'importance': importance
@@ -90,6 +103,6 @@ pickle.dump(classifier, open(outputdir + '/model.rf', 'wb'))
 #    training_data['won'],
 #    target_name='Result',
 #    feature_names=training_data.drop('won', axis=1).columns,
-#    class_names=['lost', 'won'],
+#    class_names=range(nentry),
 #  )
 #  tree.save(outputdir + '/tree_' + str(i) + '.svg')

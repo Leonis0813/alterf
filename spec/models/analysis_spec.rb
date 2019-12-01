@@ -9,6 +9,7 @@ describe Analysis, type: :model do
         num_data: [1],
         num_tree: [1],
         num_feature: [1, nil],
+        num_entry: [1, nil],
         state: %w[processing completed error],
       }
 
@@ -20,9 +21,10 @@ describe Analysis, type: :model do
         num_data: [0],
         num_tree: [0],
         num_feature: [0],
+        num_entry: [0],
         state: %w[invalid],
       }
-      absent_keys = invalid_attribute.keys - %i[num_feature]
+      absent_keys = invalid_attribute.keys - %i[num_feature num_entry]
 
       it_behaves_like '必須パラメーターがない場合のテスト', absent_keys
       it_behaves_like '不正な値を指定した場合のテスト', invalid_attribute

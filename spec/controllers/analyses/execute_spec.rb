@@ -17,31 +17,46 @@ describe AnalysesController, type: :controller do
   end
 
   describe '正常系' do
-    include_context 'トランザクション作成'
-    include_context 'リクエスト送信'
-    it_behaves_like 'レスポンスが正常であること', status: 200, body: {}
-    it_behaves_like 'DBにレコードが追加されていること', Analysis, default_params
+    [default_params, default_params.merge(num_entry: 9)].each do |body|
+      context "body: #{body}の場合" do
+        include_context 'トランザクション作成'
+        include_context 'リクエスト送信', body: body
+        it_behaves_like 'レスポンスが正常であること', status: 200, body: {}
+        it_behaves_like 'DBにレコードが追加されていること', Analysis, body
+      end
+    end
   end
 
   describe '異常系' do
-    param_keys = default_params.keys
+    required_keys = default_params.keys
     test_cases = [].tap do |tests|
-      (param_keys.size - 1).times {|i| tests << param_keys.combination(i + 1).to_a }
+      (required_keys.size - 1).times do |i|
+        tests << required_keys.combination(i + 1).to_a
+      end
     end.flatten(1)
 
-    test_cases.each do |error_keys|
-      context "#{error_keys.join(',')}がない場合" do
-        selected_keys = param_keys - error_keys
-        errors = error_keys.map {|key| {'error_code' => "absent_param_#{key}"} }
+    test_cases.each do |absent_keys|
+      context "#{absent_keys.join(',')}がない場合" do
+        selected_keys = required_keys - absent_keys
+        errors = absent_keys.map {|key| {'error_code' => "absent_param_#{key}"} }
         include_context 'リクエスト送信', body: default_params.slice(*selected_keys)
         it_behaves_like 'レスポンスが正常であること',
                         status: 400, body: {'errors' => errors}
         it_behaves_like 'DBにレコードが追加されていないこと', Analysis, default_params
       end
+    end
 
-      context "#{error_keys.join(',')}が不正な場合" do
-        invalid_params = error_keys.map {|key| [key, 'invalid'] }.to_h
-        errors = error_keys.map {|key| {'error_code' => "invalid_param_#{key}"} }
+    accepted_keys = required_keys + [:num_entry]
+    test_cases = [].tap do |tests|
+      (accepted_keys.size - 1).times do |i|
+        tests << accepted_keys.combination(i + 1).to_a
+      end
+    end.flatten(1)
+
+    test_cases.each do |invalid_keys|
+      context "#{invalid_keys.join(',')}が不正な場合" do
+        invalid_params = invalid_keys.map {|key| [key, 'invalid'] }.to_h
+        errors = invalid_keys.map {|key| {'error_code' => "invalid_param_#{key}"} }
         include_context 'リクエスト送信', body: default_params.merge(invalid_params)
         it_behaves_like 'レスポンスが正常であること',
                         status: 400, body: {'errors' => errors}

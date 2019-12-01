@@ -16,6 +16,7 @@ ActiveRecord::Schema.define(version: 20191129143746) do
     t.integer  "num_data"
     t.integer  "num_tree"
     t.integer  "num_feature"
+    t.integer  "num_entry"
     t.string   "state"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
