@@ -1,3 +1,6 @@
+# 4.10.1 (2019/12/02)
+- [UPDATE] ruby version to 2.6.3
+
 # 4.10.0 (2019/12/01)
 - [UPDATE] analysis view to specify the number of entry
 
