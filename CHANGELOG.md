@@ -1,3 +1,6 @@
+# 4.10.2 (2019/12/05)
+- [UPDATE] gems
+
 # 4.10.1 (2019/12/02)
 - [UPDATE] ruby version to 2.6.3
 
