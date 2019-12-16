@@ -185,7 +185,7 @@ GEM
     gio2 (3.4.1)
       gobject-introspection (= 3.4.1)
     git (1.5.0)
-    gitlab (4.12.0)
+    gitlab (4.13.0)
       httparty (~> 0.14, >= 0.14.0)
       terminal-table (~> 1.5, >= 1.5.1)
     glib2 (3.4.1)
