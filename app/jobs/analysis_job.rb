@@ -20,8 +20,8 @@ class AnalysisJob < ApplicationJob
       analysis.update!(num_feature: analysis_params['num_feature'])
     end
 
-    Dir[File.join(output_dir, '*.svg')].each do |svg_file|
-      ImageUtil.convert_to_png(svg_file)
+    File.open('metadata.yml', 'w') do |file|
+      YAML.dump(analysis.slice(:analysis_id, :num_feature).stringify_keys, file)
     end
 
     AnalysisMailer.completed(analysis).deliver_now
