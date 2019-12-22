@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191222020105) do
+ActiveRecord::Schema.define(version: 20191222021913) do
 
   create_table "analyses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "analysis_id", default: "", null: false
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 20191222020105) do
     t.string   "evaluation_id",                               null: false
     t.string   "model"
     t.string   "data_source",              default: "remote", null: false
+    t.integer  "num_data",                 default: 0,        null: false
     t.string   "state"
     t.float    "precision",     limit: 24
     t.float    "recall",        limit: 24
