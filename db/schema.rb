@@ -10,16 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191129143746) do
+ActiveRecord::Schema.define(version: 20191222020105) do
 
   create_table "analyses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "analysis_id", default: "", null: false
     t.integer  "num_data"
     t.integer  "num_tree"
     t.integer  "num_feature"
     t.integer  "num_entry"
     t.string   "state"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
   create_table "evaluation_data", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
