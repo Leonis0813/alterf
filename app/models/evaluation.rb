@@ -10,8 +10,8 @@ class Evaluation < ApplicationRecord
     DATA_SOURCE_TEXT,
   ].freeze
 
-  NUM_DATA_RANDOM_DEFAULT = 100.freeze
-  NUM_DATA_REMOTE = 20.freeze
+  NUM_DATA_RANDOM_DEFAULT = 100
+  NUM_DATA_REMOTE = 20
 
   validates :evaluation_id, :model, :num_data, :state,
             presence: {message: 'absent'}
@@ -26,7 +26,7 @@ class Evaluation < ApplicationRecord
   validates :num_data,
             numericality: {equal_to: NUM_DATA_REMOTE, message: 'invalid'},
             allow_nil: true,
-            if: -> { data_source == DATA_SOURCE_REMOTE }
+            if: :remote?
   validates :state,
             inclusion: {in: %w[processing completed error], message: 'invalid'}
   validates :precision, :recall, :f_measure,
@@ -42,7 +42,7 @@ class Evaluation < ApplicationRecord
   after_initialize :set_default_num_data
 
   def fetch_data!
-    race_ids = if data_source == 'remote'
+    race_ids = if remote?
                  NetkeibaClient.new.http_get_race_top
                else
                  file_path = Rails.root.join(
@@ -80,12 +80,16 @@ class Evaluation < ApplicationRecord
 
   private
 
+  def remote?
+    data_source == DATA_SOURCE_REMOTE
+  end
+
   def set_default_num_data
     case data_source
     when DATA_SOURCE_RANDOM
-      num_data ||= NUM_DATA_RANDOM_DEFAULT
+      self.num_data ||= NUM_DATA_RANDOM_DEFAULT
     when DATA_SOURCE_REMOTE
-      num_data = NUM_DATA_REMOTE
+      self.num_data = NUM_DATA_REMOTE
     end
   end
 
