@@ -73,9 +73,9 @@ class EvaluationsController < ApplicationController
 
   def race_ids
     @race_ids ||= case execute_param[:data_source]
-                  when 'file'
+                  when Evaluation::DATA_SOURCE_FILE
                     execute_param[:data].read.lines.map(&:chomp)
-                  when 'text'
+                  when Evaluation::DATA_SOURCE_TEXT
                     execute_param[:data].lines.map(&:chomp)
                   end
   end

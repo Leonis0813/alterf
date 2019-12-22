@@ -21,12 +21,12 @@ class Evaluation < ApplicationRecord
             inclusion: {in: DATA_SOURCE_LIST, message: 'invalid'},
             allow_nil: true
   validates :num_data,
-            numericality: {only_interger: true, greater_than: 0, message: 'invalid'}
+            numericality: {only_interger: true, greater_than: 0, message: 'invalid'},
             allow_nil: true
   validates :num_data,
-            numericality: {equal_to: NUM_DATA_REMOTE, message: 'invalid'}
-            allow_nil: true
-            if: { data_source == DATA_SOURCE_REMOTE }
+            numericality: {equal_to: NUM_DATA_REMOTE, message: 'invalid'},
+            allow_nil: true,
+            if: -> { data_source == DATA_SOURCE_REMOTE }
   validates :state,
             inclusion: {in: %w[processing completed error], message: 'invalid'}
   validates :precision, :recall, :f_measure,

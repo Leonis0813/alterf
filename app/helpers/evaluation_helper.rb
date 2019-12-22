@@ -34,6 +34,7 @@ module EvaluationHelper
       'Top20' => 'remote',
       'ファイル' => 'file',
       '直接入力' => 'text',
+      'ランダム' => 'random',
     }
   end
 end
