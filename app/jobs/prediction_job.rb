@@ -32,7 +32,7 @@ class PredictionJob < ApplicationJob
     raise StandardError if analysis.nil?
 
     num_entry = analysis.num_entry
-    raise StandardError unless (num_entry.nil? or num_entry == feature['entries'].size)
+    raise StandardError unless num_entry.nil? or num_entry == feature['entries'].size
 
     args = [prediction_id, prediction.model, Settings.prediction.tmp_file_name]
     execute_script('predict.py', args)
