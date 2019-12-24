@@ -42,7 +42,10 @@ class Evaluation < ApplicationRecord
   after_initialize :set_default_num_data
 
   def fetch_data!
-    race_ids = if remote?
+    race_ids = case data_source
+               when DATA_SOURCE_RANDOM
+                 sample_race_ids
+               when DATA_SOURCE_REMOTE
                  NetkeibaClient.new.http_get_race_top
                else
                  file_path = Rails.root.join(
@@ -90,6 +93,21 @@ class Evaluation < ApplicationRecord
       self.num_data ||= NUM_DATA_RANDOM_DEFAULT
     when DATA_SOURCE_REMOTE
       self.num_data = NUM_DATA_REMOTE
+    end
+  end
+
+  def sample_race_ids
+    last_id = Denebola::Race.order(:id).last
+
+    [].tap do |race_ids|
+      loop do
+        begin
+          race_ids << Denebola::Race.find(rand(1..last_id)).race_id
+          break if races.size == self.num_data
+        rescue ActiveRecord::RecordNotFound
+          retry
+        end
+      end
     end
   end
 
