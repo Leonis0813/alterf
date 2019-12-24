@@ -1,4 +1,6 @@
 class ApplicationJob < ActiveJob::Base
+  attr_accessor :num_entry
+
   def execute_script(filename, args)
     ENV['PYENV_ROOT'] = '/usr/local/pyenv'
     ENV['PATH'] = [
@@ -16,5 +18,21 @@ class ApplicationJob < ActiveJob::Base
     ].join(' && ')
     is_success = system command
     raise StandardError unless is_success
+  end
+
+  def check_metadata(metadata_file, feature)
+    raise StandardError unless File.exist?(metadata_file)
+
+    analysis_id = YAML.load_file(metadata_file)['analysis_id']
+    raise StandardError if analysis_id.nil?
+
+    analysis = Analysis.find_by(analysis_id: analysis_id)
+    raise StandardError if analysis.nil?
+
+    self.num_entry = analysis.num_entry
+  end
+
+  def check_entry_size(entry_size)
+    raise StandardError unless num_entry.nil? or num_entry == entry_size
   end
 end
