@@ -8,7 +8,7 @@ class EvaluationJob < ApplicationJob
     data_dir = Rails.root.join('tmp', 'files', evaluation_id.to_s)
     evaluation.fetch_data!
     unzip_model(File.join(data_dir, evaluation.model), data_dir)
-    check_metadata(File.join(data_dir, 'metadata.yml'), feature)
+    check_metadata(File.join(data_dir, 'metadata.yml'))
 
     evaluation.data.each do |datum|
       File.open(File.join(data_dir, Settings.prediction.tmp_file_name), 'w') do |file|

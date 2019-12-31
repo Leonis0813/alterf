@@ -104,12 +104,10 @@ class Evaluation < ApplicationRecord
 
     [].tap do |race_ids|
       loop do
-        begin
-          race_ids << Denebola::Race.find(rand(1..last_id)).race_id
-          break if race_ids.size == self.num_data
-        rescue ActiveRecord::RecordNotFound
-          retry
-        end
+        race_ids << Denebola::Race.find(rand(1..last_id)).race_id
+        break if race_ids.size == self.num_data
+      rescue ActiveRecord::RecordNotFound
+        retry
       end
     end
   end

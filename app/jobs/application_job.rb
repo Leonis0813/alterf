@@ -20,7 +20,7 @@ class ApplicationJob < ActiveJob::Base
     raise StandardError unless is_success
   end
 
-  def check_metadata(metadata_file, feature)
+  def check_metadata(metadata_file)
     raise StandardError unless File.exist?(metadata_file)
 
     analysis_id = YAML.load_file(metadata_file)['analysis_id']

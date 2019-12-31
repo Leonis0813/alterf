@@ -58,7 +58,7 @@ describe Evaluation, type: :model do
       [19, 21].each do |num_data|
         context "data_sourceがrandomの時に#{num_data}を指定した場合" do
           before(:all) do
-            @evaluation = build(:evaluation, {num_data: num_data})
+            @evaluation = build(:evaluation, num_data: num_data)
             @evaluation.validate
           end
 
@@ -85,7 +85,7 @@ describe Evaluation, type: :model do
             race_id: '1234',
             race_name: 'test',
             round: 1,
-            start_time: Date.today,
+            start_time: Time.zone.today,
             track: '芝',
             weather: '晴',
           }
@@ -95,7 +95,7 @@ describe Evaluation, type: :model do
             allow(Denebola::Race).to(receive(:order).and_return([1]))
             allow(Denebola::Race).to(receive(:find).and_return(race))
             allow(Denebola::Feature).to(receive(:find_by).and_return(feature))
-            @evaluation = create(:evaluation, {data_source: 'random', num_data: 1})
+            @evaluation = create(:evaluation, data_source: 'random', num_data: 1)
             @evaluation.fetch_data!
           end
         end
@@ -119,7 +119,7 @@ describe Evaluation, type: :model do
             )
             allow(Denebola::Race).to(receive(:find_by).and_return(race))
             allow(Denebola::Feature).to(receive(:find_by).and_return(feature))
-            @evaluation = create(:evaluation, {data_source: 'remote', num_data: 20})
+            @evaluation = create(:evaluation, data_source: 'remote', num_data: 20)
             @evaluation.fetch_data!
           end
         end

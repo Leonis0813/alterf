@@ -16,7 +16,7 @@ class PredictionJob < ApplicationJob
                 YAML.load_file(test_data)
               end.deep_stringify_keys
 
-    check_metadata(File.join(data_dir, 'metadata.yml'), feature)
+    check_metadata(File.join(data_dir, 'metadata.yml'))
     check_entry_size(feature['entries'].size)
 
     feature_file = File.join(data_dir, Settings.prediction.tmp_file_name)
