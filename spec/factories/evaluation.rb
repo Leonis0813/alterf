@@ -3,6 +3,7 @@ FactoryBot.define do
     evaluation_id { '0' * 32 }
     model { 'model.rf' }
     data_source { 'remote' }
+    num_data { 1 }
     state { 'processing' }
     precision { 0.5 }
     recall { 0.5 }

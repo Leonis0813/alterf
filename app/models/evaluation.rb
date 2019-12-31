@@ -13,22 +13,25 @@ class Evaluation < ApplicationRecord
   NUM_DATA_RANDOM_DEFAULT = 100
   NUM_DATA_REMOTE = 20
 
-  validates :evaluation_id, :model, :num_data, :state,
+  validates :evaluation_id, :model, :data_source, :num_data, :state,
             presence: {message: 'absent'}
   validates :evaluation_id,
-            format: {with: /\A[0-9a-f]{32}\z/, message: 'invalid'}
+            format: {with: /\A[0-9a-f]{32}\z/, message: 'invalid'},
+            allow_nil: true
   validates :data_source,
             inclusion: {in: DATA_SOURCE_LIST, message: 'invalid'},
             allow_nil: true
   validates :num_data,
             numericality: {only_interger: true, greater_than: 0, message: 'invalid'},
-            allow_nil: true
+            allow_nil: true,
+            unless: :remote?
   validates :num_data,
             numericality: {equal_to: NUM_DATA_REMOTE, message: 'invalid'},
             allow_nil: true,
             if: :remote?
   validates :state,
-            inclusion: {in: %w[processing completed error], message: 'invalid'}
+            inclusion: {in: %w[processing completed error], message: 'invalid'},
+            allow_nil: true
   validates :precision, :recall, :f_measure,
             numericality: {
               greater_than_or_equal_to: 0,
@@ -103,7 +106,7 @@ class Evaluation < ApplicationRecord
       loop do
         begin
           race_ids << Denebola::Race.find(rand(1..last_id)).race_id
-          break if races.size == self.num_data
+          break if race_ids.size == self.num_data
         rescue ActiveRecord::RecordNotFound
           retry
         end
