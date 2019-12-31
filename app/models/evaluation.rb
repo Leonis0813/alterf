@@ -100,7 +100,7 @@ class Evaluation < ApplicationRecord
   end
 
   def sample_race_ids
-    last_id = Denebola::Race.order(:id).last
+    last_id = Denebola::Race.order(:id).last.id
 
     [].tap do |race_ids|
       loop do
