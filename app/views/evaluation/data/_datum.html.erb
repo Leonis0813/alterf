@@ -1,5 +1,8 @@
 <% numbers = datum.prediction_results.where(won: true).map(&:number).sort %>
-<tr class='<%= row_class(numbers, datum.ground_truth) %>'>
+<tr class='<%= row_class(numbers, datum) %>'>
+  <td>
+    <%= datum_counter + 1 %>
+  </td>
   <td>
     <%= link_to datum.race_url, {target: :_blank} do %>
       <%= datum.race_name %>

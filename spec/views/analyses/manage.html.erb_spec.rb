@@ -32,7 +32,7 @@ describe 'analyses/manage', type: :view do
       is_asserted_by { title.text == 'レースを分析' }
     end
 
-    %w[num_data num_tree].each do |param|
+    %w[num_data num_tree num_entry].each do |param|
       it "analysis_#{param}を含む<label>タグがあること" do
         label = @html.xpath("#{input_xpath('analysis')}/label[@for='analysis_#{param}']")
         is_asserted_by { label.present? }
@@ -57,11 +57,11 @@ describe 'analyses/manage', type: :view do
       @table = @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']")
     end
 
-    it '6列のテーブルが表示されていること' do
-      is_asserted_by { @table.xpath('//thead/th').size == 6 }
+    it '7列のテーブルが表示されていること' do
+      is_asserted_by { @table.xpath('//thead/th').size == 7 }
     end
 
-    %w[実行開始日時 学習データ数 決定木の数 特徴量の数 状態].each_with_index do |text, i|
+    %w[実行開始日時 学習データ数 決定木の数 特徴量の数 エントリー数 状態].each_with_index do |text, i|
       it "#{i + 1}列目のヘッダーが#{text}であること" do
         is_asserted_by { @table.xpath('//thead/th')[i].text == text }
       end
@@ -83,13 +83,37 @@ describe 'analyses/manage', type: :view do
     end
   end
 
-  shared_examples 'ジョブの状態が正しいこと' do |state|
+  shared_examples 'ジョブの状態が正しいこと' do |state, num_entry: 0|
     it do
       rows =
         @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
 
       rows.each do |row|
-        is_asserted_by { row.xpath('//td')[4].text.strip == state }
+        is_asserted_by { row.search('td')[5].text.strip == state }
+      end
+    end
+
+    it '実行中の場合はアイコンが表示されていること', if: state == '実行中' do
+      rows =
+        @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
+
+      rows.each do |row|
+        td_children = row.search('td')[5].children
+
+        is_asserted_by { td_children.search('span[@class="processing"]').present? }
+
+        is_asserted_by do
+          td_children.search('i[@class="fa fa-refresh fa-spin"]').present?
+        end
+      end
+    end
+
+    it 'エントリー数が表示されていること', if: num_entry > 0 do
+      rows =
+        @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
+
+      rows.each do |row|
+        is_asserted_by { row.search('td')[4].text.strip.to_i == num_entry }
       end
     end
   end
@@ -111,6 +135,15 @@ describe 'analyses/manage', type: :view do
     it_behaves_like '画面共通テスト'
     it_behaves_like 'ページングボタンが表示されていないこと'
     it_behaves_like 'ジョブの状態が正しいこと', '実行中'
+  end
+
+  context 'エントリー数が指定されている場合' do
+    include_context 'トランザクション作成'
+    include_context '分析ジョブを作成する', update_attribute: {num_entry: 10}
+    include_context 'HTML初期化'
+    it_behaves_like '画面共通テスト'
+    it_behaves_like 'ページングボタンが表示されていないこと'
+    it_behaves_like 'ジョブの状態が正しいこと', '実行中', num_entry: 10
   end
 
   context '完了している場合' do

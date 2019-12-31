@@ -5,10 +5,9 @@ class AnalysesController < ApplicationController
   end
 
   def execute
-    attribute = params.permit(*analysis_param_keys)
-    check_absent_param(attribute, analysis_param_keys)
+    check_absent_param(execute_params, %i[num_data num_tree])
 
-    analysis = Analysis.new(attribute.merge(state: 'processing'))
+    analysis = Analysis.new(execute_params.merge(state: 'processing'))
     unless analysis.save
       error_codes = analysis.errors.messages.keys.map {|key| "invalid_param_#{key}" }
       raise BadRequest, error_codes
@@ -20,7 +19,11 @@ class AnalysesController < ApplicationController
 
   private
 
-  def analysis_param_keys
-    %i[num_data num_tree]
+  def execute_params
+    @execute_params ||= request.request_parameters.slice(
+      :num_data,
+      :num_tree,
+      :num_entry,
+    )
   end
 end

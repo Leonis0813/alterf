@@ -6,8 +6,13 @@ class AnalysisJob < ApplicationJob
     output_dir = Rails.root.join('tmp', 'files', analysis_id.to_s)
     FileUtils.mkdir_p(output_dir)
 
-    args = [analysis_id, analysis.num_data, analysis.num_tree]
-    execute_script('analyze.py', args)
+    if analysis.num_entry
+      args = [analysis_id, analysis.num_data, analysis.num_tree, analysis.num_entry]
+      execute_script('analyze_with_num_entry.py', args)
+    else
+      args = [analysis_id, analysis.num_data, analysis.num_tree]
+      execute_script('analyze.py', args)
+    end
 
     yaml_file = File.join(output_dir, 'metadata.yml')
     if File.exist?(yaml_file)

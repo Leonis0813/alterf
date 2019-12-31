@@ -75,6 +75,7 @@ RSpec.configure do |config|
   config.include CommonHelper
   config.include FactoryBot::Syntax::Methods
   config.include ViewHelper, type: :view
+  config.fuubar_auto_refresh = false
 
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction

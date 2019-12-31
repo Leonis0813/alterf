@@ -5,6 +5,7 @@ require 'rails_helper'
 describe Evaluation::Datum, type: :model do
   default_attribute = {
     evaluation_id: 1,
+    race_id: '0',
     race_name: 'race_name',
     race_url: 'race_url',
     ground_truth: 1,
@@ -25,6 +26,7 @@ describe Evaluation::Datum, type: :model do
   describe '#validates' do
     describe '正常系' do
       valid_attribute = {
+        race_id: %w[0],
         race_name: %w[race_name],
         race_url: %w[race_url],
         ground_truth: [1],
@@ -35,9 +37,10 @@ describe Evaluation::Datum, type: :model do
 
     describe '異常系' do
       invalid_attribute = {
+        race_id: ['invalid'],
         ground_truth: [0],
       }
-      absent_keys = %i[race_name race_url ground_truth]
+      absent_keys = %i[race_id race_name race_url ground_truth]
 
       it_behaves_like '必須パラメーターがない場合のテスト', absent_keys
       it_behaves_like '不正な値を指定した場合のテスト', invalid_attribute

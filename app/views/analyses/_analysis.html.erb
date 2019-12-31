@@ -12,7 +12,15 @@
     <%= analysis.num_feature %>
   </td>
   <td class='<%= state_to_class(analysis.state) %>'>
+    <%= analysis.num_entry %>
+  </td>
+  <td class='<%= state_to_class(analysis.state) %>'>
+  <% if analysis.state == 'processing' %>
+    <span class='processing'><%= state_to_title(analysis.state) %></span>
+    <i class='fa fa-refresh fa-spin'></i>
+  <% else %>
     <%= state_to_title(analysis.state) %>
+  <% end %>
   </td>
   <td class='rebuild'>
     <%= button_tag(type: 'button', class: 'btn btn-default rebuild') do %>

@@ -1,3 +1,24 @@
+# 4.10.1 (2019/12/02)
+- [UPDATE] ruby version to 2.6.3
+
+# 4.10.0 (2019/12/01)
+- [UPDATE] analysis view to specify the number of entry
+
+# 4.9.0 (2019/11/30)
+- [UPDATE] evaluation views to show progress
+- [UPDATE] gems
+
+# 4.8.0 (2019/11/21)
+- [UPDATE] evaluation result view to add sequencial numbers to table rows
+
+# 4.7.1 (2019/11/19)
+- [UPDATE] analysis view to add icon when processing
+- [UPDATE] gems
+
+# 4.7.0 (2019/10/05)
+- [UPDATE] learning script to output training data
+- [UPDATE] gems
+
 # 4.6.0 (2019/09/29)
 - [UPDATE] analysis script to output tree images and attach to email
 
