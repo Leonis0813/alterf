@@ -1,3 +1,7 @@
+# 4.11.0 (2019/12/31)
+- [UPDATE] evaluation view to specify the number of data
+- [UPDATE] prediction job for fixed entry size model
+
 # 4.10.1 (2019/12/02)
 - [UPDATE] ruby version to 2.6.3
 
