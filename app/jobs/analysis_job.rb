@@ -14,14 +14,16 @@ class AnalysisJob < ApplicationJob
       execute_script('analyze.py', args)
     end
 
+    metadata = {}
     yaml_file = File.join(output_dir, 'metadata.yml')
     if File.exist?(yaml_file)
-      analysis_params = YAML.load_file(yaml_file)
-      analysis.update!(num_feature: analysis_params['num_feature'])
+      metadata = YAML.load_file(yaml_file)
+      analysis.update!(num_feature: metadata['num_feature'])
     end
 
-    File.open('metadata.yml', 'w') do |file|
-      YAML.dump(analysis.slice(:analysis_id, :num_feature).stringify_keys, file)
+    File.open(yaml_file, 'w') do |file|
+      metadata.merge!(analysis.slice(:analysis_id, :num_feature))
+      YAML.dump(metadata.stringify_keys, file)
     end
 
     AnalysisMailer.completed(analysis).deliver_now
