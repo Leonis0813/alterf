@@ -15,4 +15,6 @@ class Analysis < ApplicationRecord
   validates :state,
             inclusion: {in: %w[processing completed error], message: 'invalid'},
             allow_nil: true
+
+  has_many :evaluations
 end

@@ -40,6 +40,7 @@ class Evaluation < ApplicationRecord
             },
             allow_nil: true
 
+  belongs_to :analysis
   has_many :data, dependent: :destroy
 
   after_initialize :set_default_num_data
