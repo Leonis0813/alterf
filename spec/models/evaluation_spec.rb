@@ -78,31 +78,17 @@ describe Evaluation, type: :model do
       context 'datasourceがrandomの場合' do
         include_context 'トランザクション作成'
         before(:all) do
-          attribute = {
-            direction: '右',
-            distance: 1,
-            place: '東京',
-            race_id: '1234',
-            race_name: 'test',
-            round: 1,
-            start_time: Time.zone.today,
-            track: '芝',
-            weather: '晴',
-          }
-          RSpec::Mocks.with_temporary_scope do
-            race = Denebola::Race.create!(attribute)
-            feature = Denebola::Feature.new(race_id: 'test', won: true, number: 1)
-            allow(Denebola::Race).to(receive(:order).and_return([race]))
-            allow(Denebola::Race).to(receive(:find).and_return(race))
-            allow(Denebola::Feature).to(receive(:find_by).and_return(feature))
-            allow(Denebola::Feature).to(receive(:where).and_return([feature]))
-            @evaluation = create(:evaluation, data_source: 'random', num_data: 1)
-            @evaluation.update!(analysis: create(:analysis, num_entry: 1))
-            @evaluation.fetch_data!
-          end
+          create(:race)
+          create(:feature, won: true)
+          @evaluation = create(:evaluation, data_source: 'random', num_data: 1)
+          @evaluation.update!(analysis: create(:analysis, num_entry: 1))
+          @evaluation.fetch_data!
         end
 
-        after(:all) { Denebola::Race.destroy_all }
+        after(:all) do
+          Denebola::Race.destroy_all
+          Denebola::Feature.destroy_all
+        end
 
         it '取得したレースIDが正しいこと' do
           is_asserted_by { @evaluation.data.size == 1 }
