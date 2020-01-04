@@ -32,7 +32,8 @@ class EvaluationJob < ApplicationJob
     FileUtils.rm_rf(data_dir)
     evaluation.calculate!
     evaluation.update!(state: 'completed')
-  rescue StandardError
+  rescue StandardError => e
+    Rails.logger.error(e.backtrace.join("\n"))
     evaluation.update!(state: 'error')
   end
 end
