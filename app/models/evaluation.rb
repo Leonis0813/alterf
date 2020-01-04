@@ -118,6 +118,7 @@ class Evaluation < ApplicationRecord
       loop do
         race_id = Denebola::Race.find(rand(1..last_id)).race_id
         next unless analysis.num_entry == Denebola::Feature.where(race_id: race_id).count
+
         race_ids << race_id
         break if race_ids.size == self.num_data
       rescue ActiveRecord::RecordNotFound

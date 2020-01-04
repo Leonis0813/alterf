@@ -16,5 +16,6 @@ class Analysis < ApplicationRecord
             inclusion: {in: %w[processing completed error], message: 'invalid'},
             allow_nil: true
 
-  has_many :evaluations
+  has_many :predictions, dependent: :destroy
+  has_many :evaluations, dependent: :destroy
 end
