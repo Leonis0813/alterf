@@ -17,7 +17,7 @@ class EvaluationJob < ApplicationJob
         YAML.dump(feature.to_hash.deep_stringify_keys, file)
       end
 
-      args = [evaluation_id, evaluation.model, Settings.evaluation.tmp_file_name]
+      args = [evaluation_id, 'model.rf', Settings.evaluation.tmp_file_name]
       if evaluation.analysis.num_entry
         execute_script('predict_with_num_entry.py', args)
       else

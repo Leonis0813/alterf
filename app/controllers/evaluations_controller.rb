@@ -11,7 +11,7 @@ class EvaluationsController < ApplicationController
     model = execute_param[:model]
     evaluation = Evaluation.new(
       evaluation_id: SecureRandom.hex,
-      model: 'model.rf',
+      model: model.original_filename,
       data_source: execute_param[:data_source],
       num_data: num_data,
       state: 'processing',

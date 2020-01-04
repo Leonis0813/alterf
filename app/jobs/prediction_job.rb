@@ -22,7 +22,7 @@ class PredictionJob < ApplicationJob
     feature_file = File.join(data_dir, Settings.prediction.tmp_file_name)
     File.open(feature_file, 'w') {|file| YAML.dump(feature, file) }
 
-    args = [prediction_id, prediction.model, Settings.prediction.tmp_file_name]
+    args = [prediction_id, 'model.rf', Settings.prediction.tmp_file_name]
     if num_entry
       execute_script('predict_with_num_entry.py', args)
     else

@@ -8,7 +8,7 @@ class PredictionsController < ApplicationController
     check_absent_param(execute_params, %i[model test_data])
     check_invalid_file_params
 
-    attribute = {model: 'model.rf'}
+    attribute = {model: execute_params[:model].original_filename}
     attribute[:test_data] = execute_params[:test_data]
     if attribute[:test_data].respond_to?(:original_filename)
       attribute[:test_data] = attribute[:test_data].original_filename
