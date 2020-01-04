@@ -32,11 +32,14 @@ entry_feature_names = np.hstack((
 mapping = yaml.load(open(workdir + '/mapping.yml', 'r+'))
 
 for entry_id in range(len(test_data['entries'])):
-  for feature_name in entry_feature_names:
-    test_data = test_data[entry_id][feature_name]
+  entry_features = test_data['entries'][entry_id]
+
+  for feature_id in range(len(entry_features)):
+    feature = entry_features[feature_id]
+    feature_name = entry_feature_names[feature_id]
     if (feature_name in mapping):
-      test_data = mapping[feature_name][test_data]
-    feature[feature_name + '_' + str(entry_id)] = test_data
+      feature = mapping[feature_name][feature]
+    feature[feature_name + '_' + str(entry_id)] = feature
 
 won = classifier.predict(feature).astype(type('int', (int,), {}))
 
