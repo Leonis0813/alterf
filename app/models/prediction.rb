@@ -9,7 +9,7 @@ class Prediction < ApplicationRecord
   has_many :results, as: :predictable, dependent: :destroy, inverse_of: :predictable
 
   def set_analysis!
-    data_dir = Rails.root.join('tmp', 'files', prediction_id.to_s)
+    data_dir = Rails.root.join('tmp', 'files', id.to_s)
     analysis_id = read_analysis_id(File.join(data_dir, 'metadata.yml'))
     analysis = Analysis.find_by(analysis_id: analysis_id)
     raise StandardError if analysis.nil?

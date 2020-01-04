@@ -33,6 +33,7 @@ class EvaluationJob < ApplicationJob
     evaluation.calculate!
     evaluation.update!(state: 'completed')
   rescue StandardError => e
+    Rails.logger.error(e.message)
     Rails.logger.error(e.backtrace.join("\n"))
     evaluation.update!(state: 'error')
   end

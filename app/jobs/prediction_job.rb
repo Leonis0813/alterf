@@ -33,6 +33,7 @@ class PredictionJob < ApplicationJob
     FileUtils.rm_rf(data_dir)
     prediction.update!(state: 'completed')
   rescue StandardError => e
+    Rails.logger.error(e.message)
     Rails.logger.error(e.backtrace.join("\n"))
     prediction.update!(state: 'error')
   end
