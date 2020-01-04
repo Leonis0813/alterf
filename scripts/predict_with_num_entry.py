@@ -20,16 +20,19 @@ classifier = pickle.load(open(model_path, 'rb'))
 test_data_path = workdir + '/../tmp/files/' + prediction_id + '/' + test_data_filename
 test_data = yaml.load(open(test_data_path, 'r+'))
 
+mapping = yaml.load(open(workdir + '/mapping.yml', 'r+'))
 feature = pd.DataFrame()
 for key in test_data:
   if (key != 'entries'):
-    feature[key] = test_data[key]
+    race_feature = test_data[key]
+    if (key in mapping):
+      race_feature = mapping[key][race_feature]
+    feature[key] = np.array([race_feature])
 
 entry_feature_names = np.hstack((
   config['prediction']['feature']['horses'],
   config['prediction']['feature']['jockeys']
 ))
-mapping = yaml.load(open(workdir + '/mapping.yml', 'r+'))
 
 for entry_id in range(len(test_data['entries'])):
   entry_features = test_data['entries'][entry_id]
