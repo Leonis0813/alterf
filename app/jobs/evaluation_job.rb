@@ -18,7 +18,7 @@ class EvaluationJob < ApplicationJob
       end
 
       args = [evaluation_id, evaluation.model, Settings.evaluation.tmp_file_name]
-      if analysis.num_entry
+      if evaluation.analysis.num_entry
         execute_script('predict_with_num_entry.py', args)
       else
         execute_script('predict.py', args)

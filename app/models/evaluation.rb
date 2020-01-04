@@ -112,19 +112,12 @@ class Evaluation < ApplicationRecord
   end
 
   def sample_race_ids
-    last_id = Denebola::Race.order(:id).last.id
-
-    [].tap do |race_ids|
-      loop do
-        race_id = Denebola::Race.find(rand(1..last_id)).race_id
-        next unless analysis.num_entry == Denebola::Feature.where(race_id: race_id).count
-
-        race_ids << race_id
-        break if race_ids.size == self.num_data
-      rescue ActiveRecord::RecordNotFound
-        retry
-      end
-    end
+    if analysis&.num_entry
+      Denebola::Feature.group(:race_id).having('count_all = ?', analysis.num_entry)
+                       .count.keys
+    else
+      Denebola::Feature.pluck(:race_id)
+    end.uniq.sample(self.num_data)
   end
 
   def true_positive
