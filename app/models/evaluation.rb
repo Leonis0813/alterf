@@ -1,4 +1,6 @@
 class Evaluation < ApplicationRecord
+  include ModelUtil
+
   DATA_SOURCE_FILE = 'file'.freeze
   DATA_SOURCE_REMOTE = 'remote'.freeze
   DATA_SOURCE_RANDOM = 'random'.freeze
@@ -44,6 +46,15 @@ class Evaluation < ApplicationRecord
   has_many :data, dependent: :destroy
 
   after_initialize :set_default_num_data
+
+  def set_analysis!
+    data_dir = Rails.root.join('tmp', 'files', evaluation_id.to_s)
+    analysis_id = read_analysis_id(File.join(data_dir, 'metadata.yml'))
+    analysis = Analysis.find_by(analysis_id: analysis_id)
+    raise StandardError if analysis.nil?
+
+    update!(analysis: analysis)
+  end
 
   def fetch_data!
     race_ids = case data_source
@@ -105,7 +116,9 @@ class Evaluation < ApplicationRecord
 
     [].tap do |race_ids|
       loop do
-        race_ids << Denebola::Race.find(rand(1..last_id)).race_id
+        race_id = Denebola::Race.find(rand(1..last_id)).race_id
+        next unless analysis.num_entry == Denebola::Feature.where(race_id: race_id).count
+        race_ids << race_id
         break if race_ids.size == self.num_data
       rescue ActiveRecord::RecordNotFound
         retry

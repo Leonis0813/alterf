@@ -7,8 +7,9 @@ class PredictionJob < ApplicationJob
     prediction = Prediction.find(prediction_id)
     data_dir = Rails.root.join('tmp', 'files', prediction_id.to_s)
     test_data = prediction.test_data
-
     unzip_model(File.join(data_dir, prediction.model), data_dir)
+
+    prediction.set_analysis!
 
     feature = if test_data.match?(URI::DEFAULT_PARSER.make_regexp)
                 FeatureUtil.create_feature_from_netkeiba(URI.parse(test_data).path)
@@ -16,8 +17,7 @@ class PredictionJob < ApplicationJob
                 YAML.load_file(test_data)
               end.deep_stringify_keys
 
-    check_metadata(File.join(data_dir, 'metadata.yml'))
-    check_entry_size(feature['entries'].size)
+    raise StandardError unless analysis.num_entry == feature['entries'].size
 
     feature_file = File.join(data_dir, Settings.prediction.tmp_file_name)
     File.open(feature_file, 'w') {|file| YAML.dump(feature, file) }

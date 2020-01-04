@@ -6,4 +6,13 @@ module ModelUtil
       end
     end
   end
+
+  def read_analysis_id(metadata_file)
+    raise StandardError unless File.exist?(metadata_file)
+
+    analysis_id = YAML.load_file(metadata_file)['analysis_id']
+    raise StandardError if analysis_id.nil?
+
+    analysis_id
+  end
 end
