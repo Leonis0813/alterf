@@ -35,11 +35,11 @@ for entry_id in range(len(test_data['entries'])):
   entry_features = test_data['entries'][entry_id]
 
   for feature_id in range(len(entry_features)):
-    feature = entry_features[feature_id]
+    entry_feature = entry_features[feature_id]
     feature_name = entry_feature_names[feature_id]
     if (feature_name in mapping):
-      feature = mapping[feature_name][feature]
-    feature[feature_name + '_' + str(entry_id)] = feature
+      entry_feature = mapping[feature_name][entry_feature]
+    feature[feature_name + '_' + str(entry_id)] = entry_feature
 
 won = classifier.predict(feature).astype(type('int', (int,), {}))
 
