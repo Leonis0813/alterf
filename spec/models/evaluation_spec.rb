@@ -92,10 +92,12 @@ describe Evaluation, type: :model do
           RSpec::Mocks.with_temporary_scope do
             race = Denebola::Race.create!(attribute)
             feature = Denebola::Feature.new(race_id: 'test', won: true, number: 1)
-            allow(Denebola::Race).to(receive(:order).and_return([1]))
+            allow(Denebola::Race).to(receive(:order).and_return([race]))
             allow(Denebola::Race).to(receive(:find).and_return(race))
             allow(Denebola::Feature).to(receive(:find_by).and_return(feature))
+            allow(Denebola::Feature).to(receive(:where).and_return([feature]))
             @evaluation = create(:evaluation, data_source: 'random', num_data: 1)
+            @evaluation.update!(analysis: create(:analysis, num_entry: 1))
             @evaluation.fetch_data!
           end
         end
