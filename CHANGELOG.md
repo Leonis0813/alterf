@@ -1,4 +1,4 @@
-# 4.11.0 (2019/12/31)
+# 4.11.0 (2020/01/05)
 - [UPDATE] evaluation view to specify the number of data
 - [UPDATE] prediction job for fixed entry size model
 
