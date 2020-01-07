@@ -5,14 +5,14 @@ class EvaluationsController < ApplicationController
   end
 
   def execute
-    check_absent_param(execute_param, %i[model data_source])
+    check_absent_param(execute_params, %i[model data_source])
     check_invalid_param
 
-    model = execute_param[:model]
+    model = execute_params[:model]
     evaluation = Evaluation.new(
       evaluation_id: SecureRandom.hex,
       model: model.original_filename,
-      data_source: execute_param[:data_source],
+      data_source: execute_params[:data_source],
       num_data: num_data,
       state: 'processing',
     )
@@ -46,7 +46,7 @@ class EvaluationsController < ApplicationController
   private
 
   def check_invalid_param
-    model = execute_param[:model]
+    model = execute_params[:model]
     raise BadRequest, 'invalid_param_model' unless model.respond_to?(:original_filename)
 
     return unless user_specified_data?
@@ -56,32 +56,32 @@ class EvaluationsController < ApplicationController
   end
 
   def user_specified_data?
-    data_source = execute_param[:data_source]
+    data_source = execute_params[:data_source]
     [Evaluation::DATA_SOURCE_FILE, Evaluation::DATA_SOURCE_TEXT].include?(data_source)
   end
 
   def num_data
-    case execute_param[:data_source]
+    case execute_params[:data_source]
     when Evaluation::DATA_SOURCE_FILE, Evaluation::DATA_SOURCE_TEXT
       race_ids.size
     when Evaluation::DATA_SOURCE_RANDOM
-      execute_param[:num_data]
+      execute_params[:num_data]
     when Evaluation::DATA_SOURCE_REMOTE
       Evaluation::NUM_DATA_REMOTE
     end
   end
 
   def race_ids
-    @race_ids ||= case execute_param[:data_source]
+    @race_ids ||= case execute_params[:data_source]
                   when Evaluation::DATA_SOURCE_FILE
-                    execute_param[:data].read.lines.map(&:chomp)
+                    execute_params[:data].read.lines.map(&:chomp)
                   when Evaluation::DATA_SOURCE_TEXT
-                    execute_param[:data].lines.map(&:chomp)
+                    execute_params[:data].lines.map(&:chomp)
                   end
   end
 
-  def execute_param
-    @execute_param ||= request.request_parameters.slice(
+  def execute_params
+    @execute_params ||= request.request_parameters.slice(
       :model,
       :data_source,
       :num_data,
