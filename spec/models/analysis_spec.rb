@@ -6,6 +6,7 @@ describe Analysis, type: :model do
   describe '#validates' do
     describe '正常系' do
       valid_attribute = {
+        analysis_id: ['0' * 32],
         num_data: [1],
         num_tree: [1],
         num_feature: [1, nil],
@@ -18,6 +19,7 @@ describe Analysis, type: :model do
 
     describe '異常系' do
       invalid_attribute = {
+        analysis_id: ['invalid', 'g' * 32, nil],
         num_data: [0],
         num_tree: [0],
         num_feature: [0],

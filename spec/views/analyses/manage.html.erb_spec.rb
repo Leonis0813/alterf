@@ -4,7 +4,12 @@ require 'rails_helper'
 
 describe 'analyses/manage', type: :view do
   per_page = 1
-  default_attribute = {num_data: 10000, num_tree: 100, state: 'processing'}
+  default_attribute = {
+    analysis_id: '0' * 32,
+    num_data: 10000,
+    num_tree: 100,
+    state: 'processing',
+  }
 
   shared_context '分析ジョブを作成する' do |total: per_page, update_attribute: {}|
     before(:all) do

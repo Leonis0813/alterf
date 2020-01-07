@@ -1,15 +1,39 @@
 class Evaluation < ApplicationRecord
-  DATA_SOURCE_LIST = %w[file remote text].freeze
+  include ModelUtil
 
-  validates :evaluation_id, :model, :state,
+  DATA_SOURCE_FILE = 'file'.freeze
+  DATA_SOURCE_REMOTE = 'remote'.freeze
+  DATA_SOURCE_RANDOM = 'random'.freeze
+  DATA_SOURCE_TEXT = 'text'.freeze
+  DATA_SOURCE_LIST = [
+    DATA_SOURCE_FILE,
+    DATA_SOURCE_RANDOM,
+    DATA_SOURCE_REMOTE,
+    DATA_SOURCE_TEXT,
+  ].freeze
+
+  NUM_DATA_RANDOM_DEFAULT = 100
+  NUM_DATA_REMOTE = 20
+
+  validates :evaluation_id, :model, :data_source, :num_data, :state,
             presence: {message: 'absent'}
   validates :evaluation_id,
-            format: {with: /\A[0-9a-f]{32}\z/, message: 'invalid'}
+            format: {with: /\A[0-9a-f]{32}\z/, message: 'invalid'},
+            allow_nil: true
   validates :data_source,
             inclusion: {in: DATA_SOURCE_LIST, message: 'invalid'},
             allow_nil: true
+  validates :num_data,
+            numericality: {only_interger: true, greater_than: 0, message: 'invalid'},
+            allow_nil: true,
+            unless: :remote?
+  validates :num_data,
+            numericality: {equal_to: NUM_DATA_REMOTE, message: 'invalid'},
+            allow_nil: true,
+            if: :remote?
   validates :state,
-            inclusion: {in: %w[processing completed error], message: 'invalid'}
+            inclusion: {in: %w[processing completed error], message: 'invalid'},
+            allow_nil: true
   validates :precision, :recall, :f_measure,
             numericality: {
               greater_than_or_equal_to: 0,
@@ -18,10 +42,25 @@ class Evaluation < ApplicationRecord
             },
             allow_nil: true
 
+  belongs_to :analysis
   has_many :data, dependent: :destroy
 
+  after_initialize :set_default_num_data
+
+  def set_analysis!
+    data_dir = Rails.root.join('tmp', 'files', id.to_s)
+    analysis_id = read_analysis_id(File.join(data_dir, 'metadata.yml'))
+    analysis = Analysis.find_by(analysis_id: analysis_id)
+    raise StandardError if analysis.nil?
+
+    update!(analysis: analysis)
+  end
+
   def fetch_data!
-    race_ids = if data_source == 'remote'
+    race_ids = case data_source
+               when DATA_SOURCE_RANDOM
+                 sample_race_ids
+               when DATA_SOURCE_REMOTE
                  NetkeibaClient.new.http_get_race_top
                else
                  file_path = Rails.root.join(
@@ -58,6 +97,28 @@ class Evaluation < ApplicationRecord
   end
 
   private
+
+  def remote?
+    data_source == DATA_SOURCE_REMOTE
+  end
+
+  def set_default_num_data
+    case data_source
+    when DATA_SOURCE_RANDOM
+      self.num_data ||= NUM_DATA_RANDOM_DEFAULT
+    when DATA_SOURCE_REMOTE
+      self.num_data = NUM_DATA_REMOTE
+    end
+  end
+
+  def sample_race_ids
+    if analysis&.num_entry
+      Denebola::Feature.group(:race_id).having('count_all = ?', analysis.num_entry)
+                       .count.keys
+    else
+      Denebola::Feature.pluck(:race_id)
+    end.uniq.sample(self.num_data)
+  end
 
   def true_positive
     data.inject(0) do |tp, datum|

@@ -8,11 +8,6 @@ class NetkeibaClient < HTTPClient
     res.body.scan(%r{.*/race/(\d+)}).flatten
   end
 
-  def http_get_race_name(race_id)
-    html = send_request("/race/#{race_id}")
-    html.xpath('//dl[contains(@class, "racedata")]/dd/h1').text.strip
-  end
-
   def http_get_race(path)
     html = send_request(path)
     place = html.xpath('//ul[contains(@class, "race_place")]').first
