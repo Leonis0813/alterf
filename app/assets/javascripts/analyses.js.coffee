@@ -35,6 +35,9 @@ $ ->
       num_data: parseInt($(@).parent().siblings()[1].innerText),
       num_tree: parseInt($(@).parent().siblings()[2].innerText),
     }
+    num_entry = $(@).parent().siblings()[4].innerText
+    if num_entry != ''
+      data['num_entry'] = parseInt(num_entry)
     $.ajax({
       type: 'POST',
       url: '/alterf/analyses',
