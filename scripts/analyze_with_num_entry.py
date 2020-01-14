@@ -52,8 +52,16 @@ connection = mysql.connect(
 )
 cursor = connection.cursor(dictionary=True)
 
+sql = 'SELECT races.race_id' \
+  + ' FROM races' \
+  + ' INNER JOIN entries ON races.id = entries.race_id' \
+  + ' INNER JOIN horses ON entries.horse_id = horses.id'
+cursor.execute(sql)
+target_race_ids = pd.DataFrame(cursor.fetchall())['race_id']
+
 sql = 'SELECT race_id, COUNT(*) as nentry' \
   + ' FROM features' \
+  + ' WHERE race_id IN (' + ','.join(target_race_ids) + ')' \
   + ' GROUP BY race_id HAVING nentry = ' + str(nentry)
 cursor.execute(sql)
 race_ids = pd.DataFrame(cursor.fetchall())['race_id']
