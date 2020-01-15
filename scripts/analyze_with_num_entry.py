@@ -52,7 +52,7 @@ connection = mysql.connect(
 )
 cursor = connection.cursor(dictionary=True)
 
-sql = 'SELECT races.race_id' \
+sql = 'SELECT DISTINCT races.race_id' \
   + ' FROM races' \
   + ' INNER JOIN entries ON races.id = entries.race_id' \
   + ' INNER JOIN horses ON entries.horse_id = horses.id'
