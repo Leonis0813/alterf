@@ -79,7 +79,7 @@ training_data = training_data.dropna()
 training_data.to_csv(outputdir + '/training_data.csv', index=False)
 
 classifier = RandomForestClassifier(n_estimators=ntree, random_state=0)
-classifier.fit(training_data.drop('won', axis=1), training_data['won'])
+classifier.fit(training_data.drop('won', axis=1), training_data['won'].astype('int'))
 
 file = open(outputdir + '/metadata.yml', 'w+')
 importance_values = classifier.feature_importances_.astype(type('float', (float,), {}))
