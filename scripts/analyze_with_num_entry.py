@@ -52,16 +52,8 @@ connection = mysql.connect(
 )
 cursor = connection.cursor(dictionary=True)
 
-sql = 'SELECT DISTINCT races.race_id' \
-  + ' FROM races' \
-  + ' INNER JOIN entries ON races.id = entries.race_id' \
-  + ' INNER JOIN horses ON entries.horse_id = horses.id'
-cursor.execute(sql)
-target_race_ids = pd.DataFrame(cursor.fetchall())['race_id']
-
 sql = 'SELECT race_id, COUNT(*) as nentry' \
   + ' FROM features' \
-  + ' WHERE race_id IN (' + ','.join(target_race_ids) + ')' \
   + ' GROUP BY race_id HAVING nentry = ' + str(nentry)
 cursor.execute(sql)
 race_ids = pd.DataFrame(cursor.fetchall())['race_id']
@@ -83,6 +75,7 @@ for name in mapping:
 
 feature.to_csv(outputdir + '/feature.csv', index=False)
 training_data = feature.groupby('race_id').apply(create_race_feature)
+training_data = training_data.dropna()
 training_data.to_csv(outputdir + '/training_data.csv', index=False)
 
 classifier = RandomForestClassifier(n_estimators=ntree, random_state=0)
