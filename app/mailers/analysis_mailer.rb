@@ -5,10 +5,13 @@ class AnalysisMailer < ApplicationMailer
     @analysis = analysis
 
     tmp_dir = Rails.root.join('tmp', 'files', analysis.id.to_s)
+    tree_files = Dir[File.join(tmp_dir, 'tree_*.yml')].map do |file_path|
+      File.basename(file_path)
+    end
 
     [
       [%w[metadata.yml model.rf], 'model.zip'],
-      [%w[tree.yml feature.csv training_data.csv], 'analysis.zip'],
+      [tree_files + %w[feature.csv training_data.csv], 'analysis.zip'],
     ].each do |file_names, zip_file_name|
       zip_file_path = File.join(tmp_dir, 'analysis.zip')
 
