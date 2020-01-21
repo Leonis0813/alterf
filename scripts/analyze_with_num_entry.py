@@ -95,4 +95,4 @@ metadata = {
 file.write(yaml.dump(metadata))
 
 pickle.dump(classifier, open(outputdir + '/model.rf', 'wb'))
-util.output_tree(classifier.estimators_, training_data)
+util.output_tree(classifier.estimators_, training_data, outputdir)

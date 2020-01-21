@@ -1,6 +1,8 @@
-def output_tree(estimators, training_data):
+import yaml
+
+def output_tree(estimators, training_data, outputdir):
   feature_names = training_data.columns
-  for i, estimator in enumerate(classifier.estimators_):
+  for i, estimator in enumerate(estimators):
     file = open(outputdir + '/tree_' + str(i) + '.yml', 'w+')
     nodes = []
     lefts = estimator.tree_.children_left.astype(type('int', (float,), {}))
