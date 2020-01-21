@@ -1,4 +1,5 @@
 from sklearn.ensemble import RandomForestClassifier
+import analysis_util as util
 import mysql.connector as mysql
 import numpy as np
 import os
@@ -94,3 +95,4 @@ metadata = {
 file.write(yaml.dump(metadata))
 
 pickle.dump(classifier, open(outputdir + '/model.rf', 'wb'))
+util.output_tree(classifier.estimators_, training_data, outputdir)
