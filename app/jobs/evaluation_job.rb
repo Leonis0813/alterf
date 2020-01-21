@@ -1,9 +1,14 @@
 class EvaluationJob < ApplicationJob
+  include ModelUtil
+
   queue_as :alterf
 
   def perform(evaluation_id)
     evaluation = Evaluation.find(evaluation_id)
     data_dir = Rails.root.join('tmp', 'files', evaluation_id.to_s)
+    unzip_model(File.join(data_dir, evaluation.model), data_dir)
+
+    evaluation.set_analysis!
     evaluation.fetch_data!
 
     evaluation.data.each do |datum|
@@ -12,8 +17,12 @@ class EvaluationJob < ApplicationJob
         YAML.dump(feature.to_hash.deep_stringify_keys, file)
       end
 
-      args = [evaluation_id, evaluation.model, Settings.evaluation.tmp_file_name]
-      execute_script('predict.py', args)
+      args = [evaluation_id, 'model.rf', Settings.evaluation.tmp_file_name]
+      if evaluation.analysis.num_entry
+        execute_script('predict_with_num_entry.py', args)
+      else
+        execute_script('predict.py', args)
+      end
 
       result_file = File.join(data_dir, 'prediction.yml')
       datum.import_prediction_results(result_file)
@@ -23,7 +32,9 @@ class EvaluationJob < ApplicationJob
     FileUtils.rm_rf(data_dir)
     evaluation.calculate!
     evaluation.update!(state: 'completed')
-  rescue StandardError
+  rescue StandardError => e
+    Rails.logger.error(e.message)
+    Rails.logger.error(e.backtrace.join("\n"))
     evaluation.update!(state: 'error')
   end
 end

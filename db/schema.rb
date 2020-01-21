@@ -10,16 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191129143746) do
+ActiveRecord::Schema.define(version: 20200101134947) do
 
   create_table "analyses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "analysis_id", default: "", null: false
     t.integer  "num_data"
     t.integer  "num_tree"
     t.integer  "num_feature"
     t.integer  "num_entry"
     t.string   "state"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
   create_table "evaluation_data", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -33,15 +34,18 @@ ActiveRecord::Schema.define(version: 20191129143746) do
   end
 
   create_table "evaluations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "analysis_id"
     t.string   "evaluation_id",                               null: false
     t.string   "model"
     t.string   "data_source",              default: "remote", null: false
+    t.integer  "num_data",                 default: 0,        null: false
     t.string   "state"
     t.float    "precision",     limit: 24
     t.float    "recall",        limit: 24
     t.float    "f_measure",     limit: 24
     t.datetime "created_at",                                  null: false
     t.datetime "updated_at",                                  null: false
+    t.index ["analysis_id"], name: "index_evaluations_on_analysis_id", using: :btree
   end
 
   create_table "prediction_results", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

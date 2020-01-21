@@ -68,6 +68,7 @@ describe 'evaluations/manage', type: :view do
       %w[remote Top20],
       %w[file ファイル],
       %w[text 直接入力],
+      %w[random ランダム],
     ].each do |value, text|
       it "valueが#{value}の<option>タグがあること" do
         xpath = "#{input_xpath('evaluation')}/span/select[@id='data_source']" \
@@ -77,14 +78,20 @@ describe 'evaluations/manage', type: :view do
       end
     end
 
-    it '非表示で無効になっている<input>タグがあること' do
+    it '非表示で無効になっているファイル入力フォームがあること' do
       xpath = "#{input_xpath('evaluation')}/input[@id='evaluation_data_file']" \
               "[@class='form-control form-data-source not-selected'][@disabled]"
       is_asserted_by { @html.xpath(xpath).present? }
     end
 
-    it '非表示で無効になっている<textarea>タグがあること' do
+    it '非表示で無効になっているテキスト入力フォームがあること' do
       xpath = "#{input_xpath('evaluation')}/textarea[@id='evaluation_data_text']" \
+              "[@class='form-control form-data-source not-selected'][@disabled]"
+      is_asserted_by { @html.xpath(xpath).present? }
+    end
+
+    it '非表示で無効になっているデータ数入力フォームがあること' do
+      xpath = "#{input_xpath('evaluation')}/input[@id='evaluation_data_random']" \
               "[@class='form-control form-data-source not-selected'][@disabled]"
       is_asserted_by { @html.xpath(xpath).present? }
     end

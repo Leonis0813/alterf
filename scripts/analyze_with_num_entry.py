@@ -1,5 +1,5 @@
-from dtreeviz.trees import dtreeviz
 from sklearn.ensemble import RandomForestClassifier
+import analysis_util as util
 import mysql.connector as mysql
 import numpy as np
 import os
@@ -75,10 +75,11 @@ for name in mapping:
 
 feature.to_csv(outputdir + '/feature.csv', index=False)
 training_data = feature.groupby('race_id').apply(create_race_feature)
+training_data = training_data.dropna()
 training_data.to_csv(outputdir + '/training_data.csv', index=False)
 
 classifier = RandomForestClassifier(n_estimators=ntree, random_state=0)
-classifier.fit(training_data.drop('won', axis=1), training_data['won'])
+classifier.fit(training_data.drop('won', axis=1), training_data['won'].astype('int'))
 
 file = open(outputdir + '/metadata.yml', 'w+')
 importance_values = classifier.feature_importances_.astype(type('float', (float,), {}))
@@ -95,14 +96,4 @@ metadata = {
 file.write(yaml.dump(metadata))
 
 pickle.dump(classifier, open(outputdir + '/model.rf', 'wb'))
-
-#for i, estimator in enumerate(classifier.estimators_):
-#  tree = dtreeviz(
-#    estimator,
-#    training_data.drop('won', axis=1),
-#    training_data['won'],
-#    target_name='Result',
-#    feature_names=training_data.drop('won', axis=1).columns,
-#    class_names=range(nentry),
-#  )
-#  tree.save(outputdir + '/tree_' + str(i) + '.svg')
+util.output_tree(classifier.estimators_, training_data, outputdir)

@@ -16,6 +16,7 @@
           <% params = {class: 'form-control form-data-source not-selected', name: :data, disabled: true} %>
           <%= f.file_field :data, params.merge(id: 'evaluation_data_file') %>
           <%= f.text_area :data, params.merge(id: 'evaluation_data_text', value: '', style: 'resize:vertical') %>
+          <%= f.text_field :data, params.merge(id: 'evaluation_data_random', name: :num_data, value: '') %>
         </div>
         <%= f.submit '実行', class: 'btn btn-primary btn-sm btn-submit' %>
         <%= f.submit 'リセット', type: 'reset', class: 'btn btn-default btn-sm' %>
