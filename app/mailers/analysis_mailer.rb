@@ -13,7 +13,7 @@ class AnalysisMailer < ApplicationMailer
       [%w[metadata.yml model.rf], 'model.zip'],
       [tree_files + %w[feature.csv training_data.csv], 'analysis.zip'],
     ].each do |file_names, zip_file_name|
-      zip_file_path = File.join(tmp_dir, 'analysis.zip')
+      zip_file_path = File.join(tmp_dir, zip_file_name)
 
       Zip::File.open(zip_file_path, Zip::File::CREATE) do |zip|
         file_names.each do |file_name|
@@ -23,7 +23,7 @@ class AnalysisMailer < ApplicationMailer
         end
       end
 
-      attachments[zip_file_name] = File.read(zip_file_name)
+      attachments[zip_file_name] = File.read(zip_file_path)
     end
 
     mail(
