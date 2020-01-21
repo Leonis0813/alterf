@@ -1,5 +1,6 @@
-# 4.11.1 (2020/01/21
+# 4.11.1 (2020/01/21)
 - [UPDATE] analysis script to output tree structure as .yml format
+- [UPDATE] gems
 - [FIX] request parameter when rebuild
 - [FIX] analysis script for no wons
 
