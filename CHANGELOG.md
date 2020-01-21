@@ -1,5 +1,7 @@
 # 4.11.1 (2020/01/21
 - [UPDATE] analysis script to output tree structure as .yml format
+- [FIX] request parameter when rebuild
+- [FIX] analysis script for no wons
 
 # 4.11.0 (2020/01/07)
 - [UPDATE] evaluation view to specify the number of data
