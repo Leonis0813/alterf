@@ -1,3 +1,6 @@
+# 4.11.2 (2020/01/22)
+- [UPDATE] gems
+
 # 4.11.1 (2020/01/21)
 - [UPDATE] analysis script to output tree structure as .yml format
 - [UPDATE] gems
