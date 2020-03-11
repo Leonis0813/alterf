@@ -51,15 +51,15 @@ mapping = yaml.load(open(workdir + '/mapping.yml', 'r+'))
 for name in mapping:
   feature[name] = feature[name].map(mapping[name]).astype(int)
 
-feature.to_csv(outputdir + '/feature.csv', index=False)
+feature.sort_values(['race_id', 'number']).to_csv(outputdir + '/feature.csv', index=False)
 feature = feature.groupby('race_id').apply(normalize_racewise_feature)
-feature = feature.drop('race_id', axis=1)
 feature = feature.dropna()
 
 positive = feature[feature['won'] == 1]
 negative = feature[feature['won'] == 0].sample(n=len(positive))
 training_data = pd.concat([positive, negative])
-training_data.to_csv(outputdir + '/training_data.csv', index=False)
+training_data.sort_values(['race_id', 'number']).to_csv(outputdir + '/training_data.csv', index=False)
+training_data = training_data.drop('race_id', axis=1)
 
 classifier = RandomForestClassifier(n_estimators=ntree, random_state=0)
 classifier.fit(training_data.drop('won', axis=1), training_data['won'])
