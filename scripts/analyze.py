@@ -63,7 +63,13 @@ feature = feature.dropna()
 positive = feature[feature['won'] == 1]
 negative = feature[feature['won'] == 0].sample(n=len(positive))
 training_data = pd.concat([positive, negative])
-training_data.sort_values(['race_id', 'number']).to_csv(outputdir + '/training_data.csv', index=False)
+
+columns = training_data.columns.to_list()
+columns.remove('race_id')
+columns.remove('number')
+columns.insert(0, 'number')
+columns.insert(0, 'race_id')
+training_data[columns].sort_values(['race_id', 'number']).to_csv(outputdir + '/training_data.csv', index=False)
 training_data = training_data.drop('race_id', axis=1)
 
 classifier = RandomForestClassifier(n_estimators=ntree, random_state=0)
