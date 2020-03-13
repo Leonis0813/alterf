@@ -89,7 +89,7 @@ columns.remove('race_id')
 columns.insert(0, 'race_id')
 training_data[columns].to_csv(outputdir + '/training_data.csv', index=False)
 
-training_data = training_data.drop('race_id')
+training_data = training_data.drop('race_id', axis=1)
 
 classifier = RandomForestClassifier(n_estimators=ntree, random_state=0)
 classifier.fit(training_data.drop('won', axis=1), training_data['won'].astype('int'))
