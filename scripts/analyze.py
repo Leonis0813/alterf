@@ -51,7 +51,12 @@ mapping = yaml.load(open(workdir + '/mapping.yml', 'r+'))
 for name in mapping:
   feature[name] = feature[name].map(mapping[name]).astype(int)
 
-feature.sort_values(['race_id', 'number']).to_csv(outputdir + '/feature.csv', index=False)
+columns = feature.columns.to_list()
+columns.remove('race_id')
+columns.remove('number')
+columns.insert(0, 'number')
+columns.insert(0, 'race_id')
+feature[columns].sort_values(['race_id', 'number']).to_csv(outputdir + '/feature.csv', index=False)
 feature = feature.groupby('race_id').apply(normalize_racewise_feature)
 feature = feature.dropna()
 
