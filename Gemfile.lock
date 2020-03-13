@@ -528,6 +528,7 @@ DEPENDENCIES
   rubocop-performance
   rubocop-rails
   rubyzip
+  rugged (~> 0.28.0)
   sass-rails (~> 5.0)
   sdoc
   selenium-webdriver (= 3.142.4)
