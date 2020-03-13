@@ -1,4 +1,5 @@
-# 4.11.2 (2020/03/04)
+# 4.11.2 (2020/03/13)
+- [UPDATE] analysis script to sort features in files by race_id and number
 - [UPDATE] gems
 
 # 4.11.1 (2020/01/21)
