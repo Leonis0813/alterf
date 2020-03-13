@@ -42,6 +42,8 @@ def create_race_feature(group):
   for i in range(nentry):
     feature = feature.drop('won_' + str(i), axis=1)
 
+  feature['race_id'] = group.iloc[0]['race_id']
+
   return feature
 
 connection = mysql.connect(
@@ -73,10 +75,21 @@ mapping = yaml.load(open(workdir + '/mapping.yml', 'r+'))
 for name in mapping:
   feature[name] = feature[name].map(mapping[name]).astype(int)
 
-feature.to_csv(outputdir + '/feature.csv', index=False)
+columns = feature.columns.to_list()
+columns.remove('race_id')
+columns.remove('number')
+columns.insert(0, 'number')
+columns.insert(0, 'race_id')
+feature[columns].sort_values(['race_id', 'number']).to_csv(outputdir + '/feature.csv', index=False)
+
 training_data = feature.groupby('race_id').apply(create_race_feature)
 training_data = training_data.dropna()
-training_data.to_csv(outputdir + '/training_data.csv', index=False)
+columns = training_data.columns.to_list()
+columns.remove('race_id')
+columns.insert(0, 'race_id')
+training_data[columns].to_csv(outputdir + '/training_data.csv', index=False)
+
+training_data = training_data.drop('race_id', axis=1)
 
 classifier = RandomForestClassifier(n_estimators=ntree, random_state=0)
 classifier.fit(training_data.drop('won', axis=1), training_data['won'].astype('int'))
