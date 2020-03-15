@@ -47,7 +47,7 @@ class Evaluation < ApplicationRecord
 
   after_initialize if: :new_record? do |evaluation|
     evaluation.evaluation_id = SecureRandom.hex
-    state = DEFAULT_STATE
+    evaluation.state = DEFAULT_STATE
 
     case evaluation.data_source
     when DATA_SOURCE_RANDOM
