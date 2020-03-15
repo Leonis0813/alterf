@@ -5,6 +5,8 @@ class EvaluationJob < ApplicationJob
 
   def perform(evaluation_id)
     evaluation = Evaluation.find(evaluation_id)
+    evaluation.update!(state: Evaluation::STATE_PROCESSING)
+
     data_dir = Rails.root.join('tmp', 'files', 'evaluations', evaluation_id.to_s)
     unzip_model(File.join(data_dir, evaluation.model), data_dir)
 
@@ -31,10 +33,10 @@ class EvaluationJob < ApplicationJob
 
     FileUtils.rm_rf(data_dir)
     evaluation.calculate!
-    evaluation.update!(state: 'completed')
+    evaluation.update!(state: Evaluation::STATE_COMPLETED)
   rescue StandardError => e
     Rails.logger.error(e.message)
     Rails.logger.error(e.backtrace.join("\n"))
-    evaluation.update!(state: 'error')
+    evaluation.update!(state: Evaluation::STATE_ERROR)
   end
 end
