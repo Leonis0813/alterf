@@ -3,6 +3,8 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :null_session
 
+  before_action :remove_old_files
+
   rescue_from BadRequest do |e|
     render status: :bad_request, json: {'errors' => e.errors}
   end
@@ -17,5 +19,14 @@ class ApplicationController < ActionController::Base
 
     error_codes = absent_keys.map {|key| "absent_param_#{key}" }
     raise BadRequest, error_codes
+  end
+
+  def remove_old_files
+    Evaluation.where('performed_at <= ?', Time.zone.now).pluck(:id).each do |id|
+      data_file = Rails.root.join('tmp', 'files', 'evaluations', id.to_s, 'data.text')
+      next unless File.exist?(data_file)
+
+      FileUtils.rm(data_file)
+    end
   end
 end

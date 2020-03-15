@@ -10,11 +10,9 @@ class EvaluationsController < ApplicationController
 
     model = execute_params[:model]
     evaluation = Evaluation.new(
-      evaluation_id: SecureRandom.hex,
       model: model.original_filename,
       data_source: execute_params[:data_source],
       num_data: num_data,
-      state: 'processing',
     )
     unless evaluation.save
       error_codes = evaluation.errors.messages.keys.map {|key| "invalid_param_#{key}" }
