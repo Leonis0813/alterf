@@ -13,9 +13,14 @@ class Analysis < ApplicationRecord
             numericality: {only_integer: true, greater_than: 0, message: 'invalid'},
             allow_nil: true
   validates :state,
-            inclusion: {in: %w[processing completed error], message: 'invalid'},
+            inclusion: {in: STATE_LIST, message: 'invalid'},
             allow_nil: true
 
   has_many :predictions, dependent: :destroy
   has_many :evaluations, dependent: :destroy
+
+  after_initialize if: :new_record? do |analysis|
+    analysis.analysis_id = SecureRandom.hex
+    analysis.state = DEFAULT_STATE
+  end
 end

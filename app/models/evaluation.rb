@@ -32,7 +32,7 @@ class Evaluation < ApplicationRecord
             allow_nil: true,
             if: :remote?
   validates :state,
-            inclusion: {in: %w[processing completed error], message: 'invalid'},
+            inclusion: {in: STATE_LIST, message: 'invalid'},
             allow_nil: true
   validates :precision, :recall, :f_measure,
             numericality: {
@@ -45,7 +45,17 @@ class Evaluation < ApplicationRecord
   belongs_to :analysis
   has_many :data, dependent: :destroy
 
-  after_initialize :set_default_num_data
+  after_initialize if: :new_record? do |evaluation|
+    evaluation.evaluation_id = SecureRandom.hex
+    state = DEFAULT_STATE
+
+    case evaluation.data_source
+    when DATA_SOURCE_RANDOM
+      evaluation.num_data ||= NUM_DATA_RANDOM_DEFAULT
+    when DATA_SOURCE_REMOTE
+      evaluation.num_data = NUM_DATA_REMOTE
+    end
+  end
 
   def set_analysis!
     data_dir = Rails.root.join('tmp', 'files', id.to_s)
@@ -100,15 +110,6 @@ class Evaluation < ApplicationRecord
 
   def remote?
     data_source == DATA_SOURCE_REMOTE
-  end
-
-  def set_default_num_data
-    case data_source
-    when DATA_SOURCE_RANDOM
-      self.num_data ||= NUM_DATA_RANDOM_DEFAULT
-    when DATA_SOURCE_REMOTE
-      self.num_data = NUM_DATA_REMOTE
-    end
   end
 
   def sample_race_ids
