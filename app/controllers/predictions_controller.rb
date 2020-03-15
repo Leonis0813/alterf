@@ -53,7 +53,7 @@ class PredictionsController < ApplicationController
     execute_params.values.each do |value|
       next unless value.respond_to?(:original_filename)
 
-      output_dir = Rails.root.join('tmp', 'files', prediction_id.to_s)
+      output_dir = Rails.root.join('tmp', 'files', 'predictions', prediction_id.to_s)
       FileUtils.mkdir_p(output_dir)
       File.open(File.join(output_dir, value.original_filename), 'w+b') do |f|
         f.write(value.read)

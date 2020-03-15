@@ -19,7 +19,7 @@ class EvaluationsController < ApplicationController
       raise BadRequest, error_codes
     end
 
-    output_dir = Rails.root.join('tmp', 'files', evaluation.id.to_s)
+    output_dir = Rails.root.join('tmp', 'files', 'evaluations', evaluation.id.to_s)
     FileUtils.mkdir_p(output_dir)
     File.open(File.join(output_dir, model.original_filename), 'w+b') do |f|
       f.write(model.read)

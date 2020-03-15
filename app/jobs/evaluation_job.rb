@@ -5,7 +5,7 @@ class EvaluationJob < ApplicationJob
 
   def perform(evaluation_id)
     evaluation = Evaluation.find(evaluation_id)
-    data_dir = Rails.root.join('tmp', 'files', evaluation_id.to_s)
+    data_dir = Rails.root.join('tmp', 'files', 'evaluations', evaluation_id.to_s)
     unzip_model(File.join(data_dir, evaluation.model), data_dir)
 
     evaluation.set_analysis!

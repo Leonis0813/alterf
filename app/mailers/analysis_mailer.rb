@@ -4,7 +4,7 @@ class AnalysisMailer < ApplicationMailer
   def completed(analysis)
     @analysis = analysis
 
-    tmp_dir = Rails.root.join('tmp', 'files', analysis.id.to_s)
+    tmp_dir = Rails.root.join('tmp', 'files', 'analyses', analysis.id.to_s)
     tree_files = Dir[File.join(tmp_dir, 'tree_*.yml')].map do |file_path|
       File.basename(file_path)
     end

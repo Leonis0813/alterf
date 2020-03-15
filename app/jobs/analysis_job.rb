@@ -3,7 +3,7 @@ class AnalysisJob < ApplicationJob
 
   def perform(analysis_id)
     analysis = Analysis.find(analysis_id)
-    output_dir = Rails.root.join('tmp', 'files', analysis_id.to_s)
+    output_dir = Rails.root.join('tmp', 'files', 'analyses', analysis_id.to_s)
     FileUtils.mkdir_p(output_dir)
 
     if analysis.num_entry
@@ -27,7 +27,8 @@ class AnalysisJob < ApplicationJob
     end
 
     AnalysisMailer.completed(analysis).deliver_now
-    FileUtils.rm_rf("#{Rails.root}/tmp/files/#{analysis_id}")
+
+    FileUtils.rm_rf(output_dir)
     analysis.update!(state: 'completed')
   rescue StandardError => e
     Rails.logger.error(e.message)
