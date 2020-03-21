@@ -53,7 +53,8 @@ module EvaluationHelper
     return if %w[text file].include?(evaluation.data_source)
     return unless evaluation.state == 'completed'
 
-    content_tag(:button, id: evaluation.evaluation_id, class: 'btn btn-success btn-download') do
+    id = evaluation.evaluation_id
+    content_tag(:button, id: id, class: 'btn btn-success btn-download') do
       content_tag(:span, nil, class: 'glyphicon glyphicon-download-alt')
     end
   end

@@ -44,8 +44,8 @@ class EvaluationsController < ApplicationController
   def download
     file_path =
       Rails.root.join('tmp', 'files', 'evaluations', evaluation.id.to_s, 'data.txt')
-    stat = File::stat(file_path)
-    send_file(file_path, :filename => 'data.txt', :length => stat.size)
+    stat = File.stat(file_path)
+    send_file(file_path, filename: 'data.txt', length: stat.size)
   end
 
   private
