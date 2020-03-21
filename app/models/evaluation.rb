@@ -109,10 +109,9 @@ class Evaluation < ApplicationRecord
   def output_race_ids
     return if [DATA_SOURCE_FILE, DATA_SOURCE_TEXT].include?(data_source)
 
-    File.open(Rails.root.join('tmp', 'files', 'evaluations', id.to_s), 'w') do |file|
-      data.pluck(:race_id).each do |race_id|
-        file.puts(race_id)
-      end
+    file_path = Rails.root.join('tmp', 'files', 'evaluations', id.to_s, 'data.txt')
+    File.open(file_path, 'w') do |file|
+      data.pluck(:race_id).each {|race_id| file.puts(race_id) }
     end
   end
 

@@ -1,4 +1,6 @@
 class EvaluationsController < ApplicationController
+  before_action :check_request_evaluation, only: %i[show download]
+
   def manage
     @evaluation = Evaluation.new
     @evaluations = Evaluation.all.order(created_at: :desc).page(params[:page])
@@ -37,11 +39,24 @@ class EvaluationsController < ApplicationController
   end
 
   def show
-    @evaluation = Evaluation.find_by(evaluation_id: params[:id])
-    raise NotFound unless @evaluation
+  end
+
+  def download
+    file_path =
+      Rails.root.join('tmp', 'files', 'evaluations', evaluation.id.to_s, 'data.txt')
+    stat = File::stat(file_path)
+    send_file(file_path, :filename => 'data.txt', :length => stat.size)
   end
 
   private
+
+  def check_request_evaluation
+    raise NotFound unless evaluation
+  end
+
+  def evaluation
+    @evaluation ||= Evaluation.find_by(request.path_parameters.slice(:evaluation_id))
+  end
 
   def check_invalid_param
     model = execute_params[:model]
