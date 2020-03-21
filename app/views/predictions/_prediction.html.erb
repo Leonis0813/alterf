@@ -31,8 +31,10 @@
       <span>...</span>
     <% end %>
     </span>
-  <% else %>
+  <% elsif prediction.state == 'error' %>
     <span class='glyphicon glyphicon-remove' style='color: red'/>
+  <% else %>
+    <span class='processing'>実行待ち</span>
   <% end %>
   </td>
 </tr>
