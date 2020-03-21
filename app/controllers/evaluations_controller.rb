@@ -44,6 +44,8 @@ class EvaluationsController < ApplicationController
   def download
     file_path =
       Rails.root.join('tmp', 'files', 'evaluations', evaluation.id.to_s, 'data.txt')
+    raise NotFound unless File.exist?(file_path)
+
     stat = File.stat(file_path)
     send_file(file_path, filename: 'data.txt', length: stat.size)
   end
