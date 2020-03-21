@@ -1,6 +1,17 @@
 # coding: utf-8
 
 module EvaluationHelper
+  def headers
+    [
+      {name: '実行開始日時', width: 25},
+      {name: 'モデル', width: 20},
+      {name: '状態', width: 15},
+      {name: '適合率', width: 10},
+      {name: '再現率', width: 10},
+      {name: 'F値', width: 10},
+    ]
+  end
+
   def progress(evaluation)
     case evaluation.state
     when 'completed'
@@ -36,5 +47,14 @@ module EvaluationHelper
       '直接入力' => 'text',
       'ランダム' => 'random',
     }
+  end
+
+  def download_button(evaluation)
+    return if %w[text file].include?(evaluation.data_source)
+    return unless evaluation.state == 'completed'
+
+    content_tag(:button, class: 'btn btn-success') do
+      content_tag(:span, nil, class: 'glyphicon glyphicon-download-alt')
+    end
   end
 end

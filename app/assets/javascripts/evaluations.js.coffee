@@ -25,4 +25,8 @@ $ ->
     $('#evaluation_data_' + $(this).val()).prop('disabled', false)
     $('#evaluation_data_' + $(this).val()).removeClass('not-selected')
     return
+
+  $('.btn-result').on 'click', ->
+    window.open('/alterf/evaluations/' + $(@).attr('id'))
+    return
   return
