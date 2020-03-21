@@ -5,7 +5,7 @@ class PredictionJob < ApplicationJob
 
   def perform(prediction_id)
     prediction = Prediction.find(prediction_id)
-    prediction.update!(state: Prediction::STATE_PROCESSING)
+    prediction.update!(state: Prediction::STATE_PROCESSING, performed_at: Time.zone.now)
 
     data_dir = Rails.root.join('tmp', 'files', 'predictions', prediction_id.to_s)
     test_data = prediction.test_data

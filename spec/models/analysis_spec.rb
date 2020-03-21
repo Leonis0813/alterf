@@ -26,7 +26,7 @@ describe Analysis, type: :model do
         num_entry: [0],
         state: %w[invalid],
       }
-      absent_keys = invalid_attribute.keys - %i[num_feature num_entry]
+      absent_keys = %i[num_data num_tree]
 
       it_behaves_like '必須パラメーターがない場合のテスト', absent_keys
       it_behaves_like '不正な値を指定した場合のテスト', invalid_attribute

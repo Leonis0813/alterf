@@ -3,7 +3,7 @@ class AnalysisJob < ApplicationJob
 
   def perform(analysis_id)
     analysis = Analysis.find(analysis_id)
-    analysis.update!(state: Analysis::STATE_PROCESSING)
+    analysis.update!(state: Analysis::STATE_PROCESSING, performed_at: Time.zone.now)
 
     output_dir = Rails.root.join('tmp', 'files', 'analyses', analysis_id.to_s)
     FileUtils.mkdir_p(output_dir)
