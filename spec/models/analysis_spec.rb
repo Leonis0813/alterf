@@ -11,7 +11,7 @@ describe Analysis, type: :model do
         num_tree: [1],
         num_feature: [1, nil],
         num_entry: [1, nil],
-        state: %w[processing completed error],
+        state: %w[waiting processing completed error],
       }
 
       it_behaves_like '正常な値を指定した場合のテスト', valid_attribute

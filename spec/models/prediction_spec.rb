@@ -22,7 +22,7 @@ describe Prediction, type: :model do
       valid_attribute = {
         model: %w[model],
         test_data: %w[test_data],
-        state: %w[processing completed error],
+        state: %w[waiting processing completed error],
       }
 
       it_behaves_like '正常な値を指定した場合のテスト', valid_attribute
