@@ -19,7 +19,7 @@ class EvaluationJob < ApplicationJob
         YAML.dump(feature.to_hash.deep_stringify_keys, file)
       end
 
-      args = [evaluation_id, 'model.rf', Settings.evaluation.tmp_file_name]
+      args = [data_dir, 'model.rf', Settings.evaluation.tmp_file_name]
       if evaluation.analysis.num_entry
         execute_script('predict_with_num_entry.py', args)
       else
@@ -31,8 +31,8 @@ class EvaluationJob < ApplicationJob
       FileUtils.rm(result_file)
     end
 
-    FileUtils.rm_rf(data_dir)
     evaluation.calculate!
+    evaluation.output_race_ids
     evaluation.update!(state: Evaluation::STATE_COMPLETED)
   rescue StandardError => e
     Rails.logger.error(e.message)
