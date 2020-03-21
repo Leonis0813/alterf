@@ -8,7 +8,7 @@ describe EvaluationsController, type: :controller do
   race_list_file_path = Rails.root.join('spec', 'fixtures', 'race_list.txt')
   data = Rack::Test::UploadedFile.new(File.open(race_list_file_path))
   default_params = {model: model, data_source: 'remote'}
-  tmp_dir = Rails.root.join('tmp', 'files')
+  tmp_dir = Rails.root.join('tmp', 'files', 'evaluations')
 
   shared_context 'リクエスト送信' do |body: default_params|
     before(:all) do
