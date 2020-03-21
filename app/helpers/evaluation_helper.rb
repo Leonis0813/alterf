@@ -1,7 +1,7 @@
 # coding: utf-8
 
 module EvaluationHelper
-  def headers
+  def evaluation_table_headers
     [
       {name: '実行開始日時', width: 25},
       {name: 'モデル', width: 20},

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 module AnalysisHelper
-  def headers
+  def analysis_table_headers
     [
       {name: '実行開始日時', width: 25},
       {name: '学習データ数', width: 15},

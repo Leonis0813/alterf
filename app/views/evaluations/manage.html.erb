@@ -33,7 +33,7 @@
     <%= paginate @evaluations %>
     <table class='table table-hover'>
       <thead>
-        <% headers.each do |header| %>
+        <% evaluation_table_headers.each do |header| %>
           <th width='<%= header[:width] %>%'><%= header[:name] %></th>
         <% end %>
         <th width='10%' style='border: none'></th>
