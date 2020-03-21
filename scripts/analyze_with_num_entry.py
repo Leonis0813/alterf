@@ -15,7 +15,7 @@ ntree = int(args[3])
 nentry = int(args[4])
 
 workdir = os.path.dirname(os.path.abspath(args[0]))
-outputdir = workdir + '/../tmp/files/' + analysis_id
+outputdir = workdir + '/../tmp/files/analyses/' + analysis_id
 config = yaml.load(open(workdir + '/../config/settings.yml', 'r+'))
 
 def create_race_feature(group):

@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
 
   def remove_old_files
     Evaluation.where('performed_at <= ?', Time.zone.now).pluck(:id).each do |id|
-      data_file = Rails.root.join('tmp', 'files', 'evaluations', id.to_s, 'data.text')
+      data_file = Rails.root.join('tmp', 'files', 'evaluations', id.to_s, 'data.txt')
       next unless File.exist?(data_file)
 
       FileUtils.rm(data_file)
