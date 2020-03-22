@@ -32,7 +32,7 @@ class Evaluation < ApplicationRecord
             allow_nil: true,
             if: :remote?
   validates :state,
-            inclusion: {in: %w[processing completed error], message: 'invalid'},
+            inclusion: {in: STATE_LIST, message: 'invalid'},
             allow_nil: true
   validates :precision, :recall, :f_measure,
             numericality: {
@@ -45,10 +45,20 @@ class Evaluation < ApplicationRecord
   belongs_to :analysis
   has_many :data, dependent: :destroy
 
-  after_initialize :set_default_num_data
+  after_initialize if: :new_record? do |evaluation|
+    evaluation.evaluation_id = SecureRandom.hex
+    evaluation.state = DEFAULT_STATE
+
+    case evaluation.data_source
+    when DATA_SOURCE_RANDOM
+      evaluation.num_data ||= NUM_DATA_RANDOM_DEFAULT
+    when DATA_SOURCE_REMOTE
+      evaluation.num_data = NUM_DATA_REMOTE
+    end
+  end
 
   def set_analysis!
-    data_dir = Rails.root.join('tmp', 'files', id.to_s)
+    data_dir = Rails.root.join('tmp', 'files', 'evaluations', id.to_s)
     analysis_id = read_analysis_id(File.join(data_dir, 'metadata.yml'))
     analysis = Analysis.find_by(analysis_id: analysis_id)
     raise StandardError if analysis.nil?
@@ -66,6 +76,7 @@ class Evaluation < ApplicationRecord
                  file_path = Rails.root.join(
                    'tmp',
                    'files',
+                   'evaluations',
                    id.to_s,
                    Settings.evaluation.race_list_filename,
                  )
@@ -96,19 +107,19 @@ class Evaluation < ApplicationRecord
     update!(precision: precision, recall: recall, f_measure: f_measure)
   end
 
+  def output_race_ids
+    return if [DATA_SOURCE_FILE, DATA_SOURCE_TEXT].include?(data_source)
+
+    file_path = Rails.root.join('tmp', 'files', 'evaluations', id.to_s, 'data.txt')
+    File.open(file_path, 'w') do |file|
+      data.pluck(:race_id).each {|race_id| file.puts(race_id) }
+    end
+  end
+
   private
 
   def remote?
     data_source == DATA_SOURCE_REMOTE
-  end
-
-  def set_default_num_data
-    case data_source
-    when DATA_SOURCE_RANDOM
-      self.num_data ||= NUM_DATA_RANDOM_DEFAULT
-    when DATA_SOURCE_REMOTE
-      self.num_data = NUM_DATA_REMOTE
-    end
   end
 
   def sample_race_ids

@@ -22,7 +22,7 @@ describe Prediction, type: :model do
       valid_attribute = {
         model: %w[model],
         test_data: %w[test_data],
-        state: %w[processing completed error],
+        state: %w[waiting processing completed error],
       }
 
       it_behaves_like '正常な値を指定した場合のテスト', valid_attribute
@@ -30,10 +30,10 @@ describe Prediction, type: :model do
 
     describe '異常系' do
       invalid_attribute = {
-        state: ['invalid', nil],
+        state: ['invalid'],
       }
 
-      it_behaves_like '必須パラメーターがない場合のテスト', %i[model test_data state]
+      it_behaves_like '必須パラメーターがない場合のテスト', %i[model test_data]
       it_behaves_like '不正な値を指定した場合のテスト', invalid_attribute
     end
   end

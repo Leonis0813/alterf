@@ -14,7 +14,7 @@ num_training_data = int(args[2])
 ntree = int(args[3])
 
 workdir = os.path.dirname(os.path.abspath(args[0]))
-outputdir = workdir + '/../tmp/files/' + analysis_id
+outputdir = workdir + '/../tmp/files/analyses/' + analysis_id
 config = yaml.load(open(workdir + '/../config/settings.yml', 'r+'))
 
 def normalize_racewise_feature(group):

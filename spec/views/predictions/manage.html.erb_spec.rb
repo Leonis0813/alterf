@@ -4,13 +4,14 @@ require 'rails_helper'
 
 describe 'predictions/manage', type: :view do
   per_page = 1
-  default_attribute = {model: 'model', test_data: 'test_data', state: 'processing'}
+  test_data = 'https://db.netkeiba.com/race/123456'
+  default_attribute = {model: 'model', test_data: 'test_data'}
 
   shared_context '予測ジョブを作成する' do |total: per_page, update_attribute: {}, results: 0|
     before(:all) do
       attribute = default_attribute.merge(update_attribute)
       total.times do
-        prediction = Prediction.create!(attribute)
+        prediction = create(:prediction, attribute)
         (1..18).each do |i|
           prediction.results.create!(number: i, won: i <= results)
         end
@@ -117,6 +118,18 @@ describe 'predictions/manage', type: :view do
     end
   end
 
+  shared_examples 'ジョブが実行待ち状態になっていること' do
+    it do
+      rows =
+        @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
+
+      @predictions.each_with_index do |_, i|
+        test_data = rows.xpath('//td[@class="td-result"]')[i]
+        is_asserted_by { test_data.search('span').text == '実行待ち' }
+      end
+    end
+  end
+
   shared_examples 'ジョブが実行中状態になっていること' do
     it do
       rows =
@@ -210,8 +223,19 @@ describe 'predictions/manage', type: :view do
     @html ||= Nokogiri.parse(response)
   end
 
+  context '実行待ちの場合' do
+    attribute = {test_data: test_data}
+    include_context 'トランザクション作成'
+    include_context '予測ジョブを作成する', update_attribute: attribute
+    include_context 'HTML初期化'
+    it_behaves_like '画面共通テスト'
+    it_behaves_like 'ページングボタンが表示されていないこと'
+    it_behaves_like 'テストデータがリンクになっていること'
+    it_behaves_like 'ジョブが実行待ち状態になっていること'
+  end
+
   context '実行中の場合' do
-    attribute = {test_data: 'https://db.netkeiba.com/race/123456'}
+    attribute = {test_data: test_data, state: 'processing', performed_at: Time.zone.now}
     include_context 'トランザクション作成'
     include_context '予測ジョブを作成する', update_attribute: attribute
     include_context 'HTML初期化'
@@ -222,7 +246,7 @@ describe 'predictions/manage', type: :view do
   end
 
   context '完了している場合' do
-    attribute = {state: 'completed'}
+    attribute = {state: 'completed', performed_at: Time.zone.now}
 
     context '番号の数が6個の場合' do
       include_context 'トランザクション作成'
@@ -244,8 +268,9 @@ describe 'predictions/manage', type: :view do
   end
 
   context 'エラーの場合' do
+    attribute = {state: 'error', performed_at: Time.zone.now}
     include_context 'トランザクション作成'
-    include_context '予測ジョブを作成する', update_attribute: {state: 'error'}
+    include_context '予測ジョブを作成する', update_attribute: attribute
     include_context 'HTML初期化'
     it_behaves_like '画面共通テスト'
     it_behaves_like 'ページングボタンが表示されていないこと'

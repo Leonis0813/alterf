@@ -4,9 +4,14 @@ class Prediction < ApplicationRecord
   validates :model, :test_data, :state,
             presence: {message: 'absent'}
   validates :state,
-            inclusion: {in: %w[processing completed error], message: 'invalid'}
+            inclusion: {in: STATE_LIST, message: 'invalid'},
+            allow_nil: true
 
   has_many :results, as: :predictable, dependent: :destroy, inverse_of: :predictable
+
+  after_initialize if: :new_record? do |prediction|
+    prediction.state = DEFAULT_STATE
+  end
 
   def set_analysis!
     data_dir = Rails.root.join('tmp', 'files', id.to_s)

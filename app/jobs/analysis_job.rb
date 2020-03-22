@@ -3,7 +3,9 @@ class AnalysisJob < ApplicationJob
 
   def perform(analysis_id)
     analysis = Analysis.find(analysis_id)
-    output_dir = Rails.root.join('tmp', 'files', analysis_id.to_s)
+    analysis.update!(state: Analysis::STATE_PROCESSING, performed_at: Time.zone.now)
+
+    output_dir = Rails.root.join('tmp', 'files', 'analyses', analysis_id.to_s)
     FileUtils.mkdir_p(output_dir)
 
     if analysis.num_entry
@@ -27,12 +29,13 @@ class AnalysisJob < ApplicationJob
     end
 
     AnalysisMailer.completed(analysis).deliver_now
-    FileUtils.rm_rf("#{Rails.root}/tmp/files/#{analysis_id}")
-    analysis.update!(state: 'completed')
+
+    FileUtils.rm_rf(output_dir)
+    analysis.update!(state: Analysis::STATE_COMPLETED)
   rescue StandardError => e
     Rails.logger.error(e.message)
     Rails.logger.error(e.backtrace.join("\n"))
-    analysis.update!(state: 'error')
+    analysis.update!(state: Analysis::STATE_ERROR)
     AnalysisMailer.error(analysis).deliver_now
   end
 end

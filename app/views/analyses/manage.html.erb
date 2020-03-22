@@ -29,7 +29,7 @@
     <%= paginate @analyses %>
     <table class='table table-hover'>
       <thead>
-        <% headers.each do |header| %>
+        <% analysis_table_headers.each do |header| %>
           <th width='<%= header[:width] %>%'><%= header[:name] %></th>
         <% end %>
         <th class='rebuild'></th>
