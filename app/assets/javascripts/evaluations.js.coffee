@@ -31,10 +31,14 @@ $ ->
     return
 
   $('.btn-download').on 'click', ->
+    url = '/alterf/evaluations/' + $(@).attr('id') + '/download'
     $.ajax({
       type: 'GET',
-      url: '/alterf/evaluations/' + $(@).attr('id') + '/download',
-    }).fail((xhr, status, error) ->
+      url: url,
+    }).done((data) ->
+      window.href = url
+      return
+    )fail((xhr, status, error) ->
       bootbox.alert({
         title: 'エラーが発生しました',
         message: '評価データが存在しません',
