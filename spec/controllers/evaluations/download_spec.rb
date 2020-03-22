@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 describe EvaluationsController, type: :controller do
-  tmp_dir = Rails.root.join('tmp', 'files', 'evaluations')
+  tmp_dir = Rails.root.join('tmp/files/evaluations')
   file_body = '1' * 8
 
   shared_context '評価データを作成する' do

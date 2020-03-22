@@ -134,7 +134,7 @@ describe 'evaluations/manage', type: :view do
     end
   end
 
-  shared_examples 'ジョブの状態が正しいこと' do |state: nil, button_class: nil |
+  shared_examples 'ジョブの状態が正しいこと' do |state: nil, button_class: nil|
     before(:each) do
       @rows =
         @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
@@ -185,14 +185,12 @@ describe 'evaluations/manage', type: :view do
   end
 
   shared_examples 'ダウンロードボタンが表示されていないこと' do
-    before(:each) do
-      @rows ||=
-        @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
-    end
-
     it do
-      @evaluations.each_with_index do |evaluation, i|
-        cell = @rows[i].children.search('td')[6].children
+      rows =
+        @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
+
+      rows.each do |row|
+        cell = row.children.search('td')[6].children
         button = cell.search('a/button[@class="btn btn-success btn-download"]')
         is_asserted_by { button.blank? }
       end
