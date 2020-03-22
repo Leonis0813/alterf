@@ -38,7 +38,7 @@ $ ->
     }).done((data) ->
       window.href = url
       return
-    )fail((xhr, status, error) ->
+    ).fail((xhr, status, error) ->
       bootbox.alert({
         title: 'エラーが発生しました',
         message: '評価データが存在しません',
