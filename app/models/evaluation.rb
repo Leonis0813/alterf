@@ -76,6 +76,7 @@ class Evaluation < ApplicationRecord
                  file_path = Rails.root.join(
                    'tmp',
                    'files',
+                   'evaluations',
                    id.to_s,
                    Settings.evaluation.race_list_filename,
                  )
