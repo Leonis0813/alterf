@@ -10,7 +10,7 @@ describe Evaluation, type: :model do
         model: %w[model],
         data_source: %w[file random remote text],
         num_data: [20],
-        state: %w[processing completed error],
+        state: %w[waiting processing completed error],
         precision: [0, 1, nil],
         recall: [0, 1, nil],
         f_measure: [0, 1, nil],
@@ -51,7 +51,7 @@ describe Evaluation, type: :model do
         f_measure: [-0.1, 1.1],
       }
 
-      absent_keys = %i[evaluation_id model state]
+      absent_keys = %i[model]
       it_behaves_like '必須パラメーターがない場合のテスト', absent_keys
       it_behaves_like '不正な値を指定した場合のテスト', base_invalid_attribute
 

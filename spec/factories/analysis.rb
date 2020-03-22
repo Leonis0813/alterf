@@ -4,6 +4,6 @@ FactoryBot.define do
     num_data { 10000 }
     num_tree { 100 }
     num_feature { 20 }
-    state { 'processing' }
+    state { 'waiting' }
   end
 end

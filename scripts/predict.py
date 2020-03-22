@@ -7,17 +7,17 @@ import sys
 import yaml
 
 args = sys.argv
-prediction_id = args[1]
+data_dir = args[1]
 model_filename = args[2]
 test_data_filename = args[3]
 
 workdir = os.path.dirname(os.path.abspath(args[0]))
 config = yaml.load(open(workdir + '/../config/settings.yml', 'r+'))
 
-model_path = workdir + '/../tmp/files/' + prediction_id + '/' + model_filename
+model_path = data_dir + '/' + model_filename
 classifier = pickle.load(open(model_path, 'rb'))
 
-test_data_path = workdir + '/../tmp/files/' + prediction_id + '/' + test_data_filename
+test_data_path = data_dir + '/' + test_data_filename
 test_data = yaml.load(open(test_data_path, 'r+'))
 
 feature = pd.DataFrame()
@@ -58,5 +58,5 @@ result = {}
 for i in range(len(won)):
   result[i + 1] = won[i]
 
-file = open(workdir + '/../tmp/files/' + prediction_id + '/prediction.yml', 'w+')
+file = open(data_dir + '/prediction.yml', 'w+')
 file.write(yaml.dump(result))

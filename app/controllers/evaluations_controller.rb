@@ -1,4 +1,6 @@
 class EvaluationsController < ApplicationController
+  before_action :check_request_evaluation, only: %i[show download]
+
   def manage
     @evaluation = Evaluation.new
     @evaluations = Evaluation.all.order(created_at: :desc).page(params[:page])
@@ -10,18 +12,16 @@ class EvaluationsController < ApplicationController
 
     model = execute_params[:model]
     evaluation = Evaluation.new(
-      evaluation_id: SecureRandom.hex,
       model: model.original_filename,
       data_source: execute_params[:data_source],
       num_data: num_data,
-      state: 'processing',
     )
     unless evaluation.save
       error_codes = evaluation.errors.messages.keys.map {|key| "invalid_param_#{key}" }
       raise BadRequest, error_codes
     end
 
-    output_dir = Rails.root.join('tmp', 'files', evaluation.id.to_s)
+    output_dir = Rails.root.join('tmp', 'files', 'evaluations', evaluation.id.to_s)
     FileUtils.mkdir_p(output_dir)
     File.open(File.join(output_dir, model.original_filename), 'w+b') do |f|
       f.write(model.read)
@@ -39,11 +39,26 @@ class EvaluationsController < ApplicationController
   end
 
   def show
-    @evaluation = Evaluation.find_by(evaluation_id: params[:id])
-    raise NotFound unless @evaluation
+  end
+
+  def download
+    file_path =
+      Rails.root.join('tmp', 'files', 'evaluations', evaluation.id.to_s, 'data.txt')
+    raise NotFound unless File.exist?(file_path)
+
+    stat = File.stat(file_path)
+    send_file(file_path, filename: 'data.txt', length: stat.size)
   end
 
   private
+
+  def check_request_evaluation
+    raise NotFound unless evaluation
+  end
+
+  def evaluation
+    @evaluation ||= Evaluation.find_by(request.path_parameters.slice(:evaluation_id))
+  end
 
   def check_invalid_param
     model = execute_params[:model]

@@ -5,7 +5,9 @@ class EvaluationJob < ApplicationJob
 
   def perform(evaluation_id)
     evaluation = Evaluation.find(evaluation_id)
-    data_dir = Rails.root.join('tmp', 'files', evaluation_id.to_s)
+    evaluation.update!(state: Evaluation::STATE_PROCESSING, performed_at: Time.zone.now)
+
+    data_dir = Rails.root.join('tmp', 'files', 'evaluations', evaluation_id.to_s)
     unzip_model(File.join(data_dir, evaluation.model), data_dir)
 
     evaluation.set_analysis!
@@ -17,7 +19,7 @@ class EvaluationJob < ApplicationJob
         YAML.dump(feature.to_hash.deep_stringify_keys, file)
       end
 
-      args = [evaluation_id, 'model.rf', Settings.evaluation.tmp_file_name]
+      args = [data_dir, 'model.rf', Settings.evaluation.tmp_file_name]
       if evaluation.analysis.num_entry
         execute_script('predict_with_num_entry.py', args)
       else
@@ -29,12 +31,12 @@ class EvaluationJob < ApplicationJob
       FileUtils.rm(result_file)
     end
 
-    FileUtils.rm_rf(data_dir)
     evaluation.calculate!
-    evaluation.update!(state: 'completed')
+    evaluation.output_race_ids
+    evaluation.update!(state: Evaluation::STATE_COMPLETED)
   rescue StandardError => e
     Rails.logger.error(e.message)
     Rails.logger.error(e.backtrace.join("\n"))
-    evaluation.update!(state: 'error')
+    evaluation.update!(state: Evaluation::STATE_ERROR)
   end
 end
