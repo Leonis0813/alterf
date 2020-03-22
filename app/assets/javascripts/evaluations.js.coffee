@@ -36,7 +36,7 @@ $ ->
       type: 'GET',
       url: url,
     }).done((data) ->
-      window.href = url
+      location.href = url
       return
     ).fail((xhr, status, error) ->
       bootbox.alert({
