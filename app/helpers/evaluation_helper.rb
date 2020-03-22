@@ -18,6 +18,8 @@ module EvaluationHelper
       '完了'
     when 'error'
       'エラー'
+    when 'waiting'
+      '実行待ち'
     else
       if evaluation.data.empty?
         '0%完了'
