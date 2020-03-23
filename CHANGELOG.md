@@ -1,3 +1,6 @@
+# 4.12.1 (2020/03/23)
+- [UPDATE] gems
+
 # 4.12.0 (2020/03/22)
 - [UPDATE] evaluation view to download evaluation data
 - [UPDATE] gems
