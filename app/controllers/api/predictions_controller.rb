@@ -1,8 +1,8 @@
 module Api
   class PredictionsController < ApplicationController
-    def manage
+    def index
       @predictions = Prediction.all.order(created_at: :desc).page(index_params[:page])
-      render status: :ok, template: 'predictions/predictions'
+      render status: :ok
     end
 
     private
