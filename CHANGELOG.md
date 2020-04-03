@@ -1,3 +1,21 @@
+# 4.12.0 (2020/03/22)
+- [UPDATE] evaluation view to download evaluation data
+- [UPDATE] gems
+
+# 4.11.2 (2020/03/13)
+- [UPDATE] analysis script to sort features in files by race_id and number
+- [UPDATE] gems
+
+# 4.11.1 (2020/01/21)
+- [UPDATE] analysis script to output tree structure as .yml format
+- [UPDATE] gems
+- [FIX] request parameter when rebuild
+- [FIX] analysis script for no wons
+
+# 4.11.0 (2020/01/07)
+- [UPDATE] evaluation view to specify the number of data
+- [UPDATE] prediction job for fixed entry size model
+
 # 4.10.1 (2019/12/02)
 - [UPDATE] ruby version to 2.6.3
 

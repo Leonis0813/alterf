@@ -1,6 +1,6 @@
 <tr class='<%= state_to_class(prediction.state) %>'>
   <td>
-    <%= time_to_string(prediction.created_at) %>
+    <%= time_to_string(prediction.performed_at) %>
   </td>
   <td>
     <%= prediction.model %>
@@ -31,8 +31,10 @@
       <span>...</span>
     <% end %>
     </span>
-  <% else %>
+  <% elsif prediction.state == 'error' %>
     <span class='glyphicon glyphicon-remove' style='color: red'/>
+  <% else %>
+    <span class='processing'>実行待ち</span>
   <% end %>
   </td>
 </tr>

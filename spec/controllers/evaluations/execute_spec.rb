@@ -8,7 +8,7 @@ describe EvaluationsController, type: :controller do
   race_list_file_path = Rails.root.join('spec', 'fixtures', 'race_list.txt')
   data = Rack::Test::UploadedFile.new(File.open(race_list_file_path))
   default_params = {model: model, data_source: 'remote'}
-  tmp_dir = Rails.root.join('tmp', 'files')
+  tmp_dir = Rails.root.join('tmp/files/evaluations')
 
   shared_context 'リクエスト送信' do |body: default_params|
     before(:all) do
@@ -32,8 +32,12 @@ describe EvaluationsController, type: :controller do
 
     [
       {data_source: 'file', data: data},
+      {data_source: 'random', num_data: 100},
+      {data_source: 'remote'},
       {data_source: 'text', data: "test\n"},
     ].each do |data_body|
+      user_specified_data = %w[file text].include?(data_body[:data_source])
+
       context "data_sourceに#{data_body[:data_source]}を指定した場合" do
         query = {model: model.original_filename, data_source: data_body[:data_source]}
         include_context 'トランザクション作成'
@@ -41,7 +45,7 @@ describe EvaluationsController, type: :controller do
         it_behaves_like 'レスポンスが正常であること', status: 200, body: {}
         it_behaves_like 'DBにレコードが追加されていること', Evaluation, query
 
-        it '評価データがファイルに保存されていること' do
+        it '評価データがファイルに保存されていること', if: user_specified_data do
           evaluation = Evaluation.find_by(query)
           output_file_path = File.join(
             tmp_dir,
@@ -72,11 +76,11 @@ describe EvaluationsController, type: :controller do
     end
 
     [
-      {model: 'invalid'},
-      {data_source: 'invalid'},
-    ].each do |error_body|
+      [{model: 'invalid'}, %w[model]],
+      [{data_source: 'invalid'}, %w[num_data data_source]],
+    ].each do |error_body, error_keys|
       context "#{error_body.keys.join(',')}が不正な場合" do
-        errors = error_body.keys.map {|key| {'error_code' => "invalid_param_#{key}"} }
+        errors = error_keys.map {|key| {'error_code' => "invalid_param_#{key}"} }
         include_context 'リクエスト送信', body: default_params.merge(error_body)
         it_behaves_like 'レスポンスが正常であること',
                         status: 400, body: {'errors' => errors}

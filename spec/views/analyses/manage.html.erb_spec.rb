@@ -4,12 +4,12 @@ require 'rails_helper'
 
 describe 'analyses/manage', type: :view do
   per_page = 1
-  default_attribute = {num_data: 10000, num_tree: 100, state: 'processing'}
+  default_attribute = {num_data: 10000, num_tree: 100}
 
   shared_context '分析ジョブを作成する' do |total: per_page, update_attribute: {}|
     before(:all) do
       attribute = default_attribute.merge(update_attribute)
-      total.times { Analysis.create!(attribute) }
+      total.times {|i| create(:analysis, attribute.merge(analysis_id: i.to_s * 32)) }
       @analyses = Analysis.order(created_at: :desc).page(1)
     end
   end
@@ -128,9 +128,19 @@ describe 'analyses/manage', type: :view do
     @html ||= Nokogiri.parse(response)
   end
 
-  context '実行中の場合' do
+  context '実行待ちの場合' do
     include_context 'トランザクション作成'
     include_context '分析ジョブを作成する'
+    include_context 'HTML初期化'
+    it_behaves_like '画面共通テスト'
+    it_behaves_like 'ページングボタンが表示されていないこと'
+    it_behaves_like 'ジョブの状態が正しいこと', '実行待ち'
+  end
+
+  context '実行中の場合' do
+    update_attribute = {state: 'processing', performed_at: Time.zone.now}
+    include_context 'トランザクション作成'
+    include_context '分析ジョブを作成する', update_attribute: update_attribute
     include_context 'HTML初期化'
     it_behaves_like '画面共通テスト'
     it_behaves_like 'ページングボタンが表示されていないこと'
@@ -138,8 +148,9 @@ describe 'analyses/manage', type: :view do
   end
 
   context 'エントリー数が指定されている場合' do
+    update_attribute = {num_entry: 10, state: 'processing', performed_at: Time.zone.now}
     include_context 'トランザクション作成'
-    include_context '分析ジョブを作成する', update_attribute: {num_entry: 10}
+    include_context '分析ジョブを作成する', update_attribute: update_attribute
     include_context 'HTML初期化'
     it_behaves_like '画面共通テスト'
     it_behaves_like 'ページングボタンが表示されていないこと'
@@ -147,8 +158,9 @@ describe 'analyses/manage', type: :view do
   end
 
   context '完了している場合' do
+    update_attribute = {state: 'completed', performed_at: Time.zone.now}
     include_context 'トランザクション作成'
-    include_context '分析ジョブを作成する', update_attribute: {state: 'completed'}
+    include_context '分析ジョブを作成する', update_attribute: update_attribute
     include_context 'HTML初期化'
     it_behaves_like '画面共通テスト'
     it_behaves_like 'ページングボタンが表示されていないこと'
@@ -156,8 +168,9 @@ describe 'analyses/manage', type: :view do
   end
 
   context 'エラーの場合' do
+    update_attribute = {state: 'error', performed_at: Time.zone.now}
     include_context 'トランザクション作成'
-    include_context '分析ジョブを作成する', update_attribute: {state: 'error'}
+    include_context '分析ジョブを作成する', update_attribute: update_attribute
     include_context 'HTML初期化'
     it_behaves_like '画面共通テスト'
     it_behaves_like 'ページングボタンが表示されていないこと'

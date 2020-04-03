@@ -5,15 +5,15 @@ class PredictionsController < ApplicationController
   end
 
   def execute
-    attribute = params.permit(*prediction_param_keys)
-    check_absent_param(attribute, prediction_param_keys)
-    check_invalid_file_params(attribute)
+    check_absent_param(execute_params, %i[model test_data])
+    check_invalid_file_params
 
-    attribute[:model] = attribute[:model].original_filename
+    attribute = {model: execute_params[:model].original_filename}
+    attribute[:test_data] = execute_params[:test_data]
     if attribute[:test_data].respond_to?(:original_filename)
       attribute[:test_data] = attribute[:test_data].original_filename
     end
-    prediction = Prediction.new(attribute.merge(state: 'processing'))
+    prediction = Prediction.new(attribute)
     unless prediction.save
       error_codes = prediction.errors.messages.keys.map {|key| "invalid_param_#{key}" }
       raise BadRequest, error_codes
@@ -26,16 +26,19 @@ class PredictionsController < ApplicationController
 
   private
 
-  def prediction_param_keys
-    %i[model test_data]
+  def execute_params
+    @execute_params ||= request.request_parameters.slice(
+      :model,
+      :test_data,
+    )
   end
 
-  def check_invalid_file_params(attribute)
+  def check_invalid_file_params
     invalid_keys = [].tap do |keys|
-      keys << :model unless attribute[:model].respond_to?(:original_filename)
+      keys << :model unless execute_params[:model].respond_to?(:original_filename)
 
-      test_data = attribute[:test_data]
-      if test_data.is_a?(String) and not test_data.match(URI.regexp(%w[http https]))
+      test_data = execute_params[:test_data]
+      if test_data.is_a?(String) and not test_data.match?(URI.regexp(%w[http https]))
         keys << :test_data
       end
     end
@@ -47,12 +50,12 @@ class PredictionsController < ApplicationController
   end
 
   def save_files(prediction_id)
-    params.slice(*prediction_param_keys).values.each do |value|
+    execute_params.values.each do |value|
       next unless value.respond_to?(:original_filename)
 
-      output_dir = "#{Rails.root}/tmp/files/#{prediction_id}"
+      output_dir = Rails.root.join('tmp', 'files', 'predictions', prediction_id.to_s)
       FileUtils.mkdir_p(output_dir)
-      File.open("#{output_dir}/#{value.original_filename}", 'w+b') do |f|
+      File.open(File.join(output_dir, value.original_filename), 'w+b') do |f|
         f.write(value.read)
       end
     end

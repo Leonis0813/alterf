@@ -28,28 +28,6 @@ describe NetkeibaClient do
     end
   end
 
-  describe '#http_get_race_name' do
-    dirs = %w[spec fixtures lib clients netkeiba_client http_get_race].join('/')
-    expected = '第86回東京優駿(G1)'
-
-    describe '正常系' do
-      before(:all) do
-        RSpec::Mocks.with_temporary_scope do
-          client = NetkeibaClient.new
-          race = File.read(Rails.root.join(dirs, 'race.html'))
-          struct = Struct.new(:body)
-          response = struct.new(race)
-          allow(client).to receive(:get).and_return(response)
-          @response = client.http_get_race_name('dummy')
-        end
-      end
-
-      it 'レスポンスが正しいこと' do
-        is_asserted_by { @response == expected }
-      end
-    end
-  end
-
   describe '#http_get_race' do
     dirs = %w[spec fixtures lib clients netkeiba_client http_get_race].join('/')
 

@@ -3,7 +3,9 @@ class AnalysisJob < ApplicationJob
 
   def perform(analysis_id)
     analysis = Analysis.find(analysis_id)
-    output_dir = Rails.root.join('tmp', 'files', analysis_id.to_s)
+    analysis.update!(state: Analysis::STATE_PROCESSING, performed_at: Time.zone.now)
+
+    output_dir = Rails.root.join('tmp', 'files', 'analyses', analysis_id.to_s)
     FileUtils.mkdir_p(output_dir)
 
     if analysis.num_entry
@@ -14,21 +16,26 @@ class AnalysisJob < ApplicationJob
       execute_script('analyze.py', args)
     end
 
+    metadata = {}
     yaml_file = File.join(output_dir, 'metadata.yml')
     if File.exist?(yaml_file)
-      analysis_params = YAML.load_file(yaml_file)
-      analysis.update!(num_feature: analysis_params['num_feature'])
+      metadata = YAML.load_file(yaml_file)
+      analysis.update!(num_feature: metadata['num_feature'])
     end
 
-    Dir[File.join(output_dir, '*.svg')].each do |svg_file|
-      ImageUtil.convert_to_png(svg_file)
+    File.open(yaml_file, 'w') do |file|
+      metadata.merge!(analysis.slice(:analysis_id, :num_feature))
+      YAML.dump(metadata.stringify_keys, file)
     end
 
     AnalysisMailer.completed(analysis).deliver_now
-    FileUtils.rm_rf("#{Rails.root}/tmp/files/#{analysis_id}")
-    analysis.update!(state: 'completed')
-  rescue StandardError
-    analysis.update!(state: 'error')
+
+    FileUtils.rm_rf(output_dir)
+    analysis.update!(state: Analysis::STATE_COMPLETED)
+  rescue StandardError => e
+    Rails.logger.error(e.message)
+    Rails.logger.error(e.backtrace.join("\n"))
+    analysis.update!(state: Analysis::STATE_ERROR)
     AnalysisMailer.error(analysis).deliver_now
   end
 end

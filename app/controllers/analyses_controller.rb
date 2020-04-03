@@ -7,7 +7,7 @@ class AnalysesController < ApplicationController
   def execute
     check_absent_param(execute_params, %i[num_data num_tree])
 
-    analysis = Analysis.new(execute_params.merge(state: 'processing'))
+    analysis = Analysis.new(execute_params)
     unless analysis.save
       error_codes = analysis.errors.messages.keys.map {|key| "invalid_param_#{key}" }
       raise BadRequest, error_codes

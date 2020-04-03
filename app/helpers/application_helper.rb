@@ -2,7 +2,7 @@
 
 module ApplicationHelper
   def time_to_string(time)
-    time.strftime('%Y/%m/%d %T')
+    time&.strftime('%Y/%m/%d %T')
   end
 
   def state_to_class(state)
@@ -18,6 +18,8 @@ module ApplicationHelper
 
   def state_to_title(state)
     case state
+    when 'waiting'
+      '実行待ち'
     when 'processing'
       '実行中'
     when 'completed'

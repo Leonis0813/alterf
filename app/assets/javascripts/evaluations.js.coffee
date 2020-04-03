@@ -25,4 +25,25 @@ $ ->
     $('#evaluation_data_' + $(this).val()).prop('disabled', false)
     $('#evaluation_data_' + $(this).val()).removeClass('not-selected')
     return
+
+  $('.btn-result').on 'click', ->
+    window.open('/alterf/evaluations/' + $(@).attr('id'))
+    return
+
+  $('.btn-download').on 'click', ->
+    url = '/alterf/evaluations/' + $(@).attr('id') + '/download'
+    $.ajax({
+      type: 'GET',
+      url: url,
+    }).done((data) ->
+      location.href = url
+      return
+    ).fail((xhr, status, error) ->
+      bootbox.alert({
+        title: 'エラーが発生しました',
+        message: '評価データが存在しません',
+      })
+      return
+    )
+    return
   return

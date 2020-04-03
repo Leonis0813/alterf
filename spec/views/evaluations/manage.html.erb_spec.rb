@@ -4,13 +4,12 @@ require 'rails_helper'
 
 describe 'evaluations/manage', type: :view do
   per_page = 1
-  default_attribute = {evaluation_id: '0' * 32, model: 'model', state: 'processing'}
 
   shared_context '評価ジョブを作成する' do |total: per_page, update_attribute: {}|
     before(:all) do
-      attribute = default_attribute.merge(update_attribute)
-      total.times do
-        evaluation = Evaluation.create!(attribute)
+      total.times do |i|
+        attribute = {evaluation_id: i.to_s * 32}.merge(update_attribute)
+        evaluation = create(:evaluation, attribute)
         evaluation.data.create!(
           race_id: '1' * 8,
           race_name: 'race_name',
@@ -68,6 +67,7 @@ describe 'evaluations/manage', type: :view do
       %w[remote Top20],
       %w[file ファイル],
       %w[text 直接入力],
+      %w[random ランダム],
     ].each do |value, text|
       it "valueが#{value}の<option>タグがあること" do
         xpath = "#{input_xpath('evaluation')}/span/select[@id='data_source']" \
@@ -77,14 +77,20 @@ describe 'evaluations/manage', type: :view do
       end
     end
 
-    it '非表示で無効になっている<input>タグがあること' do
+    it '非表示で無効になっているファイル入力フォームがあること' do
       xpath = "#{input_xpath('evaluation')}/input[@id='evaluation_data_file']" \
               "[@class='form-control form-data-source not-selected'][@disabled]"
       is_asserted_by { @html.xpath(xpath).present? }
     end
 
-    it '非表示で無効になっている<textarea>タグがあること' do
+    it '非表示で無効になっているテキスト入力フォームがあること' do
       xpath = "#{input_xpath('evaluation')}/textarea[@id='evaluation_data_text']" \
+              "[@class='form-control form-data-source not-selected'][@disabled]"
+      is_asserted_by { @html.xpath(xpath).present? }
+    end
+
+    it '非表示で無効になっているデータ数入力フォームがあること' do
+      xpath = "#{input_xpath('evaluation')}/input[@id='evaluation_data_random']" \
               "[@class='form-control form-data-source not-selected'][@disabled]"
       is_asserted_by { @html.xpath(xpath).present? }
     end
@@ -102,8 +108,8 @@ describe 'evaluations/manage', type: :view do
       @table = @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']")
     end
 
-    it '8列のテーブルが表示されていること' do
-      is_asserted_by { @table.xpath('//thead/th').size == 8 }
+    it '7列のテーブルが表示されていること' do
+      is_asserted_by { @table.xpath('//thead/th').size == 7 }
     end
 
     %w[実行開始日時 モデル 状態 適合率 再現率 F値].each_with_index do |text, i|
@@ -117,13 +123,35 @@ describe 'evaluations/manage', type: :view do
     end
   end
 
-  shared_examples 'ジョブの状態が正しいこと' do |state|
+  shared_examples '実行開始時間が表示されていないこと' do
     it do
       rows =
         @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
 
       rows.each do |row|
-        is_asserted_by { row.xpath('//td')[2].text.strip == state }
+        is_asserted_by { row.search('td')[0].text.strip.blank? }
+      end
+    end
+  end
+
+  shared_examples 'ジョブの状態が正しいこと' do |state: nil, button_class: nil|
+    before(:each) do
+      @rows =
+        @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
+    end
+
+    it do
+      @evaluations.size.times do |i|
+        is_asserted_by { @rows[i].search('td')[2].text.strip == state }
+      end
+    end
+
+    it '詳細ボタンになっていること', unless: %w[実行待ち エラー].include?(state) do
+      @evaluations.each_with_index do |evaluation, i|
+        button_xpath = "button[@id='#{evaluation.evaluation_id}']" \
+                       "[@class='btn btn-xs btn-#{button_class} btn-result']"
+        button = @rows[i].search('td')[2].children.search(button_xpath)
+        is_asserted_by { button.present? }
       end
     end
   end
@@ -154,39 +182,37 @@ describe 'evaluations/manage', type: :view do
         is_asserted_by { precision.text.strip == evaluation.f_measure.round(3).to_s }
       end
     end
-
-    it_behaves_like '詳細ボタンが表示されていること'
   end
 
-  shared_examples '詳細ボタンが表示されていること' do |button_class = 'success'|
+  shared_examples 'ダウンロードボタンが表示されていないこと' do
+    it do
+      rows =
+        @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
+
+      rows.each do |row|
+        cell = row.children.search('td')[6].children
+        button = cell.search('a/button[@class="btn btn-success btn-download"]')
+        is_asserted_by { button.blank? }
+      end
+    end
+  end
+
+  shared_examples 'ダウンロードボタンが表示されていること' do
     before(:each) do
       @rows ||=
         @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
     end
 
-    it '矢印が表示されていること' do
-      @evaluations.each_with_index do |_, i|
-        cell = @rows[i].children.search('td')[6].children
-        is_asserted_by do
-          cell.search('span[@class="glyphicon glyphicon-arrow-right"]').present?
-        end
-      end
-    end
-
-    it '結果画面へのボタンが表示されていること' do
+    it do
       @evaluations.each_with_index do |evaluation, i|
-        cell = @rows[i].children.search('td')[7].children
-        href = "/evaluations/#{evaluation.evaluation_id}"
-        is_asserted_by { cell.search('a').attribute('href').value == href }
-
-        button = cell.search("a/button[@class='btn btn-#{button_class} btn-result']")
+        cell = @rows[i].children.search('td')[6].children
+        button_xpath = "button[@id='#{evaluation.evaluation_id}']" \
+                       '[@class="btn btn-success btn-download"]'
+        button = cell.search(button_xpath)
         is_asserted_by { button.present? }
-        is_asserted_by { button.text.strip == '詳細' }
-        is_asserted_by do
-          button.children
-                .search('span[@class="glyphicon glyphicon-new-window new-window"]')
-                .present?
-        end
+
+        icon = button.children.search('span[@class="glyphicon glyphicon-download-alt"]')
+        is_asserted_by { icon.present? }
       end
     end
   end
@@ -201,34 +227,77 @@ describe 'evaluations/manage', type: :view do
     @html ||= Nokogiri.parse(response)
   end
 
-  context '実行中の場合' do
+  context '実行待ちの場合' do
     include_context 'トランザクション作成'
     include_context '評価ジョブを作成する'
     include_context 'HTML初期化'
     it_behaves_like '画面共通テスト'
     it_behaves_like 'ページングボタンが表示されていないこと'
-    it_behaves_like 'ジョブの状態が正しいこと', '0%完了'
-    it_behaves_like '詳細ボタンが表示されていること', 'warning'
+    it_behaves_like '実行開始時間が表示されていないこと'
+    it_behaves_like 'ジョブの状態が正しいこと', state: '実行待ち'
+    it_behaves_like 'ダウンロードボタンが表示されていないこと'
+  end
+
+  context '実行中の場合' do
+    attribute = {state: 'processing', performed_at: Time.zone.now}
+    include_context 'トランザクション作成'
+    include_context '評価ジョブを作成する', update_attribute: attribute
+    include_context 'HTML初期化'
+    it_behaves_like '画面共通テスト'
+    it_behaves_like 'ページングボタンが表示されていないこと'
+    it_behaves_like 'ジョブの状態が正しいこと', state: '0%完了', button_class: 'warning'
+    it_behaves_like 'ダウンロードボタンが表示されていないこと'
   end
 
   context '完了している場合' do
-    update_attribute = {state: 'completed', precision: 0.75, recall: 0.5, f_measure: 0.6}
-    include_context 'トランザクション作成'
-    include_context '評価ジョブを作成する', update_attribute: update_attribute
-    include_context 'HTML初期化'
-    it_behaves_like '画面共通テスト'
-    it_behaves_like 'ページングボタンが表示されていないこと'
-    it_behaves_like 'ジョブの状態が正しいこと', '完了'
-    it_behaves_like '評価結果情報が表示されていること'
+    attribute = {
+      state: 'completed',
+      precision: 0.75,
+      recall: 0.5,
+      f_measure: 0.6,
+      performed_at: Time.zone.now,
+    }
+
+    %w[file text].each do |data_source|
+      context "data_sourceが#{data_source}の場合" do
+        include_context 'トランザクション作成'
+        include_context '評価ジョブを作成する',
+                        update_attribute: attribute.merge(data_source: data_source)
+        include_context 'HTML初期化'
+        it_behaves_like '画面共通テスト'
+        it_behaves_like 'ページングボタンが表示されていないこと'
+        it_behaves_like 'ジョブの状態が正しいこと',
+                        state: '完了', button_class: 'success'
+        it_behaves_like '評価結果情報が表示されていること'
+        it_behaves_like 'ダウンロードボタンが表示されていないこと'
+      end
+    end
+
+    %w[remote random].each do |data_source|
+      context "data_sourceが#{data_source}の場合" do
+        include_context 'トランザクション作成'
+        include_context '評価ジョブを作成する',
+                        update_attribute: attribute.merge(data_source: data_source)
+        include_context 'HTML初期化'
+        it_behaves_like '画面共通テスト'
+        it_behaves_like 'ページングボタンが表示されていないこと'
+        it_behaves_like 'ジョブの状態が正しいこと',
+                        state: '完了', button_class: 'success'
+        it_behaves_like '評価結果情報が表示されていること'
+        it_behaves_like 'ダウンロードボタンが表示されていること'
+      end
+    end
   end
 
   context 'エラーの場合' do
+    attribute = {state: 'error', performed_at: Time.zone.now}
     include_context 'トランザクション作成'
-    include_context '評価ジョブを作成する', update_attribute: {state: 'error'}
+    include_context '評価ジョブを作成する', update_attribute: attribute
     include_context 'HTML初期化'
     it_behaves_like '画面共通テスト'
     it_behaves_like 'ページングボタンが表示されていないこと'
-    it_behaves_like 'ジョブの状態が正しいこと', 'エラー'
+    it_behaves_like 'ジョブの状態が正しいこと', state: 'エラー'
+    it_behaves_like 'ダウンロードボタンが表示されていないこと'
   end
 
   context "評価ジョブ情報が#{per_page * (Kaminari.config.window + 2)}件の場合" do
