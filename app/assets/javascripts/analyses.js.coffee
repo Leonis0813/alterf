@@ -50,8 +50,4 @@ $ ->
       return
     )
     return
-
-  if location.pathname.match(/analyses$/)
-
-    return
   return
