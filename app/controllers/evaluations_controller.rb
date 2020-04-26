@@ -3,7 +3,8 @@ class EvaluationsController < ApplicationController
 
   def manage
     @evaluation = Evaluation.new
-    @evaluations = Evaluation.includes(data: :prediction_results).all.order(created_at: :desc).page(params[:page])
+    @evaluations = Evaluation.includes(data: :prediction_results)
+                             .all.order(created_at: :desc).page(params[:page])
   end
 
   def execute

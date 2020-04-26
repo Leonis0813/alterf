@@ -26,10 +26,6 @@ $ ->
     $('#evaluation_data_' + $(this).val()).removeClass('not-selected')
     return
 
-  $('.btn-result').on 'click', ->
-    window.open('/alterf/evaluations/' + $(@).attr('id'))
-    return
-
   $('.btn-download').on 'click', ->
     url = '/alterf/evaluations/' + $(@).attr('id') + '/download'
     $.ajax({
