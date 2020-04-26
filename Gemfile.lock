@@ -191,7 +191,7 @@ GEM
       gio2 (= 3.4.1)
     gio2 (3.4.1)
       gobject-introspection (= 3.4.1)
-    git (1.6.0)
+    git (1.7.0)
       rchardet (~> 1.8)
     gitlab (4.14.1)
       httparty (~> 0.14, >= 0.14.0)
