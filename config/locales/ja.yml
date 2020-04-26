@@ -7,3 +7,9 @@ ja:
       next: '▶'
       last: '▶▶'
       truncate: '...'
+    js:
+      state:
+        waiting: '実行待ち'
+        processing: '実行中'
+        completed: '完了'
+        error: 'エラー'
