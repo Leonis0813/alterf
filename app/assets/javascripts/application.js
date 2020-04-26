@@ -15,4 +15,6 @@
 //= require jquery.remotipart
 //= require twitter/bootstrap
 //= require bootbox
+//= require moment
+//= require moment/ja
 //= require_tree .
