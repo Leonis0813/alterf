@@ -10,13 +10,9 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require i18n
-//= require i18n/translations
 //= require jquery
 //= require jquery_ujs
 //= require jquery.remotipart
 //= require twitter/bootstrap
 //= require bootbox
-//= require moment
-//= require moment/ja
 //= require_tree .

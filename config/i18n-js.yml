@@ -1,4 +1,0 @@
-export_i18n_js: 'vendor/assets/javascripts'
-translations:
-  - file: 'app/assets/javascripts/i18n/translations.js'
-    only: '*.views'
