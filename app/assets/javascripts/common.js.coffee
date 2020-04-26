@@ -4,12 +4,12 @@ $ ->
     $(@).submit()
     return
 
-  window.stateToClass = (state) ->
-    switch state
-      when 'processing'
-        return 'warning'
-      when 'completed'
-        return 'success'
-      when 'error'
-        return 'danger'
+  setInterval(() ->
+    $.ajax({
+      type: 'GET',
+      url: location.pathname + location.search,
+      dataType: 'script',
+    })
+    return
+  , 3000)
   return

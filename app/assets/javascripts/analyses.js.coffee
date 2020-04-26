@@ -22,44 +22,6 @@ $ ->
     })
     return
 
-  updateRowColor = (analysis_id, state) ->
-    rowClasses = ['performed_at', 'num_data', 'num_tree', 'num_feature', 'num_entry', 'state']
-    $.each(rowClasses, (i, rowClass) ->
-      td = $('tr#' + analysis_id + ' > td[class*=' + rowClass + ']')
-      $.each(['danger', 'warning', 'success'], (j, colorRowClass) ->
-        td.removeClass(colorRowClass)
-        return
-      )
-      td.addClass(stateToClass(state))
-      return
-    )
-    return
-
-  updateTable = ->
-    $.ajax({
-      type: 'GET',
-      url: '/alterf/api/analyses' + location.search,
-    }).done((response) ->
-      $.each(response.analyses, (i, analysis) ->
-        updateRowColor(analysis.analysis_id, analysis.state)
-        if analysis.performed_at?
-          datum = $('tr#' + analysis.analysis_id + ' > td[class*=performed_at]')
-          date = new Date(analysis.performed_at)
-          date_string = moment.utc(date).format('YYYY/MM/DD HH:mm:ss')
-          datum.text(date_string)
-        if analysis.num_feature?
-          datum = $('tr#' + analysis.analysis_id + ' > td[class*=num_feature]')
-          datum.text(analysis.num_feature)
-        datum = $('tr#' + analysis.analysis_id + ' > td[class*=state]')
-        datum.text(I18n.t('views.js.state.' + analysis.state))
-        return
-      )
-      return
-    ).fail((xhr, status, error) ->
-      return
-    )
-    return
-
   $('#new_analysis').on 'ajax:success', (event, xhr, status, error) ->
     successDialog()
     return
@@ -90,6 +52,6 @@ $ ->
     return
 
   if location.pathname.match(/analyses$/)
-    setInterval(updateTable, 3000)
+
     return
   return
