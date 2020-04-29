@@ -58,7 +58,8 @@ class EvaluationsController < ApplicationController
   end
 
   def evaluation
-    @evaluation ||= Evaluation.find_by(request.path_parameters.slice(:evaluation_id))
+    @evaluation ||= Evaluation.includes(data: :prediction_results)
+                              .find_by(request.path_parameters.slice(:evaluation_id))
   end
 
   def check_invalid_param
