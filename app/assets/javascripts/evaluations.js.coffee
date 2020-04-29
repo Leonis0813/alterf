@@ -26,7 +26,7 @@ $ ->
     $('#evaluation_data_' + $(this).val()).removeClass('not-selected')
     return
 
-  $('table').on 'ajax:success', (event, data, status, xhr) ->
+  $('#table-evaluation').on 'ajax:success', (event, data, status, xhr) ->
     blob = new Blob([data], {type: 'text/plain'})
     blobUrl = (URL || webkitURL).createObjectURL(blob)
     filename = /filename="(.*)"/.exec(xhr.getResponseHeader('Content-Disposition'))[1]
@@ -34,7 +34,7 @@ $ ->
     (URL || webkitURL).revokeObjectURL(blobUrl)
     return
 
-  $('table').on 'ajax:error', (event, xhr, status, error) ->
+  $('#table-evaluation').on 'ajax:error', (event, xhr, status, error) ->
     bootbox.alert({
       title: 'エラーが発生しました',
       message: '評価データが存在しません',

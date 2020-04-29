@@ -27,7 +27,7 @@
     <% info = {total_count: @analyses.total_count, from: from, to: @analyses.offset_value + @analyses.size} %>
     <h4 class='pagination-info'><%= t('views.pagination.info', info) %></h4>
     <%= paginate @analyses %>
-    <table class='table table-hover'>
+    <table id='table-analysis' class='table table-hover'>
       <thead>
         <% analysis_table_headers.each do |header| %>
           <th width='<%= header[:width] %>%'><%= header[:name] %></th>
