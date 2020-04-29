@@ -30,24 +30,11 @@ $ ->
     failureDialog()
     return
 
-  $('button.rebuild').on 'click', ->
-    data = {
-      num_data: parseInt($(@).parent().siblings()[1].innerText),
-      num_tree: parseInt($(@).parent().siblings()[2].innerText),
-    }
-    num_entry = $(@).parent().siblings()[4].innerText
-    if num_entry != ''
-      data['num_entry'] = parseInt(num_entry)
-    $.ajax({
-      type: 'POST',
-      url: '/alterf/analyses',
-      data: data,
-    }).done((data) ->
-      successDialog()
-      return
-    ).fail((xhr, status, error) ->
-      failureDialog()
-      return
-    )
+  $('#table-analysis').on 'ajax:success', (event, data, status, xhr) ->
+    successDialog()
+    return
+
+  $('#table-analysis').on 'ajax:error', (event, xhr, status, error) ->
+    failureDialog()
     return
   return

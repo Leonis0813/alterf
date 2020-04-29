@@ -1,4 +1,5 @@
-# 4.12.1 (2020/04/27)
+# 4.13.0 (2020/04/29)
+- [UPDATE] views to reload job info automatically
 - [UPDATE] gems
 
 # 4.12.0 (2020/03/22)

@@ -1,8 +1,11 @@
 class Prediction < ApplicationRecord
   include ModelUtil
 
-  validates :model, :test_data, :state,
+  validates :prediction_id, :model, :test_data, :state,
             presence: {message: 'absent'}
+  validates :prediction_id,
+            format: {with: /\A[0-9a-f]{32}\z/, message: 'invalid'},
+            allow_nil: true
   validates :state,
             inclusion: {in: STATE_LIST, message: 'invalid'},
             allow_nil: true
@@ -10,6 +13,7 @@ class Prediction < ApplicationRecord
   has_many :results, as: :predictable, dependent: :destroy, inverse_of: :predictable
 
   after_initialize if: :new_record? do |prediction|
+    prediction.prediction_id = SecureRandom.hex
     prediction.state = DEFAULT_STATE
   end
 

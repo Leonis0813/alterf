@@ -81,23 +81,53 @@ describe 'analyses/manage', type: :view do
     it 'ジョブの数が正しいこと' do
       is_asserted_by { @table.xpath('//tbody/tr').size == rows }
     end
+
+    it 'ジョブ情報が正しく表示されていること' do
+      rows = @table.xpath('//tbody/tr')
+
+      @analyses.each_with_index do |analysis, i|
+        performed_at = analysis.performed_at&.strftime('%Y/%m/%d %T')
+        tds = rows[i].search('td')
+        is_asserted_by { tds[0].text.strip == performed_at.to_s }
+        is_asserted_by { tds[1].text.strip == analysis.num_data.to_s }
+        is_asserted_by { tds[2].text.strip == analysis.num_tree.to_s }
+        is_asserted_by { tds[3].text.strip == analysis.num_feature.to_s }
+        is_asserted_by { tds[4].text.strip == analysis.num_entry.to_s }
+        is_asserted_by { tds[5].text.strip == state_map[analysis.state] }
+      end
+    end
+
+    it '再実行ボタンが表示されていること' do
+      rows = @table.xpath('//tbody/tr')
+
+      @analyses.each_with_index do |analysis, i|
+        rebuild_form = rows[i].search('td')[6].search('form')
+        is_asserted_by { rebuild_form.present? }
+
+        inputs = rebuild_form.search('input')
+        analysis_id = analysis.analysis_id
+        is_asserted_by { inputs[1].attribute('id').value == "num_data-#{analysis_id}" }
+        is_asserted_by { inputs[1].attribute('value').value == analysis.num_data.to_s }
+        is_asserted_by { inputs[2].attribute('id').value == "num_tree-#{analysis_id}" }
+        is_asserted_by { inputs[2].attribute('value').value == analysis.num_tree.to_s }
+      end
+    end
   end
 
   shared_examples 'ジョブの状態が正しいこと' do |state, num_entry: 0|
-    it do
-      rows =
+    before(:each) do
+      @rows =
         @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
+    end
 
-      rows.each do |row|
+    it do
+      @rows.each do |row|
         is_asserted_by { row.search('td')[5].text.strip == state }
       end
     end
 
     it '実行中の場合はアイコンが表示されていること', if: state == '実行中' do
-      rows =
-        @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
-
-      rows.each do |row|
+      @rows.each do |row|
         td_children = row.search('td')[5].children
 
         is_asserted_by { td_children.search('span[@class="processing"]').present? }
@@ -109,11 +139,20 @@ describe 'analyses/manage', type: :view do
     end
 
     it 'エントリー数が表示されていること', if: num_entry > 0 do
-      rows =
-        @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
-
-      rows.each do |row|
+      @rows.each do |row|
         is_asserted_by { row.search('td')[4].text.strip.to_i == num_entry }
+      end
+    end
+
+    it '再実行ボタンにエントリー数が設定されていること', if: num_entry > 0 do
+      @analyses.each_with_index do |analysis, i|
+        rebuild_form = @rows[i].search('td')[6].search('form')
+        is_asserted_by { rebuild_form.present? }
+
+        inputs = rebuild_form.search('input')
+        analysis_id = analysis.analysis_id
+        is_asserted_by { inputs[3].attribute('id').value == "num_entry-#{analysis_id}" }
+        is_asserted_by { inputs[3].attribute('value').value == analysis.num_entry.to_s }
       end
     end
   end

@@ -31,7 +31,7 @@
     <% info = {total_count: @evaluations.total_count, from: from, to: to} %>
     <h4 class='pagination-info'><%= t('views.pagination.info', info) %></h4>
     <%= paginate @evaluations %>
-    <table class='table table-hover'>
+    <table id='table-evaluation' class='table table-hover'>
       <thead>
         <% evaluation_table_headers.each do |header| %>
           <th width='<%= header[:width] %>%'><%= header[:name] %></th>

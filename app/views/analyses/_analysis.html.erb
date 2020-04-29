@@ -23,8 +23,13 @@
   <% end %>
   </td>
   <td class='rebuild'>
-    <%= button_tag(type: 'button', class: 'btn btn-default rebuild') do %>
-      <span class='glyphicon glyphicon-repeat' />
+    <%= form_tag analyses_path, remote: true, style: 'padding: 0px' do %>
+      <%= hidden_field_tag :num_data, analysis.num_data, id: "num_data-#{analysis.analysis_id}" %>
+      <%= hidden_field_tag :num_tree, analysis.num_tree, id: "num_tree-#{analysis.analysis_id}" %>
+      <%= hidden_field_tag :num_entry, analysis.num_entry, id: "num_entry-#{analysis.analysis_id}" %>
+      <%= button_tag type: :submit, class: 'btn btn-default' do %>
+        <span class='glyphicon glyphicon-repeat' />
+      <% end %>
     <% end %>
   </td>
 </tr>

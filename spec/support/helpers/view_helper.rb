@@ -1,4 +1,15 @@
+# -*- coding: utf-8 -*-
+
 module ViewHelper
+  def state_map
+    {
+      'waiting' => '実行待ち',
+      'processing' => '実行中',
+      'completed' => '完了',
+      'error' => 'エラー',
+    }
+  end
+
   def row_xpath
     '//div[@id="main-content"]/div[@class="row center-block"]'
   end

@@ -19,7 +19,7 @@ describe Analysis, type: :model do
 
     describe '異常系' do
       invalid_attribute = {
-        analysis_id: ['invalid', 'g' * 32, nil],
+        analysis_id: ['invalid', 'g' * 32],
         num_data: [0],
         num_tree: [0],
         num_feature: [0],
