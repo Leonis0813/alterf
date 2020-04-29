@@ -148,8 +148,8 @@ describe 'evaluations/manage', type: :view do
 
     it '詳細ボタンになっていること', unless: %w[実行待ち エラー].include?(state) do
       @evaluations.each_with_index do |evaluation, i|
-        button_xpath = "button[@id='#{evaluation.evaluation_id}']" \
-                       "[@class='btn btn-xs btn-#{button_class} btn-result']"
+        button_xpath = "a[@href='/evaluations/#{evaluation.evaluation_id}']" \
+                       "/button[@class='btn btn-xs btn-#{button_class}']"
         button = @rows[i].search('td')[2].children.search(button_xpath)
         is_asserted_by { button.present? }
       end
@@ -189,30 +189,27 @@ describe 'evaluations/manage', type: :view do
       rows =
         @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
 
-      rows.each do |row|
-        cell = row.children.search('td')[6].children
-        button = cell.search('a/button[@class="btn btn-success btn-download"]')
-        is_asserted_by { button.blank? }
+      @evaluations.each_with_index do |evaluation, i|
+        download_button = rows[i].children.search('td')[6]
+        link_xpath = "a[@href='/evaluations/#{evaluation.evaluation_id}/download']" \
+                     '/button[@class="btn btn-success"]' \
+                     '/span[@class="glyphicon glyphicon-download-alt"]'
+        is_asserted_by { download_button.children.search(link_xpath).blank? }
       end
     end
   end
 
   shared_examples 'ダウンロードボタンが表示されていること' do
-    before(:each) do
-      @rows ||=
-        @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
-    end
-
     it do
-      @evaluations.each_with_index do |evaluation, i|
-        cell = @rows[i].children.search('td')[6].children
-        button_xpath = "button[@id='#{evaluation.evaluation_id}']" \
-                       '[@class="btn btn-success btn-download"]'
-        button = cell.search(button_xpath)
-        is_asserted_by { button.present? }
+      rows =
+        @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
 
-        icon = button.children.search('span[@class="glyphicon glyphicon-download-alt"]')
-        is_asserted_by { icon.present? }
+      @evaluations.each_with_index do |evaluation, i|
+        download_button = rows[i].children.search('td')[6]
+        link_xpath = "a[@href='/evaluations/#{evaluation.evaluation_id}/download']" \
+                     '/button[@class="btn btn-success"]' \
+                     '/span[@class="glyphicon glyphicon-download-alt"]'
+        is_asserted_by { download_button.children.search(link_xpath).present? }
       end
     end
   end
