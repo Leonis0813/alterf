@@ -11,5 +11,5 @@ $ ->
       dataType: 'script',
     })
     return
-  , 3000)
+  , 5000)
   return
