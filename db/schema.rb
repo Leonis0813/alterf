@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200315014959) do
+ActiveRecord::Schema.define(version: 20200328032518) do
 
   create_table "analyses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "analysis_id",  default: "", null: false
@@ -60,12 +60,14 @@ ActiveRecord::Schema.define(version: 20200315014959) do
   end
 
   create_table "predictions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "prediction_id"
     t.string   "model"
     t.string   "test_data"
     t.string   "state"
     t.datetime "performed_at"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["prediction_id"], name: "index_predictions_on_prediction_id", unique: true, using: :btree
   end
 
 end

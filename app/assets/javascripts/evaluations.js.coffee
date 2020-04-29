@@ -26,24 +26,18 @@ $ ->
     $('#evaluation_data_' + $(this).val()).removeClass('not-selected')
     return
 
-  $('.btn-result').on 'click', ->
-    window.open('/alterf/evaluations/' + $(@).attr('id'))
+  $('#table-evaluation').on 'ajax:success', (event, data, status, xhr) ->
+    blob = new Blob([data], {type: 'text/plain'})
+    blobUrl = (URL || webkitURL).createObjectURL(blob)
+    filename = /filename="(.*)"/.exec(xhr.getResponseHeader('Content-Disposition'))[1]
+    $('<a>', {href: blobUrl, download: filename})[0].click()
+    (URL || webkitURL).revokeObjectURL(blobUrl)
     return
 
-  $('.btn-download').on 'click', ->
-    url = '/alterf/evaluations/' + $(@).attr('id') + '/download'
-    $.ajax({
-      type: 'GET',
-      url: url,
-    }).done((data) ->
-      location.href = url
-      return
-    ).fail((xhr, status, error) ->
-      bootbox.alert({
-        title: 'エラーが発生しました',
-        message: '評価データが存在しません',
-      })
-      return
-    )
+  $('#table-evaluation').on 'ajax:error', (event, xhr, status, error) ->
+    bootbox.alert({
+      title: 'エラーが発生しました',
+      message: '評価データが存在しません',
+    })
     return
   return

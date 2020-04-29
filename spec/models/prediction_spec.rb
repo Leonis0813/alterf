@@ -20,6 +20,7 @@ describe Prediction, type: :model do
   describe '#validates' do
     describe '正常系' do
       valid_attribute = {
+        prediction_id: ['0' * 32],
         model: %w[model],
         test_data: %w[test_data],
         state: %w[waiting processing completed error],
@@ -30,6 +31,7 @@ describe Prediction, type: :model do
 
     describe '異常系' do
       invalid_attribute = {
+        prediction_id: ['invalid', 'g' * 32],
         state: ['invalid'],
       }
 
