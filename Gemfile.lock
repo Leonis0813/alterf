@@ -162,7 +162,7 @@ GEM
       dry-equalizer (~> 0.2)
       dry-initializer (~> 3.0)
       dry-schema (~> 1.5)
-    erb_lint (0.0.33)
+    erb_lint (0.0.34)
       activesupport
       better_html (~> 1.0.7)
       html_tokenizer
@@ -311,7 +311,7 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
     public_suffix (4.0.5)
-    rack (2.2.2)
+    rack (2.2.3)
     rack-protection (2.0.8.1)
       rack
     rack-test (0.6.3)
