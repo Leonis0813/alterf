@@ -9,10 +9,12 @@
   <% if %w[waiting error].include?(evaluation.state) %>
     <%= progress(evaluation) %>
   <% else %>
-    <button id='<%= evaluation.evaluation_id %>' class='btn btn-xs btn-<%= state_to_class(evaluation.state) %> btn-result' title='詳細を確認'>
-      <%= progress(evaluation) %>
-      <span class='glyphicon glyphicon-new-window'></span>
-    </button>
+    <%= link_to evaluation_path(evaluation.evaluation_id), target: :_blank, rel: 'noopener noreferrer' do %>
+      <button class='btn btn-xs btn-<%= state_to_class(evaluation.state) %>' title='詳細を確認'>
+        <%= progress(evaluation) %>
+        <span class='glyphicon glyphicon-new-window'></span>
+      </button>
+    <% end %>
   <% end %>
   </td>
   <td class='<%= state_to_class(evaluation.state) %>'>

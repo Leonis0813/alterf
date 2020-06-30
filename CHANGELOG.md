@@ -1,3 +1,7 @@
+# 4.13.0 (2020/04/29)
+- [UPDATE] views to reload job info automatically
+- [UPDATE] gems
+
 # 4.12.0 (2020/03/22)
 - [UPDATE] evaluation view to download evaluation data
 - [UPDATE] gems
