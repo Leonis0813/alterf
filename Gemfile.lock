@@ -387,7 +387,7 @@ GEM
     rsvg2 (3.4.3)
       cairo-gobject (= 3.4.3)
       gdk_pixbuf2 (= 3.4.3)
-    rubocop (0.87.0)
+    rubocop (0.87.1)
       parallel (~> 1.10)
       parser (>= 2.7.1.1)
       rainbow (>= 2.2.2, < 4.0)
