@@ -1,12 +1,12 @@
 class window.AnalysisResult
-  @WIDTH = 1200
+  @WIDTH = 1100
   @HEIGHT = 500
   @X_AXIS = {
-    ORIGIN: {x: 50, y: 25},
-    RANGE: [0, AnalysisResult.WIDTH - 75],
+    ORIGIN: {x: 200, y: 25},
+    RANGE: [0, AnalysisResult.WIDTH - 225],
   }
   @Y_AXIS = {
-    ORIGIN: {x: 50, y: 0},
+    ORIGIN: {x: 200, y: 0},
     RANGE: [25, AnalysisResult.HEIGHT - 50],
   }
 
@@ -45,9 +45,9 @@ class window.AnalysisResult
       importances.map((importance) ->
         {
           x: AnalysisResult.X_AXIS.ORIGIN.x + scale.x(0),
-          y: AnalysisResult.Y_AXIS.ORIGIN.y + scale.y(importance.feature_name) + 5,
+          y: AnalysisResult.Y_AXIS.ORIGIN.y + scale.y(importance.feature_name) + 2.5,
           width: scale.x(importance.value),
-          height: scale.y.bandwidth() - 10,
+          height: scale.y.bandwidth() - 5,
           value: importance.value,
         }
       )
