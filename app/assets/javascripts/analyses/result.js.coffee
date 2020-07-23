@@ -37,6 +37,7 @@ class window.AnalysisResult
         bars = _createBars(importances, scale)
         _importanceBar.drawBars(bars)
         _setColor('importance')
+        _setEvent('importance', scale)
       )
       return
 
@@ -47,6 +48,7 @@ class window.AnalysisResult
           y: AnalysisResult.Y_AXIS.ORIGIN.y + scale.y(importance.feature_name) + 5,
           width: scale.x(importance.value),
           height: scale.y.bandwidth() - 10,
+          value: importance.value,
         }
       )
 
@@ -55,5 +57,24 @@ class window.AnalysisResult
         .selectAll('.bar')
         .attr('fill', 'green')
         .attr('opacity', 0.3)
+      return
+
+    _setEvent = (id, scale) ->
+      d3.select("##{id}")
+        .selectAll('rect')
+        .on('mouseover', (bar) ->
+          d3.select("##{id}")
+            .append('text')
+            .text(bar.value)
+            .attr('x', bar.x + 5)
+            .attr('y', bar.y + scale.y.bandwidth() / 2)
+            .attr('class', 'value')
+          return
+        )
+        .on('mouseout', () ->
+          d3.select("##{id}")
+            .select('text.value')
+            .remove()
+        )
       return
     return
