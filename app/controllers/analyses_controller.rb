@@ -1,4 +1,6 @@
 class AnalysesController < ApplicationController
+  before_action :check_request_analysis, only: %i[show]
+
   def manage
     @analysis = Analysis.new
     @analyses = Analysis.all.order(created_at: :desc).page(params[:page])
@@ -17,7 +19,18 @@ class AnalysesController < ApplicationController
     render status: :ok, json: {}
   end
 
+  def show
+  end
+
   private
+
+  def check_request_analysis
+    raise NotFound unless request_analysis
+  end
+
+  def request_analysis
+    @request_analysis ||= Analysis.find_by(request.path_parameters.slice(:analysisid))
+  end
 
   def execute_params
     @execute_params ||= request.request_parameters.slice(
