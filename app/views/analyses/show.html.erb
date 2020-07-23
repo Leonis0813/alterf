@@ -1,0 +1,12 @@
+<h3>分析結果</h3>
+<div>
+  <h4>重要度</h4>
+  <svg id='importance'></svg>
+</div>
+
+<script>
+  $(document).ready(function() {
+    result = new AnalysisResult();
+    result.drawImportance('<%= @analysis.analysis_id %>');
+  });
+</script>

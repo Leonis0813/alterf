@@ -15,4 +15,5 @@
 //= require jquery.remotipart
 //= require twitter/bootstrap
 //= require bootbox
+//= require d3
 //= require_tree .
