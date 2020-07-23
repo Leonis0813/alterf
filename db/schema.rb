@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200719063544) do
+ActiveRecord::Schema.define(version: 20200723064309) do
 
   create_table "analyses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "analysis_id",  default: "", null: false
@@ -22,6 +22,16 @@ ActiveRecord::Schema.define(version: 20200719063544) do
     t.datetime "performed_at"
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
+  end
+
+  create_table "analysis_result_importances", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "analysis_result_id",            null: false
+    t.string   "feature_name",                  null: false
+    t.float    "value",              limit: 24, null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.index ["analysis_result_id", "feature_name"], name: "index_unique_analysis_result_id_feature_name_on_importances", unique: true, using: :btree
+    t.index ["analysis_result_id"], name: "index_analysis_result_importances_on_analysis_result_id", using: :btree
   end
 
   create_table "analysis_results", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -55,16 +65,6 @@ ActiveRecord::Schema.define(version: 20200719063544) do
     t.datetime "created_at",                                  null: false
     t.datetime "updated_at",                                  null: false
     t.index ["analysis_id"], name: "index_evaluations_on_analysis_id", using: :btree
-  end
-
-  create_table "importances", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.integer  "analysis_result_id",            null: false
-    t.string   "feature_name",                  null: false
-    t.float    "value",              limit: 24, null: false
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
-    t.index ["analysis_result_id", "feature_name"], name: "index_importances_on_analysis_result_id_and_feature_name", unique: true, using: :btree
-    t.index ["analysis_result_id"], name: "index_importances_on_analysis_result_id", using: :btree
   end
 
   create_table "prediction_results", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

@@ -17,6 +17,7 @@ class Analysis < ApplicationRecord
             inclusion: {in: STATE_LIST, message: 'invalid'},
             allow_nil: true
 
+  has_one :result, dependent: :destroy
   has_many :predictions, dependent: :destroy
   has_many :evaluations, dependent: :destroy
 
