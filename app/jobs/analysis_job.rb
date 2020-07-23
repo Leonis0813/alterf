@@ -28,6 +28,9 @@ class AnalysisJob < ApplicationJob
       YAML.dump(metadata.stringify_keys, file)
     end
 
+    metadata['importance'].each do |feature_name, value|
+      analysis.result.importances.create!(feature_name: feature_name, value: value)
+    end
     AnalysisMailer.completed(analysis).deliver_now
 
     FileUtils.rm_rf(output_dir)
