@@ -5,5 +5,6 @@ FactoryBot.define do
     num_tree { 100 }
     num_feature { 20 }
     state { 'waiting' }
+    result { build(:analysis_result) }
   end
 end
