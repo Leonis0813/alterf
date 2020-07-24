@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :analysis_result, class: 'Analysis::Result' do
-    importances { [] }
+    importances { [build(:importance)] }
   end
 end
