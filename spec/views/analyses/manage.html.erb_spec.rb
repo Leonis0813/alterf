@@ -141,7 +141,7 @@ describe 'analyses/manage', type: :view do
     it '完了の場合は結果画面へのボタンが表示されていること', if: state == '完了' do
       @rows.each do |row|
         td_children = row.search('td')[5].children
-        button_xpath = 'a/button[@class="btn btn-xs btn-success"]' +
+        button_xpath = 'a/button[@class="btn btn-xs btn-success"]' \
                        '/span[@class="glyphicon glyphicon-new-window"]'
 
         is_asserted_by { td_children.search(button_xpath).present? }

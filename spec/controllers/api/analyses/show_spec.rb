@@ -29,7 +29,7 @@ describe Api::AnalysesController, type: :controller do
         :num_feature,
         :num_entry,
         :performed_at,
-        :state
+        :state,
       ).merge(result: result).deep_stringify_keys
     end
     include_context 'リクエスト送信'
