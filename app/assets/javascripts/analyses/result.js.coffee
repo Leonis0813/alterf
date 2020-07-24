@@ -23,9 +23,12 @@ class window.AnalysisResult
           return d3.descending(x.value, y.value)
         )
 
+        d3.select('#importance')
+          .attr('height', importances.length * 14 + 50)
+
         scale = {
           x: d3.scaleLinear().range(AnalysisResult.X_AXIS.RANGE),
-          y: d3.scaleBand().rangeRound(AnalysisResult.Y_AXIS.RANGE),
+          y: d3.scaleBand().rangeRound([25, importances.length * 14 + 25]),
         }
 
         max = d3.max(importances, (importance) -> importance.value)
