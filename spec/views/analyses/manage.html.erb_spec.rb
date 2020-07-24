@@ -138,6 +138,16 @@ describe 'analyses/manage', type: :view do
       end
     end
 
+    it '完了の場合は結果画面へのボタンが表示されていること', if: state == '完了' do
+      @rows.each do |row|
+        td_children = row.search('td')[5].children
+        button_xpath = 'a/button[@class="btn btn-xs btn-success"]' +
+                       '/span[@class="glyphicon glyphicon-new-window"]'
+
+        is_asserted_by { td_children.search(button_xpath).present? }
+      end
+    end
+
     it 'エントリー数が表示されていること', if: num_entry > 0 do
       @rows.each do |row|
         is_asserted_by { row.search('td')[4].text.strip.to_i == num_entry }
