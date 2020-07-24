@@ -1,3 +1,7 @@
+# 4.14.0 (2020/07/24)
+- [UPDATE] analyses view to confirm result
+- [UPDATE] gems
+
 # 4.13.0 (2020/04/29)
 - [UPDATE] views to reload job info automatically
 - [UPDATE] gems

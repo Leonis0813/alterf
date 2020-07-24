@@ -11,7 +11,7 @@ describe AnalysesController, type: :controller do
         allow(AnalysisJob).to receive(:perform_later).and_return(true)
         response = client.post('/analyses', body)
         @response_status = response.status
-        @response_body = JSON.parse(response.body) rescue nil
+        @response_body = JSON.parse(response.body) rescue response.body
       end
     end
   end
@@ -21,8 +21,17 @@ describe AnalysesController, type: :controller do
       context "body: #{body}の場合" do
         include_context 'トランザクション作成'
         include_context 'リクエスト送信', body: body
+        before(:all) { @analysis = Analysis.find_by(body.merge(state: 'waiting')) }
+
         it_behaves_like 'レスポンスが正常であること', status: 200, body: {}
-        it_behaves_like 'DBにレコードが追加されていること', Analysis, body
+
+        it 'DBに分析ジョブが登録されていること' do
+          is_asserted_by { @analysis.present? }
+        end
+
+        it 'DBに分析結果が登録されていること' do
+          is_asserted_by { @analysis.result.present? }
+        end
       end
     end
   end

@@ -1,4 +1,6 @@
 class AnalysesController < ApplicationController
+  before_action :check_request_analysis, only: %i[show]
+
   def manage
     @analysis = Analysis.new
     @analyses = Analysis.all.order(created_at: :desc).page(params[:page])
@@ -8,6 +10,7 @@ class AnalysesController < ApplicationController
     check_absent_param(execute_params, %i[num_data num_tree])
 
     analysis = Analysis.new(execute_params)
+    analysis.build_result
     unless analysis.save
       error_codes = analysis.errors.messages.keys.map {|key| "invalid_param_#{key}" }
       raise BadRequest, error_codes
@@ -17,7 +20,19 @@ class AnalysesController < ApplicationController
     render status: :ok, json: {}
   end
 
+  def show
+    @analysis = request_analysis
+  end
+
   private
+
+  def check_request_analysis
+    raise NotFound unless request_analysis
+  end
+
+  def request_analysis
+    @request_analysis ||= Analysis.find_by(request.path_parameters.slice(:analysis_id))
+  end
 
   def execute_params
     @execute_params ||= request.request_parameters.slice(
