@@ -1,3 +1,6 @@
+# 4.14.1 (2020/07/28)
+- [UPDATE] gems
+
 # 4.14.0 (2020/07/24)
 - [UPDATE] analyses view to confirm result
 - [UPDATE] gems
