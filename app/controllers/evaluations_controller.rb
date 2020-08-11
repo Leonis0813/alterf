@@ -8,7 +8,7 @@ class EvaluationsController < ApplicationController
   end
 
   def execute
-    check_absent_param(execute_params, %i[model data_source])
+    check_schema(execute_schema, execute_params, resource: 'evaluation')
     check_invalid_param
 
     model = execute_params[:model]
@@ -18,8 +18,7 @@ class EvaluationsController < ApplicationController
       num_data: num_data,
     )
     unless evaluation.save
-      error_codes = evaluation.errors.messages.keys.map {|key| "invalid_param_#{key}" }
-      raise BadRequest, error_codes
+      raise BadRequest, messages: evaluation.errors.messages, resource: 'evaluation'
     end
 
     output_dir = Rails.root.join('tmp', 'files', 'evaluations', evaluation.id.to_s)
@@ -63,13 +62,15 @@ class EvaluationsController < ApplicationController
   end
 
   def check_invalid_param
-    model = execute_params[:model]
-    raise BadRequest, 'invalid_param_model' unless model.respond_to?(:original_filename)
+    unless execute_params[:model].respond_to?(:original_filename)
+      raise BadRequest, messages: {model: %w[invalid_parameter]}, resource: 'evaluation'
+    end
 
     return unless user_specified_data?
 
-    raise BadRequest, 'invalid_param_data' if race_ids.empty?
-    raise BadRequest, 'invalid_param_data' if race_ids.any?(&:empty?)
+    if race_ids.empty? or race_ids.any?(&:empty?)
+      raise BadRequest, messages: {data: %w[invalid_param_data]}, resource: 'evaluation'
+    end
   end
 
   def user_specified_data?
@@ -104,5 +105,16 @@ class EvaluationsController < ApplicationController
       :num_data,
       :data,
     )
+  end
+
+  def execute_schema
+    @execute_schema ||= {
+      type: :object,
+      required: %i[model data_source],
+      properties: {
+        data_source: {type: :string, enum: Evaluation::DATA_SOURCE_LIST},
+        num_data: {type: :string, pattern: '^[1-9][0-9]*$'},
+      },
+    }
   end
 end

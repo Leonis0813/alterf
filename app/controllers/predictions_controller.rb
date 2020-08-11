@@ -5,7 +5,7 @@ class PredictionsController < ApplicationController
   end
 
   def execute
-    check_absent_param(execute_params, %i[model test_data])
+    check_schema(execute_schema, execute_params, resource: 'prediction')
     check_invalid_file_params
 
     attribute = {model: execute_params[:model].original_filename}
@@ -15,8 +15,7 @@ class PredictionsController < ApplicationController
     end
     prediction = Prediction.new(attribute)
     unless prediction.save
-      error_codes = prediction.errors.messages.keys.map {|key| "invalid_param_#{key}" }
-      raise BadRequest, error_codes
+      raise BadRequest, messages: prediction.errors.messages, resource: 'prediction'
     end
 
     save_files(prediction.id)
@@ -33,6 +32,13 @@ class PredictionsController < ApplicationController
     )
   end
 
+  def execute_schema
+    @execute_schema ||= {
+      type: :object,
+      required: %i[model test_data],
+    }
+  end
+
   def check_invalid_file_params
     invalid_keys = [].tap do |keys|
       keys << :model unless execute_params[:model].respond_to?(:original_filename)
@@ -45,8 +51,8 @@ class PredictionsController < ApplicationController
 
     return if invalid_keys.empty?
 
-    error_codes = invalid_keys.map {|key| "invalid_param_#{key}" }
-    raise BadRequest, error_codes
+    messages = invalid_keys.map {|key| [key, %w[invalid_parameter] }.to_h
+    raise BadRequest, messages: messages, resource: 'prediction'
   end
 
   def save_files(prediction_id)
