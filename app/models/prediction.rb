@@ -1,7 +1,7 @@
 class Prediction < ApplicationRecord
   include ModelUtil
 
-  validates :prediction_id, :model, :test_data, :state,
+  validates :prediction_id, :state,
             presence: {message: 'absent'}
   validates :prediction_id,
             format: {with: /\A[0-9a-f]{32}\z/, message: 'invalid'},

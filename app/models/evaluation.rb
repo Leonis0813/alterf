@@ -15,13 +15,10 @@ class Evaluation < ApplicationRecord
   NUM_DATA_RANDOM_DEFAULT = 100
   NUM_DATA_REMOTE = 20
 
-  validates :evaluation_id, :model, :data_source, :num_data, :state,
+  validates :evaluation_id, :state,
             presence: {message: 'absent'}
   validates :evaluation_id,
             format: {with: /\A[0-9a-f]{32}\z/, message: 'invalid'},
-            allow_nil: true
-  validates :data_source,
-            inclusion: {in: DATA_SOURCE_LIST, message: 'invalid'},
             allow_nil: true
   validates :num_data,
             numericality: {only_interger: true, greater_than: 0, message: 'invalid'},
