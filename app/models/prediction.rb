@@ -4,10 +4,10 @@ class Prediction < ApplicationRecord
   validates :prediction_id, :state,
             presence: {message: 'absent'}
   validates :prediction_id,
-            format: {with: /\A[0-9a-f]{32}\z/, message: 'invalid'},
+            format: {with: /\A[0-9a-f]{32}\z/, message: MESSAGE_INVALID},
             allow_nil: true
   validates :state,
-            inclusion: {in: STATE_LIST, message: 'invalid'},
+            inclusion: {in: STATE_LIST, message: MESSAGE_INVALID},
             allow_nil: true
 
   has_many :results, as: :predictable, dependent: :destroy, inverse_of: :predictable

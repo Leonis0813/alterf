@@ -7,29 +7,38 @@ describe Analysis, type: :model do
     describe '正常系' do
       valid_attribute = {
         analysis_id: ['0' * 32],
-        num_data: [1],
-        num_tree: [1],
         num_feature: [1, nil],
-        num_entry: [1, nil],
         state: %w[waiting processing completed error],
       }
 
-      it_behaves_like '正常な値を指定した場合のテスト', valid_attribute
+      CommonHelper.generate_test_case(valid_attribute).each do |attribute|
+        context "#{attribute}を指定した場合" do
+          before(:all) { @object = build(:analysis, attribute) }
+
+          it_behaves_like 'バリデーションエラーにならないこと'
+        end
+      end
     end
 
     describe '異常系' do
       invalid_attribute = {
         analysis_id: ['invalid', 'g' * 32],
-        num_data: [0],
-        num_tree: [0],
         num_feature: [0],
-        num_entry: [0],
         state: %w[invalid],
       }
-      absent_keys = %i[num_data num_tree]
 
-      it_behaves_like '必須パラメーターがない場合のテスト', absent_keys
-      it_behaves_like '不正な値を指定した場合のテスト', invalid_attribute
+      CommonHelper.generate_test_case(invalid_attribute).each do |attribute|
+        context "#{attribute.keys.join(',')}が不正な場合" do
+          expected_error = attribute.keys.map {|key| [key, 'invalid_parameter'] }.to_h
+
+          before(:all) do
+            @object = build(:analysis, attribute)
+            @object.validate
+          end
+
+          it_behaves_like 'エラーメッセージが正しいこと', expected_error
+        end
+      end
     end
   end
 end

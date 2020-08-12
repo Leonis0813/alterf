@@ -10,17 +10,44 @@ describe Prediction::Result, type: :model do
         won: [true, false],
       }
 
-      it_behaves_like '正常な値を指定した場合のテスト', valid_attribute
+      CommonHelper.generate_test_case(valid_attribute).each do |attribute|
+        context "#{attribute}を指定した場合" do
+          before(:all) { @object = build(:result, attribute) }
+
+          it_behaves_like 'バリデーションエラーにならないこと'
+        end
+      end
     end
 
     describe '異常系' do
+      context 'numberが指定されていない場合' do
+        expected_error = {number: 'absent_parameter'}
+
+        before(:all) do
+          @object = build(:result, number: nil)
+          @object.validate
+        end
+
+        it_behaves_like 'エラーメッセージが正しいこと', expected_error
+      end
+
       invalid_attribute = {
         number: [0],
         won: [nil],
       }
 
-      it_behaves_like '必須パラメーターがない場合のテスト', %i[number]
-      it_behaves_like '不正な値を指定した場合のテスト', invalid_attribute
+      CommonHelper.generate_test_case(invalid_attribute).each do |attribute|
+        context "#{attribute.keys.join(',')}が不正な場合" do
+          expected_error = attribute.keys.map {|key| [key, 'invalid_parameter'] }.to_h
+
+          before(:all) do
+            @object = build(:result, attribute)
+            @object.validate
+          end
+
+          it_behaves_like 'エラーメッセージが正しいこと', expected_error
+        end
+      end
     end
   end
 end

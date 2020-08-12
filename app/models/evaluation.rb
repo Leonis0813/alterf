@@ -16,26 +16,30 @@ class Evaluation < ApplicationRecord
   NUM_DATA_REMOTE = 20
 
   validates :evaluation_id, :state,
-            presence: {message: 'absent'}
+            presence: {message: MESSAGE_ABSENT}
   validates :evaluation_id,
-            format: {with: /\A[0-9a-f]{32}\z/, message: 'invalid'},
+            format: {with: /\A[0-9a-f]{32}\z/, message: MESSAGE_INVALID},
             allow_nil: true
   validates :num_data,
-            numericality: {only_interger: true, greater_than: 0, message: 'invalid'},
+            numericality: {
+              only_interger: true,
+              greater_than: 0,
+              message: MESSAGE_INVALID,
+            },
             allow_nil: true,
             unless: :remote?
   validates :num_data,
-            numericality: {equal_to: NUM_DATA_REMOTE, message: 'invalid'},
+            numericality: {equal_to: NUM_DATA_REMOTE, message: MESSAGE_INVALID},
             allow_nil: true,
             if: :remote?
   validates :state,
-            inclusion: {in: STATE_LIST, message: 'invalid'},
+            inclusion: {in: STATE_LIST, message: MESSAGE_INVALID},
             allow_nil: true
   validates :precision, :recall, :f_measure,
             numericality: {
               greater_than_or_equal_to: 0,
               less_than_or_equal_to: 1,
-              message: 'invalid',
+              message: MESSAGE_INVALID,
             },
             allow_nil: true
 
