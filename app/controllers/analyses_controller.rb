@@ -7,7 +7,7 @@ class AnalysesController < ApplicationController
   end
 
   def execute
-    check_schema(execute_schema, execute_params, resource: 'payment')
+    check_schema(execute_schema, execute_params, 'payment')
 
     analysis = Analysis.new(execute_params)
     analysis.build_result

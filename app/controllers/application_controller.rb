@@ -13,7 +13,7 @@ class ApplicationController < ActionController::Base
     head :not_found
   end
 
-  def check_schema(schema, request_parameter, resource: nil)
+  def check_schema(schema, request_parameter, resource)
     errors = JSON::Validator.fully_validate(
       schema,
       request_parameter,
@@ -22,21 +22,7 @@ class ApplicationController < ActionController::Base
     return if errors.empty?
 
     messages = errors.map do |error|
-      parameter = case error[:failed_attribute]
-                  when 'Required'
-                    error[:message].scan(/required property of '(.*)'/).first.first
-                  else
-                    error[:fragment].split('/').second
-                  end
-
-      error_code = case error[:failed_attribute]
-                   when 'Required'
-                     ApplicationValidator::ERROR_MESSAGE[:absent]
-                   else
-                     ApplicationValidator::ERROR_MESSAGE[:invalid]
-                   end
-
-      [parameter, [error_code]]
+      [error[:fragment].split('/').second, %w[invalid_parameter]]
     end.to_h
 
     raise BadRequest, messages: messages, resource: resource

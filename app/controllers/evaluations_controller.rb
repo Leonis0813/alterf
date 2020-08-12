@@ -8,7 +8,7 @@ class EvaluationsController < ApplicationController
   end
 
   def execute
-    check_schema(execute_schema, execute_params, resource: 'evaluation')
+    check_schema(execute_schema, execute_params, 'evaluation')
     check_invalid_param
 
     model = execute_params[:model]

@@ -5,7 +5,7 @@ class PredictionsController < ApplicationController
   end
 
   def execute
-    check_schema(execute_schema, execute_params, resource: 'prediction')
+    check_schema(execute_schema, execute_params, 'prediction')
     check_invalid_file_params
 
     attribute = {model: execute_params[:model].original_filename}
