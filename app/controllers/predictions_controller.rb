@@ -29,13 +29,17 @@ class PredictionsController < ApplicationController
     @execute_params ||= request.request_parameters.slice(
       :model,
       :test_data,
+      :type,
     )
   end
 
   def execute_schema
     @execute_schema ||= {
       type: :object,
-      required: %i[model test_data],
+      required: %i[model test_data type],
+      properties: {
+        type: {type: :string, enum: %w[file url]},
+      },
     }
   end
 
@@ -50,8 +54,8 @@ class PredictionsController < ApplicationController
     end
 
     return if invalid_keys.empty?
-
-    messages = invalid_keys.map {|key| [key, %w[invalid_parameter] }.to_h
+    logger.info(invalid_keys)
+    messages = invalid_keys.map {|key| [key, %w[invalid_parameter]] }.to_h
     raise BadRequest, messages: messages, resource: 'prediction'
   end
 

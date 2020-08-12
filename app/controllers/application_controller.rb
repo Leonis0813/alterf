@@ -22,7 +22,21 @@ class ApplicationController < ActionController::Base
     return if errors.empty?
 
     messages = errors.map do |error|
-      [error[:fragment].split('/').second, %w[invalid_parameter]]
+      parameter = case error[:failed_attribute]
+                  when 'Required'
+                    error[:message].scan(/required property of '(.*)'/).first.first
+                  else
+                    error[:fragment].split('/').second
+                  end
+
+      error_code = case error[:failed_attribute]
+                   when 'Required'
+                     'absent_parameter'
+                   else
+                     'invalid_parameter'
+                   end
+
+      [parameter, [error_code]]
     end.to_h
 
     raise BadRequest, messages: messages, resource: resource

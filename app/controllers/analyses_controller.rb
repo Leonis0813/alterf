@@ -7,7 +7,7 @@ class AnalysesController < ApplicationController
   end
 
   def execute
-    check_schema(execute_schema, execute_params, 'payment')
+    check_schema(execute_schema, execute_params, 'analysis')
 
     analysis = Analysis.new(execute_params)
     analysis.build_result
@@ -48,7 +48,7 @@ class AnalysesController < ApplicationController
       properties: {
         num_data: {type: :string, pattern: '^[1-9][0-9]*$'},
         num_tree: {type: :string, pattern: '^[1-9][0-9]*$'},
-        num_entry: {type: :string, pattern: '^[1-9][0-9]*$'},
+        num_entry: {type: :string, pattern: '^([1-9][0-9]*|\s*)$'},
       },
     }
   end
