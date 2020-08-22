@@ -13,12 +13,33 @@ class ApplicationController < ActionController::Base
     head :not_found
   end
 
-  def check_absent_param(request_param, required_param_keys)
-    absent_keys = required_param_keys - request_param.keys.map(&:to_sym)
-    return if absent_keys.empty?
+  def check_schema(schema, request_parameter, resource)
+    errors = JSON::Validator.fully_validate(
+      schema,
+      request_parameter,
+      errors_as_objects: true,
+    )
+    return if errors.empty?
 
-    error_codes = absent_keys.map {|key| "absent_param_#{key}" }
-    raise BadRequest, error_codes
+    messages = errors.map do |error|
+      parameter = case error[:failed_attribute]
+                  when 'Required'
+                    error[:message].scan(/required property of '(.*)'/).first.first
+                  else
+                    error[:fragment].split('/').second
+                  end
+
+      error_code = case error[:failed_attribute]
+                   when 'Required'
+                     'absent_parameter'
+                   else
+                     'invalid_parameter'
+                   end
+
+      [parameter, [error_code]]
+    end.to_h
+
+    raise BadRequest, messages: messages, resource: resource
   end
 
   def remove_old_files

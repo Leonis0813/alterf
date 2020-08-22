@@ -7,13 +7,12 @@ class AnalysesController < ApplicationController
   end
 
   def execute
-    check_absent_param(execute_params, %i[num_data num_tree])
+    check_schema(execute_schema, execute_params, 'analysis')
 
     analysis = Analysis.new(execute_params)
     analysis.build_result
     unless analysis.save
-      error_codes = analysis.errors.messages.keys.map {|key| "invalid_param_#{key}" }
-      raise BadRequest, error_codes
+      raise BadRequest, messages: analysis.errors.messages, resource: 'analysis'
     end
 
     AnalysisJob.perform_later(analysis.id)
@@ -40,5 +39,17 @@ class AnalysesController < ApplicationController
       :num_tree,
       :num_entry,
     )
+  end
+
+  def execute_schema
+    @execute_schema ||= {
+      type: :object,
+      required: %i[num_data num_tree],
+      properties: {
+        num_data: {type: :string, pattern: '^[1-9][0-9]*$'},
+        num_tree: {type: :string, pattern: '^[1-9][0-9]*$'},
+        num_entry: {type: :string, pattern: '^([1-9][0-9]*|\s*)$'},
+      },
+    }
   end
 end

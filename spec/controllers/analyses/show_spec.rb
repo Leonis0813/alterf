@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe AnalysesController, type: :controller do
   shared_context 'リクエスト送信' do
-    before(:all) do
+    before do
       response = client.get("/analyses/#{@analysis_id}")
       @response_status = response.status
     end
@@ -12,7 +12,7 @@ describe AnalysesController, type: :controller do
 
   describe '正常系' do
     include_context 'トランザクション作成'
-    before(:all) { @analysis_id = create(:analysis).analysis_id }
+    before { @analysis_id = create(:analysis).analysis_id }
     include_context 'リクエスト送信'
 
     it 'ステータスコードが正しいこと' do

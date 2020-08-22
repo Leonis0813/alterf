@@ -5,11 +5,11 @@
       <%= form_for @analysis, url: analyses_path, remote: true do |f| %>
         <div class='form-group'>
           <%= f.label :num_data, '学習データ数', class: 'required' %><br>
-          <%= f.text_field :num_data, class: 'form-control', name: :num_data, required: true %>
+          <%= f.text_field :num_data, class: 'form-control', name: :num_data %>
         </div>
         <div class='form-group'>
           <%= f.label :num_tree, '決定木の数', class: 'required' %><br>
-          <%= f.text_field :num_tree, class: 'form-control', name: :num_tree, required: true %>
+          <%= f.text_field :num_tree, class: 'form-control', name: :num_tree %>
         </div>
         <div class='form-group'>
           <%= f.label :num_entry, 'エントリー数' %><br>

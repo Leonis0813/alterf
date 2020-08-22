@@ -10,23 +10,21 @@ describe PredictionsController, type: :controller do
     file: Rack::Test::UploadedFile.new(File.open(test_data_file_path)),
     url: 'http://example.com',
   }
-  default_params = {model: model, test_data: test_data[:file]}
+  default_params = {model: model, test_data: test_data[:file], type: 'file'}
 
   shared_context 'リクエスト送信' do |body: {}|
-    before(:all) do
-      RSpec::Mocks.with_temporary_scope do
-        allow(PredictionJob).to receive(:perform_later).and_return(true)
-        response = client.post('/predictions', body)
-        @response_status = response.status
-        @response_body = JSON.parse(response.body) rescue nil
-      end
+    before do
+      allow(PredictionJob).to receive(:perform_later).and_return(true)
+      response = client.post('/predictions', body)
+      @response_status = response.status
+      @response_body = JSON.parse(response.body) rescue nil
     end
   end
 
   describe '正常系' do
     %i[file url].each do |type|
       context "テストデータの種類が#{type}の場合" do
-        body = default_params.merge(test_data: test_data[type])
+        body = default_params.merge(test_data: test_data[type], type: type.to_s)
         include_context 'トランザクション作成'
         include_context 'リクエスト送信', body: body
         it_behaves_like 'レスポンスが正常であること', status: 200, body: {}
@@ -37,32 +35,92 @@ describe PredictionsController, type: :controller do
   end
 
   describe '異常系' do
-    test_cases = [].tap do |tests|
-      (default_params.keys.size - 1).times do |i|
-        tests << default_params.keys.combination(i + 1).to_a
-      end
-    end.flatten(1)
+    required_keys = default_params.keys
 
-    test_cases.each do |error_keys|
-      context "#{error_keys.join(',')}がない場合" do
-        selected_keys = default_params.keys - error_keys
-        errors = error_keys.map {|key| {'error_code' => "absent_param_#{key}"} }
+    CommonHelper.generate_combinations(required_keys).each do |absent_keys|
+      context "#{absent_keys.join(',')}がない場合" do
+        selected_keys = required_keys - absent_keys
+        errors = absent_keys.map do |key|
+          {
+            'error_code' => 'absent_parameter',
+            'parameter' => key.to_s,
+            'resource' => 'prediction',
+          }
+        end
+        errors.sort_by! {|error| [error['error_code'], error['parameter']] }
+
         include_context 'リクエスト送信', body: default_params.slice(*selected_keys)
         it_behaves_like 'レスポンスが正常であること',
                         status: 400, body: {'errors' => errors}
         it_behaves_like 'DBにレコードが追加されていないこと',
                         Prediction, model: model.original_filename
       end
+    end
 
-      context "#{error_keys.join(',')}が不正な場合" do
-        invalid_params = error_keys.map {|key| [key, 'invalid'] }.to_h
-        errors = error_keys.map {|key| {'error_code' => "invalid_param_#{key}"} }
-        include_context 'リクエスト送信', body: default_params.merge(invalid_params)
+    invalid_attribute = {
+      type: ['invalid', %w[file], {type: 'file'}, nil],
+    }
+
+    CommonHelper.generate_test_case(invalid_attribute).each do |invalid_param|
+      context "#{invalid_param.keys.join(',')}が不正な場合" do
+        errors = invalid_param.keys.map do |key|
+          {
+            'error_code' => 'invalid_parameter',
+            'parameter' => key.to_s,
+            'resource' => 'prediction',
+          }
+        end
+        errors.sort_by! {|error| [error['error_code'], error['parameter']] }
+
+        include_context 'リクエスト送信', body: default_params.merge(invalid_param)
         it_behaves_like 'レスポンスが正常であること',
                         status: 400, body: {'errors' => errors}
         it_behaves_like 'DBにレコードが追加されていないこと',
                         Prediction, model: model.original_filename
       end
+    end
+
+    [
+      [{model: 'invalid', type: 'file'}, %i[model]],
+      [{model: 'invalid', type: 'url', test_data: test_data[:url]}, %i[model]],
+      [{type: 'file', test_data: 'invalid'}, %i[test_data]],
+      [{type: 'url', test_data: 'invalid'}, %i[test_data]],
+      [{type: 'url', test_data: test_data[:file]}, %i[test_data]],
+      [{model: 'invalid', type: 'file', test_data: 'invalid'}, %i[model test_data]],
+    ].each do |param, invalid_keys|
+      context "#{invalid_keys.join(',')}が不正な場合" do
+        errors = invalid_keys.map do |key|
+          {
+            'error_code' => 'invalid_parameter',
+            'parameter' => key.to_s,
+            'resource' => 'prediction',
+          }
+        end
+        errors.sort_by! {|error| [error['error_code'], error['parameter']] }
+
+        include_context 'リクエスト送信', body: default_params.merge(param)
+        it_behaves_like 'レスポンスが正常であること',
+                        status: 400, body: {'errors' => errors}
+      end
+    end
+
+    context '複合エラーの場合' do
+      errors = [
+        {
+          'error_code' => 'absent_parameter',
+          'parameter' => 'model',
+          'resource' => 'prediction',
+        },
+        {
+          'error_code' => 'invalid_parameter',
+          'parameter' => 'type',
+          'resource' => 'prediction',
+        },
+      ]
+
+      include_context 'リクエスト送信', body: {type: 'invalid', test_data: 'test_data'}
+      it_behaves_like 'レスポンスが正常であること',
+                      status: 400, body: {'errors' => errors}
     end
   end
 end

@@ -7,8 +7,6 @@ describe Evaluation, type: :model do
     describe '正常系' do
       valid_attribute = {
         evaluation_id: ['0' * 32],
-        model: %w[model],
-        data_source: %w[file random remote text],
         num_data: [20],
         state: %w[waiting processing completed error],
         precision: [0, 1, nil],
@@ -16,7 +14,13 @@ describe Evaluation, type: :model do
         f_measure: [0, 1, nil],
       }
 
-      it_behaves_like '正常な値を指定した場合のテスト', valid_attribute
+      CommonHelper.generate_test_case(valid_attribute).each do |attribute|
+        context "#{attribute}を指定した場合" do
+          before(:all) { @object = build(:evaluation, attribute) }
+
+          it_behaves_like 'バリデーションエラーにならないこと'
+        end
+      end
 
       [
         [{data_source: 'random', num_data: nil}, 100],
@@ -25,25 +29,21 @@ describe Evaluation, type: :model do
       ].each do |attribute, expected_num_data|
         context "#{attribute}を指定した場合" do
           before(:all) do
-            @evaluation = Evaluation.new(build(:evaluation).attributes.merge(attribute))
-            @evaluation.validate
+            @object = Evaluation.new(build(:evaluation).attributes.merge(attribute))
           end
 
-          it 'エラーにならないこと' do
-            is_asserted_by { @evaluation.errors.empty? }
-          end
+          it_behaves_like 'バリデーションエラーにならないこと'
 
           it "num_dataに#{expected_num_data}が設定されていること" do
-            is_asserted_by { @evaluation.num_data == expected_num_data }
+            is_asserted_by { @object.num_data == expected_num_data }
           end
         end
       end
     end
 
     describe '異常系' do
-      base_invalid_attribute = {
+      invalid_attribute = {
         evaluation_id: ['invalid', 'g' * 32],
-        data_source: %w[invalid],
         num_data: [0],
         state: ['invalid'],
         precision: [-0.1, 1.1],
@@ -51,23 +51,28 @@ describe Evaluation, type: :model do
         f_measure: [-0.1, 1.1],
       }
 
-      absent_keys = %i[model]
-      it_behaves_like '必須パラメーターがない場合のテスト', absent_keys
-      it_behaves_like '不正な値を指定した場合のテスト', base_invalid_attribute
+      CommonHelper.generate_test_case(invalid_attribute).each do |attribute|
+        context "#{attribute.keys.join(',')}が不正な場合" do
+          expected_error = attribute.keys.map {|key| [key, 'invalid_parameter'] }.to_h
+
+          before(:all) do
+            @object = build(:evaluation, attribute)
+            @object.validate
+          end
+
+          it_behaves_like 'エラーメッセージが正しいこと', expected_error
+        end
+      end
 
       [19, 21].each do |num_data|
         context "data_sourceがrandomの時に#{num_data}を指定した場合" do
+          expected_error = {num_data: 'invalid_parameter'}
           before(:all) do
-            @evaluation = build(:evaluation, num_data: num_data)
-            @evaluation.validate
+            @object = build(:evaluation, num_data: num_data)
+            @object.validate
           end
 
-          it 'invalidエラーになること' do
-            is_asserted_by { @evaluation.errors.present? }
-            is_asserted_by do
-              @evaluation.errors.messages[:num_data].include?('invalid')
-            end
-          end
+          it_behaves_like 'エラーメッセージが正しいこと', expected_error
         end
       end
     end

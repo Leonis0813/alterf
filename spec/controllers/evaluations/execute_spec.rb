@@ -11,19 +11,17 @@ describe EvaluationsController, type: :controller do
   tmp_dir = Rails.root.join('tmp/files/evaluations')
 
   shared_context 'リクエスト送信' do |body: default_params|
-    before(:all) do
-      RSpec::Mocks.with_temporary_scope do
-        allow(EvaluationJob).to receive(:perform_later).and_return(true)
-        response = client.post('/evaluations', body)
-        @response_status = response.status
-        @response_body = JSON.parse(response.body) rescue response.body
-      end
+    before do
+      allow(EvaluationJob).to receive(:perform_later).and_return(true)
+      response = client.post('/evaluations', body)
+      @response_status = response.status
+      @response_body = JSON.parse(response.body) rescue response.body
     end
   end
 
   describe '正常系' do
-    before(:all) { FileUtils.rm_rf(Dir[File.join(tmp_dir, '*')]) }
-    after(:all) { FileUtils.rm_rf(Dir[File.join(tmp_dir, '*')]) }
+    before { FileUtils.rm_rf(Dir[File.join(tmp_dir, '*')]) }
+    after { FileUtils.rm_rf(Dir[File.join(tmp_dir, '*')]) }
     include_context 'トランザクション作成'
     include_context 'リクエスト送信'
     it_behaves_like 'レスポンスが正常であること', status: 200, body: {}
@@ -60,14 +58,20 @@ describe EvaluationsController, type: :controller do
   end
 
   describe '異常系' do
-    [
-      %i[model],
-      %i[data_source],
-      %i[model data_source],
-    ].each do |error_keys|
-      context "#{error_keys.join(',')}がない場合" do
-        errors = error_keys.map {|key| {'error_code' => "absent_param_#{key}"} }
-        include_context 'リクエスト送信', body: default_params.except(*error_keys)
+    required_keys = %i[model data_source]
+
+    CommonHelper.generate_combinations(required_keys).each do |absent_keys|
+      context "#{absent_keys.join(',')}がない場合" do
+        errors = absent_keys.map do |key|
+          {
+            'error_code' => 'absent_parameter',
+            'parameter' => key.to_s,
+            'resource' => 'evaluation',
+          }
+        end
+        errors.sort_by! {|error| [error['error_code'], error['parameter']] }
+
+        include_context 'リクエスト送信', body: default_params.except(*absent_keys)
         it_behaves_like 'レスポンスが正常であること',
                         status: 400, body: {'errors' => errors}
         it_behaves_like 'DBにレコードが追加されていないこと',
@@ -75,13 +79,23 @@ describe EvaluationsController, type: :controller do
       end
     end
 
-    [
-      [{model: 'invalid'}, %w[model]],
-      [{data_source: 'invalid'}, %w[num_data data_source]],
-    ].each do |error_body, error_keys|
-      context "#{error_body.keys.join(',')}が不正な場合" do
-        errors = error_keys.map {|key| {'error_code' => "invalid_param_#{key}"} }
-        include_context 'リクエスト送信', body: default_params.merge(error_body)
+    invalid_attribute = {
+      data_source: ['invalid', %w[remote], {source: 'remote'}, nil],
+      num_data: ['0', [1], {data: 1}, nil],
+    }
+
+    CommonHelper.generate_test_case(invalid_attribute).each do |invalid_param|
+      context "#{invalid_param.keys.join(',')}が不正な場合" do
+        errors = invalid_param.keys.map do |key|
+          {
+            'error_code' => 'invalid_parameter',
+            'parameter' => key.to_s,
+            'resource' => 'evaluation',
+          }
+        end
+        errors.sort_by! {|error| [error['error_code'], error['parameter']] }
+
+        include_context 'リクエスト送信', body: default_params.merge(invalid_param)
         it_behaves_like 'レスポンスが正常であること',
                         status: 400, body: {'errors' => errors}
         it_behaves_like 'DBにレコードが追加されていないこと',
@@ -94,7 +108,14 @@ describe EvaluationsController, type: :controller do
       {data_source: 'text', data: "\ntest"},
     ].each do |error_data|
       context "dataが不正な場合(#{error_data})" do
-        errors = [{'error_code' => 'invalid_param_data'}]
+        errors = [
+          {
+            'error_code' => 'invalid_parameter',
+            'parameter' => 'data',
+            'resource' => 'evaluation',
+          },
+        ]
+
         include_context 'リクエスト送信', body: default_params.merge(error_data)
         it_behaves_like 'レスポンスが正常であること',
                         status: 400, body: {'errors' => errors}
@@ -103,6 +124,25 @@ describe EvaluationsController, type: :controller do
                         model: model.original_filename,
                         data_source: error_data[:data_source]
       end
+    end
+
+    context '複合エラーの場合' do
+      errors = [
+        {
+          'error_code' => 'absent_parameter',
+          'parameter' => 'model',
+          'resource' => 'evaluation',
+        },
+        {
+          'error_code' => 'invalid_parameter',
+          'parameter' => 'data_source',
+          'resource' => 'evaluation',
+        },
+      ]
+
+      include_context 'リクエスト送信', body: {data_source: 'invalid'}
+      it_behaves_like 'レスポンスが正常であること',
+                      status: 400, body: {'errors' => errors}
     end
   end
 end
