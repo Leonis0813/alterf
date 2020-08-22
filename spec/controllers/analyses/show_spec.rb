@@ -5,7 +5,7 @@ require 'rails_helper'
 describe AnalysesController, type: :controller do
   shared_context 'リクエスト送信' do
     before do
-      response = client.get("/analyses/#{@analysis_id}")
+      get(:show, params: {analysis_id: @analysis_id})
       @response_status = response.status
     end
   end
