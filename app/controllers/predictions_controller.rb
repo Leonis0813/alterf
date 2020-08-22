@@ -48,13 +48,18 @@ class PredictionsController < ApplicationController
       keys << :model unless execute_params[:model].respond_to?(:original_filename)
 
       test_data = execute_params[:test_data]
-      if test_data.is_a?(String) and not test_data.match?(URI.regexp(%w[http https]))
-        keys << :test_data
+      case execute_params[:type]
+      when 'file'
+        keys << :test_data unless test_data.respond_to?(:original_filename)
+      when 'url'
+        unless test_data.is_a?(String) and test_data.match?(URI.regexp(%w[http https]))
+          keys << :test_data
+        end
       end
     end
 
     return if invalid_keys.empty?
-    logger.info(invalid_keys)
+
     messages = invalid_keys.map {|key| [key, %w[invalid_parameter]] }.to_h
     raise BadRequest, messages: messages, resource: 'prediction'
   end
