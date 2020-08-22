@@ -67,10 +67,9 @@ class EvaluationsController < ApplicationController
     end
 
     return unless user_specified_data?
+    return unless race_ids.empty? or race_ids.any?(&:empty?)
 
-    if race_ids.empty? or race_ids.any?(&:empty?)
-      raise BadRequest, messages: {data: %w[invalid_parameter]}, resource: 'evaluation'
-    end
+    raise BadRequest, messages: {data: %w[invalid_parameter]}, resource: 'evaluation'
   end
 
   def user_specified_data?

@@ -52,7 +52,8 @@ class PredictionsController < ApplicationController
       when 'file'
         keys << :test_data unless test_data.respond_to?(:original_filename)
       when 'url'
-        unless test_data.is_a?(String) and test_data.match?(URI.regexp(%w[http https]))
+        uri_regexp = URI::DEFAULT_PARSER.make_regexp(%w[http https])
+        unless test_data.is_a?(String) and test_data.match?(uri_regexp)
           keys << :test_data
         end
       end

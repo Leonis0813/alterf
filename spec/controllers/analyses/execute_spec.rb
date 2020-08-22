@@ -46,7 +46,9 @@ describe AnalysesController, type: :controller do
             'parameter' => key.to_s,
             'resource' => 'analysis',
           }
-        end.sort_by {|error| [error['error_code'], error['parameter']] }
+        end
+        errors.sort_by! {|error| [error['error_code'], error['parameter']] }
+
         include_context 'リクエスト送信', body: default_params.slice(*selected_keys)
         it_behaves_like 'レスポンスが正常であること',
                         status: 400, body: {'errors' => errors}
@@ -68,7 +70,9 @@ describe AnalysesController, type: :controller do
             'parameter' => key.to_s,
             'resource' => 'analysis',
           }
-        end.sort_by {|error| [error['error_code'], error['parameter']] }
+        end
+        errors.sort_by! {|error| [error['error_code'], error['parameter']] }
+
         include_context 'リクエスト送信', body: default_params.merge(invalid_param)
         it_behaves_like 'レスポンスが正常であること',
                         status: 400, body: {'errors' => errors}
@@ -89,6 +93,7 @@ describe AnalysesController, type: :controller do
           'resource' => 'analysis',
         },
       ]
+
       include_context 'リクエスト送信', body: {num_tree: 'invalid'}
       it_behaves_like 'レスポンスが正常であること',
                       status: 400, body: {'errors' => errors}

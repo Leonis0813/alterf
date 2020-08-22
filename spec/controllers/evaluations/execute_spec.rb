@@ -68,7 +68,9 @@ describe EvaluationsController, type: :controller do
             'parameter' => key.to_s,
             'resource' => 'evaluation',
           }
-        end.sort_by {|error| [error['error_code'], error['parameter']] }
+        end
+        errors.sort_by! {|error| [error['error_code'], error['parameter']] }
+
         include_context 'リクエスト送信', body: default_params.except(*absent_keys)
         it_behaves_like 'レスポンスが正常であること',
                         status: 400, body: {'errors' => errors}
@@ -90,7 +92,9 @@ describe EvaluationsController, type: :controller do
             'parameter' => key.to_s,
             'resource' => 'evaluation',
           }
-        end.sort_by {|error| [error['error_code'], error['parameter']] }
+        end
+        errors.sort_by! {|error| [error['error_code'], error['parameter']] }
+
         include_context 'リクエスト送信', body: default_params.merge(invalid_param)
         it_behaves_like 'レスポンスが正常であること',
                         status: 400, body: {'errors' => errors}
@@ -111,6 +115,7 @@ describe EvaluationsController, type: :controller do
             'resource' => 'evaluation',
           },
         ]
+
         include_context 'リクエスト送信', body: default_params.merge(error_data)
         it_behaves_like 'レスポンスが正常であること',
                         status: 400, body: {'errors' => errors}
@@ -134,6 +139,7 @@ describe EvaluationsController, type: :controller do
           'resource' => 'evaluation',
         },
       ]
+
       include_context 'リクエスト送信', body: {data_source: 'invalid'}
       it_behaves_like 'レスポンスが正常であること',
                       status: 400, body: {'errors' => errors}
