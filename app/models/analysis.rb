@@ -1,20 +1,18 @@
 class Analysis < ApplicationRecord
-  validates :analysis_id, :num_data, :num_tree, :state,
-            presence: {message: 'absent'}
+  validates :analysis_id, :state,
+            presence: {message: MESSAGE_ABSENT}
   validates :analysis_id,
-            format: {with: /\A[0-9a-f]{32}\z/, message: 'invalid'},
-            allow_nil: true
-  validates :num_data, :num_tree,
-            numericality: {only_integer: true, greater_than: 0, message: 'invalid'},
+            format: {with: /\A[0-9a-f]{32}\z/, message: MESSAGE_INVALID},
             allow_nil: true
   validates :num_feature,
-            numericality: {only_integer: true, greater_than: 0, message: 'invalid'},
-            allow_nil: true
-  validates :num_entry,
-            numericality: {only_integer: true, greater_than: 0, message: 'invalid'},
+            numericality: {
+              only_integer: true,
+              greater_than: 0,
+              message: MESSAGE_INVALID,
+            },
             allow_nil: true
   validates :state,
-            inclusion: {in: STATE_LIST, message: 'invalid'},
+            inclusion: {in: STATE_LIST, message: MESSAGE_INVALID},
             allow_nil: true
 
   has_one :result, dependent: :destroy

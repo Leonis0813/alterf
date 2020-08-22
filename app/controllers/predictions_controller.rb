@@ -5,7 +5,7 @@ class PredictionsController < ApplicationController
   end
 
   def execute
-    check_absent_param(execute_params, %i[model test_data])
+    check_schema(execute_schema, execute_params, 'prediction')
     check_invalid_file_params
 
     attribute = {model: execute_params[:model].original_filename}
@@ -15,8 +15,7 @@ class PredictionsController < ApplicationController
     end
     prediction = Prediction.new(attribute)
     unless prediction.save
-      error_codes = prediction.errors.messages.keys.map {|key| "invalid_param_#{key}" }
-      raise BadRequest, error_codes
+      raise BadRequest, messages: prediction.errors.messages, resource: 'prediction'
     end
 
     save_files(prediction.id)
@@ -30,7 +29,18 @@ class PredictionsController < ApplicationController
     @execute_params ||= request.request_parameters.slice(
       :model,
       :test_data,
+      :type,
     )
+  end
+
+  def execute_schema
+    @execute_schema ||= {
+      type: :object,
+      required: %i[model test_data type],
+      properties: {
+        type: {type: :string, enum: %w[file url]},
+      },
+    }
   end
 
   def check_invalid_file_params
@@ -38,15 +48,21 @@ class PredictionsController < ApplicationController
       keys << :model unless execute_params[:model].respond_to?(:original_filename)
 
       test_data = execute_params[:test_data]
-      if test_data.is_a?(String) and not test_data.match?(URI.regexp(%w[http https]))
-        keys << :test_data
+      case execute_params[:type]
+      when 'file'
+        keys << :test_data unless test_data.respond_to?(:original_filename)
+      when 'url'
+        uri_regexp = URI::DEFAULT_PARSER.make_regexp(%w[http https])
+        unless test_data.is_a?(String) and test_data.match?(uri_regexp)
+          keys << :test_data
+        end
       end
     end
 
     return if invalid_keys.empty?
 
-    error_codes = invalid_keys.map {|key| "invalid_param_#{key}" }
-    raise BadRequest, error_codes
+    messages = invalid_keys.map {|key| [key, %w[invalid_parameter]] }.to_h
+    raise BadRequest, messages: messages, resource: 'prediction'
   end
 
   def save_files(prediction_id)
