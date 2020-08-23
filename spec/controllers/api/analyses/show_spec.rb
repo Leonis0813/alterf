@@ -3,9 +3,11 @@
 require 'rails_helper'
 
 describe Api::AnalysesController, type: :controller do
+  render_views
+
   shared_context 'リクエスト送信' do
-    before(:all) do
-      response = client.get("/api/analyses/#{@analysis_id}")
+    before do
+      response = get(:show, params: {analysis_id: @analysis_id}, format: :json)
       @response_status = response.status
       @response_body = JSON.parse(response.body) rescue response.body
     end
@@ -13,7 +15,7 @@ describe Api::AnalysesController, type: :controller do
 
   describe '正常系' do
     include_context 'トランザクション作成'
-    before(:all) do
+    before do
       analysis = create(:analysis)
       @analysis_id = analysis.analysis_id
 
@@ -37,7 +39,7 @@ describe Api::AnalysesController, type: :controller do
   end
 
   describe '異常系' do
-    before(:all) { @analysis_id = 'not_exist' }
+    before { @analysis_id = 'not_exist' }
     include_context 'リクエスト送信'
 
     it 'ステータスコードが正しいこと' do

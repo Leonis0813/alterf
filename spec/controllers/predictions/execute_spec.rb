@@ -12,10 +12,10 @@ describe PredictionsController, type: :controller do
   }
   default_params = {model: model, test_data: test_data[:file], type: 'file'}
 
-  shared_context 'リクエスト送信' do |body: {}|
+  shared_context 'リクエスト送信' do |params: {}|
     before do
       allow(PredictionJob).to receive(:perform_later).and_return(true)
-      response = client.post('/predictions', body)
+      response = post(:execute, params: params)
       @response_status = response.status
       @response_body = JSON.parse(response.body) rescue nil
     end
@@ -24,9 +24,9 @@ describe PredictionsController, type: :controller do
   describe '正常系' do
     %i[file url].each do |type|
       context "テストデータの種類が#{type}の場合" do
-        body = default_params.merge(test_data: test_data[type], type: type.to_s)
+        params = default_params.merge(test_data: test_data[type], type: type.to_s)
         include_context 'トランザクション作成'
-        include_context 'リクエスト送信', body: body
+        include_context 'リクエスト送信', params: params
         it_behaves_like 'レスポンスが正常であること', status: 200, body: {}
         it_behaves_like 'DBにレコードが追加されていること',
                         Prediction, model: model.original_filename
@@ -49,7 +49,7 @@ describe PredictionsController, type: :controller do
         end
         errors.sort_by! {|error| [error['error_code'], error['parameter']] }
 
-        include_context 'リクエスト送信', body: default_params.slice(*selected_keys)
+        include_context 'リクエスト送信', params: default_params.slice(*selected_keys)
         it_behaves_like 'レスポンスが正常であること',
                         status: 400, body: {'errors' => errors}
         it_behaves_like 'DBにレコードが追加されていないこと',
@@ -72,7 +72,7 @@ describe PredictionsController, type: :controller do
         end
         errors.sort_by! {|error| [error['error_code'], error['parameter']] }
 
-        include_context 'リクエスト送信', body: default_params.merge(invalid_param)
+        include_context 'リクエスト送信', params: default_params.merge(invalid_param)
         it_behaves_like 'レスポンスが正常であること',
                         status: 400, body: {'errors' => errors}
         it_behaves_like 'DBにレコードが追加されていないこと',
@@ -98,7 +98,7 @@ describe PredictionsController, type: :controller do
         end
         errors.sort_by! {|error| [error['error_code'], error['parameter']] }
 
-        include_context 'リクエスト送信', body: default_params.merge(param)
+        include_context 'リクエスト送信', params: default_params.merge(param)
         it_behaves_like 'レスポンスが正常であること',
                         status: 400, body: {'errors' => errors}
       end
@@ -118,7 +118,7 @@ describe PredictionsController, type: :controller do
         },
       ]
 
-      include_context 'リクエスト送信', body: {type: 'invalid', test_data: 'test_data'}
+      include_context 'リクエスト送信', params: {type: 'invalid', test_data: 'test_data'}
       it_behaves_like 'レスポンスが正常であること',
                       status: 400, body: {'errors' => errors}
     end

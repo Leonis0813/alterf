@@ -3,10 +3,6 @@ module CommonHelper
     ENV['REMOTE_HOST']
   end
 
-  def client
-    @client ||= Capybara.page.driver
-  end
-
   def generate_test_case(params)
     [].tap do |test_cases|
       params.each do |attribute_name, values|
@@ -29,5 +25,5 @@ module CommonHelper
     end.flatten(1)
   end
 
-  module_function :client, :generate_test_case, :generate_combinations
+  module_function :generate_test_case, :generate_combinations
 end
