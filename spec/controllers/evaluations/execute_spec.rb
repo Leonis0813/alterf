@@ -10,23 +10,25 @@ describe EvaluationsController, type: :controller do
   default_params = {model: model, data_source: 'remote'}
   tmp_dir = Rails.root.join('tmp/files/evaluations')
 
-  shared_context 'リクエスト送信' do |body: default_params|
+  shared_context 'リクエスト送信' do |params: default_params|
     before do
       allow(EvaluationJob).to receive(:perform_later).and_return(true)
-      response = client.post('/evaluations', body)
+      response = post(:execute, params: params)
       @response_status = response.status
       @response_body = JSON.parse(response.body) rescue response.body
     end
   end
 
   describe '正常系' do
-    before { FileUtils.rm_rf(Dir[File.join(tmp_dir, '*')]) }
-    after { FileUtils.rm_rf(Dir[File.join(tmp_dir, '*')]) }
-    include_context 'トランザクション作成'
-    include_context 'リクエスト送信'
-    it_behaves_like 'レスポンスが正常であること', status: 200, body: {}
-    it_behaves_like 'DBにレコードが追加されていること',
-                    Evaluation, model: model.original_filename, data_source: 'remote'
+    context do
+      before { FileUtils.rm_rf(Dir[File.join(tmp_dir, '*')]) }
+      after { FileUtils.rm_rf(Dir[File.join(tmp_dir, '*')]) }
+      include_context 'トランザクション作成'
+      include_context 'リクエスト送信'
+      it_behaves_like 'レスポンスが正常であること', status: 200, body: {}
+      it_behaves_like 'DBにレコードが追加されていること',
+                      Evaluation, model: model.original_filename, data_source: 'remote'
+    end
 
     [
       {data_source: 'file', data: data},
@@ -39,7 +41,7 @@ describe EvaluationsController, type: :controller do
       context "data_sourceに#{data_body[:data_source]}を指定した場合" do
         query = {model: model.original_filename, data_source: data_body[:data_source]}
         include_context 'トランザクション作成'
-        include_context 'リクエスト送信', body: default_params.merge(data_body)
+        include_context 'リクエスト送信', params: default_params.merge(data_body)
         it_behaves_like 'レスポンスが正常であること', status: 200, body: {}
         it_behaves_like 'DBにレコードが追加されていること', Evaluation, query
 
@@ -71,7 +73,7 @@ describe EvaluationsController, type: :controller do
         end
         errors.sort_by! {|error| [error['error_code'], error['parameter']] }
 
-        include_context 'リクエスト送信', body: default_params.except(*absent_keys)
+        include_context 'リクエスト送信', params: default_params.except(*absent_keys)
         it_behaves_like 'レスポンスが正常であること',
                         status: 400, body: {'errors' => errors}
         it_behaves_like 'DBにレコードが追加されていないこと',
@@ -95,7 +97,7 @@ describe EvaluationsController, type: :controller do
         end
         errors.sort_by! {|error| [error['error_code'], error['parameter']] }
 
-        include_context 'リクエスト送信', body: default_params.merge(invalid_param)
+        include_context 'リクエスト送信', params: default_params.merge(invalid_param)
         it_behaves_like 'レスポンスが正常であること',
                         status: 400, body: {'errors' => errors}
         it_behaves_like 'DBにレコードが追加されていないこと',
@@ -116,7 +118,7 @@ describe EvaluationsController, type: :controller do
           },
         ]
 
-        include_context 'リクエスト送信', body: default_params.merge(error_data)
+        include_context 'リクエスト送信', params: default_params.merge(error_data)
         it_behaves_like 'レスポンスが正常であること',
                         status: 400, body: {'errors' => errors}
         it_behaves_like 'DBにレコードが追加されていないこと',
@@ -140,7 +142,7 @@ describe EvaluationsController, type: :controller do
         },
       ]
 
-      include_context 'リクエスト送信', body: {data_source: 'invalid'}
+      include_context 'リクエスト送信', params: {data_source: 'invalid'}
       it_behaves_like 'レスポンスが正常であること',
                       status: 400, body: {'errors' => errors}
     end
