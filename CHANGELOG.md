@@ -1,3 +1,6 @@
+# 4.14.2 (2020/08/25)
+- [UPDATE] gems
+
 # 4.14.1 (2020/08/22)
 - [UPDATE] gems
 - [UPDATE] error spec by json-schema
