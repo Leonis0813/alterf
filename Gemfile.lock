@@ -178,6 +178,8 @@ GEM
       ruby-progressbar (~> 1.4)
     gdk_pixbuf2 (3.4.3)
       gio2 (= 3.4.3)
+    get_process_mem (0.2.7)
+      ffi (~> 1.0)
     gio2 (3.4.3)
       gobject-introspection (= 3.4.3)
     git (1.7.0)
@@ -450,6 +452,9 @@ GEM
     unicorn (5.4.1)
       kgio (~> 2.6)
       raindrops (~> 0.7)
+    unicorn-worker-killer (0.4.4)
+      get_process_mem (~> 0)
+      unicorn (>= 4, < 6)
     vegas (0.1.11)
       rack (>= 1.0.0)
     web-console (3.7.0)
@@ -515,6 +520,7 @@ DEPENDENCIES
   twitter-bootstrap-rails (= 3.2.2)
   uglifier
   unicorn (~> 5.4.0)
+  unicorn-worker-killer
   web-console
 
 BUNDLED WITH
