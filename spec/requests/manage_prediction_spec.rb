@@ -6,17 +6,7 @@ describe 'ブラウザで予測する', type: :request do
   include_context 'Webdriver起動'
 
   describe '予測画面を開く' do
-    before(:all) do
-      retry_times = 0
-      begin
-        @driver.get("#{base_url}/predictions")
-      rescue Net::ReadTimeout
-        raise if retry_times > 3
-
-        retry_times += 1
-        retry
-      end
-    end
+    before(:all) { @driver.get("#{base_url}/predictions") }
 
     it '予測画面が表示されていること' do
       is_asserted_by { @driver.current_url == "#{base_url}/predictions" }
