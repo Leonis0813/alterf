@@ -41,8 +41,13 @@ analysis:
       - 'jockey_win_rate'
       - 'jockey_win_rate_last_four_races'
   racewise_features:
+    - 'blank'
     - 'burden_weight'
+    - 'entry_times'
     - 'horse_average_prize_money'
+    - 'jockey_average_prize_money'
+    - 'jockey_win_rate'
+    - 'jockey_win_rate_last_four_races'
     - 'rate_within_third'
     - 'weight'
     - 'weight_diff'
