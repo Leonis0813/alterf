@@ -6,7 +6,7 @@ shared_context 'Webdriver起動' do
 
   before(:all) do
     client = Selenium::WebDriver::Remote::Http::Default.new
-    client.timeout = 120
+    client.read_timeout = 120
     @driver = Selenium::WebDriver.for :firefox, http_client: client
     @wait = Selenium::WebDriver::Wait.new(timeout: 30)
 
