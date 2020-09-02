@@ -1,5 +1,6 @@
 # 4.14.3 (2020/09/02)
 - [UPDATE] gems for memory leak
+- [UPDATE] gems
 
 # 4.14.2 (2020/08/29)
 - [UPDATE] config/settings.yml to add racewise features
