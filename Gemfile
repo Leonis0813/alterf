@@ -27,6 +27,7 @@ gem 'turbolinks'
 gem 'twitter-bootstrap-rails', '3.2.2'
 gem 'uglifier'
 gem 'unicorn', '~> 5.4.0'
+gem 'unicorn-worker-killer'
 
 group :development do
   gem 'pronto'
