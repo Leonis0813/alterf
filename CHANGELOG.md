@@ -1,3 +1,6 @@
+# 4.14.4 (2020/09/03)
+- [UPDATE] gems
+
 # 4.14.3 (2020/09/02)
 - [UPDATE] gems for memory leak
 - [UPDATE] gems
