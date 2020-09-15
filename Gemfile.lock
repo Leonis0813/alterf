@@ -267,7 +267,7 @@ GEM
     parallel (1.19.2)
     parser (2.7.1.4)
       ast (~> 2.4.1)
-    pkg-config (1.4.2)
+    pkg-config (1.4.3)
     power_assert (1.1.7)
     pronto (0.10.0)
       gitlab (~> 4.0, >= 4.0.0)
