@@ -329,7 +329,7 @@ GEM
     redis-namespace (1.8.0)
       redis (>= 3.0.4)
     ref (2.0.0)
-    regexp_parser (1.7.1)
+    regexp_parser (1.8.0)
     remotipart (1.4.4)
     resque (2.0.0)
       mono_logger (~> 1.0)
