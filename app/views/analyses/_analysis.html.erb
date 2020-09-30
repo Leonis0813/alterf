@@ -15,9 +15,17 @@
     <%= analysis.num_entry %>
   </td>
   <td class='<%= state_to_class(analysis.state) %>'>
-  <% if analysis.state == 'processing' %>
+  <% case analysis.state %>
+  <% when 'processing' %>
     <span class='processing'><%= state_to_title(analysis.state) %></span>
     <i class='fa fa-refresh fa-spin'></i>
+  <% when 'completed' %>
+    <%= link_to analysis_path(analysis.analysis_id), target: :_blank, rel: 'noopener noreferrer' do %>
+      <button class='btn btn-xs btn-success' title='結果を確認'>
+        <%= state_to_title(analysis.state) %>
+        <span class='glyphicon glyphicon-new-window'></span>
+      </button>
+    <% end %>
   <% else %>
     <%= state_to_title(analysis.state) %>
   <% end %>

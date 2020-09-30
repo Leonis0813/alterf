@@ -3,65 +3,101 @@
 require 'rails_helper'
 
 describe AnalysesController, type: :controller do
-  default_params = {num_data: 1000, num_tree: 100}
+  default_params = {num_data: '1000', num_tree: '100'}
 
-  shared_context 'リクエスト送信' do |body: default_params|
-    before(:all) do
-      RSpec::Mocks.with_temporary_scope do
-        allow(AnalysisJob).to receive(:perform_later).and_return(true)
-        response = client.post('/analyses', body)
-        @response_status = response.status
-        @response_body = JSON.parse(response.body) rescue nil
-      end
+  shared_context 'リクエスト送信' do |params: default_params|
+    before do
+      allow(AnalysisJob).to receive(:perform_later).and_return(true)
+      response = post(:execute, params: params)
+      @response_status = response.status
+      @response_body = JSON.parse(response.body) rescue response.body
     end
   end
 
   describe '正常系' do
-    [default_params, default_params.merge(num_entry: 9)].each do |body|
-      context "body: #{body}の場合" do
+    [default_params, default_params.merge(num_entry: '9')].each do |params|
+      context "params: #{params}の場合" do
         include_context 'トランザクション作成'
-        include_context 'リクエスト送信', body: body
+        include_context 'リクエスト送信', params: params
+        before { @analysis = Analysis.find_by(params.merge(state: 'waiting')) }
+
         it_behaves_like 'レスポンスが正常であること', status: 200, body: {}
-        it_behaves_like 'DBにレコードが追加されていること', Analysis, body
+
+        it 'DBに分析ジョブが登録されていること' do
+          is_asserted_by { @analysis.present? }
+        end
+
+        it 'DBに分析結果が登録されていること' do
+          is_asserted_by { @analysis.result.present? }
+        end
       end
     end
   end
 
   describe '異常系' do
     required_keys = default_params.keys
-    test_cases = [].tap do |tests|
-      (required_keys.size - 1).times do |i|
-        tests << required_keys.combination(i + 1).to_a
-      end
-    end.flatten(1)
 
-    test_cases.each do |absent_keys|
+    CommonHelper.generate_combinations(required_keys).each do |absent_keys|
       context "#{absent_keys.join(',')}がない場合" do
         selected_keys = required_keys - absent_keys
-        errors = absent_keys.map {|key| {'error_code' => "absent_param_#{key}"} }
-        include_context 'リクエスト送信', body: default_params.slice(*selected_keys)
+        errors = absent_keys.map do |key|
+          {
+            'error_code' => 'absent_parameter',
+            'parameter' => key.to_s,
+            'resource' => 'analysis',
+          }
+        end
+        errors.sort_by! {|error| [error['error_code'], error['parameter']] }
+
+        include_context 'リクエスト送信', params: default_params.slice(*selected_keys)
         it_behaves_like 'レスポンスが正常であること',
                         status: 400, body: {'errors' => errors}
         it_behaves_like 'DBにレコードが追加されていないこと', Analysis, default_params
       end
     end
 
-    accepted_keys = required_keys + [:num_entry]
-    test_cases = [].tap do |tests|
-      (accepted_keys.size - 1).times do |i|
-        tests << accepted_keys.combination(i + 1).to_a
-      end
-    end.flatten(1)
+    invalid_attribute = {
+      num_data: ['invalid', [1], {data: 1}, nil],
+      num_tree: ['invalid', [1], {tree: 1}, nil],
+      num_entry: ['invalid', [1], {entry: 1}],
+    }
 
-    test_cases.each do |invalid_keys|
-      context "#{invalid_keys.join(',')}が不正な場合" do
-        invalid_params = invalid_keys.map {|key| [key, 'invalid'] }.to_h
-        errors = invalid_keys.map {|key| {'error_code' => "invalid_param_#{key}"} }
-        include_context 'リクエスト送信', body: default_params.merge(invalid_params)
+    CommonHelper.generate_test_case(invalid_attribute).each do |invalid_param|
+      context "#{invalid_param.keys.join(',')}が不正な場合" do
+        errors = invalid_param.keys.map do |key|
+          {
+            'error_code' => 'invalid_parameter',
+            'parameter' => key.to_s,
+            'resource' => 'analysis',
+          }
+        end
+        errors.sort_by! {|error| [error['error_code'], error['parameter']] }
+
+        include_context 'リクエスト送信', params: default_params.merge(invalid_param)
         it_behaves_like 'レスポンスが正常であること',
                         status: 400, body: {'errors' => errors}
         it_behaves_like 'DBにレコードが追加されていないこと', Analysis, default_params
       end
+    end
+
+    context '複合エラーの場合' do
+      errors = [
+        {
+          'error_code' => 'absent_parameter',
+          'parameter' => 'num_data',
+          'resource' => 'analysis',
+        },
+        {
+          'error_code' => 'invalid_parameter',
+          'parameter' => 'num_tree',
+          'resource' => 'analysis',
+        },
+      ]
+
+      include_context 'リクエスト送信', params: {num_tree: 'invalid'}
+      it_behaves_like 'レスポンスが正常であること',
+                      status: 400, body: {'errors' => errors}
+      it_behaves_like 'DBにレコードが追加されていないこと', Analysis, default_params
     end
   end
 end

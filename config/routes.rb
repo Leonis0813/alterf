@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   get '/analyses' => 'analyses#manage'
   post '/analyses' => 'analyses#execute'
+  resources :analyses, only: %i[show], param: :analysis_id
 
   get '/predictions' => 'predictions#manage'
   post '/predictions' => 'predictions#execute'
@@ -11,4 +12,8 @@ Rails.application.routes.draw do
     get 'download' => 'evaluations#download', param: :evaluation_id
   end
   resources :evaluations, only: %i[show], param: :evaluation_id
+
+  namespace :api, format: 'json' do
+    resources :analyses, only: %i[show], param: :analysis_id
+  end
 end

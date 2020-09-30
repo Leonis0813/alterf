@@ -5,7 +5,9 @@ shared_context 'Webdriver起動' do
   test_password = 'test_user_pass'
 
   before(:all) do
-    @driver = Selenium::WebDriver.for :firefox
+    client = Selenium::WebDriver::Remote::Http::Default.new
+    client.read_timeout = 120
+    @driver = Selenium::WebDriver.for :firefox, http_client: client
     @wait = Selenium::WebDriver::Wait.new(timeout: 30)
 
     @driver.get("#{base_url.sub('/alterf', '')}/login.html")

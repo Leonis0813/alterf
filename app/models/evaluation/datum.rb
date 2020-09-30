@@ -1,12 +1,16 @@
 class Evaluation
   class Datum < ApplicationRecord
     validates :race_id, :race_name, :race_url, :ground_truth,
-              presence: {message: 'absent'}
+              presence: {message: MESSAGE_ABSENT}
     validates :race_id,
-              format: {with: /\A\d+\z/, message: 'invalid'},
+              format: {with: /\A\d+\z/, message: MESSAGE_INVALID},
               allow_nil: true
     validates :ground_truth,
-              numericality: {only_integer: true, greater_than: 0, message: 'invalid'},
+              numericality: {
+                only_integer: true,
+                greater_than: 0,
+                message: MESSAGE_INVALID,
+              },
               allow_nil: true
 
     belongs_to :evaluation

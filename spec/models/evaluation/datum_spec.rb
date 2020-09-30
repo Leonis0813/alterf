@@ -32,18 +32,49 @@ describe Evaluation::Datum, type: :model do
         ground_truth: [1],
       }
 
-      it_behaves_like '正常な値を指定した場合のテスト', valid_attribute
+      CommonHelper.generate_test_case(valid_attribute).each do |attribute|
+        context "#{attribute}を指定した場合" do
+          before(:all) { @object = build(:datum, attribute) }
+
+          it_behaves_like 'バリデーションエラーにならないこと'
+        end
+      end
     end
 
     describe '異常系' do
+      required_keys = %i[race_id race_name race_url ground_truth]
+
+      CommonHelper.generate_combinations(required_keys).each do |absent_keys|
+        context "#{absent_keys.join(',')}が指定されていない場合" do
+          expected_error = absent_keys.map {|key| [key, 'absent_parameter'] }.to_h
+
+          before(:all) do
+            attribute = absent_keys.map {|key| [key, nil] }.to_h
+            @object = build(:datum, attribute)
+            @object.validate
+          end
+
+          it_behaves_like 'エラーメッセージが正しいこと', expected_error
+        end
+      end
+
       invalid_attribute = {
-        race_id: ['invalid'],
+        race_id: %w[invalid],
         ground_truth: [0],
       }
-      absent_keys = %i[race_id race_name race_url ground_truth]
 
-      it_behaves_like '必須パラメーターがない場合のテスト', absent_keys
-      it_behaves_like '不正な値を指定した場合のテスト', invalid_attribute
+      CommonHelper.generate_test_case(invalid_attribute).each do |attribute|
+        context "#{attribute.keys.join(',')}が不正な場合" do
+          expected_error = attribute.keys.map {|key| [key, 'invalid_parameter'] }.to_h
+
+          before(:all) do
+            @object = build(:datum, attribute)
+            @object.validate
+          end
+
+          it_behaves_like 'エラーメッセージが正しいこと', expected_error
+        end
+      end
     end
   end
 

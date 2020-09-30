@@ -8,7 +8,7 @@ describe EvaluationsController, type: :controller do
 
   shared_context '評価データを作成する' do
     include_context 'トランザクション作成'
-    before(:all) do
+    before do
       @evaluation = create(:evaluation)
       output_dir = File.join(tmp_dir, @evaluation.id.to_s)
       FileUtils.mkdir_p(output_dir)
@@ -19,17 +19,18 @@ describe EvaluationsController, type: :controller do
   end
 
   shared_context 'リクエスト送信' do |evaluation_id = nil|
-    before(:all) do
+    before do
       evaluation_id ||= @evaluation.evaluation_id
-      response = client.get("/evaluations/#{evaluation_id}/download")
+      params = {param: :evaluation_id, evaluation_id: evaluation_id}
+      response = get(:download, params: params)
       @response_status = response.status
       @response_body = response.body
     end
   end
 
   describe '正常系' do
-    before(:all) { FileUtils.rm_rf(Dir[File.join(tmp_dir, '*')]) }
-    after(:all) { FileUtils.rm_rf(Dir[File.join(tmp_dir, '*')]) }
+    before { FileUtils.rm_rf(Dir[File.join(tmp_dir, '*')]) }
+    after { FileUtils.rm_rf(Dir[File.join(tmp_dir, '*')]) }
     include_context '評価データを作成する'
     include_context 'リクエスト送信'
     it_behaves_like 'レスポンスが正常であること', status: 200, body: "#{file_body}\n"
@@ -43,7 +44,7 @@ describe EvaluationsController, type: :controller do
 
     context '評価データファイルが存在しない場合' do
       include_context '評価データを作成する'
-      before(:all) { FileUtils.rm(File.join(tmp_dir, @evaluation.id.to_s, 'data.txt')) }
+      before { FileUtils.rm(File.join(tmp_dir, @evaluation.id.to_s, 'data.txt')) }
       include_context 'リクエスト送信'
       it_behaves_like 'レスポンスが正常であること', status: 404, body: ''
     end
