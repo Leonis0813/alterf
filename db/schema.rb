@@ -10,18 +10,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200723064309) do
+ActiveRecord::Schema.define(version: 20201009093941) do
 
   create_table "analyses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "analysis_id",  default: "", null: false
     t.integer  "num_data"
-    t.integer  "num_tree"
     t.integer  "num_feature"
     t.integer  "num_entry"
     t.string   "state"
     t.datetime "performed_at"
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
+  end
+
+  create_table "analysis_parameters", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "analysis_id",                        null: false
+    t.integer  "num_tree",          default: 100,    null: false
+    t.integer  "max_depth"
+    t.integer  "min_samples_split", default: 2,      null: false
+    t.integer  "min_samples_leaf",  default: 1,      null: false
+    t.string   "max_features",      default: "sqrt", null: false
+    t.integer  "max_leaf_nodes"
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.index ["analysis_id"], name: "index_analysis_parameters_on_analysis_id", unique: true, using: :btree
   end
 
   create_table "analysis_result_importances", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
