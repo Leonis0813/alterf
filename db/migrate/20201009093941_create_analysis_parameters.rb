@@ -2,12 +2,12 @@ class CreateAnalysisParameters < ActiveRecord::Migration[5.0]
   def up
     create_table :analysis_parameters do |t|
       t.references :analysis, null: false, index: {unique: true}
-      t.integer :num_tree, null: false, default: 100
       t.integer :max_depth
-      t.integer :min_samples_split, null: false, default: 2
-      t.integer :min_samples_leaf, null: false, default: 1
       t.string :max_features, null: false, default: 'sqrt'
       t.integer :max_leaf_nodes
+      t.integer :min_samples_leaf, null: false, default: 1
+      t.integer :min_samples_split, null: false, default: 2
+      t.integer :num_tree, null: false, default: 100
       t.timestamps null: false
     end
 
