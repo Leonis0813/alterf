@@ -37,4 +37,16 @@ $ ->
   $('#table-analysis').on 'ajax:error', (event, xhr, status, error) ->
     failureDialog()
     return
+
+  $('#parameter').on 'show.bs.collapse', ->
+    $('a[href="#parameter"]')
+      .removeClass('glyphicon-chevron-right')
+      .addClass('glyphicon-chevron-down')
+    return
+
+  $('#parameter').on 'hide.bs.collapse', ->
+    $('a[href="#parameter"]')
+      .removeClass('glyphicon-chevron-down')
+      .addClass('glyphicon-chevron-right')
+    return
   return

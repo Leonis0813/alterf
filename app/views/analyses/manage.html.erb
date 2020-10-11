@@ -1,19 +1,63 @@
 <div class='row center-block'>
-  <div class='col-lg-4'>
+  <div class='col-lg-3'>
     <div id='new-analysis' class='well'>
       <h3>レースを分析</h3>
+      <h4>
+        <span style='color: red'>* </span>は必須項目です
+      </h4>
       <%= form_for @analysis, url: analyses_path, remote: true do |f| %>
         <div class='form-group'>
           <%= f.label :num_data, '学習データ数', class: 'required' %><br>
           <%= f.text_field :num_data, class: 'form-control', name: :num_data %>
         </div>
         <div class='form-group'>
-          <%= f.label :num_tree, '決定木の数', class: 'required' %><br>
-          <%= f.text_field :num_tree, class: 'form-control', name: :num_tree %>
-        </div>
-        <div class='form-group'>
           <%= f.label :num_entry, 'エントリー数' %><br>
           <%= f.text_field :num_entry, class: 'form-control', name: :num_entry %>
+        </div>
+        <div class='form-group'>
+          <a href='#parameter' class='glyphicon glyphicon-chevron-right' data-toggle='collapse' aria-expanded='false' aria-controls='parameter' style='text-decoration: none; color: black;'>
+          パラメーター設定
+          </a>
+        </div>
+        <div id='parameter' class='collapse'>
+          <%= f.fields_for :parameter do |param_form| %>
+            <div class='form-group'>
+              <%= param_form.label :max_depth, 'max_depth' %>
+              <span class='glyphicon glyphicon-question-sign' title='木の深さの最大値'></span>
+              <br>
+              <%= param_form.text_field :max_depth, class: 'form-control' %>
+            </div>
+            <div class='form-group'>
+              <%= param_form.label :max_features, 'max_features' %>
+              <span class='glyphicon glyphicon-question-sign' title='決定木の生成に使用する素性数の最大値'></span>
+              <br>
+              <%= param_form.select :max_features, [['sqrt'], ['log2'], ['all']], {}, class: 'form-control' %>
+            </div>
+            <div class='form-group'>
+              <%= param_form.label :max_leaf_nodes, 'max_leaf_nodes' %>
+              <span class='glyphicon glyphicon-question-sign' title='葉ノード数の最大値'></span>
+              <br>
+              <%= param_form.text_field :max_leaf_nodes, class: 'form-control' %>
+            </div>
+            <div class='form-group'>
+              <%= param_form.label :min_samples_leaf, 'min_samples_leaf' %>
+              <span class='glyphicon glyphicon-question-sign' title='葉ノードに存在するデータの最小値'></span>
+              <br>
+              <%= param_form.text_field :min_samples_leaf, class: 'form-control' %>
+            </div>
+            <div class='form-group'>
+              <%= param_form.label :min_samples_split, 'min_samples_split' %>
+              <span class='glyphicon glyphicon-question-sign' title='中間ノードに存在するデータの最小値'></span>
+              <br>
+              <%= param_form.text_field :min_samples_split, class: 'form-control' %>
+            </div>
+            <div class='form-group'>
+              <%= param_form.label :num_tree, 'num_tree' %>
+              <span class='glyphicon glyphicon-question-sign' title='決定木の数'></span>
+              <br>
+              <%= param_form.text_field :num_tree, class: 'form-control', name: :num_tree %>
+            </div>
+          <% end %>
         </div>
         <%= f.submit '実行', class: 'btn btn-primary btn-sm btn-submit' %>
         <%= f.submit 'リセット', type: 'reset', class: 'btn btn-default btn-sm' %>
@@ -21,7 +65,7 @@
     </div>
   </div>
 
-  <div class='col-lg-8 well'>
+  <div class='col-lg-9 well'>
     <h3 class='table-title'>ジョブ実行履歴</h3>
     <% from = @analyses.total_count == 0 ? 0 : @analyses.offset_value + 1 %>
     <% info = {total_count: @analyses.total_count, from: from, to: @analyses.offset_value + @analyses.size} %>

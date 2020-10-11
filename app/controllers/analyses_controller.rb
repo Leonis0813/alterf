@@ -3,6 +3,7 @@ class AnalysesController < ApplicationController
 
   def manage
     @analysis = Analysis.new
+    @analysis.build_parameter
     @analyses = Analysis.all.order(created_at: :desc).page(params[:page])
   end
 
