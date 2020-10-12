@@ -49,4 +49,14 @@ $ ->
       .removeClass('glyphicon-chevron-down')
       .addClass('glyphicon-chevron-right')
     return
+
+  $('.collapse-list').on 'show.bs.collapse', ->
+    analysisId = $(@).parents('tr').attr('id')
+    $("#icon-#{analysisId}").removeClass('glyphicon-plus').addClass('glyphicon-minus')
+    return
+
+  $('.collapse-list').on 'hide.bs.collapse', ->
+    analysisId = $(@).parents('tr').attr('id')
+    $("#icon-#{analysisId}").removeClass('glyphicon-minus').addClass('glyphicon-plus')
+    return
   return
