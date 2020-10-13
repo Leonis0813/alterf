@@ -14,6 +14,11 @@ Rails.application.routes.draw do
   resources :evaluations, only: %i[show], param: :evaluation_id
 
   namespace :api, format: 'json' do
+    resources :analyses, only: [] do
+      scope module: :analyses do
+        resource :parameter, only: %i[show]
+      end
+    end
     resources :analyses, only: %i[show], param: :analysis_id
   end
 end

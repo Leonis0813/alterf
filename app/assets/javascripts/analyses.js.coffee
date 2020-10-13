@@ -56,7 +56,14 @@ $ ->
       type: 'GET',
       url: "/alterf/api/analyses/#{analysisId}/parameter",
     }).done((parameter) ->
-      $('#parameter-max_depth').text(parameter.max_depth)
+      if (parameter.max_depth != null)
+        $('#parameter-max_depth').text(parameter.max_depth)
+      $('#parameter-max_features').text(parameter.max_features)
+      if (parameter.max_leaf_nodes != null)
+        $('#parameter-max_leaf_nodes').text(parameter.max_leaf_nodes)
+      $('#parameter-min_samples_leaf').text(parameter.min_samples_leaf)
+      $('#parameter-min_samples_split').text(parameter.min_samples_split)
+      $('#parameter-num_tree').text(parameter.num_tree)
       $('#dialog-parameter').modal('show')
     ).fail((xhr, status, error) ->
       bootbox.alert({
@@ -66,7 +73,7 @@ $ ->
     )
     return
 
-  $('btn-modal-ok').on 'click', ->
+  $('#btn-modal-ok').on 'click', ->
     $('#dialog-parameter').modal('hide')
     return
   return

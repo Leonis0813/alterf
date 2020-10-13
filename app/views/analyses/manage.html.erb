@@ -78,7 +78,7 @@
         <% end %>
         <th class='rebuild'></th>
       </thead>
-      <tbody>
+      <tbody id='tbody-analysis'>
         <%= render @analyses %>
       </tbody>
     </table>
@@ -105,7 +105,7 @@
                 <th>値</th>
               </thead>
               <tbody>
-                <% %i[
+                <% %w[
                   max_depth
                   max_features
                   max_leaf_nodes

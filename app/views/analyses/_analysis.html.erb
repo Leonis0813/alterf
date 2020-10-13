@@ -12,7 +12,7 @@
     <%= analysis.num_entry %>
   </td>
   <td class='<%= state_to_class(analysis.state) %>'>
-    <button class='btn btn-xs btn-success btn-param'>
+    <button class='btn btn-xs btn-<%= state_to_class(analysis.state) %> btn-param'>
       確認
     </button>
   </td>
