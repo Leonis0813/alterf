@@ -12,43 +12,9 @@
     <%= analysis.num_entry %>
   </td>
   <td class='<%= state_to_class(analysis.state) %>'>
-    <button class='btn btn-xs btn-success' type="button" data-toggle="collapse" data-target='#parameter-<%= analysis.analysis_id %>' aria-expanded="false" aria-controls='parameter-<%= analysis.analysis_id %>'>
-      <span id='icon-<%= analysis.analysis_id %>' class='glyphicon glyphicon-plus' style='padding-right: 2px'></span>表示
+    <button class='btn btn-xs btn-success btn-param'>
+      確認
     </button>
-    <div id='parameter-<%= analysis.analysis_id %>' class='collapse collapse-list' style='padding-top: 10px; width: 50px'>
-      <table class='table' style='margin-bottom: 0px; width: 100%'>
-        <thead>
-          <th>名前</th>
-          <th>値</th>
-        </thead>
-        <tbody>
-          <tr>
-            <td>max_depth</td>
-            <td><%= analysis.parameter.max_depth %></td>
-          </tr>
-          <tr>
-            <td>max_features</td>
-            <td><%= analysis.parameter.max_features %></td>
-          </tr>
-          <tr>
-            <td>max_leaf_nodes</td>
-            <td><%= analysis.parameter.max_leaf_nodes %></td>
-          </tr>
-          <tr>
-            <td>min_samples_leaf</td>
-            <td><%= analysis.parameter.min_samples_leaf %></td>
-          </tr>
-          <tr>
-            <td>min_samples_split</td>
-            <td><%= analysis.parameter.min_samples_split %></td>
-          </tr>
-          <tr>
-            <td>num_tree</td>
-            <td><%= analysis.parameter.num_tree %></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
   </td>
   <td class='<%= state_to_class(analysis.state) %>'>
   <% case analysis.state %>

@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
                   when 'Required'
                     error[:message].scan(/required property of '(.*)'/).first.first
                   else
-                    error[:fragment].split('/').second
+                    error[:fragment].split('/').last
                   end
 
       error_code = case error[:failed_attribute]

@@ -43,14 +43,15 @@ class AnalysesController < ApplicationController
       :num_entry,
       :parameter,
     )
-    @execute_params[:parameter]&.slice!(
-      :max_depth,
-      :max_features,
-      :max_leaf_nodes,
-      :min_samples_leaf,
-      :min_samples_split,
-      :num_tree,
+    parameter = @execute_params['parameter'].slice(
+      'max_depth',
+      'max_features',
+      'max_leaf_nodes',
+      'min_samples_leaf',
+      'min_samples_split',
+      'num_tree',
     )
+    @execute_params.merge!('parameter' => parameter)
   end
 
   def execute_schema
@@ -59,16 +60,16 @@ class AnalysesController < ApplicationController
       required: %i[num_data parameter],
       properties: {
         num_data: {type: :string, pattern: '^[1-9][0-9]*$'},
-        num_entry: {type: :string, pattern: '^[1-9][0-9]*$'},
+        num_entry: {type: :string, pattern: '^([1-9][0-9]*|\s*)$'},
         parameter: {
           type: :object,
           properties: {
-            max_depth: {type: :string, pattern: '^[1-9][0-9]*$'},
+            max_depth: {type: :string, pattern: '^([1-9][0-9]*|\s*)$'},
             max_features: {type: :string, enum: Analysis::Parameter::MAX_FEATURES_LIST},
-            max_leaf_nodes: {type: :string, pattern: '^[1-9][0-9]*$'},
-            min_samples_leaf: {type: :string, pattern: '^[1-9][0-9]*$'},
-            min_samples_split: {type: :string, pattern: '^[1-9][0-9]*$'},
-            num_tree: {type: :string, pattern: '^[1-9][0-9]*$'},
+            max_leaf_nodes: {type: :string, pattern: '^([1-9][0-9]*|\s*)$'},
+            min_samples_leaf: {type: :string, pattern: '^([1-9][0-9]*|\s*)$'},
+            min_samples_split: {type: :string, pattern: '^([1-9][0-9]*|\s*)$'},
+            num_tree: {type: :string, pattern: '^([1-9][0-9]*|\s*)$'},
           },
         },
       },

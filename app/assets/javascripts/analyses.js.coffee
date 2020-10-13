@@ -50,13 +50,23 @@ $ ->
       .addClass('glyphicon-chevron-right')
     return
 
-  $('.collapse-list').on 'show.bs.collapse', ->
+  $('tbody').on 'click', '.btn-param', ->
     analysisId = $(@).parents('tr').attr('id')
-    $("#icon-#{analysisId}").removeClass('glyphicon-plus').addClass('glyphicon-minus')
+    $.ajax({
+      type: 'GET',
+      url: "/alterf/api/analyses/#{analysisId}/parameter",
+    }).done((parameter) ->
+      $('#parameter-max_depth').text(parameter.max_depth)
+      $('#dialog-parameter').modal('show')
+    ).fail((xhr, status, error) ->
+      bootbox.alert({
+        title: 'エラーが発生しました',
+        message: 'パラメーターの取得に失敗しました',
+      })
+    )
     return
 
-  $('.collapse-list').on 'hide.bs.collapse', ->
-    analysisId = $(@).parents('tr').attr('id')
-    $("#icon-#{analysisId}").removeClass('glyphicon-minus').addClass('glyphicon-plus')
+  $('btn-modal-ok').on 'click', ->
+    $('#dialog-parameter').modal('hide')
     return
   return
