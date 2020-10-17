@@ -11,4 +11,25 @@ module AnalysisHelper
       {name: '状態', width: 10},
     ]
   end
+
+  def question_sign(param_name)
+    content_tag(
+      :span,
+      nil,
+      class: 'glyphicon glyphicon-question-sign', title: question_title[param_name],
+    )
+  end
+
+  private
+
+  def question_title
+    {
+      max_depth: '木の深さの最大値',
+      max_features: '決定木の生成に使用する素性数の最大値',
+      max_leaf_nodes: '葉ノード数の最大値',
+      min_samples_leaf: '葉ノードに存在するデータ数の最小値',
+      min_samples_split: '中間ノードに存在するデータ数の最小値',
+      num_tree: '決定木の数',
+    }
+  end
 end

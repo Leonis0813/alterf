@@ -4,7 +4,10 @@ class AnalysesController < ApplicationController
   def manage
     @analysis = Analysis.new
     @analysis.build_parameter
-    @analyses = Analysis.all.includes(:parameter).order(created_at: :desc).page(params[:page])
+    @analyses = Analysis.all
+                        .includes(:parameter)
+                        .order(created_at: :desc)
+                        .page(params[:page])
   end
 
   def execute

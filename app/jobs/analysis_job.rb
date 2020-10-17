@@ -43,7 +43,7 @@ class AnalysisJob < ApplicationJob
   private
 
   def dump_yaml(file, content)
-    File.open(file, ,'w') do |file|
+    File.open(file, 'w') do |file|
       YAML.dump(parameter, file)
     end
   end

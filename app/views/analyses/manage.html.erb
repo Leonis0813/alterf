@@ -23,39 +23,39 @@
           <%= f.fields_for :parameter do |param_form| %>
             <div class='form-group'>
               <%= param_form.label :max_depth, 'max_depth' %>
-              <span class='glyphicon glyphicon-question-sign' title='木の深さの最大値'></span>
-              <br>
-              <%= param_form.text_field :max_depth, name: 'parameter[max_depth]', class: 'form-control' %>
+              <%= question_sign(:max_depth) %>
+              <% option = {name: 'parameter[max_depth]', class: 'form-control'} %>
+              <%= param_form.text_field :max_depth, option %>
             </div>
             <div class='form-group'>
               <%= param_form.label :max_features, 'max_features' %>
-              <span class='glyphicon glyphicon-question-sign' title='決定木の生成に使用する素性数の最大値'></span>
-              <br>
-              <%= param_form.select :max_features, [['sqrt'], ['log2'], ['all']], {}, name: 'parameter[max_features]', class: 'form-control' %>
+              <%= question_sign(:max_features) %>
+              <% option = {name: 'parameter[max_features]', class: 'form-control'} %>
+              <%= param_form.select :max_features, [['sqrt'], ['log2'], ['all']], {}, option %>
             </div>
             <div class='form-group'>
               <%= param_form.label :max_leaf_nodes, 'max_leaf_nodes' %>
-              <span class='glyphicon glyphicon-question-sign' title='葉ノード数の最大値'></span>
-              <br>
-              <%= param_form.text_field :max_leaf_nodes, name: 'parameter[max_leaf_nodes]', class: 'form-control' %>
+              <%= question_sign(:max_leaf_nodes) %>
+              <% option = {name: 'parameter[max_leaf_nodes]', class: 'form-control'} %>
+              <%= param_form.text_field :max_leaf_nodes, option %>
             </div>
             <div class='form-group'>
               <%= param_form.label :min_samples_leaf, 'min_samples_leaf' %>
-              <span class='glyphicon glyphicon-question-sign' title='葉ノードに存在するデータの最小値'></span>
-              <br>
-              <%= param_form.text_field :min_samples_leaf, name: 'parameter[min_samples_leaf]', class: 'form-control' %>
+              <%= question_sign(:min_samples_leaf) %>
+              <% option = {name: 'parameter[min_samples_leaf]', class: 'form-control'} %>
+              <%= param_form.text_field :min_samples_leaf, option %>
             </div>
             <div class='form-group'>
               <%= param_form.label :min_samples_split, 'min_samples_split' %>
-              <span class='glyphicon glyphicon-question-sign' title='中間ノードに存在するデータの最小値'></span>
-              <br>
-              <%= param_form.text_field :min_samples_split, name: 'parameter[min_samples_split]', class: 'form-control' %>
+              <%= question_sign(:min_samples_split) %>
+              <% option = {name: 'parameter[min_samples_split]', class: 'form-control'} %>
+              <%= param_form.text_field :min_samples_split, option %>
             </div>
             <div class='form-group'>
               <%= param_form.label :num_tree, 'num_tree' %>
-              <span class='glyphicon glyphicon-question-sign' title='決定木の数'></span>
-              <br>
-              <%= param_form.text_field :num_tree, name: 'parameter[num_tree]', class: 'form-control' %>
+              <%= question_sign(:num_tree) %>
+              <% option = {name: 'parameter[num_tree]', class: 'form-control'} %>
+              <%= param_form.text_field :num_tree, option %>
             </div>
           <% end %>
         </div>
@@ -106,13 +106,13 @@
               </thead>
               <tbody>
                 <% %w[
-                  max_depth
-                  max_features
-                  max_leaf_nodes
-                  min_samples_leaf
-                  min_samples_split
-                  num_tree
-                ].each do |name| %>
+                     max_depth
+                     max_features
+                     max_leaf_nodes
+                     min_samples_leaf
+                     min_samples_split
+                     num_tree
+                   ].each do |name| %>
                 <tr>
                   <td><%= name %></td>
                   <td id='parameter-<%= name %>'></td>

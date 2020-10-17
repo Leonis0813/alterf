@@ -15,7 +15,8 @@ module Api
       end
 
       def request_analysis
-        @request_analysis ||= Analysis.find_by(request.path_parameters.slice(:analysis_id))
+        @request_analysis ||=
+          Analysis.find_by(request.path_parameters.slice(:analysis_id))
       end
     end
   end
