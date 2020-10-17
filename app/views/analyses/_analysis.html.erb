@@ -37,13 +37,16 @@
       <%= hidden_field_tag :num_data, analysis.num_data, id: "num_data-#{analysis.analysis_id}" %>
       <%= hidden_field_tag :num_entry, analysis.num_entry, id: "num_entry-#{analysis.analysis_id}" %>
 
-      <% parameter = analysis.parameter %>
-      <%= hidden_field_tag :max_depth, parameter.max_depth, name: 'parameter[max_depth]' %>
-      <%= hidden_field_tag :max_features, parameter.max_features, name: 'parameter[max_features]' %>
-      <%= hidden_field_tag :max_leaf_nodes, parameter.max_leaf_nodes, name: 'parameter[max_leaf_nodes]' %>
-      <%= hidden_field_tag :min_samples_leaf, parameter.min_samples_leaf, name: 'parameter[min_samples_leaf]' %>
-      <%= hidden_field_tag :min_samples_split, parameter.min_samples_split, name: 'parameter[min_samples_split]' %>
-      <%= hidden_field_tag :num_tree, parameter.num_tree, name: 'parameter[num_tree]' %>
+      <% %i[
+           max_depth
+           max_features
+           max_leaf_nodes
+           min_samples_leaf
+           min_samples_split
+           num_tree
+         ].each do |name| %>
+        <%= hidden_field_tag name, analysis.parameter.send(name), name: "parameter[#{name}]" %>
+      <% end %>
       <%= button_tag type: :submit, class: 'btn btn-default' do %>
         <span class='glyphicon glyphicon-repeat' />
       <% end %>

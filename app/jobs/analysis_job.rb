@@ -24,7 +24,7 @@ class AnalysisJob < ApplicationJob
       metadata = YAML.load_file(yaml_file)
       analysis.update!(num_feature: metadata['num_feature'])
     end
-    dump_yaml(yaml_file, metadata.merge(analysis.slice(:analysis_id, :num_feature))
+    dump_yaml(yaml_file, metadata.merge(analysis.slice(:analysis_id, :num_feature)))
 
     metadata['importance'].each do |feature_name, value|
       analysis.result.importances.create!(feature_name: feature_name, value: value)
