@@ -56,11 +56,9 @@ $ ->
       type: 'GET',
       url: "/alterf/api/analyses/#{analysisId}/parameter",
     }).done((parameter) ->
-      if (parameter.max_depth != null)
-        $('#parameter-max_depth').text(parameter.max_depth)
+      $('#parameter-max_depth').text(parameter.max_depth || '指定なし')
       $('#parameter-max_features').text(parameter.max_features)
-      if (parameter.max_leaf_nodes != null)
-        $('#parameter-max_leaf_nodes').text(parameter.max_leaf_nodes)
+      $('#parameter-max_leaf_nodes').text(parameter.max_leaf_nodes || '指定なし')
       $('#parameter-min_samples_leaf').text(parameter.min_samples_leaf)
       $('#parameter-min_samples_split').text(parameter.min_samples_split)
       $('#parameter-num_tree').text(parameter.num_tree)
