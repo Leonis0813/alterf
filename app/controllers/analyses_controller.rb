@@ -46,7 +46,7 @@ class AnalysesController < ApplicationController
       :num_entry,
       :parameter,
     )
-    parameter = @execute_params['parameter'].slice(
+    parameter = @execute_params['parameter']&.slice(
       'max_depth',
       'max_features',
       'max_leaf_nodes',
@@ -54,7 +54,7 @@ class AnalysesController < ApplicationController
       'min_samples_split',
       'num_tree',
     )
-    @execute_params.merge!('parameter' => parameter)
+    parameter ? @execute_params.merge!('parameter' => parameter) : @execute_params
   end
 
   def execute_schema
