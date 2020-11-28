@@ -5,5 +5,6 @@ FactoryBot.define do
     num_feature { 20 }
     state { 'waiting' }
     result { build(:analysis_result) }
+    parameter { build(:analysis_parameter) }
   end
 end

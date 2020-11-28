@@ -6,7 +6,7 @@ describe 'analyses/show', type: :view do
   include_context 'トランザクション作成'
   before(:all) { @analysis = create(:analysis) }
 
-  before(:each) do
+  before do
     render template: 'analyses/show', layout: 'layouts/application'
     @html ||= Nokogiri.parse(response)
   end

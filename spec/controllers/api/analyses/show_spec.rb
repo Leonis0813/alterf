@@ -24,15 +24,22 @@ describe Api::AnalysesController, type: :controller do
           importance.slice(:feature_name, :value)
         end,
       }
+      parameter = analysis.parameter.slice(
+        :max_depth,
+        :max_features,
+        :max_leaf_nodes,
+        :min_samples_leaf,
+        :min_samples_split,
+        :num_tree,
+      )
       @body = analysis.slice(
         :analysis_id,
         :num_data,
-        :num_tree,
         :num_feature,
         :num_entry,
         :performed_at,
         :state,
-      ).merge(result: result).deep_stringify_keys
+      ).merge(parameter: parameter, result: result).deep_stringify_keys
     end
     include_context 'リクエスト送信'
     it_behaves_like 'レスポンスが正常であること', status: 200

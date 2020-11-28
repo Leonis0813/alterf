@@ -12,7 +12,7 @@ json.parameter do
     @analysis.parameter,
     :max_depth,
     :max_features,
-    :min_leaf_nodes,
+    :max_leaf_nodes,
     :min_samples_leaf,
     :min_samples_split,
     :num_tree,
