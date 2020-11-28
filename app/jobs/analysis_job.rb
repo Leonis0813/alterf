@@ -8,6 +8,7 @@ class AnalysisJob < ApplicationJob
     output_dir = Rails.root.join('tmp', 'files', 'analyses', analysis_id.to_s)
     FileUtils.mkdir_p(output_dir)
     parameter = analysis.parameter.attributes.merge('num_data' => analysis.num_data)
+    parameter.except!('created_at', 'updated_at')
     parameter_file = File.join(output_dir, 'parameter.yml')
 
     if analysis.num_entry
