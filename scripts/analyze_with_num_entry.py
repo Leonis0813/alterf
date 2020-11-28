@@ -69,9 +69,13 @@ sql = 'SELECT ' + ','.join(feature_names) \
   + ' FROM features WHERE race_id IN (' + ','.join(race_ids) + ')'
 cursor.execute(sql)
 feature = pd.DataFrame(cursor.fetchall())
+
 mapping = yaml.load(open(workdir + '/mapping.yml', 'r+'))
 for name in mapping:
   feature[name] = feature[name].map(mapping[name]).astype(int)
+
+feature['horse_average_prize_money'] = features['horse_average_prize_money'].astype(float)
+feature['jockey_average_prize_money'] = features['jockey_average_prize_money'].astype(float)
 
 columns = feature.columns.to_list()
 columns.remove('race_id')

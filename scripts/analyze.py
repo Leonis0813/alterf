@@ -18,6 +18,8 @@ parameter = yaml.load(open(outputdir + '/parameter.yml', 'r+'))
 
 def normalize_racewise_feature(group):
   features = group[config['analysis']['racewise_features']]
+  features['horse_average_prize_money'] = features['horse_average_prize_money'].astype(float)
+  features['jockey_average_prize_money'] = features['jockey_average_prize_money'].astype(float)
   normalized = (features - features.min()) / (features.max() - features.min())
   for name in config['analysis']['racewise_features']:
     group[name] = normalized[name]
