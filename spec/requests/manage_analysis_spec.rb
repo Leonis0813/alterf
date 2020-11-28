@@ -74,6 +74,9 @@ describe 'ブラウザで分析する', type: :request do
           res = @driver.find_element(:id, 'collapse-parameter').click rescue false
           res.nil?
         end
+        @wait.until do
+          @driver.find_element(:id, 'analysis_parameter_attributes_num_tree').displayed?
+        end
         num_tree = @driver.find_element(:id, 'analysis_parameter_attributes_num_tree')
         num_tree.clear
         num_tree.send_keys(10)
