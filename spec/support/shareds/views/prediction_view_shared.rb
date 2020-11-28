@@ -69,37 +69,34 @@ shared_examples '予測情報入力フォームが表示されていること' d
 end
 
 shared_examples '予測ジョブテーブルが表示されていること' do |rows: 0|
-  before(:each) do
-    @table = @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']")
-  end
+  before { @table = @html.xpath(table_xpath) }
 
   it '4列のテーブルが表示されていること' do
-    is_asserted_by { @table.xpath('//thead/th').size == 4 }
+    is_asserted_by { @table.search('thead/th').size == 4 }
   end
 
   %w[実行開始日時 モデル テストデータ 予測結果].each_with_index do |text, i|
     it "#{i + 1}列目のヘッダーが#{text}であること" do
-      is_asserted_by { @table.xpath('//thead/th')[i].text == text }
+      is_asserted_by { @table.search('thead/th')[i].text == text }
     end
   end
 
   it 'ジョブの数が正しいこと' do
-    is_asserted_by { @table.xpath('//tbody/tr').size == rows }
+    is_asserted_by { @table.search('tbody/tr').size == rows }
   end
 end
 
 shared_examples 'テストデータがリンクになっていること' do
   it do
-    rows =
-      @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
+    rows = @html.xpath("#{table_xpath}/tbody/tr")
 
     @predictions.each_with_index do |prediction, i|
-      test_data = rows.xpath('//td[@class="td-test-data"]')[i]
+      test_data = rows[i].search('td[@class="td-test-data"]')
 
-      link = test_data.xpath("//a[@href='#{prediction.test_data}']")
+      link = test_data.search("a[@href='#{prediction.test_data}']")
       is_asserted_by { link.present? }
 
-      icon = link.xpath('//span[@class="glyphicon glyphicon-new-window new-window"]')
+      icon = link.search('span[@class="glyphicon glyphicon-new-window new-window"]')
       is_asserted_by { icon.present? }
     end
   end
@@ -107,11 +104,10 @@ end
 
 shared_examples 'ジョブが実行待ち状態になっていること' do
   it do
-    rows =
-      @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
+    rows = @html.xpath("#{table_xpath}/tbody/tr")
 
     @predictions.each_with_index do |_, i|
-      test_data = rows.xpath('//td[@class="td-result"]')[i]
+      test_data = rows[i].search('td[@class="td-result"]')
       is_asserted_by { test_data.search('span').text == '実行待ち' }
     end
   end
@@ -119,11 +115,10 @@ end
 
 shared_examples 'ジョブが実行中状態になっていること' do
   it do
-    rows =
-      @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
+    rows = @html.xpath("#{table_xpath}/tbody/tr")
 
     @predictions.each_with_index do |_, i|
-      test_data = rows.xpath('//td[@class="td-result"]')[i]
+      test_data = rows[i].search('td[@class="td-result"]')
       is_asserted_by { test_data.search('span').text == '実行中' }
       is_asserted_by { test_data.search('i[@class="fa fa-refresh fa-spin"]').present? }
     end
@@ -132,12 +127,11 @@ end
 
 shared_examples 'ジョブがエラー状態になっていること' do
   it do
-    rows =
-      @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
+    rows = @html.xpath("#{table_xpath}/tbody/tr")
 
     @predictions.each_with_index do |_, i|
-      error_span = rows.xpath('//td[@class="td-result"]')[i].children
-                       .search('span[@class="glyphicon glyphicon-remove"]')
+      error_span = rows[i].search('td[@class="td-result"]')
+                          .search('span[@class="glyphicon glyphicon-remove"]')
       is_asserted_by { error_span.present? }
     end
   end
@@ -146,7 +140,7 @@ end
 shared_examples 'テーブルに予測結果が表示されていること' do |numbers: 0|
   color = %w[orange skyblue magenta]
 
-  before(:each) do
+  before do
     @result = [
       table_panel_xpath,
       'table[@class="table table-hover"]',

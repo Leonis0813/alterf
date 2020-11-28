@@ -11,18 +11,18 @@ shared_context '分析ジョブを作成する' do |total: nil, update_attribute
   end
 end
 
-shared_examples '画面共通テスト' do |expected: {}|
+shared_examples '分析画面共通テスト' do |expected: {}|
   it_behaves_like 'ヘッダーが表示されていること'
-  it_behaves_like '入力フォームが表示されていること'
+  it_behaves_like '分析情報入力フォームが表示されていること'
   it_behaves_like '表示件数情報が表示されていること',
                   total: expected[:total] || AnalysisViewHelper::DEFAULT_PER_PAGE,
                   from: expected[:from] || 1,
                   to: expected[:to] || AnalysisViewHelper::DEFAULT_PER_PAGE
-  it_behaves_like 'テーブルが表示されていること',
+  it_behaves_like '分析ジョブテーブルが表示されていること',
                   rows: expected[:rows] || AnalysisViewHelper::DEFAULT_PER_PAGE
 end
 
-shared_examples '入力フォームが表示されていること' do
+shared_examples '分析情報入力フォームが表示されていること' do
   it_behaves_like 'タイトルが表示されていること', 'レースを分析'
 
   it '必須項目の説明が表示されていること' do
@@ -110,7 +110,7 @@ shared_examples '入力フォームが表示されていること' do
   end
 end
 
-shared_examples 'テーブルが表示されていること' do |rows: 0|
+shared_examples '分析ジョブテーブルが表示されていること' do |rows: 0|
   before do
     @table = @html.xpath(table_xpath)
     @rows = @table.search('tbody/tr')
@@ -171,7 +171,7 @@ shared_examples 'テーブルが表示されていること' do |rows: 0|
   end
 end
 
-shared_examples 'ジョブの状態が正しいこと' do |state, num_entry: 0|
+shared_examples '分析ジョブの状態が正しいこと' do |state, num_entry: 0|
   before { @rows = @html.xpath(table_xpath).search('tbody/tr') }
 
   it do

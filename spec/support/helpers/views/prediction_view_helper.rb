@@ -15,8 +15,8 @@ module PredictionViewHelper
     ].join('/')
   end
 
-  def input_xpath
-    [form_xpath, 'div[@class="form-group"]'].join('/')
+  def table_xpath
+    [table_panel_xpath, 'table[@class="table table-hover"]'].join('/')
   end
 
   def link_two_xpath

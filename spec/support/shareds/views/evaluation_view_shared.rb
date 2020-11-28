@@ -99,41 +99,33 @@ shared_examples '評価情報入力フォームが表示されていること' d
 end
 
 shared_examples '評価ジョブテーブルが表示されていること' do |rows: 0|
-  before(:each) do
-    @table = @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']")
-  end
+  before { @table = @html.xpath(table_xpath) }
 
   it '7列のテーブルが表示されていること' do
-    is_asserted_by { @table.xpath('//thead/th').size == 7 }
+    is_asserted_by { @table.search('thead/th').size == 7 }
   end
 
   %w[実行開始日時 モデル 状態 適合率 再現率 F値].each_with_index do |text, i|
     it "#{i + 1}列目のヘッダーが#{text}であること" do
-      is_asserted_by { @table.xpath('//thead/th')[i].text == text }
+      is_asserted_by { @table.search('thead/th')[i].text == text }
     end
   end
 
   it 'ジョブの数が正しいこと' do
-    is_asserted_by { @table.xpath('//tbody/tr').size == rows }
+    is_asserted_by { @table.search('tbody/tr').size == rows }
   end
 end
 
 shared_examples '実行開始時間が表示されていないこと' do
   it do
-    rows =
-      @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
-
-    rows.each do |row|
+    @html.xpath("#{table_xpath}/tbody/tr").each do |row|
       is_asserted_by { row.search('td')[0].text.strip.blank? }
     end
   end
 end
 
 shared_examples 'ジョブの状態が正しいこと' do |state: nil, button_class: nil|
-  before(:each) do
-    @rows =
-      @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
-  end
+  before { @rows = @html.xpath("#{table_xpath}/tbody/tr") }
 
   it do
     @evaluations.size.times do |i|
@@ -152,10 +144,7 @@ shared_examples 'ジョブの状態が正しいこと' do |state: nil, button_cl
 end
 
 shared_examples '評価結果情報が表示されていること' do
-  before(:each) do
-    @rows =
-      @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
-  end
+  before { @rows = @html.xpath("#{table_xpath}/tbody/tr") }
 
   it '適合率が表示されていること' do
     @evaluations.each_with_index do |evaluation, i|
@@ -181,8 +170,7 @@ end
 
 shared_examples 'ダウンロードボタンが表示されていないこと' do
   it do
-    rows =
-      @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
+    rows = @html.xpath("#{table_xpath}/tbody/tr")
 
     @evaluations.each_with_index do |evaluation, i|
       download_button = rows[i].children.search('td')[6]
@@ -196,8 +184,7 @@ end
 
 shared_examples 'ダウンロードボタンが表示されていること' do
   it do
-    rows =
-      @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
+    rows = @html.xpath("#{table_xpath}/tbody/tr")
 
     @evaluations.each_with_index do |evaluation, i|
       download_button = rows[i].children.search('td')[6]

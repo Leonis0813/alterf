@@ -16,21 +16,12 @@ module CommonViewHelper
     '//div[@id="main-content"]/div[@class="row center-block"]'
   end
 
-  def form_panel_xpath
-    [row_xpath, 'div[@class="col-lg-4"]'].join('/')
+  def input_xpath
+    [form_xpath, 'div[@class="form-group"]'].join('/')
   end
 
-  def form_xpath(model)
-    [
-      form_panel_xpath,
-      "div[@id='new-#{model}']",
-      "form[@action='/#{model.pluralize}'][@data-remote='true'][@method='post']" \
-      "[@class='new_#{model}']",
-    ].join('/')
-  end
-
-  def input_xpath(model)
-    [form_xpath(model), 'div[@class="form-group"]'].join('/')
+  def table_panel_xpath
+    [row_xpath, 'div[@class="col-lg-8 well"]'].join('/')
   end
 
   def paging_xpath
@@ -72,9 +63,5 @@ module CommonViewHelper
 
   def list_gap_xpath
     [paging_xpath, 'li[@class="page-item disabled"]', 'a[@href="#"]'].join('/')
-  end
-
-  def table_panel_xpath
-    [row_xpath, 'div[@class="col-lg-8 well"]'].join('/')
   end
 end

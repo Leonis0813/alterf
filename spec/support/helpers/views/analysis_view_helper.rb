@@ -17,10 +17,6 @@ module AnalysisViewHelper
     ].join('/')
   end
 
-  def input_xpath
-    [form_xpath, 'div[@class="form-group"]'].join('/')
-  end
-
   def parameter_form_block_xpath
     [form_xpath, 'div[@class="collapse"]', 'div[@class="form-group"]'].join('/')
   end
