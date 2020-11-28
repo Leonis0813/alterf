@@ -94,7 +94,7 @@ describe AnalysesController, type: :controller do
           it_behaves_like 'レスポンスが正常であること',
                           status: 400, body: {'errors' => errors}
           it_behaves_like 'DBにレコードが追加されていないこと',
-                           Analysis, default_params.slice(:num_data)
+                          Analysis, default_params.slice(:num_data)
         end
       end
 

@@ -1,9 +1,9 @@
 class Analysis
   class Parameter < ApplicationRecord
     MAX_FEATURES_LIST = %w[all sqrt log2].freeze
-    DEFAULT_MIN_SAMPLES_LEAF = 1.freeze
-    DEFAULT_MIN_SAMPLES_SPLIT = 2.freeze
-    DEFAULT_NUM_TREE = 100.freeze
+    DEFAULT_MIN_SAMPLES_LEAF = 1
+    DEFAULT_MIN_SAMPLES_SPLIT = 2
+    DEFAULT_NUM_TREE = 100
 
     belongs_to :analysis
 
