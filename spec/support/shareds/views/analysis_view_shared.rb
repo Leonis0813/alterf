@@ -32,8 +32,8 @@ shared_examples '分析情報入力フォームが表示されていること' d
   end
 
   [
-    ['num_data', '学習データ数'],
-    ['num_entry', 'エントリー数'],
+    %w[num_data 学習データ数],
+    %w[num_entry エントリー数],
   ].each do |param_name, label_name|
     it "#{label_name}入力フォームのラベルがあること" do
       label = @html.xpath("#{input_xpath}/label[@for='analysis_#{param_name}']")
@@ -147,8 +147,8 @@ shared_examples '分析ジョブテーブルが表示されていること' do |
   end
 
   it 'パラメーター表示ボタンが表示されていること' do
-    @analyses.each_with_index do |analysis, i|
-      button = @rows[i].search('td')[4].search('button')
+    @rows do |row|
+      button = row.search('td')[4].search('button')
       is_asserted_by { button.present? }
       is_asserted_by { button.text.strip == '確認' }
     end

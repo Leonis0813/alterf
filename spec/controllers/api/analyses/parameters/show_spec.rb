@@ -25,7 +25,7 @@ describe Api::Analyses::ParametersController, type: :controller do
           :max_leaf_nodes,
           :min_samples_leaf,
           :min_samples_split,
-          :num_tree
+          :num_tree,
         ).deep_stringify_keys
       end
       include_context 'リクエスト送信'
