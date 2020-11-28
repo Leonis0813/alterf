@@ -5,12 +5,12 @@ require 'rails_helper'
 describe 'ブラウザで分析する', type: :request do
   shared_examples 'ダイアログが正しく表示されていること' do |title, message|
     it 'タイトルが正しいこと' do
-      xpath = '//h4[@class="modal-title"]'
+      xpath = 'div//h4[@class="modal-title"]'
       is_asserted_by { @dialog.find_element(:xpath, xpath).text == title }
     end
 
     it 'メッセージが正しいこと' do
-      xpath = '//div[@class="modal-body"]'
+      xpath = 'div//div[@class="modal-body"]'
       is_asserted_by { @dialog.find_element(:xpath, xpath).text == message }
     end
   end
@@ -70,7 +70,10 @@ describe 'ブラウザで分析する', type: :request do
       before(:all) do
         @driver.get("#{base_url}/analyses")
         @driver.find_element(:id, 'analysis_num_data').send_keys(100)
-        @driver.find_element(:id, 'collapse-parameter').click
+        @wait.until do
+          res = @driver.find_element(:id, 'collapse-parameter').click rescue false
+          res.nil?
+        end
         num_tree = @driver.find_element(:id, 'analysis_parameter_attributes_num_tree')
         num_tree.clear
         num_tree.send_keys(10)
@@ -86,7 +89,8 @@ describe 'ブラウザで分析する', type: :request do
       describe '確認ダイアログを表示する' do
         before(:all) do
           @driver.get("#{base_url}/analyses")
-          @driver.find_element(:xpath, '//td[contains(@class, "btn-param")]').click
+          @driver.find_element(:xpath, '//button[contains(@class, "btn-param")]').click
+          @wait.until { @driver.find_element(:id, 'dialog-parameter').displayed? }
         end
 
         it 'パラメーター確認ダイアログが表示されていること' do
@@ -97,7 +101,7 @@ describe 'ブラウザで分析する', type: :request do
 
         it 'パラメーターが表示されていること' do
           xpath = '//div[@id="dialog-parameter"]//td[@id="parameter-num_tree"]'
-          is_asserted_by { @driver.find_element(:xpath, xpath.text == '10') }
+          is_asserted_by { @driver.find_element(:xpath, xpath).text == '10' }
         end
       end
     end
