@@ -14,7 +14,7 @@ analysis_id = args[1]
 workdir = os.path.dirname(os.path.abspath(args[0]))
 outputdir = workdir + '/../tmp/files/analyses/' + analysis_id
 config = yaml.load(open(workdir + '/../config/settings.yml', 'r+'))
-parameter = yaml.load(open(workdir + '/parameter.yml', 'r+'))
+parameter = yaml.load(open(outputdir + '/parameter.yml', 'r+'))
 
 def create_race_feature(group):
   group = group.sort_values('number')
