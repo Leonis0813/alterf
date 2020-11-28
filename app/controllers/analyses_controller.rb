@@ -3,14 +3,19 @@ class AnalysesController < ApplicationController
 
   def manage
     @analysis = Analysis.new
-    @analyses = Analysis.all.order(created_at: :desc).page(params[:page])
+    @analysis.build_parameter
+    @analyses = Analysis.all
+                        .includes(:parameter)
+                        .order(created_at: :desc)
+                        .page(params[:page])
   end
 
   def execute
     check_schema(execute_schema, execute_params, 'analysis')
 
-    analysis = Analysis.new(execute_params)
+    analysis = Analysis.new(execute_params.except(:parameter))
     analysis.build_result
+    analysis.build_parameter(execute_params[:parameter])
     unless analysis.save
       raise BadRequest, messages: analysis.errors.messages, resource: 'analysis'
     end
@@ -34,21 +39,42 @@ class AnalysesController < ApplicationController
   end
 
   def execute_params
-    @execute_params ||= request.request_parameters.slice(
+    return @execute_params if @execute_params
+
+    @execute_params = request.request_parameters.slice(
       :num_data,
-      :num_tree,
       :num_entry,
+      :parameter,
     )
+    parameter = @execute_params['parameter']&.slice(
+      'max_depth',
+      'max_features',
+      'max_leaf_nodes',
+      'min_samples_leaf',
+      'min_samples_split',
+      'num_tree',
+    )
+    parameter ? @execute_params.merge!('parameter' => parameter) : @execute_params
   end
 
   def execute_schema
     @execute_schema ||= {
       type: :object,
-      required: %i[num_data num_tree],
+      required: %i[num_data parameter],
       properties: {
         num_data: {type: :string, pattern: '^[1-9][0-9]*$'},
-        num_tree: {type: :string, pattern: '^[1-9][0-9]*$'},
         num_entry: {type: :string, pattern: '^([1-9][0-9]*|\s*)$'},
+        parameter: {
+          type: :object,
+          properties: {
+            max_depth: {type: :string, pattern: '^([1-9][0-9]*|\s*)$'},
+            max_features: {type: :string, enum: Analysis::Parameter::MAX_FEATURES_LIST},
+            max_leaf_nodes: {type: :string, pattern: '^([1-9][0-9]*|\s*)$'},
+            min_samples_leaf: {type: :string, pattern: '^([1-9][0-9]*|\s*)$'},
+            min_samples_split: {type: :string, pattern: '^([1-9][0-9]*|\s*)$'},
+            num_tree: {type: :string, pattern: '^([1-9][0-9]*|\s*)$'},
+          },
+        },
       },
     }
   end

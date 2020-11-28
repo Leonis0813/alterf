@@ -1,4 +1,5 @@
-# 4.14.4 (2020/10/09)
+# 4.15.0 (2020/11/28)
+- [UPDATE] analysis view to specify parameters
 - [UPDATE] gems
 
 # 4.14.3 (2020/09/02)

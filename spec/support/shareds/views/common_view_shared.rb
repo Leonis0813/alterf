@@ -32,6 +32,14 @@ shared_examples 'ヘッダーが表示されていること' do
   end
 end
 
+shared_examples 'タイトルが表示されていること' do |expected_title|
+  it do
+    title = @html.xpath("#{form_panel_xpath}/h3")
+    is_asserted_by { title.present? }
+    is_asserted_by { title.text == expected_title }
+  end
+end
+
 shared_examples '表示件数情報が表示されていること' do |total: 0, from: 0, to: 0|
   it 'タイトルが表示されていること' do
     title = @html.xpath("#{table_panel_xpath}/h3")
@@ -53,7 +61,7 @@ shared_examples 'ページングボタンが表示されていないこと' do
   end
 end
 
-shared_examples 'ページングボタンが表示されていること' do |model: nil|
+shared_examples 'ページングボタンが表示されていること' do
   it '先頭のページへのボタンが表示されていないこと' do
     is_asserted_by { @html.xpath(link_first_xpath).blank? }
   end
@@ -69,13 +77,13 @@ shared_examples 'ページングボタンが表示されていること' do |mod
   end
 
   it '2ページ目へのリンクが表示されていること' do
-    link_two = @html.xpath(link_two_xpath(model))
+    link_two = @html.xpath(link_two_xpath)
     is_asserted_by { link_two.present? }
     is_asserted_by { link_two.text == '2' }
   end
 
   it '次のページへのボタンが表示されていること' do
-    link_next = @html.xpath(link_next_xpath(model))
+    link_next = @html.xpath(link_next_xpath)
     is_asserted_by { link_next.present? }
     is_asserted_by { link_next.text == I18n.t('views.pagination.next') }
   end

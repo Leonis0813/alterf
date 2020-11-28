@@ -1,0 +1,44 @@
+ <div class='modal fade' id='dialog-parameter' tabindex='-1' role='dialog' aria-hidden='true'>
+  <div class='modal-dialog'>
+    <div class='modal-content'>
+      <div class='modal-header'>
+        <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>
+          &times;
+        </button>
+        <h4 class='modal-title'>
+          パラメーター
+        </h4>
+      </div>
+      <div class='modal-body'>
+        <div class='form-group'>
+          <table class='table'>
+            <thead>
+              <th>名前</th>
+              <th>値</th>
+            </thead>
+            <tbody>
+              <% %w[
+                   max_depth
+                   max_features
+                   max_leaf_nodes
+                   min_samples_leaf
+                   min_samples_split
+                   num_tree
+                 ].each do |name| %>
+              <tr>
+                <td><%= name %></td>
+                <td id='parameter-<%= name %>'></td>
+              </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class='modal-footer'>
+        <button id='btn-modal-parameter-ok' class='btn btn-primary'>
+          OK
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

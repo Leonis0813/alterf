@@ -3,6 +3,18 @@
 require 'rails_helper'
 
 describe 'ブラウザで分析する', type: :request do
+  shared_examples 'ダイアログが正しく表示されていること' do |title, message|
+    it 'タイトルが正しいこと' do
+      xpath = 'div//h4[@class="modal-title"]'
+      is_asserted_by { @dialog.find_element(:xpath, xpath).text == title }
+    end
+
+    it 'メッセージが正しいこと' do
+      xpath = 'div//div[@class="modal-body"]'
+      is_asserted_by { @dialog.find_element(:xpath, xpath).text == message }
+    end
+  end
+
   include_context 'Webdriver起動'
 
   describe '分析画面を開く' do
@@ -16,65 +28,81 @@ describe 'ブラウザで分析する', type: :request do
   describe '不正な値を入力する' do
     before(:all) do
       @driver.find_element(:id, 'analysis_num_data').send_keys('invalid')
-      @driver.find_element(:id, 'analysis_num_tree').send_keys(1)
       @driver.find_element(:xpath, '//form/input[@value="実行"]').click
-      @wait.until { @driver.find_element(:class, 'modal-body').displayed? }
+      @wait.until { @driver.find_element(:id, 'dialog-execute-error').displayed? }
+      @dialog = @driver.find_element(:id, 'dialog-execute-error')
     end
 
-    it 'タイトルが正しいこと' do
-      xpath = '//div[@class="modal-header"]/h4[@class="modal-title"]'
-      text = 'エラーが発生しました'
-      is_asserted_by { @driver.find_element(:xpath, xpath).text == text }
-    end
-
-    it 'エラーメッセージが正しいこと' do
-      xpath = '//div[@class="modal-body"]/div'
-      text = '入力値を見直してください'
-      is_asserted_by { @driver.find_element(:xpath, xpath).text == text }
-    end
+    it_behaves_like 'ダイアログが正しく表示されていること',
+                    'エラーが発生しました',
+                    '入力値を見直してください'
 
     describe 'エントリー数を指定せずに分析を実行する' do
       before(:all) do
         @driver.get("#{base_url}/analyses")
         @driver.find_element(:id, 'analysis_num_data').send_keys(100)
-        @driver.find_element(:id, 'analysis_num_tree').send_keys(10)
         @driver.find_element(:xpath, '//form/input[@value="実行"]').click
-        @wait.until { @driver.find_element(:class, 'modal-body').displayed? }
+        @wait.until { @driver.find_element(:id, 'dialog-execute').displayed? }
+        @dialog = @driver.find_element(:id, 'dialog-execute')
       end
 
-      it 'タイトルが正しいこと' do
-        xpath = '//div[@class="modal-header"]/h4[@class="modal-title"]'
-        text = '分析を開始しました'
-        is_asserted_by { @driver.find_element(:xpath, xpath).text == text }
-      end
-
-      it 'ダイアログのメッセージが正しいこと' do
-        xpath = '//div[@class="modal-body"]/div'
-        text = '終了後、メールにて結果を通知します'
-        is_asserted_by { @driver.find_element(:xpath, xpath).text == text }
-      end
+      it_behaves_like 'ダイアログが正しく表示されていること',
+                      '分析を開始しました',
+                      '終了後、メールにて結果を通知します'
     end
 
     describe 'エントリー数を指定して分析を実行する' do
       before(:all) do
         @driver.get("#{base_url}/analyses")
         @driver.find_element(:id, 'analysis_num_data').send_keys(100)
-        @driver.find_element(:id, 'analysis_num_tree').send_keys(10)
         @driver.find_element(:id, 'analysis_num_entry').send_keys(10)
         @driver.find_element(:xpath, '//form/input[@value="実行"]').click
-        @wait.until { @driver.find_element(:class, 'modal-body').displayed? }
+        @wait.until { @driver.find_element(:id, 'dialog-execute').displayed? }
+        @dialog = @driver.find_element(:id, 'dialog-execute')
       end
 
-      it 'タイトルが正しいこと' do
-        xpath = '//div[@class="modal-header"]/h4[@class="modal-title"]'
-        text = '分析を開始しました'
-        is_asserted_by { @driver.find_element(:xpath, xpath).text == text }
+      it_behaves_like 'ダイアログが正しく表示されていること',
+                      '分析を開始しました',
+                      '終了後、メールにて結果を通知します'
+    end
+
+    describe 'パラメーターを指定して分析を実行する' do
+      before(:all) do
+        @driver.get("#{base_url}/analyses")
+        @driver.find_element(:id, 'analysis_num_data').send_keys(100)
+        @wait.until do
+          res = @driver.find_element(:id, 'collapse-parameter').click rescue false
+          res.nil?
+        end
+        num_tree = @driver.find_element(:id, 'analysis_parameter_attributes_num_tree')
+        num_tree.clear
+        num_tree.send_keys(10)
+        @driver.find_element(:xpath, '//form/input[@value="実行"]').click
+        @wait.until { @driver.find_element(:id, 'dialog-execute').displayed? }
+        @dialog = @driver.find_element(:id, 'dialog-execute')
       end
 
-      it 'ダイアログのメッセージが正しいこと' do
-        xpath = '//div[@class="modal-body"]/div'
-        text = '終了後、メールにて結果を通知します'
-        is_asserted_by { @driver.find_element(:xpath, xpath).text == text }
+      it_behaves_like 'ダイアログが正しく表示されていること',
+                      '分析を開始しました',
+                      '終了後、メールにて結果を通知します'
+
+      describe '確認ダイアログを表示する' do
+        before(:all) do
+          @driver.get("#{base_url}/analyses")
+          @driver.find_element(:xpath, '//button[contains(@class, "btn-param")]').click
+          @wait.until { @driver.find_element(:id, 'dialog-parameter').displayed? }
+        end
+
+        it 'パラメーター確認ダイアログが表示されていること' do
+          xpath = '//div[@id="dialog-parameter"]//h4[@class="modal-title"]'
+          title = 'パラメーター'
+          is_asserted_by { @driver.find_element(:xpath, xpath).text == title }
+        end
+
+        it 'パラメーターが表示されていること' do
+          xpath = '//div[@id="dialog-parameter"]//td[@id="parameter-num_tree"]'
+          is_asserted_by { @driver.find_element(:xpath, xpath).text == '10' }
+        end
       end
     end
   end
