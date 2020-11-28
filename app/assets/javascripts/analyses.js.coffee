@@ -2,40 +2,20 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 $ ->
-  successDialog = ->
-    bootbox.alert({
-      title: '分析を開始しました',
-      message: '終了後、メールにて結果を通知します',
-      callback: ->
-        location.reload()
-        return
-    })
-    return
-
-  failureDialog = ->
-    bootbox.alert({
-      title: 'エラーが発生しました',
-      message: '入力値を見直してください',
-      callback: ->
-        $('.btn-submit').prop('disabled', false)
-        return
-    })
-    return
-
   $('#new_analysis').on 'ajax:success', (event, xhr, status, error) ->
-    successDialog()
+    $('#dialog-execute').modal('show')
     return
 
   $('#new_analysis').on 'ajax:error', (event, xhr, status, error) ->
-    failureDialog()
+    $('#dialog-execute-error').modal('show')
     return
 
   $('#table-analysis').on 'ajax:success', (event, data, status, xhr) ->
-    successDialog()
+    $('#dialog-execute').modal('show')
     return
 
   $('#table-analysis').on 'ajax:error', (event, xhr, status, error) ->
-    failureDialog()
+    $('#dialog-execute-error').modal('show')
     return
 
   $('#parameter').on 'show.bs.collapse', ->
@@ -71,7 +51,17 @@ $ ->
     )
     return
 
-  $('#btn-modal-ok').on 'click', ->
+  $('#btn-modal-parameter-ok').on 'click', ->
     $('#dialog-parameter').modal('hide')
+    return
+
+  $('#btn-modal-execute-ok').on 'click', ->
+    $('#dialog-execute').modal('hide')
+    location.reload()
+    return
+
+  $('#btn-modal-execute-error-ok').on 'click', ->
+    $('#dialog-execute-error').modal('hide')
+    $('.btn-submit').prop('disabled', false)
     return
   return
