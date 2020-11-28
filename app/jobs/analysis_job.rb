@@ -7,13 +7,16 @@ class AnalysisJob < ApplicationJob
 
     output_dir = Rails.root.join('tmp', 'files', 'analyses', analysis_id.to_s)
     FileUtils.mkdir_p(output_dir)
+    parameter = analysis.parameter.attributes.merge('num_data' => analysis.num_data)
+    parameter.except!('created_at', 'updated_at')
+    parameter_file = File.join(output_dir, 'parameter.yml')
 
     if analysis.num_entry
-      args = [analysis_id, analysis.num_data, analysis.num_tree, analysis.num_entry]
-      execute_script('analyze_with_num_entry.py', args)
+      dump_yaml(parameter_file, parameter.merge('num_entry' => analysis.num_entry))
+      execute_script('analyze_with_num_entry.py', [analysis_id])
     else
-      args = [analysis_id, analysis.num_data, analysis.num_tree]
-      execute_script('analyze.py', args)
+      dump_yaml(parameter_file, parameter)
+      execute_script('analyze.py', [analysis_id])
     end
 
     metadata = {}
@@ -22,11 +25,7 @@ class AnalysisJob < ApplicationJob
       metadata = YAML.load_file(yaml_file)
       analysis.update!(num_feature: metadata['num_feature'])
     end
-
-    File.open(yaml_file, 'w') do |file|
-      metadata.merge!(analysis.slice(:analysis_id, :num_feature))
-      YAML.dump(metadata.stringify_keys, file)
-    end
+    dump_yaml(yaml_file, metadata.merge(analysis.slice(:analysis_id, :num_feature)))
 
     metadata['importance'].each do |feature_name, value|
       analysis.result.importances.create!(feature_name: feature_name, value: value)
@@ -40,5 +39,13 @@ class AnalysisJob < ApplicationJob
     Rails.logger.error(e.backtrace.join("\n"))
     analysis.update!(state: Analysis::STATE_ERROR)
     AnalysisMailer.error(analysis).deliver_now
+  end
+
+  private
+
+  def dump_yaml(file, content)
+    File.open(file, 'w') do |yaml|
+      YAML.dump(content, yaml)
+    end
   end
 end

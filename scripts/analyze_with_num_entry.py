@@ -10,13 +10,11 @@ import yaml
 
 args = sys.argv
 analysis_id = args[1]
-num_training_data = int(args[2])
-ntree = int(args[3])
-nentry = int(args[4])
 
 workdir = os.path.dirname(os.path.abspath(args[0]))
 outputdir = workdir + '/../tmp/files/analyses/' + analysis_id
 config = yaml.load(open(workdir + '/../config/settings.yml', 'r+'))
+parameter = yaml.load(open(outputdir + '/parameter.yml', 'r+'))
 
 def create_race_feature(group):
   group = group.sort_values('number')
@@ -25,7 +23,7 @@ def create_race_feature(group):
   for name in config['analysis']['feature']['races']:
     feature[name] = group[name].head(1)
 
-  for i in range(nentry):
+  for i in range(parameter['num_entry']):
     for name in config['analysis']['feature']['horses']:
       feature[name + '_' + str(i)] = group.iloc[i][name]
 
@@ -35,11 +33,11 @@ def create_race_feature(group):
     feature['won_' + str(i)] = group.iloc[i]['won']
 
   wons = pd.Series()
-  for i in range(nentry):
+  for i in range(parameter['num_entry']):
     wons = wons.append(feature['won_' + str(i)], ignore_index=True)
     feature['won'] = wons.where(wons == 1).first_valid_index()
 
-  for i in range(nentry):
+  for i in range(parameter['num_entry']):
     feature = feature.drop('won_' + str(i), axis=1)
 
   feature['race_id'] = group.iloc[0]['race_id']
@@ -56,11 +54,11 @@ cursor = connection.cursor(dictionary=True)
 
 sql = 'SELECT race_id, COUNT(*) as nentry' \
   + ' FROM features' \
-  + ' GROUP BY race_id HAVING nentry = ' + str(nentry)
+  + ' GROUP BY race_id HAVING nentry = ' + str(parameter['num_entry'])
 cursor.execute(sql)
 race_ids = pd.DataFrame(cursor.fetchall())['race_id']
-if (len(race_ids) > num_training_data):
-  race_ids = np.random.choice(race_ids, int(num_training_data), replace=False)
+if (len(race_ids) > parameter['num_data']):
+  race_ids = np.random.choice(race_ids, int(parameter['num_data']), replace=False)
 
 cursor.execute('desc features')
 fields = pd.DataFrame(cursor.fetchall())['Field']
@@ -71,9 +69,13 @@ sql = 'SELECT ' + ','.join(feature_names) \
   + ' FROM features WHERE race_id IN (' + ','.join(race_ids) + ')'
 cursor.execute(sql)
 feature = pd.DataFrame(cursor.fetchall())
+
 mapping = yaml.load(open(workdir + '/mapping.yml', 'r+'))
 for name in mapping:
   feature[name] = feature[name].map(mapping[name]).astype(int)
+
+feature['horse_average_prize_money'] = feature['horse_average_prize_money'].astype(float)
+feature['jockey_average_prize_money'] = feature['jockey_average_prize_money'].astype(float)
 
 columns = feature.columns.to_list()
 columns.remove('race_id')
@@ -91,7 +93,15 @@ training_data[columns].to_csv(outputdir + '/training_data.csv', index=False)
 
 training_data = training_data.drop('race_id', axis=1)
 
-classifier = RandomForestClassifier(n_estimators=ntree, random_state=0)
+classifier = RandomForestClassifier(
+  max_depth=parameter['max_depth'],
+  max_features=parameter['max_features'],
+  max_leaf_nodes=parameter['max_leaf_nodes'],
+  min_samples_leaf=parameter['min_samples_leaf'],
+  min_samples_split=parameter['min_samples_split'],
+  n_estimators=parameter['num_tree'],
+  random_state=0
+)
 classifier.fit(training_data.drop('won', axis=1), training_data['won'].astype('int'))
 
 file = open(outputdir + '/metadata.yml', 'w+')
@@ -101,8 +111,8 @@ for i in range(len(training_data.columns) - 1):
   importance[training_data.columns[i]] = importance_values[i]
 
 metadata = {
-  'num_training_data': len(training_data),
-  'num_tree': ntree,
+  'num_data': len(training_data),
+  'num_tree': parameter['num_tree'],
   'num_feature': classifier.n_features_,
   'importance': importance
 }

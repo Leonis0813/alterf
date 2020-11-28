@@ -10,15 +10,16 @@ import yaml
 
 args = sys.argv
 analysis_id = args[1]
-num_training_data = int(args[2])
-ntree = int(args[3])
 
 workdir = os.path.dirname(os.path.abspath(args[0]))
 outputdir = workdir + '/../tmp/files/analyses/' + analysis_id
 config = yaml.load(open(workdir + '/../config/settings.yml', 'r+'))
+parameter = yaml.load(open(outputdir + '/parameter.yml', 'r+'))
 
 def normalize_racewise_feature(group):
   features = group[config['analysis']['racewise_features']]
+  features['horse_average_prize_money'] = features['horse_average_prize_money'].astype(float)
+  features['jockey_average_prize_money'] = features['jockey_average_prize_money'].astype(float)
   normalized = (features - features.min()) / (features.max() - features.min())
   for name in config['analysis']['racewise_features']:
     group[name] = normalized[name]
@@ -35,8 +36,8 @@ cursor = connection.cursor(dictionary=True)
 cursor.execute('SELECT race_id FROM features WHERE won = 1')
 race_ids = pd.DataFrame(cursor.fetchall())['race_id']
 
-if (len(race_ids) >= num_training_data / 2):
-  race_ids = np.random.choice(race_ids, int(num_training_data / 2), replace=False)
+if (len(race_ids) >= parameter['num_data'] / 2):
+  race_ids = np.random.choice(race_ids, int(parameter['num_data'] / 2), replace=False)
 
 cursor.execute('desc features')
 fields = pd.DataFrame(cursor.fetchall())['Field']
@@ -72,7 +73,15 @@ columns.insert(0, 'race_id')
 training_data[columns].sort_values(['race_id', 'number']).to_csv(outputdir + '/training_data.csv', index=False)
 training_data = training_data.drop('race_id', axis=1)
 
-classifier = RandomForestClassifier(n_estimators=ntree, random_state=0)
+classifier = RandomForestClassifier(
+  max_depth=parameter['max_depth'],
+  max_features=parameter['max_features'],
+  max_leaf_nodes=parameter['max_leaf_nodes'],
+  min_samples_leaf=parameter['min_samples_leaf'],
+  min_samples_split=parameter['min_samples_split'],
+  n_estimators=parameter['num_tree'],
+  random_state=0
+)
 classifier.fit(training_data.drop('won', axis=1), training_data['won'])
 
 file = open(outputdir + '/metadata.yml', 'w+')
@@ -82,11 +91,11 @@ for i in range(len(training_data.columns) - 1):
   importance[training_data.columns[i]] = importance_values[i]
 
 metadata = {
-  'num_training_data': {
+  'num_data': {
     'positive': len(positive),
     'negative': len(negative)
   },
-  'num_tree': ntree,
+  'num_tree': parameter['num_tree'],
   'num_feature': classifier.n_features_,
   'importance': importance
 }
