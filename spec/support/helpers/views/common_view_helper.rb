@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
-module AnalysisViewHelper
+module CommonViewHelper
+  DEFAULT_PER_PAGE = 1
+
   def state_map
     {
       'waiting' => '実行待ち',
@@ -15,31 +17,20 @@ module AnalysisViewHelper
   end
 
   def form_panel_xpath
-    [row_xpath, 'div[@class="col-lg-3"]', 'div[@id="new-analysis"]'].join('/')
+    [row_xpath, 'div[@class="col-lg-4"]'].join('/')
   end
 
-  def form_xpath
+  def form_xpath(model)
     [
       form_panel_xpath,
-      'form[@action="/analyses"][@data-remote="true"][@method="post"]' \
-      '[@class="new_analysis"]',
+      "div[@id='new-#{model}']",
+      "form[@action='/#{model.pluralize}'][@data-remote='true'][@method='post']" \
+      "[@class='new_#{model}']",
     ].join('/')
   end
 
-  def input_xpath
-    [form_xpath, 'div[@class="form-group"]'].join('/')
-  end
-
-  def parameter_form_block_xpath
-    [form_xpath, 'div[@class="collapse"]', 'div[@class="form-group"]'].join('/')
-  end
-
-  def table_panel_xpath
-    [row_xpath, 'div[@class="col-lg-9 well"]'].join('/')
-  end
-
-  def table_xpath
-    [table_panel_xpath, 'table[@id="table-analysis"]'].join('/')
+  def input_xpath(model)
+    [form_xpath(model), 'div[@class="form-group"]'].join('/')
   end
 
   def paging_xpath
@@ -58,20 +49,20 @@ module AnalysisViewHelper
     [paging_xpath, 'li[@class="page-item active"]', 'a[@class="page-link"]'].join('/')
   end
 
-  def link_two_xpath(model)
+  def link_two_xpath(path)
     [
       paging_xpath,
       'li[@class="page-item"]',
-      "a[@class='page-link'][@href='/#{model.pluralize}?page=2']",
+      "a[@class='page-link'][@href='#{path}?page=2']",
     ].join('/')
   end
 
-  def link_next_xpath(model)
+  def link_next_xpath(path)
     [
       paging_xpath,
       'li[@class="page-item"]',
       'span[@class="next"]',
-      "a[@class='page-link'][@href='/#{model.pluralize}?page=2']",
+      "a[@class='page-link'][@href='#{path}?page=2']",
     ].join('/')
   end
 
@@ -81,5 +72,9 @@ module AnalysisViewHelper
 
   def list_gap_xpath
     [paging_xpath, 'li[@class="page-item disabled"]', 'a[@href="#"]'].join('/')
+  end
+
+  def table_panel_xpath
+    [row_xpath, 'div[@class="col-lg-8 well"]'].join('/')
   end
 end

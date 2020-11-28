@@ -3,10 +3,10 @@
 require 'rails_helper'
 
 describe 'analyses/manage', type: :view do
-  include AnalysisViewShared
+  include AnalysisViewHelper
 
   before(:all) do
-    Kaminari.config.default_per_page = AnalysisViewShared::DEFAULT_PER_PAGE
+    Kaminari.config.default_per_page = AnalysisViewHelper::DEFAULT_PER_PAGE
     @analysis = Analysis.new
     @analysis.build_parameter
   end
@@ -16,7 +16,7 @@ describe 'analyses/manage', type: :view do
     @html ||= Nokogiri.parse(response)
   end
 
-  context '実行待ちの場合', :wip do
+  context '実行待ちの場合' do
     include_context 'トランザクション作成'
     include_context '分析ジョブを作成する'
     include_context 'HTML初期化'
@@ -65,12 +65,12 @@ describe 'analyses/manage', type: :view do
     it_behaves_like 'ジョブの状態が正しいこと', 'エラー'
   end
 
-  total = AnalysisViewShared::DEFAULT_PER_PAGE * (Kaminari.config.window + 2)
-  context "分析ジョブ情報が#{total}件の場合" do
+  total = AnalysisViewHelper::DEFAULT_PER_PAGE * (Kaminari.config.window + 2)
+  context "分析ジョブ情報が#{total}件の場合", :wip do
     include_context 'トランザクション作成'
     include_context '分析ジョブを作成する', total: total
     include_context 'HTML初期化'
     it_behaves_like '画面共通テスト', expected: {total: total}
-    it_behaves_like 'ページングボタンが表示されていること', model: 'analysis'
+    it_behaves_like 'ページングボタンが表示されていること'
   end
 end
