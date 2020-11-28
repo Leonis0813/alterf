@@ -4,9 +4,9 @@
 特徴量の数: <%= @analysis.num_feature %>
 エントリー数: <%= @analysis.num_entry || '指定なし' %>
 パラメータ:
-  max_depth: <%= @analysis.max_depth %>
-  max_features: <%= @analysis.max_feature %>
-  max_leaf_nodes: <%= @analysis.max_leaf_nodes %>
-  min_samples_leaf: <%= @analysis.min_samples_leaf %>
-  min_samples_split: <%= @analysis.min_samples_split %>
-  num_tree: <%= @analysis.num_tree %>
+  max_depth: <%= @analysis.parameter.max_depth %>
+  max_features: <%= @analysis.parameter.max_feature %>
+  max_leaf_nodes: <%= @analysis.parameter.max_leaf_nodes %>
+  min_samples_leaf: <%= @analysis.parameter.min_samples_leaf %>
+  min_samples_split: <%= @analysis.parameter.min_samples_split %>
+  num_tree: <%= @analysis.parameter.num_tree %>
