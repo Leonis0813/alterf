@@ -18,13 +18,13 @@
             </thead>
             <tbody>
               <% %w[
-                max_depth
-                max_features
-                max_leaf_nodes
-                min_samples_leaf
-                min_samples_split
-                num_tree
-              ].each do |name| %>
+                   max_depth
+                   max_features
+                   max_leaf_nodes
+                   min_samples_leaf
+                   min_samples_split
+                   num_tree
+                 ].each do |name| %>
               <tr>
                 <td><%= name %></td>
                 <td id='parameter-<%= name %>'></td>

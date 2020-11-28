@@ -91,7 +91,7 @@ describe 'ブラウザで分析する', type: :request do
 
         it 'パラメーター確認ダイアログが表示されていること' do
           xpath = '//div[@id="dialog-parameter"]//h4[@class="modal-title"]'
-          text = 'パラメーター'
+          title = 'パラメーター'
           is_asserted_by { @driver.find_element(:xpath, xpath).text == title }
         end
 
