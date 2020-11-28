@@ -147,7 +147,7 @@ shared_examples '分析ジョブテーブルが表示されていること' do |
   end
 
   it 'パラメーター表示ボタンが表示されていること' do
-    @rows do |row|
+    @rows.each do |row|
       button = row.search('td')[4].search('button')
       is_asserted_by { button.present? }
       is_asserted_by { button.text.strip == '確認' }
