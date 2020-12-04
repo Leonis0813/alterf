@@ -33,6 +33,7 @@ class AnalysisJob < ApplicationJob
 
     create_zip(%w[metadata.yml model.rf], 'model.zip')
     create_zip(tree_files + %w[feature.csv training_data.csv], 'analysis.zip')
+    create_zip(%w[model.zip analysis.zip], 'result.zip')
 
     metadata['importance'].each do |feature_name, value|
       analysis.result.importances.create!(feature_name: feature_name, value: value)
