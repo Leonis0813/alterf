@@ -1,5 +1,5 @@
 class AnalysesController < ApplicationController
-  before_action :check_request_analysis, only: %i[show]
+  before_action :check_request_analysis, only: %i[show download]
 
   def manage
     @analysis = Analysis.new
@@ -26,6 +26,15 @@ class AnalysesController < ApplicationController
 
   def show
     @analysis = request_analysis
+  end
+
+  def download
+    file_path =
+      Rails.root.join('tmp', 'files', 'analyses', request_analysis.id.to_s, 'data.zip')
+    raise NotFound unless File.exist?(file_path)
+
+    stat = File.stat
+    send_file(file_path, filename: 'data.zip', length: stat.size)
   end
 
   private
