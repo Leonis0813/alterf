@@ -40,15 +40,14 @@ ActiveRecord::Schema.define(version: 20201205121459) do
     t.integer  "analysis_result_decision_tree_id",            null: false
     t.integer  "node_id",                                     null: false
     t.string   "node_type",                                   null: false
+    t.string   "group"
     t.string   "feature_name",                                null: false
     t.float    "threshold",                        limit: 24, null: false
-    t.integer  "left_node_id"
-    t.integer  "right_node_id"
+    t.integer  "parent_id"
     t.datetime "created_at",                                  null: false
     t.datetime "updated_at",                                  null: false
     t.index ["analysis_result_decision_tree_id"], name: "index_analysis_result_decision_tree_id_on_nodes", using: :btree
-    t.index ["left_node_id"], name: "fk_rails_323606f495", using: :btree
-    t.index ["right_node_id"], name: "fk_rails_fa73ed73f0", using: :btree
+    t.index ["parent_id"], name: "fk_rails_4ea2de4774", using: :btree
   end
 
   create_table "analysis_result_decision_trees", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -123,6 +122,5 @@ ActiveRecord::Schema.define(version: 20201205121459) do
     t.index ["prediction_id"], name: "index_predictions_on_prediction_id", unique: true, using: :btree
   end
 
-  add_foreign_key "analysis_result_decision_tree_nodes", "analysis_result_decision_tree_nodes", column: "left_node_id"
-  add_foreign_key "analysis_result_decision_tree_nodes", "analysis_result_decision_tree_nodes", column: "right_node_id"
+  add_foreign_key "analysis_result_decision_tree_nodes", "analysis_result_decision_tree_nodes", column: "parent_id"
 end
