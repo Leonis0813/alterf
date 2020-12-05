@@ -39,7 +39,6 @@ module AnalysisViewHelper
 
   def download_link_xpath(analysis)
     [
-      "a[@href='/analyses/#{analysis.analysis_id}/download']",
       'button[@class="btn btn-default"]',
       'span[@class="glyphicon glyphicon-download-alt"]',
     ].join('/')
