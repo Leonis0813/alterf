@@ -7,11 +7,11 @@ $ ->
     $('#dialog-execute-error').modal('show')
     return
 
-  $('#table-analysis').on 'ajax:success', (event, data, status, xhr) ->
+  $('#table-analysis').on 'ajax:success', '.rebuild', (event, data, status, xhr) ->
     $('#dialog-execute').modal('show')
     return
 
-  $('#table-analysis').on 'ajax:error', (event, xhr, status, error) ->
+  $('#table-analysis').on 'ajax:error', '.rebuild', (event, xhr, status, error) ->
     $('#dialog-execute-error').modal('show')
     return
 
@@ -62,15 +62,15 @@ $ ->
     $('.btn-submit').prop('disabled', false)
     return
 
-  $('tbody').on 'ajax:success', '.download', (event, data, status, xhr) ->
-    blob = new Blob([data], {type: 'text/plain'})
+  $('#tbody-analysis').on 'ajax:success', '.download', (event, data, status, xhr) ->
+    blob = new Blob([data], {type: 'octet/stream'})
     blobUrl = (URL || webkitURL).createObjectURL(blob)
     filename = /filename="(.*)"/.exec(xhr.getResponseHeader('Content-Disposition'))[1]
     $('<a>', {href: blobUrl, download: filename})[0].click()
     (URL || webkitURL).revokeObjectURL(blobUrl)
     return
 
-  $('tbody').on 'ajax:error', '.download', (event, xhr, status, error) ->
+  $('#tbody-analysis').on 'ajax:error', '.download', (event, xhr, status, error) ->
     bootbox.alert({
       title: 'エラーが発生しました',
       message: '分析結果が存在しません',
