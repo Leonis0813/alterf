@@ -210,9 +210,8 @@ shared_examples '分析ジョブの状態が正しいこと' do |state, num_entr
   end
 
   it '完了の場合はダウンロードボタンが表示されていること', if: state == '完了' do
-    @analyses.each_with_index do |analysis, i|
-      download_button = @rows[i].search('td')[6]
-      download_link = download_button.search(download_link_xpath)
+    @rows.each do |row|
+      download_link = row.search('td')[6].search(download_link_xpath)
       is_asserted_by { download_link.present? }
     end
   end
