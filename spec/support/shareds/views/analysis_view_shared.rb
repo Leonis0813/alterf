@@ -116,8 +116,8 @@ shared_examples '分析ジョブテーブルが表示されていること' do |
     @rows = @table.search('tbody/tr')
   end
 
-  it '7列のテーブルが表示されていること' do
-    is_asserted_by { @table.search('thead/th').size == 7 }
+  it '8列のテーブルが表示されていること' do
+    is_asserted_by { @table.search('thead/th').size == 8 }
   end
 
   %w[実行開始日時 学習データ数 特徴量の数 エントリー数 パラメーター 状態].each_with_index do |text, i|
@@ -156,7 +156,7 @@ shared_examples '分析ジョブテーブルが表示されていること' do |
 
   it '再実行ボタンが表示されていること' do
     @analyses.each_with_index do |analysis, i|
-      rebuild_form = @rows[i].search('td')[6].search('form')
+      rebuild_form = @rows[i].search('td')[7].search('form')
       is_asserted_by { rebuild_form.present? }
 
       inputs = rebuild_form.search('input')
