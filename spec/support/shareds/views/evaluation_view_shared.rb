@@ -174,10 +174,8 @@ shared_examples 'ダウンロードボタンが表示されていないこと' d
 
     @evaluations.each_with_index do |evaluation, i|
       download_button = rows[i].children.search('td')[6]
-      link_xpath = "a[@href='/evaluations/#{evaluation.evaluation_id}/download']" \
-                   '/button[@class="btn btn-success"]' \
-                   '/span[@class="glyphicon glyphicon-download-alt"]'
-      is_asserted_by { download_button.children.search(link_xpath).blank? }
+      download_link = download_button.search(download_link_xpath(evaluation))
+      is_asserted_by { download_link.blank? }
     end
   end
 end
@@ -188,10 +186,8 @@ shared_examples 'ダウンロードボタンが表示されていること' do
 
     @evaluations.each_with_index do |evaluation, i|
       download_button = rows[i].children.search('td')[6]
-      link_xpath = "a[@href='/evaluations/#{evaluation.evaluation_id}/download']" \
-                   '/button[@class="btn btn-success"]' \
-                   '/span[@class="glyphicon glyphicon-download-alt"]'
-      is_asserted_by { download_button.children.search(link_xpath).present? }
+      download_link = download_button.search(download_link_xpath(evaluation))
+      is_asserted_by { download_link.present? }
     end
   end
 end

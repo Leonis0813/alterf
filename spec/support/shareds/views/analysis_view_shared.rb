@@ -116,14 +116,18 @@ shared_examples '分析ジョブテーブルが表示されていること' do |
     @rows = @table.search('tbody/tr')
   end
 
-  it '7列のテーブルが表示されていること' do
-    is_asserted_by { @table.search('thead/th').size == 7 }
+  it '8列のテーブルが表示されていること' do
+    is_asserted_by { @table.search('thead/th').size == 8 }
   end
 
   %w[実行開始日時 学習データ数 特徴量の数 エントリー数 パラメーター 状態].each_with_index do |text, i|
     it "#{i + 1}列目のヘッダーが#{text}であること" do
       is_asserted_by { @table.search('thead/th')[i].text == text }
     end
+  end
+
+  it 'ダウンロードボタンが配置されている列があること' do
+    is_asserted_by { @table.search('thead/th[@class="download"]').present? }
   end
 
   it '再実行ボタンが配置されている列があること' do
@@ -156,7 +160,7 @@ shared_examples '分析ジョブテーブルが表示されていること' do |
 
   it '再実行ボタンが表示されていること' do
     @analyses.each_with_index do |analysis, i|
-      rebuild_form = @rows[i].search('td')[6].search('form')
+      rebuild_form = @rows[i].search('td')[7].search('form')
       is_asserted_by { rebuild_form.present? }
 
       inputs = rebuild_form.search('input')
@@ -180,6 +184,12 @@ shared_examples '分析ジョブの状態が正しいこと' do |state, num_entr
     end
   end
 
+  it 'エントリー数が表示されていること', if: num_entry > 0 do
+    @rows.each do |row|
+      is_asserted_by { row.search('td')[3].text.strip.to_i == num_entry }
+    end
+  end
+
   it '実行中の場合はアイコンが表示されていること', if: state == '実行中' do
     @rows.each do |row|
       td_children = row.search('td')[5].children
@@ -194,17 +204,15 @@ shared_examples '分析ジョブの状態が正しいこと' do |state, num_entr
 
   it '完了の場合は結果画面へのボタンが表示されていること', if: state == '完了' do
     @rows.each do |row|
-      td_children = row.search('td')[5].children
-      button_xpath = 'a/button[@class="btn btn-xs btn-success"]' \
-                     '/span[@class="glyphicon glyphicon-new-window"]'
-
-      is_asserted_by { td_children.search(button_xpath).present? }
+      result_button = row.search('td')[5].search(result_button_xpath)
+      is_asserted_by { result_button.present? }
     end
   end
 
-  it 'エントリー数が表示されていること', if: num_entry > 0 do
+  it '完了の場合はダウンロードボタンが表示されていること', if: state == '完了' do
     @rows.each do |row|
-      is_asserted_by { row.search('td')[3].text.strip.to_i == num_entry }
+      download_link = row.search('td')[6].search(download_link_xpath)
+      is_asserted_by { download_link.present? }
     end
   end
 end

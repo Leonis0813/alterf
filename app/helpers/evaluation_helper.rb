@@ -51,7 +51,7 @@ module EvaluationHelper
     }
   end
 
-  def download_button(evaluation)
+  def evaluation_data_download_button(evaluation)
     return if %w[text file].include?(evaluation.data_source)
     return unless evaluation.state == 'completed'
 
