@@ -5,5 +5,9 @@ class Analysis
              foreign_key: 'analysis_result_id',
              dependent: :destroy,
              inverse_of: :result
+    has_many :decision_trees,
+             foreign_key: 'analysis_result_id',
+             dependent: :destroy,
+             inverse_of: :result
   end
 end
