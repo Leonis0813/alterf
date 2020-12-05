@@ -33,7 +33,7 @@ class AnalysesController < ApplicationController
       Rails.root.join('tmp', 'files', 'analyses', request_analysis.id.to_s, 'result.zip')
     raise NotFound unless File.exist?(file_path)
 
-    stat = File.stat
+    stat = File.stat(file_path)
     send_file(file_path, filename: 'result.zip', length: stat.size)
   end
 
