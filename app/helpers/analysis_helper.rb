@@ -23,10 +23,8 @@ module AnalysisHelper
   def analysis_result_download_button(analysis)
     return unless analysis.state == 'completed'
 
-    link_to(analysis_download_path(analysis.analysis_id), remote: true) do
-      content_tag(:button, class: 'btn btn-default', title: '結果をダウンロード') do
-        content_tag(:span, nil, class: 'glyphicon glyphicon-download-alt')
-      end
+    content_tag(:button, class: 'btn btn-default', title: '結果をダウンロード') do
+      content_tag(:span, nil, class: 'glyphicon glyphicon-download-alt')
     end
   end
 
