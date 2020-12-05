@@ -16,4 +16,6 @@
 //= require twitter/bootstrap
 //= require bootbox
 //= require d3
+//= require jszip
+//= require FileSaver
 //= require_tree .

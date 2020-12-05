@@ -171,6 +171,7 @@ GEM
     faraday-http-cache (2.2.0)
       faraday (>= 0.8)
     ffi (1.13.1)
+    filesaverjs-rails (1.1.20150716)
     font-awesome-rails (4.7.0.5)
       railties (>= 3.2, < 6.1)
     fuubar (2.5.0)
@@ -211,6 +212,7 @@ GEM
     json (2.3.1)
     json-schema (2.8.1)
       addressable (>= 2.4)
+    jszip-rails (2.5.0)
     kaminari (1.2.1)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.2.1)
@@ -482,6 +484,7 @@ DEPENDENCIES
   database_cleaner
   execjs
   factory_bot_rails
+  filesaverjs-rails
   font-awesome-rails
   fuubar
   headless
@@ -489,6 +492,7 @@ DEPENDENCIES
   jbuilder
   jquery-rails
   json-schema
+  jszip-rails
   kaminari
   less-rails
   mysql2 (~> 0.3.20)
