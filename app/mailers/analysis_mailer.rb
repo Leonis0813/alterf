@@ -1,7 +1,7 @@
 # coding: utf-8
 
 class AnalysisMailer < ApplicationMailer
-  MAIL_TO = 'Leonis.0813@gmail.com'
+  MAIL_TO = 'Leonis.0813@gmail.com'.freeze
 
   def completed(analysis)
     @analysis = analysis

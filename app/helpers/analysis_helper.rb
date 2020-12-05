@@ -7,7 +7,7 @@ module AnalysisHelper
       {name: '学習データ数', width: 15},
       {name: '特徴量の数', width: 12},
       {name: 'エントリー数', width: 15},
-      {name: 'パラメーター', width: 28},
+      {name: 'パラメーター', width: 18},
       {name: '状態', width: 10},
     ]
   end
@@ -18,6 +18,16 @@ module AnalysisHelper
       nil,
       class: 'glyphicon glyphicon-question-sign', title: question_title[param_name],
     )
+  end
+
+  def analysis_result_download_button(analysis)
+    return unless analysis.state == 'completed'
+
+    link_to(analysis_download_path(analysis.analysis_id), remote: true) do
+      content_tag(:button, class: 'btn btn-success') do
+        content_tag(:span, nil, class: 'glyphicon glyphicon-download-alt')
+      end
+    end
   end
 
   private

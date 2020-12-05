@@ -80,6 +80,7 @@
         <% analysis_table_headers.each do |header| %>
           <th width='<%= header[:width] %>%'><%= header[:name] %></th>
         <% end %>
+        <th class='download'></th>
         <th class='rebuild'></th>
       </thead>
       <tbody id='tbody-analysis'>
