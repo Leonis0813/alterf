@@ -37,7 +37,7 @@ module AnalysisViewHelper
     [table_panel_xpath, 'table[@id="table-analysis"]'].join('/')
   end
 
-  def download_link_xpath(analysis)
+  def download_link_xpath
     [
       'button[@class="btn btn-default"]',
       'span[@class="glyphicon glyphicon-download-alt"]',
