@@ -1,6 +1,3 @@
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://coffeescript.org/
 $ ->
   $('#new_analysis').on 'ajax:success', (event, xhr, status, error) ->
     $('#dialog-execute').modal('show')
@@ -63,5 +60,20 @@ $ ->
   $('#btn-modal-execute-error-ok').on 'click', ->
     $('#dialog-execute-error').modal('hide')
     $('.btn-submit').prop('disabled', false)
+    return
+
+  $('tbody').on 'ajax:success', '.download', ->
+    blob = new Blob([data], {type: 'text/plain'})
+    blobUrl = (URL || webkitURL).createObjectURL(blob)
+    filename = /filename="(.*)"/.exec(xhr.getResponseHeader('Content-Disposition'))[1]
+    $('<a>', {href: blobUrl, download: filename})[0].click()
+    (URL || webkitURL).revokeObjectURL(blobUrl)
+    return
+
+  $('tbody').on 'ajax:error', '.download', ->
+    bootbox.alert({
+      title: 'エラーが発生しました',
+      message: '分析結果が存在しません',
+    })
     return
   return
