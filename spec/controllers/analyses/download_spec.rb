@@ -11,7 +11,7 @@ describe AnalysesController, type: :controller do
       @analysis = create(:analysis)
       dest_dir = File.join(tmp_dir, @analysis.id.to_s)
       FileUtils.mkdir_p(dest_dir)
-      FileUtils.cp(Rails.root.join('spec', 'fixtures', 'result.zip'), dest_dir)
+      FileUtils.cp(Rails.root.join('spec/fixtures/result.zip'), dest_dir)
     end
   end
 
