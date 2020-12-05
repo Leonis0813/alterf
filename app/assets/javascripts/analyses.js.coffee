@@ -62,7 +62,7 @@ $ ->
     $('.btn-submit').prop('disabled', false)
     return
 
-  $('tbody').on 'ajax:success', '.download', ->
+  $('tbody').on 'ajax:success', '.download', (event, data, status, xhr) ->
     blob = new Blob([data], {type: 'text/plain'})
     blobUrl = (URL || webkitURL).createObjectURL(blob)
     filename = /filename="(.*)"/.exec(xhr.getResponseHeader('Content-Disposition'))[1]
@@ -70,7 +70,7 @@ $ ->
     (URL || webkitURL).revokeObjectURL(blobUrl)
     return
 
-  $('tbody').on 'ajax:error', '.download', ->
+  $('tbody').on 'ajax:error', '.download', (event, xhr, status, error) ->
     bootbox.alert({
       title: 'エラーが発生しました',
       message: '分析結果が存在しません',
