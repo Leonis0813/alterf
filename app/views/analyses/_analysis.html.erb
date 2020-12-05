@@ -32,6 +32,9 @@
     <%= state_to_title(analysis.state) %>
   <% end %>
   </td>
+  <td class='download'>
+    <%= analysis_result_download_button(analysis) %>
+  </td>
   <td class='rebuild'>
     <%= form_tag analyses_path, remote: true, style: 'padding: 0px' do %>
       <%= hidden_field_tag :num_data, analysis.num_data, id: "num_data-#{analysis.analysis_id}" %>

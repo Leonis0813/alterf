@@ -15,15 +15,23 @@ module EvaluationViewHelper
     ].join('/')
   end
 
-  def table_xpath
-    [table_panel_xpath, 'table[@id="table-evaluation"]'].join('/')
-  end
-
   def link_two_xpath
     super('/evaluations')
   end
 
   def link_next_xpath
     super('/evaluations')
+  end
+
+  def table_xpath
+    [table_panel_xpath, 'table[@id="table-evaluation"]'].join('/')
+  end
+
+  def download_link_xpath(evaluation)
+    [
+      "a[@href='/evaluations/#{evaluation.evaluation_id}/download']",
+      'button[@class="btn btn-success"]',
+      'span[@class="glyphicon glyphicon-download-alt"]',
+    ].join('/')
   end
 end

@@ -1,12 +1,5 @@
 分析開始日時: <%= @analysis.created_at %>
 分析終了日時: <%= @analysis.updated_at %>
-学習データ数: <%= @analysis.num_data %>
-特徴量の数: <%= @analysis.num_feature %>
-エントリー数: <%= @analysis.num_entry || '指定なし' %>
-パラメータ:
-  max_depth: <%= @analysis.parameter.max_depth %>
-  max_features: <%= @analysis.parameter.max_features %>
-  max_leaf_nodes: <%= @analysis.parameter.max_leaf_nodes %>
-  min_samples_leaf: <%= @analysis.parameter.min_samples_leaf %>
-  min_samples_split: <%= @analysis.parameter.min_samples_split %>
-  num_tree: <%= @analysis.parameter.num_tree %>
+
+こちらから分析結果をダウンロードできます
+http://<%= Settings.analysis.host %>/alterf/analyses

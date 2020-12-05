@@ -2,6 +2,8 @@
 <%= render 'analyses/dialogs/execute' %>
 <%= render 'analyses/dialogs/execute_error' %>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.2.2/jszip.js"></script>
+
 <div class='row center-block'>
   <div class='col-lg-3'>
     <div id='new-analysis' class='well'>
@@ -80,6 +82,7 @@
         <% analysis_table_headers.each do |header| %>
           <th width='<%= header[:width] %>%'><%= header[:name] %></th>
         <% end %>
+        <th class='download'></th>
         <th class='rebuild'></th>
       </thead>
       <tbody id='tbody-analysis'>

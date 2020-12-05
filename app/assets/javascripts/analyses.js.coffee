@@ -1,6 +1,3 @@
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://coffeescript.org/
 $ ->
   $('#new_analysis').on 'ajax:success', (event, xhr, status, error) ->
     $('#dialog-execute').modal('show')
@@ -10,11 +7,11 @@ $ ->
     $('#dialog-execute-error').modal('show')
     return
 
-  $('#table-analysis').on 'ajax:success', (event, data, status, xhr) ->
+  $('#table-analysis').on 'ajax:success', '.rebuild', (event, data, status, xhr) ->
     $('#dialog-execute').modal('show')
     return
 
-  $('#table-analysis').on 'ajax:error', (event, xhr, status, error) ->
+  $('#table-analysis').on 'ajax:error', '.rebuild', (event, xhr, status, error) ->
     $('#dialog-execute-error').modal('show')
     return
 
@@ -63,5 +60,27 @@ $ ->
   $('#btn-modal-execute-error-ok').on 'click', ->
     $('#dialog-execute-error').modal('hide')
     $('.btn-submit').prop('disabled', false)
+    return
+
+  $('#tbody-analysis').on 'click', '.download', ->
+    analysisId = $(@).parents('tr').attr('id')
+    xhr = new XMLHttpRequest()
+    xhr.open('GET', "/alterf/analyses/#{analysisId}/download")
+    xhr.responseType = 'blob'
+    xhr.onload = (e) ->
+      if (this.status == 200)
+        data = this.response
+        blob = new Blob([data], {type: data.type})
+        blobUrl = (URL || webkitURL).createObjectURL(blob)
+        filename = /filename="(.*)"/.exec(xhr.getResponseHeader('Content-Disposition'))[1]
+        $('<a>', {href: blobUrl, download: filename})[0].click()
+        (URL || webkitURL).revokeObjectURL(blobUrl)
+      else
+        bootbox.alert({
+          title: 'エラーが発生しました',
+          message: '分析結果が存在しません',
+        })
+      return
+    xhr.send()
     return
   return
