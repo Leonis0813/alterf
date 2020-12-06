@@ -1,7 +1,28 @@
 <h3>分析結果</h3>
-<div class='well'>
-  <h4>重要度</h4>
-  <svg id='importance'></svg>
+<ul class='nav nav-tabs'>
+  <li class='active'>
+        <%= link_to '重要度', '#tab-importance', 'data-toggle' => 'tab' %>
+  </li>
+  <li>
+        <%= link_to '決定木', '#tab-decision_tree', 'data-toggle' => 'tab' %>
+  </li>
+</ul>
+
+<div class='tab-content'>
+  <div id='tab-importance' class='well tab-pane active'>
+    <h4>重要度</h4>
+    <svg id='importance'></svg>
+  </div>
+
+  <div id='tab-decision_tree' class='well tab-pane'>
+    <h4>決定木</h4>
+    <div class='form-inline'>
+      <%= label_tag :tree_id, 'ID' %>
+      <% options = @analysis.result.decision_trees.map(&:tree_id).sort %>
+      <%= select_tag :tree_id, options_for_select(options, 0), :class => 'form-control' %>
+    </div>
+    <svg id='decision_tree'></svg>
+  </div>
 </div>
 
 <script>
