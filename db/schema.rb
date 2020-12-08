@@ -41,8 +41,8 @@ ActiveRecord::Schema.define(version: 20201205121459) do
     t.integer  "node_id",                                     null: false
     t.string   "node_type",                                   null: false
     t.string   "group"
-    t.string   "feature_name",                                null: false
-    t.float    "threshold",                        limit: 24, null: false
+    t.string   "feature_name"
+    t.float    "threshold",                        limit: 24
     t.integer  "parent_id"
     t.datetime "created_at",                                  null: false
     t.datetime "updated_at",                                  null: false

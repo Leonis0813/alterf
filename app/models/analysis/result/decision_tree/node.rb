@@ -5,7 +5,7 @@ class Analysis
         NODE_TYPE_LIST = %w[root split leaf].freeze
         GROUP_LIST = %w[less greater].freeze
 
-        validates :node_id, :node_type, :feature_name, :threshold,
+        validates :node_id, :node_type,
                   presence: {message: MESSAGE_ABSENT}
         validates :node_id,
                   numericality: {

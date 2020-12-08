@@ -7,8 +7,8 @@ class CreateAnalysisResultDecisionTreeNodes < ActiveRecord::Migration[5.0]
       t.integer :node_id, null: false
       t.string :node_type, null: false
       t.string :group
-      t.string :feature_name, null: false
-      t.float :threshold, null: false
+      t.string :feature_name
+      t.float :threshold
       t.integer :parent_id
       t.timestamps null: false
     end
