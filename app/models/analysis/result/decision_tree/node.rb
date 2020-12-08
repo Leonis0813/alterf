@@ -20,7 +20,7 @@ class Analysis
                     message: MESSAGE_DUPLICATED,
                   }
         validates :node_type,
-                  inclusion: {in: NODE_TYPE_LIST, message: MESSAGE_INVALID}
+                  inclusion: {in: NODE_TYPE_LIST, message: MESSAGE_INVALID},
                   allow_nil: true
         validates :group,
                   inclusion: {in: GROUP_LIST, message: MESSAGE_INVALID},
