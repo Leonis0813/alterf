@@ -19,10 +19,9 @@ class Analysis
         importances.create!(feature_name: feature_name, value: value)
       end
 
-      Dir[File.join(output_dir, 'tree_*.yml')].each do |tree_file|
-        tree_id = File.basename(tree_file).match(/^tree_(\d+)/)[1].to_i
-        nodes = YAML.load_file(tree_file)['nodes']
-        decision_trees.create!(tree_id: tree_id, nodes: nodes)
+      metadata['num_tree'].times do |i|
+        decision_tree = decision_trees.create!(tree_id: i)
+        decision_tree.import!
       end
     end
   end

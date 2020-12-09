@@ -19,18 +19,20 @@ class Analysis
                dependent: :destroy,
                inverse_of: :decision_tree
 
-      def create!(attributes)
-        attributes['nodes'].each do |node|
-          node = nodes.new(
+      def import!
+        output_dir = Rails.root.join('tmp', 'files', 'analyses', result.analysis.id.to_s)
+        tree_file = File.join(output_dir, "tree_#{tree_id}.yml")
+
+        YAML.load_file(tree_file)['nodes'].each do |node|
+          nodes.create!(
             node_id: node['node_id'],
             node_type: node['node_type'],
             group: node['group'],
             feature_name: node['feature_name'],
             threshold: node['threshold'],
+            parent: nodes.find {|node| node.node_id == node['parent_id'] },
           )
-          node.parent = nodes.find {|node| node.node_id == node['parent_id'] }
         end
-        super(attributes.slice(:tree_id))
       end
     end
   end
