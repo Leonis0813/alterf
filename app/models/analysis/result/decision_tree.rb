@@ -30,7 +30,7 @@ class Analysis
             group: node['group'],
             feature_name: node['feature_name'],
             threshold: node['threshold'],
-            parent: nodes.find {|node| node.node_id == node['parent_id'] },
+            parent: nodes.reload.find {|node| node.node_id == node['parent_id'] },
           )
         end
       end
