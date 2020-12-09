@@ -36,7 +36,7 @@ class Analysis
         has_many :children,
                  class_name: 'Analysis::Result::DecisionTree::Node',
                  foreign_key: 'parent_id',
-                 dependent: :destroy
+                 dependent: :destroy,
                  inverse_of: :parent
       end
     end
