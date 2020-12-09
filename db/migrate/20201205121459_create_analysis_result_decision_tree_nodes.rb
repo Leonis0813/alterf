@@ -11,6 +11,10 @@ class CreateAnalysisResultDecisionTreeNodes < ActiveRecord::Migration[5.0]
       t.float :threshold
       t.integer :parent_id
       t.timestamps null: false
+
+      t.index %i[analysis_result_decision_tree_id node_id],
+              unique: true,
+              name: 'index_unique_analysis_result_decision_tree_id_node_id_on_nodes'
     end
 
     add_foreign_key :analysis_result_decision_tree_nodes,

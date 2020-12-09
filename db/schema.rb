@@ -46,6 +46,7 @@ ActiveRecord::Schema.define(version: 20201205121459) do
     t.integer  "parent_id"
     t.datetime "created_at",                                  null: false
     t.datetime "updated_at",                                  null: false
+    t.index ["analysis_result_decision_tree_id", "node_id"], name: "index_unique_analysis_result_decision_tree_id_node_id_on_nodes", unique: true, using: :btree
     t.index ["analysis_result_decision_tree_id"], name: "index_analysis_result_decision_tree_id_on_nodes", using: :btree
     t.index ["parent_id"], name: "fk_rails_4ea2de4774", using: :btree
   end

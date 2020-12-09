@@ -23,15 +23,9 @@ class Analysis
         output_dir = Rails.root.join('tmp', 'files', 'analyses', result.analysis.id.to_s)
         tree_file = File.join(output_dir, "tree_#{tree_id}.yml")
 
-        YAML.load_file(tree_file)['nodes'].each do |node|
-          nodes.create!(
-            node_id: node['node_id'],
-            node_type: node['node_type'],
-            group: node['group'],
-            feature_name: node['feature_name'],
-            threshold: node['threshold'],
-            parent: nodes.reload.find {|node| node.node_id == node['parent_id'] },
-          )
+        YAML.load_file(tree_file)['nodes'].each do |node_attribute|
+          parent = nodes.reload.find_by(node_id: node_attribute['parent_id'])
+          nodes.create!(node_attribute.except('parent_id').merge(parent: parent))
         end
       end
     end
