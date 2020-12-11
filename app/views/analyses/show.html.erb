@@ -29,5 +29,6 @@
   $(document).ready(function() {
     result = new AnalysisResult('<%= @analysis.analysis_id %>');
     result.drawImportance();
+    result.drawTree(0);
   });
 </script>

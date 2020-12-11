@@ -18,7 +18,7 @@ class window.Bar
         .call(d3.axisLeft(scale))
       return
 
-    @drawBars = (bars) ->
+    @drawBars = (bars, options = {}) ->
       _svg.selectAll('.bar')
         .data(bars)
         .enter()
@@ -28,5 +28,15 @@ class window.Bar
         .attr('y', (bar) -> bar.y)
         .attr('width', (bar) -> bar.width)
         .attr('height', (bar) -> bar.height)
+
+      if options['color']
+        _svg.selectAll('.bar').attr('fill', options['color'])
+
+      if options['opacity']
+        _svg.selectAll('.bar').attr('opacity', options['opacity'])
+      return
+
+    @setEvent = (target, eventType, event) ->
+      _svg.selectAll(target).on(eventType, event)
       return
     return
