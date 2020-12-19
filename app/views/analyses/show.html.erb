@@ -17,7 +17,7 @@
   <div id='tab-decision_tree' class='well tab-pane'>
     <h4>決定木</h4>
     <div class='form-inline'>
-      <%= label_tag :tree_id, 'ID' %>
+      <%= label_tag :tree_id, 'Tree ID' %>
       <% options = @analysis.result.decision_trees.map(&:tree_id).sort %>
       <%= select_tag :tree_id, options_for_select(options, 0), class: 'form-control' %>
     </div>
