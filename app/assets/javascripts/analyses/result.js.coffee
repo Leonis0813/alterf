@@ -10,8 +10,8 @@ class window.AnalysisResult
     RANGE: [25, AnalysisResult.HEIGHT - 50],
   }
 
-  constructor: (analysis_id) ->
-    @requestAnalysis = d3.json("/alterf/api/analyses/#{analysis_id}")
+  constructor: (analysisId) ->
+    @requestAnalysis = d3.json("/alterf/api/analyses/#{analysisId}")
 
     @drawImportance = ->
       _importanceBar = new Bar('importance', AnalysisResult.WIDTH, AnalysisResult.HEIGHT)
