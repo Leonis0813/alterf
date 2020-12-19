@@ -55,7 +55,7 @@ describe Analysis::Result, type: :model do
         it 'StandardErrorが発生すること' do
           error = begin
                     @analysis.result.import!
-                  rescue => e
+                  rescue StandardError => e
                     e
                   end
 

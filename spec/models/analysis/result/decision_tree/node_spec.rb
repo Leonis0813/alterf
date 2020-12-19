@@ -29,7 +29,7 @@ describe Analysis::Result::DecisionTree::Node, type: :model do
           expected_error = absent_keys.map {|key| [key, 'absent_parameter'] }.to_h
 
           before(:all) do
-            @object = build(:node, absent_keys.map{|key| [key, nil] }.to_h)
+            @object = build(:node, absent_keys.map {|key| [key, nil] }.to_h)
             @object.validate
           end
 
