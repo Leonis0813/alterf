@@ -23,6 +23,15 @@ describe Api::AnalysesController, type: :controller do
         importances: analysis.result.importances.map do |importance|
           importance.slice(:feature_name, :value)
         end,
+        decision_trees: analysis.result.decision_trees.map do |decision_tree|
+          {
+            tree_id: decision_tree.tree_id,
+            nodes: decision_tree.nodes.map do |node|
+              node.slice(:node_id, :node_type, :group, :feature_name, :threshold)
+                  .merge(parent_node_id: node.parent&.node_id)
+            end,
+          }
+        end,
       }
       parameter = analysis.parameter.slice(
         :max_depth,

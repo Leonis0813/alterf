@@ -65,7 +65,7 @@ describe Analysis::Result::DecisionTree, type: :model do
       include_context 'トランザクション作成'
       before(:all) do
         @analysis = create(:analysis)
-        @analysis.result.decision_trees.create!(tree_id: 0)
+        @analysis.result.decision_trees.first.nodes.destroy_all
 
         output_dir = File.join(tmp_dir, @analysis.id.to_s)
         FileUtils.mkdir_p(output_dir)
