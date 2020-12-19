@@ -22,7 +22,7 @@ class window.Tree
       root = d3.hierarchy(treeData)
       root.x0 = AnalysisResult.HEIGHT / 2
       root.y0 = 0
-      tree = d3.tree().size([height, width])
+      tree = d3.tree().size([height, width]).separation((a, b) -> 1.1)
       _data = tree(root)
       return
 
