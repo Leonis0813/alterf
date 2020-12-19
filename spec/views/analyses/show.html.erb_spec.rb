@@ -27,7 +27,7 @@ describe 'analyses/show', type: :view do
     %w[decision_tree 決定木],
   ].each do |tab_id, text|
     it "#{text}を表示するタブが表示されていること" do
-      link_xpath = "#{content_xpath}/ul[@class='nav nav-tabs']" +
+      link_xpath = "#{content_xpath}/ul[@class='nav nav-tabs']" \
                    "/li/a[@href='#tab-#{tab_id}']"
       link = @html.xpath(link_xpath)
       is_asserted_by { link.present? }
@@ -47,7 +47,7 @@ describe 'analyses/show', type: :view do
   end
 
   it '決定木選択フォームが表示されていること' do
-    form_xpath = "#{content_xpath}/div[@class='tab-content']" +
+    form_xpath = "#{content_xpath}/div[@class='tab-content']" \
                  '/div[@id="tab-decision_tree"]/div[@class="form-inline"]'
     select_label = @html.xpath("#{form_xpath}/label[@for='tree_id']")
     is_asserted_by { select_label.present? }
