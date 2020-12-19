@@ -60,8 +60,16 @@ class window.AnalysisResult
           decisionTree.tree_id == targetTreeId
         )
 
-        _decisionTree = new Tree('decision_tree', AnalysisResult.WIDTH, AnalysisResult.HEIGHT)
-        _decisionTree.buildTree(targetTree.nodes, AnalysisResult.WIDTH, AnalysisResult.HEIGHT)
+        _decisionTree = new Tree(
+          'decision_tree',
+          AnalysisResult.WIDTH,
+          AnalysisResult.HEIGHT
+        )
+        _decisionTree.buildTree(
+          targetTree.nodes,
+          AnalysisResult.WIDTH,
+          AnalysisResult.HEIGHT
+        )
         _decisionTree.getData().children.forEach(_collapse)
         _decisionTree.drawNodes(_decisionTree.getData())
         _decisionTree.drawLinks(_decisionTree.getData())
