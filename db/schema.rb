@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20201009093941) do
+ActiveRecord::Schema.define(version: 20201205121459) do
 
   create_table "analyses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "analysis_id",  default: "", null: false
@@ -34,6 +34,30 @@ ActiveRecord::Schema.define(version: 20201009093941) do
     t.datetime "created_at",                         null: false
     t.datetime "updated_at",                         null: false
     t.index ["analysis_id"], name: "index_analysis_parameters_on_analysis_id", unique: true, using: :btree
+  end
+
+  create_table "analysis_result_decision_tree_nodes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "analysis_result_decision_tree_id",            null: false
+    t.integer  "node_id",                                     null: false
+    t.string   "node_type",                                   null: false
+    t.string   "group"
+    t.string   "feature_name"
+    t.float    "threshold",                        limit: 24
+    t.integer  "parent_id"
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
+    t.index ["analysis_result_decision_tree_id", "node_id"], name: "index_unique_analysis_result_decision_tree_id_node_id_on_nodes", unique: true, using: :btree
+    t.index ["analysis_result_decision_tree_id"], name: "index_analysis_result_decision_tree_id_on_nodes", using: :btree
+    t.index ["parent_id"], name: "fk_rails_4ea2de4774", using: :btree
+  end
+
+  create_table "analysis_result_decision_trees", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "analysis_result_id", null: false
+    t.integer  "tree_id",            null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.index ["analysis_result_id", "tree_id"], name: "index_unique_analysis_result_id_tree_id_on_decision_trees", unique: true, using: :btree
+    t.index ["analysis_result_id"], name: "index_analysis_result_decision_trees_on_analysis_result_id", using: :btree
   end
 
   create_table "analysis_result_importances", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -99,4 +123,5 @@ ActiveRecord::Schema.define(version: 20201009093941) do
     t.index ["prediction_id"], name: "index_predictions_on_prediction_id", unique: true, using: :btree
   end
 
+  add_foreign_key "analysis_result_decision_tree_nodes", "analysis_result_decision_tree_nodes", column: "parent_id"
 end

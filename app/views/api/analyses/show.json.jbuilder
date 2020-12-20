@@ -24,4 +24,15 @@ json.result do
       json.(importance, :feature_name, :value)
     end
   end
+  json.decision_trees do
+    json.array!(@analysis.result.decision_trees) do |decision_tree|
+      json.(decision_tree, :tree_id)
+      json.nodes do
+        json.array!(decision_tree.nodes) do |node|
+          json.(node, :node_id, :node_type, :group, :feature_name, :threshold)
+          json.parent_node_id node.parent&.node_id
+        end
+      end
+    end
+  end
 end
