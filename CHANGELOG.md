@@ -1,4 +1,5 @@
-# 4.16.1 (2020/12/20)
+# 4.17.0 (2020/12/20)
+- [UPDATE] analysis result view to show decision trees
 - [UPDATE] gems
 
 # 4.16.0 (2020/12/05)
