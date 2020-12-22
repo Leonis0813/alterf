@@ -171,7 +171,7 @@ GEM
       ruby2_keywords
     faraday-http-cache (2.2.0)
       faraday (>= 0.8)
-    ffi (1.14.1)
+    ffi (1.14.2)
     font-awesome-rails (4.7.0.5)
       railties (>= 3.2, < 6.1)
     fuubar (2.5.0)
@@ -325,7 +325,7 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     rchardet (1.8.0)
-    rdoc (6.2.1)
+    rdoc (6.3.0)
     redis (4.2.5)
     redis-namespace (1.8.0)
       redis (>= 3.0.4)
