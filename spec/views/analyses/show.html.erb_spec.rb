@@ -3,10 +3,12 @@
 require 'rails_helper'
 
 describe 'analyses/show', type: :view do
+  content_xpath = '//div[@id="main-content"]'
+
   include_context 'トランザクション作成'
   before(:all) { @analysis = create(:analysis) }
 
-  before(:each) do
+  before do
     render template: 'analyses/show', layout: 'layouts/application'
     @html ||= Nokogiri.parse(response)
   end
@@ -15,27 +17,55 @@ describe 'analyses/show', type: :view do
   it_behaves_like 'ヘッダーが表示されていること'
 
   it 'タイトルが表示されていること' do
-    title = @html.xpath('//div[@id="main-content"]/h3')
+    title = @html.xpath("#{content_xpath}/h3")
     is_asserted_by { title.present? }
     is_asserted_by { title.text.strip == '分析結果' }
   end
 
-  it '重要度描画領域があること' do
-    base_xpath = '//div[@id="main-content"]/div[@class="well"]'
+  [
+    %w[importance 重要度],
+    %w[decision_tree 決定木],
+  ].each do |tab_id, text|
+    it "#{text}を表示するタブが表示されていること" do
+      link_xpath = "#{content_xpath}/ul[@class='nav nav-tabs']" \
+                   "/li/a[@href='#tab-#{tab_id}']"
+      link = @html.xpath(link_xpath)
+      is_asserted_by { link.present? }
+      is_asserted_by { link.text == text }
+    end
 
-    title = @html.xpath("#{base_xpath}/h4")
-    is_asserted_by { title.present? }
-    is_asserted_by { title.text.strip == '重要度' }
+    it "#{text}描画領域があること" do
+      base_xpath = "#{content_xpath}/div[@class='tab-content']/div[@id='tab-#{tab_id}']"
 
-    svg = @html.xpath("#{base_xpath}/svg[@id='importance']")
-    is_asserted_by { svg.present? }
+      title = @html.xpath("#{base_xpath}/h4")
+      is_asserted_by { title.present? }
+      is_asserted_by { title.text.strip == text }
+
+      svg = @html.xpath("#{base_xpath}/svg[@id='#{tab_id}']")
+      is_asserted_by { svg.present? }
+    end
   end
 
-  it '描画メソッドに引数が設定されていること' do
+  it '決定木選択フォームが表示されていること' do
+    form_xpath = "#{content_xpath}/div[@class='tab-content']" \
+                 '/div[@id="tab-decision_tree"]/div[@class="form-inline"]'
+    select_label = @html.xpath("#{form_xpath}/label[@for='tree_id']")
+    is_asserted_by { select_label.present? }
+    is_asserted_by { select_label.text == 'Tree ID' }
+
+    select_form_xpath = "#{form_xpath}/select[@id='tree_id']"
+    select_form = @html.xpath(select_form_xpath)
+    is_asserted_by { select_form.present? }
+
+    selected_option = @html.xpath("#{select_form_xpath}/option[@selected]")
+    is_asserted_by { selected_option.attribute('value').value == '0' }
+  end
+
+  it '描画クラスのコンストラクタに引数が設定されていること' do
     script_lines = @html.search('script').children.first.text.lines
     is_asserted_by do
       script_lines.any? do |line|
-        line.strip == "result.drawImportance('#{@analysis.analysis_id}');"
+        line.strip.include?("new AnalysisResult('#{@analysis.analysis_id}');")
       end
     end
   end

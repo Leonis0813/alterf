@@ -1,3 +1,15 @@
+# 4.17.0 (2020/12/20)
+- [UPDATE] analysis result view to show decision trees
+- [UPDATE] gems
+
+# 4.16.0 (2020/12/05)
+- [UPDATE] analysis view to download analysis result
+- [UPDATE] gems
+
+# 4.15.0 (2020/11/28)
+- [UPDATE] analysis view to specify parameters
+- [UPDATE] gems
+
 # 4.14.3 (2020/09/02)
 - [UPDATE] gems for memory leak
 - [UPDATE] gems

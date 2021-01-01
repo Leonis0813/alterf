@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
                   when 'Required'
                     error[:message].scan(/required property of '(.*)'/).first.first
                   else
-                    error[:fragment].split('/').second
+                    error[:fragment].split('/').last
                   end
 
       error_code = case error[:failed_attribute]
@@ -43,6 +43,13 @@ class ApplicationController < ActionController::Base
   end
 
   def remove_old_files
+    Analysis.where('performed_at <= ?', 3.days.ago).pluck(:id).each do |id|
+      result_file = Rails.root.join('tmp', 'files', 'analyses', id.to_s)
+      next unless File.exist?(result_file)
+
+      FileUtils.rm_rf(result_file)
+    end
+
     Evaluation.where('performed_at <= ?', 1.month.ago).pluck(:id).each do |id|
       data_file = Rails.root.join('tmp', 'files', 'evaluations', id.to_s)
       next unless File.exist?(data_file)

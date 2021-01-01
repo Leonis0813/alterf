@@ -1,7 +1,5 @@
 分析開始日時: <%= @analysis.created_at %>
 分析終了日時: <%= @analysis.updated_at %>
-パラメータ:
-  学習データ数: <%= @analysis.num_data %>
-  決定木の数: <%= @analysis.num_tree %>
-  特徴量の数: <%= @analysis.num_feature %>
-  エントリー数: <%= @analysis.num_entry || '指定なし' %>
+
+こちらから分析結果をダウンロードできます
+http://<%= Settings.analysis.host %>/alterf/analyses

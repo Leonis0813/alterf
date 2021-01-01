@@ -5,40 +5,67 @@ class AnalysisJob < ApplicationJob
     analysis = Analysis.find(analysis_id)
     analysis.update!(state: Analysis::STATE_PROCESSING, performed_at: Time.zone.now)
 
-    output_dir = Rails.root.join('tmp', 'files', 'analyses', analysis_id.to_s)
-    FileUtils.mkdir_p(output_dir)
+    @output_dir = Rails.root.join('tmp', 'files', 'analyses', analysis_id.to_s)
+    FileUtils.mkdir_p(@output_dir)
+    parameter = analysis.parameter.attributes.merge('num_data' => analysis.num_data)
+    parameter.except!('id', 'analysis_id', 'created_at', 'updated_at')
 
     if analysis.num_entry
-      args = [analysis_id, analysis.num_data, analysis.num_tree, analysis.num_entry]
-      execute_script('analyze_with_num_entry.py', args)
+      dump_yaml('parameter.yml', parameter.merge('num_entry' => analysis.num_entry))
+      execute_script('analyze_with_num_entry.py', [analysis_id])
     else
-      args = [analysis_id, analysis.num_data, analysis.num_tree]
-      execute_script('analyze.py', args)
+      dump_yaml('parameter.yml', parameter)
+      execute_script('analyze.py', [analysis_id])
     end
 
-    metadata = {}
-    yaml_file = File.join(output_dir, 'metadata.yml')
-    if File.exist?(yaml_file)
-      metadata = YAML.load_file(yaml_file)
-      analysis.update!(num_feature: metadata['num_feature'])
-    end
+    check_output
+    analysis.result.import!
 
-    File.open(yaml_file, 'w') do |file|
-      metadata.merge!(analysis.slice(:analysis_id, :num_feature))
-      YAML.dump(metadata.stringify_keys, file)
-    end
+    yaml_file = File.join(@output_dir, 'metadata.yml')
+    metadata = YAML.load_file(yaml_file)
+    analysis.update!(num_feature: metadata['num_feature'])
+    metadata.merge!(analysis.slice(:analysis_id))
+    dump_yaml('metadata.yml', metadata)
 
-    metadata['importance'].each do |feature_name, value|
-      analysis.result.importances.create!(feature_name: feature_name, value: value)
-    end
+    create_zip(%w[metadata.yml model.rf], 'model.zip')
+    create_zip(%w[feature.csv training_data.csv], 'analysis.zip')
+    create_zip(%w[model.zip analysis.zip], 'result.zip')
+
     AnalysisMailer.completed(analysis).deliver_now
 
-    FileUtils.rm_rf(output_dir)
     analysis.update!(state: Analysis::STATE_COMPLETED)
   rescue StandardError => e
     Rails.logger.error(e.message)
     Rails.logger.error(e.backtrace.join("\n"))
     analysis.update!(state: Analysis::STATE_ERROR)
     AnalysisMailer.error(analysis).deliver_now
+  end
+
+  private
+
+  def check_output
+    %w[metadata.yml model.rf feature.csv training_data.csv].each do |file_name|
+      raise StandardError unless File.exist?(File.join(@output_dir, file_name))
+    end
+  end
+
+  def dump_yaml(file_name, content)
+    yaml_file = File.join(@output_dir, file_name)
+
+    File.open(yaml_file, 'w') do |file|
+      YAML.dump(content, file)
+    end
+  end
+
+  def create_zip(target_files, zip_file_name)
+    zip_file_path = File.join(@output_dir, zip_file_name)
+
+    Zip::File.open(zip_file_path, Zip::File::CREATE) do |zip|
+      target_files.each do |target_file|
+        Dir[File.join(@output_dir, target_file)].each do |file_path|
+          zip.add(File.basename(file_path), file_path)
+        end
+      end
+    end
   end
 end

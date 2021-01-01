@@ -10,21 +10,18 @@ class window.AnalysisResult
     RANGE: [25, AnalysisResult.HEIGHT - 50],
   }
 
-  constructor: ->
-    @drawImportance = (analysis_id) ->
-      _importanceBar = new Bar(
-        'importance',
-        AnalysisResult.WIDTH,
-        AnalysisResult.HEIGHT,
-      )
+  constructor: (analysisId) ->
+    @requestAnalysis = d3.json("/alterf/api/analyses/#{analysisId}")
 
-      d3.json("/alterf/api/analyses/#{analysis_id}").then((analysis) ->
+    @drawImportance = ->
+      _importanceBar = new Bar('importance', AnalysisResult.WIDTH, AnalysisResult.HEIGHT)
+
+      @requestAnalysis.then((analysis) ->
         importances = analysis.result.importances.sort((x, y) ->
           return d3.descending(x.value, y.value)
         )
 
-        d3.select('#importance')
-          .attr('height', importances.length * 14 + 50)
+        d3.select('#importance').attr('height', importances.length * 14 + 50)
 
         scale = {
           x: d3.scaleLinear().range(AnalysisResult.X_AXIS.RANGE),
@@ -38,9 +35,44 @@ class window.AnalysisResult
         _importanceBar.drawYAxis(AnalysisResult.Y_AXIS.ORIGIN, scale.y)
 
         bars = _createBars(importances, scale)
-        _importanceBar.drawBars(bars)
-        _setColor('importance')
-        _setEvent('importance', scale)
+        _importanceBar.drawBars(bars, {color: 'green', opacity: 0.3})
+
+        _importanceBar.setEvent('rect', 'mouseover', (bar) ->
+          d3.select('#importance')
+            .append('text')
+            .text(bar.value)
+            .attr('x', bar.x + 5)
+            .attr('y', bar.y + scale.y.bandwidth() / 2)
+            .attr('class', 'value')
+          return
+        )
+
+        _importanceBar.setEvent('rect', 'mouseout', () ->
+          d3.select('#importance').select('text.value').remove()
+          return
+        )
+      )
+      return
+
+    @drawTree = (targetTreeId) ->
+      @requestAnalysis.then((analysis) ->
+        targetTree = analysis.result.decision_trees.find((decisionTree) ->
+          decisionTree.tree_id == targetTreeId
+        )
+
+        _decisionTree = new Tree(
+          'decision_tree',
+          AnalysisResult.WIDTH,
+          AnalysisResult.HEIGHT
+        )
+        _decisionTree.buildTree(
+          targetTree.nodes,
+          AnalysisResult.WIDTH,
+          AnalysisResult.HEIGHT
+        )
+        _decisionTree.getData().children.forEach(_collapse)
+        _decisionTree.drawNodes(_decisionTree.getData())
+        _decisionTree.drawLinks(_decisionTree.getData())
       )
       return
 
@@ -55,29 +87,10 @@ class window.AnalysisResult
         }
       )
 
-    _setColor = (id) ->
-      d3.select("##{id}")
-        .selectAll('.bar')
-        .attr('fill', 'green')
-        .attr('opacity', 0.3)
-      return
+    _collapse = (node) ->
+      if node.children
+        node._children = node.children
+        node._children.forEach(_collapse)
+        node.children = null
 
-    _setEvent = (id, scale) ->
-      d3.select("##{id}")
-        .selectAll('rect')
-        .on('mouseover', (bar) ->
-          d3.select("##{id}")
-            .append('text')
-            .text(bar.value)
-            .attr('x', bar.x + 5)
-            .attr('y', bar.y + scale.y.bandwidth() / 2)
-            .attr('class', 'value')
-          return
-        )
-        .on('mouseout', () ->
-          d3.select("##{id}")
-            .select('text.value')
-            .remove()
-        )
-      return
     return

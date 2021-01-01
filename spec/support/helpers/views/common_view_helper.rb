@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
-module ViewHelper
+module CommonViewHelper
+  DEFAULT_PER_PAGE = 1
+
   def state_map
     {
       'waiting' => '実行待ち',
@@ -14,21 +16,12 @@ module ViewHelper
     '//div[@id="main-content"]/div[@class="row center-block"]'
   end
 
-  def form_panel_xpath
-    [row_xpath, 'div[@class="col-lg-4"]'].join('/')
+  def input_xpath
+    [form_xpath, 'div[@class="form-group"]'].join('/')
   end
 
-  def form_xpath(model)
-    [
-      form_panel_xpath,
-      "div[@id='new-#{model}']",
-      "form[@action='/#{model.pluralize}'][@data-remote='true'][@method='post']" \
-      "[@class='new_#{model}']",
-    ].join('/')
-  end
-
-  def input_xpath(model)
-    [form_xpath(model), 'div[@class="form-group"]'].join('/')
+  def table_panel_xpath
+    [row_xpath, 'div[@class="col-lg-8 well"]'].join('/')
   end
 
   def paging_xpath
@@ -47,20 +40,20 @@ module ViewHelper
     [paging_xpath, 'li[@class="page-item active"]', 'a[@class="page-link"]'].join('/')
   end
 
-  def link_two_xpath(model)
+  def link_two_xpath(path)
     [
       paging_xpath,
       'li[@class="page-item"]',
-      "a[@class='page-link'][@href='/#{model.pluralize}?page=2']",
+      "a[@class='page-link'][@href='#{path}?page=2']",
     ].join('/')
   end
 
-  def link_next_xpath(model)
+  def link_next_xpath(path)
     [
       paging_xpath,
       'li[@class="page-item"]',
       'span[@class="next"]',
-      "a[@class='page-link'][@href='/#{model.pluralize}?page=2']",
+      "a[@class='page-link'][@href='#{path}?page=2']",
     ].join('/')
   end
 
@@ -70,9 +63,5 @@ module ViewHelper
 
   def list_gap_xpath
     [paging_xpath, 'li[@class="page-item disabled"]', 'a[@href="#"]'].join('/')
-  end
-
-  def table_panel_xpath
-    [row_xpath, 'div[@class="col-lg-8 well"]'].join('/')
   end
 end
