@@ -1,4 +1,5 @@
-# 4.17.1 (2021/01/10)
+# 4.17.1 (2021/01/11)
+- [FIX] evaluation data of big decimal type
 - [UPDATE] gems
 
 # 4.17.0 (2020/12/20)
