@@ -30,6 +30,7 @@ gem 'unicorn', '~> 5.4.0'
 gem 'unicorn-worker-killer'
 
 group :development do
+  gem 'erb_lint', '< 0.0.36'
   gem 'pronto'
   gem 'pronto-coffeelint', require: false
   gem 'pronto-erb_lint', require: false
