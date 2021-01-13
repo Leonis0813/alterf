@@ -1,3 +1,6 @@
+# 4.17.2 (2021/01/13)
+- [UPDATE] gems
+
 # 4.17.1 (2021/01/11)
 - [FIX] evaluation data of big decimal type
 - [UPDATE] gems
