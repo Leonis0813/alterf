@@ -1,6 +1,6 @@
 class window.AnalysisResult
   @WIDTH = 1100
-  @HEIGHT = 500
+  @HEIGHT = 1340
   @X_AXIS = {
     ORIGIN: {x: 200, y: 25},
     RANGE: [0, AnalysisResult.WIDTH - 225],
@@ -60,17 +60,15 @@ class window.AnalysisResult
           decisionTree.tree_id == targetTreeId
         )
 
-        _decisionTree = new Tree(
-          'decision_tree',
-          AnalysisResult.WIDTH,
-          AnalysisResult.HEIGHT
-        )
-        _decisionTree.buildTree(
-          targetTree.nodes,
-          AnalysisResult.WIDTH,
-          AnalysisResult.HEIGHT
-        )
-        _decisionTree.getData().children.forEach(_collapse)
+        _decisionTree = new Tree('decision_tree', targetTree)
+        _decisionTree.buildTreeStructure()
+
+        if AnalysisResult.WIDTH < _decisionTree.getWidth()
+          width = _decisionTree.getWidth() + 50
+          d3.select('#tab-decision_tree').style('width', "#{width}px")
+        if AnalysisResult.HEIGHT < _decisionTree.getHeight()
+          height = _decisionTree.getHeight() + 100
+          d3.select('#tab-decision_tree').style('height', "#{height}px")
         _decisionTree.drawNodes(_decisionTree.getData())
         _decisionTree.drawLinks(_decisionTree.getData())
       )
@@ -86,11 +84,5 @@ class window.AnalysisResult
           value: importance.value,
         }
       )
-
-    _collapse = (node) ->
-      if node.children
-        node._children = node.children
-        node._children.forEach(_collapse)
-        node.children = null
 
     return

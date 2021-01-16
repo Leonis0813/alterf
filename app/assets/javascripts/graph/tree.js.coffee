@@ -1,58 +1,71 @@
 class window.Tree
-  constructor: (id, width, height) ->
+  constructor: (id, tree) ->
     _svg = d3.select("##{id}")
-      .attr('width', width)
-      .attr('height', height)
-      .append('g')
-      .attr('transform', 'translate(30,0)')
 
+    _width = 0
+    _height = 0
     _data = null
-    _id = 0
 
+    @getWidth = () -> _width
+    @getHeight = () -> _height
     @getData = () -> _data
 
-    @buildTree = (nodes, width, height) ->
-      treeData = {
-        node_id: nodes[0].node_id,
-        name: nodes[0].feature_name,
-        threshold: nodes[0].threshold,
-        group: nodes[0].group,
-        children: _buildChildren(nodes[0].node_id, nodes),
-      }
-      root = d3.hierarchy(treeData)
-      root.x0 = AnalysisResult.HEIGHT / 2
-      root.y0 = 0
-      tree = d3.tree().size([height, width]).separation((a, b) -> 1.1)
-      _data = tree(root)
+    @buildTreeStructure = () ->
+      root = tree.nodes[0]
+      hierarchy = d3.hierarchy({
+        node_id: root.node_id,
+        name: root.feature_name,
+        threshold: root.threshold,
+        group: root.group,
+        children: _buildChildren(root.node_id, tree.nodes),
+      })
+
+      depths = hierarchy.descendants().map((node) -> node.depth)
+      maxDepth = depths.reduce((a, b) -> Math.max(a, b))
+      depthCount = {}
+      $.each(depths, (i, depth) ->
+        if depthCount[depth]
+          depthCount[depth] += 1
+        else
+          depthCount[depth] = 1
+      )
+      maxDepthCount = $.map(depthCount, (depth, count) -> count)
+        .reduce((a, b) -> Math.max(a, b))
+
+      _width = maxDepth * 150 + 50
+      _height = maxDepthCount * 150 + 50
+
+      tree = d3.tree().size([_height, _width]).separation((a, b) -> 2.0)
+
+      _data = tree(hierarchy)
+      nodes = _data.descendants()
+      nodes.forEach((node) ->
+        node.x = node.x * 1.5
+        node.y = node.depth * 150
+      )
+
+      _width = $.map(nodes, (node) -> node.y).reduce((a, b) -> Math.max(a, b)) + 200
+      _height = $.map(nodes, (node) -> node.x).reduce((a, b) -> Math.max(a, b)) + 100
+      _svg = _svg.attr('width', _width)
+        .attr('height', _height)
+        .append('g')
+        .attr('transform', 'translate(30,0)')
       return
 
     @drawNodes = (source) ->
-      that = this
-      click = (node) ->
-        if node.children
-          node._children = node.children
-          node.children = null
-        else
-          node.children = node._children
-          node._children = null
-        that.drawNodes(node)
-        that.drawLinks(node)
-
       nodes = _data.descendants()
-      nodes.forEach((node) -> node.y = node.depth * 150)
 
       oldNodes = _svg.selectAll('g.node')
-        .data(nodes, (node) -> node.id || (node.id = ++_id))
+        .data(nodes)
 
       newNodes = oldNodes.enter()
         .append('g')
         .attr('class', 'node')
-        .attr('transform', (node) -> "translate(#{source.y0},#{source.x0})")
-        .on('click', click)
+        .attr('transform', (node) -> "translate(#{source.y},#{source.x})")
       newNodes.append('circle')
         .attr('class', 'node')
         .attr('r', 1e-6)
-        .style('fill', (node) -> if node._children then 'lightsteelblue' else '#fff')
+        .style('fill', 'white')
       newNodes.append('text')
         .attr('dy', '22')
         .attr('x', '-12')
@@ -80,8 +93,7 @@ class window.Tree
         .attr('transform', (node) -> "translate(#{node.y},#{node.x})")
       allNodes.select('circle.node')
         .attr('r', 10)
-        .style('fill', (node) -> if node._children then 'lightsteelblue' else '#fff')
-        .attr('cursor', 'pointer')
+        .style('fill', 'white')
 
       removedNodes = oldNodes.exit()
         .transition()
@@ -90,11 +102,6 @@ class window.Tree
         .remove()
       removedNodes.select('circle').attr('r', 1e-6)
       removedNodes.select('text').style('fill-opacity', 1e-6)
-
-      nodes.forEach((node) ->
-        node.x0 = node.x
-        node.y0 = node.y
-      )
       return
 
     @drawLinks = (source) ->
@@ -105,7 +112,7 @@ class window.Tree
         .insert('path', 'g')
         .attr('class', 'link')
         .attr('d', (node) ->
-          origin = {x: source.x0, y: source.y0}
+          origin = {x: source.x, y: source.y}
           _calcDiagonal(origin, origin)
         )
 
