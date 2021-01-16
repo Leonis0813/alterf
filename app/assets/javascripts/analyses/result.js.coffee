@@ -69,8 +69,8 @@ class window.AnalysisResult
         if AnalysisResult.HEIGHT < _decisionTree.getHeight()
           height = _decisionTree.getHeight() + 100
           d3.select('#tab-decision_tree').style('height', "#{height}px")
-        _decisionTree.drawNodes(_decisionTree.getData())
-        _decisionTree.drawLinks(_decisionTree.getData())
+        _decisionTree.drawNodes()
+        _decisionTree.drawLinks()
       )
       return
 

@@ -11,6 +11,7 @@ class window.Tree
     @getData = () -> _data
 
     @buildTreeStructure = () ->
+      console.log(tree)
       root = tree.nodes[0]
       hierarchy = d3.hierarchy({
         node_id: root.node_id,
@@ -41,7 +42,7 @@ class window.Tree
       nodes = _data.descendants()
       nodes.forEach((node) ->
         node.x = node.x * 1.5
-        node.y = node.depth * 150
+        node.y = node.depth * 170
       )
 
       _width = $.map(nodes, (node) -> node.y).reduce((a, b) -> Math.max(a, b)) + 200
@@ -52,32 +53,41 @@ class window.Tree
         .attr('transform', 'translate(30,0)')
       return
 
-    @drawNodes = (source) ->
+    @drawNodes = () ->
       nodes = _data.descendants()
 
-      oldNodes = _svg.selectAll('g.node')
+      g = _svg.selectAll('g.node')
         .data(nodes)
-
-      newNodes = oldNodes.enter()
+        .enter()
         .append('g')
         .attr('class', 'node')
-        .attr('transform', (node) -> "translate(#{source.y},#{source.x})")
-      newNodes.append('circle')
+        .attr('transform', (node) -> "translate(#{node.y},#{node.x})")
+      g.append('circle')
         .attr('class', 'node')
-        .attr('r', 1e-6)
-        .style('fill', 'white')
-      newNodes.append('text')
+        .attr('r', 10)
+        .attr('fill', (node) ->
+          if node.data.type == 'leaf'
+            "url('#node_#{node.data.node_id}')"
+          else
+            'white'
+        )
+      g.append('text')
         .attr('dy', '22')
         .attr('x', '-12')
         .attr('text-anchor', 'start')
         .attr('font-size', 10)
-        .text((node) -> node.data.name)
-      newNodes.append('text')
+        .text((node) ->
+          if node.data.type == 'leaf'
+            "win: #{node.data.num_win} lose: #{node.data.num_lose}"
+          else
+            node.data.name
+          )
+      g.append('text')
         .attr('dy', '35')
         .attr('x', '-12')
         .attr('font-size', 10)
         .text((node) -> node.data.threshold)
-      newNodes.append('text')
+      g.append('text')
         .attr('dy', '5')
         .attr('x', '-30')
         .text((node) ->
@@ -87,48 +97,40 @@ class window.Tree
             '>='
         )
 
-      allNodes = newNodes.merge(oldNodes)
-      allNodes.transition()
-        .duration(750)
-        .attr('transform', (node) -> "translate(#{node.y},#{node.x})")
-      allNodes.select('circle.node')
-        .attr('r', 10)
-        .style('fill', 'white')
-
-      removedNodes = oldNodes.exit()
-        .transition()
-        .duration(750)
-        .attr('transform', (node) -> "translate(#{source.y},#{source.x})")
-        .remove()
-      removedNodes.select('circle').attr('r', 1e-6)
-      removedNodes.select('text').style('fill-opacity', 1e-6)
+      leaves = $.grep(nodes, (node, i) ->
+        node.data.type == 'leaf'
+      )
+      linearGradient = _svg.selectAll('linearGradient')
+        .data(leaves)
+        .enter()
+        .append('linearGradient')
+        .attr('id', (leaf) -> "node_#{leaf.data.node_id}")
+      linearGradient.append('stop')
+        .attr('offset', '0%')
+        .attr('stop-opacity', 0.7)
+        .attr('stop-color', 'red')
+      linearGradient.append('stop')
+        .attr('offset', (leaf) -> "#{_winRate(leaf.data)}%")
+        .attr('stop-opacity', 0.7)
+        .attr('stop-color', 'red')
+      linearGradient.append('stop')
+        .attr('offset', (leaf) -> "#{_winRate(leaf.data)}%")
+        .attr('stop-opacity', 0.7)
+        .attr('stop-color', 'blue')
+      linearGradient.append('stop')
+        .attr('offset', '100%')
+        .attr('stop-opacity', 0.7)
+        .attr('stop-color', 'blue')
       return
 
-    @drawLinks = (source) ->
-      oldLinks = _svg.selectAll('path.link')
-        .data(_data.descendants().slice(1), (node) -> node.id)
-
-      newLinks = oldLinks.enter()
+    @drawLinks = () ->
+      _svg.selectAll('path.link')
+        .data(_data.descendants().slice(1))
+        .enter()
         .insert('path', 'g')
         .attr('class', 'link')
-        .attr('d', (node) ->
-          origin = {x: source.x, y: source.y}
-          _calcDiagonal(origin, origin)
-        )
-
-      allLinks = newLinks.merge(oldLinks)
-      allLinks.transition()
-        .duration(750)
         .attr('d', (node) -> _calcDiagonal(node, node.parent))
-
-      oldLinks.exit()
-        .transition()
-        .duration(750)
-        .attr('d', (node) ->
-          origin = {x: source.x, y: source.y}
-          _calcDiagonal(origin, origin)
-        )
-        .remove()
+      return
 
     _buildChildren = (node_id, nodes) ->
       children = nodes.filter((node) -> node.parent_node_id == node_id)
@@ -138,8 +140,11 @@ class window.Tree
           {
             node_id: child.node_id,
             name: child.feature_name,
+            type: child.node_type,
             threshold: child.threshold,
             group: child.group,
+            num_win: child.num_win,
+            num_lose: child.num_lose,
             children: _buildChildren(child.node_id, nodes),
           }
         )
@@ -152,4 +157,7 @@ class window.Tree
        C #{(src.y + dest.y) / 2} #{src.x},
          #{(src.y + dest.y) / 2} #{dest.x},
          #{dest.y} #{dest.x}"
+
+    _winRate = (data) ->
+      100 * parseFloat(data.num_win) / (data.num_win + data.num_lose)
     return
