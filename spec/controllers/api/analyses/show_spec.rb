@@ -27,8 +27,15 @@ describe Api::AnalysesController, type: :controller do
           {
             tree_id: decision_tree.tree_id,
             nodes: decision_tree.nodes.map do |node|
-              node.slice(:node_id, :node_type, :group, :feature_name, :threshold)
-                  .merge(parent_node_id: node.parent&.node_id)
+              node.slice(
+                :node_id,
+                :node_type,
+                :group,
+                :feature_name,
+                :threshold,
+                :num_win,
+                :num_lose,
+              ).merge(parent_node_id: node.parent&.node_id)
             end,
           }
         end,
