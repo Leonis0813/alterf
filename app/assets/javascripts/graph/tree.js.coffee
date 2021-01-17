@@ -41,7 +41,7 @@ class window.Tree
       _data = tree(hierarchy)
       nodes = _data.descendants()
       nodes.forEach((node) ->
-        node.x = node.x * 2.0
+        node.x = node.x * maxDepth * 0.28
         node.y = node.depth * 170
       )
 
