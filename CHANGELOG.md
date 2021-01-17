@@ -1,4 +1,4 @@
-# 4.18.0 (2021/01/16)
+# 4.18.0 (2021/01/17)
 - [UPDATE] analysis result view to show win rate
 - [FIX] decision tree area size
 - [REMOVE] collapsible feature of decision tree
