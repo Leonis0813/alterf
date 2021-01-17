@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20201205121459) do
+ActiveRecord::Schema.define(version: 20210114134934) do
 
   create_table "analyses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "analysis_id",  default: "", null: false
@@ -43,6 +43,8 @@ ActiveRecord::Schema.define(version: 20201205121459) do
     t.string   "group"
     t.string   "feature_name"
     t.float    "threshold",                        limit: 24
+    t.integer  "num_win"
+    t.integer  "num_lose"
     t.integer  "parent_id"
     t.datetime "created_at",                                  null: false
     t.datetime "updated_at",                                  null: false

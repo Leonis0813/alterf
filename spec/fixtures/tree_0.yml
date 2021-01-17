@@ -3,28 +3,38 @@ nodes:
   node_type: root
   feature_name: feature1
   threshold: 0.5
+  num_win: null
+  num_lose: null
   parent_id: null
 - node_id: 1
   node_type: split
   feature_name: feature2
   threshold: 2.0
+  num_win: null
+  num_lose: null
   parent_id: 0
   group: less
 - node_id: 2
   node_type: leaf
   feature_name: null
   threshold: null
+  num_win: 10
+  num_lose: 1
   parent_id: 1
   group: less
 - node_id: 3
   node_type: leaf
   feature_name: null
   threshold: null
+  num_win: 0
+  num_lose: 300
   parent_id: 1
   group: greater
 - node_id: 4
   node_type: leaf
   feature_name: null
   threshold: null
+  num_win: 0
+  num_lose: 1000
   parent_id: 0
   group: greater

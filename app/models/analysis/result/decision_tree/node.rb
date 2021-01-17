@@ -7,7 +7,7 @@ class Analysis
 
         validates :node_id, :node_type,
                   presence: {message: MESSAGE_ABSENT}
-        validates :node_id,
+        validates :node_id, :num_win, :num_lose,
                   numericality: {
                     only_integer: true,
                     greater_than_or_equal_to: 0,
