@@ -24,5 +24,9 @@ $ ->
 
   $('input[name="type"]:radio').on 'change', ->
     $('#prediction_test_data').get(0).type = $(this).val()
+    if $(this).val() == 'file'
+      $('#prediction_test_data').removeClass('form-control')
+    else
+      $('#prediction_test_data').addClass('form-control')
     return
   return

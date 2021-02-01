@@ -5,7 +5,7 @@
       <%= form_for @evaluation, html: {multipart: true}, url: evaluations_path, remote: true do |f| %>
         <div class='form-group'>
           <%= f.label :model, 'モデル' %><br />
-          <%= f.file_field :model, class: 'form-control', name: :model %>
+          <%= f.file_field :model, name: :model %>
         </div>
         <div class='form-group'>
           <%= f.label :data, '評価データ' %>
@@ -13,8 +13,9 @@
             <%= label_tag :data_source, '指定方法:' %>
             <%= select_tag :data_source, options_for_select(data_source_option) %>
           </span>
-          <% params = {class: 'form-control form-data-source not-selected', name: :data, disabled: true} %>
+          <% params = {class: 'form-data-source not-selected', name: :data, disabled: true} %>
           <%= f.file_field :data, params.merge(id: 'evaluation_data_file') %>
+          <% params = {class: 'form-control form-data-source not-selected', name: :data, disabled: true} %>
           <%= f.text_area :data, params.merge(id: 'evaluation_data_text', value: '', style: 'resize:vertical') %>
           <%= f.text_field :data, params.merge(id: 'evaluation_data_random', name: :num_data, value: '') %>
         </div>
