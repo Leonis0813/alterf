@@ -99,17 +99,17 @@ class Evaluation < ApplicationRecord
     attribute = {}
     unless (true_positive + false_positive).zero?
       precision = true_positive / (true_positive + false_positive)
-      attribute.merge!(precision: precision)
+      attribute[:precision] = precision
     end
     unless (true_positive + false_negative).zero?
       recall = true_positive / (true_positive + false_negative)
-      attribute.merge!(recall: recall)
+      attribute[:recall] = recall
     end
     unless (true_negative + false_positive).zero?
-      attribute.merge!(specificity: true_negative / (true_negative + false_positive))
+      attribute[:specificity] = true_negative / (true_negative + false_positive)
     end
     unless (precision + recall).zero?
-      attribute.merge!(f_measure: (2 * precision * recall) / (precision + recall))
+      attribute[:f_measure] = (2 * precision * recall) / (precision + recall)
     end
     update!(attribute)
   end

@@ -13,7 +13,7 @@
           <label><%= radio_button_tag :type, 'file', :checked %> ファイル</label>
           <label><%= radio_button_tag :type, 'url' %> URL</label>
           <br>
-          <%= f.file_field :test_data,  name: :test_data %>
+          <%= f.file_field :test_data, name: :test_data %>
         </div>
         <%= f.submit '実行', class: 'btn btn-primary btn-sm btn-submit' %>
         <%= f.submit 'リセット', type: 'reset', class: 'btn btn-default btn-sm' %>
