@@ -35,7 +35,7 @@ class Evaluation < ApplicationRecord
   validates :state,
             inclusion: {in: STATE_LIST, message: MESSAGE_INVALID},
             allow_nil: true
-  validates :precision, :recall, :f_measure,
+  validates :precision, :recall, :specificity, :f_measure,
             numericality: {
               greater_than_or_equal_to: 0,
               less_than_or_equal_to: 1,
