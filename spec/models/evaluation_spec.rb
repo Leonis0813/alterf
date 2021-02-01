@@ -11,6 +11,7 @@ describe Evaluation, type: :model do
         state: %w[waiting processing completed error],
         precision: [0, 1, nil],
         recall: [0, 1, nil],
+        specificity: [0, 1, nil],
         f_measure: [0, 1, nil],
       }
 
@@ -48,6 +49,7 @@ describe Evaluation, type: :model do
         state: ['invalid'],
         precision: [-0.1, 1.1],
         recall: [-0.1, 1.1],
+        specificity: [-0.1, 1.1],
         f_measure: [-0.1, 1.1],
       }
 
@@ -163,6 +165,10 @@ describe Evaluation, type: :model do
 
       it '再現率が正しいこと' do
         is_asserted_by { @evaluation.recall == 0.5 }
+      end
+
+      it '特異度が正しいこと' do
+        is_asserted_by { @evaluation.specificity == 0.75 }
       end
 
       it 'F値が正しいこと' do
