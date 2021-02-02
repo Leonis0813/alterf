@@ -1,3 +1,6 @@
+# 4.19.0 (2021/02/03)
+- [UPDATE] evaluation view to show specificity
+
 # 4.18.0 (2021/01/17)
 - [UPDATE] analysis result view to show win rate
 - [FIX] decision tree area size
