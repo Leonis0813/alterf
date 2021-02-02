@@ -44,9 +44,7 @@ describe 'ブラウザで予測する', type: :request do
           element = @driver.find_element(:id, 'evaluation_data_file')
 
           is_asserted_by { @wait.until { element.enabled? } }
-          is_asserted_by do
-            element.attribute('class') == 'form-control form-data-source'
-          end
+          is_asserted_by { element.attribute('class') == 'form-data-source' }
         end
       end
 
