@@ -1,5 +1,6 @@
 # 4.19.0 (2021/02/03)
 - [UPDATE] evaluation view to show specificity
+- [UPDATE] gems
 
 # 4.18.0 (2021/01/17)
 - [UPDATE] analysis result view to show win rate
