@@ -74,7 +74,7 @@ shared_examples '評価情報入力フォームが表示されていること' d
 
   it '非表示で無効になっているファイル入力フォームがあること' do
     xpath = "#{input_xpath}/input[@id='evaluation_data_file']" \
-            "[@class='form-control form-data-source not-selected'][@disabled]"
+            "[@class='form-data-source not-selected'][@disabled]"
     is_asserted_by { @html.xpath(xpath).present? }
   end
 
@@ -101,11 +101,11 @@ end
 shared_examples '評価ジョブテーブルが表示されていること' do |rows: 0|
   before { @table = @html.xpath(table_xpath) }
 
-  it '7列のテーブルが表示されていること' do
-    is_asserted_by { @table.search('thead/th').size == 7 }
+  it '8列のテーブルが表示されていること' do
+    is_asserted_by { @table.search('thead/th').size == 8 }
   end
 
-  %w[実行開始日時 モデル 状態 適合率 再現率 F値].each_with_index do |text, i|
+  %w[実行開始日時 モデル 状態 適合率 再現率 特異度 F値].each_with_index do |text, i|
     it "#{i + 1}列目のヘッダーが#{text}であること" do
       is_asserted_by { @table.search('thead/th')[i].text == text }
     end
@@ -155,15 +155,22 @@ shared_examples '評価結果情報が表示されていること' do
 
   it '再現率が表示されていること' do
     @evaluations.each_with_index do |evaluation, i|
-      precision = @rows[i].children.search('td')[4]
-      is_asserted_by { precision.text.strip == evaluation.recall.round(3).to_s }
+      recall = @rows[i].children.search('td')[4]
+      is_asserted_by { recall.text.strip == evaluation.recall.round(3).to_s }
+    end
+  end
+
+  it '特異度が表示されていること' do
+    @evaluations.each_with_index do |evaluation, i|
+      specificity = @rows[i].children.search('td')[5]
+      is_asserted_by { specificity.text.strip == evaluation.specificity.round(3).to_s }
     end
   end
 
   it 'F値が表示されていること' do
     @evaluations.each_with_index do |evaluation, i|
-      precision = @rows[i].children.search('td')[5]
-      is_asserted_by { precision.text.strip == evaluation.f_measure.round(3).to_s }
+      f_measure = @rows[i].children.search('td')[6]
+      is_asserted_by { f_measure.text.strip == evaluation.f_measure.round(3).to_s }
     end
   end
 end
@@ -173,7 +180,7 @@ shared_examples 'ダウンロードボタンが表示されていないこと' d
     rows = @html.xpath("#{table_xpath}/tbody/tr")
 
     @evaluations.each_with_index do |evaluation, i|
-      download_button = rows[i].children.search('td')[6]
+      download_button = rows[i].children.search('td')[7]
       download_link = download_button.search(download_link_xpath(evaluation))
       is_asserted_by { download_link.blank? }
     end
@@ -185,7 +192,7 @@ shared_examples 'ダウンロードボタンが表示されていること' do
     rows = @html.xpath("#{table_xpath}/tbody/tr")
 
     @evaluations.each_with_index do |evaluation, i|
-      download_button = rows[i].children.search('td')[6]
+      download_button = rows[i].children.search('td')[7]
       download_link = download_button.search(download_link_xpath(evaluation))
       is_asserted_by { download_link.present? }
     end
