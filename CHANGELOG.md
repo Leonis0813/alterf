@@ -1,3 +1,6 @@
+# 4.19.1 (2021/02/03)
+- [UPDATE] gems
+
 # 4.19.0 (2021/02/03)
 - [UPDATE] evaluation view to show specificity
 - [UPDATE] gems
