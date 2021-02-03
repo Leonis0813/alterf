@@ -281,7 +281,7 @@ GEM
     multipart-post (2.1.1)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
-    mysql2 (0.3.21)
+    mysql2 (0.5.3)
     nap (1.1.0)
     native-package-installer (1.1.1)
     nio4r (2.5.4)
@@ -529,7 +529,7 @@ DEPENDENCIES
   json-schema
   kaminari
   less-rails
-  mysql2 (~> 0.3.20)
+  mysql2
   pronto
   pronto-coffeelint
   pronto-erb_lint

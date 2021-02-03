@@ -29,7 +29,8 @@ class Analysis
                   numericality: {message: MESSAGE_INVALID},
                   allow_nil: true
 
-        belongs_to :decision_tree
+        belongs_to :decision_tree,
+                   foreign_key: 'analysis_result_decision_tree_id'
         belongs_to :parent,
                    class_name: 'Analysis::Result::DecisionTree::Node',
                    inverse_of: :children

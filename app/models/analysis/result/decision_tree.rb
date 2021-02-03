@@ -13,7 +13,8 @@ class Analysis
       validates :tree_id,
                 uniqueness: {scope: 'analysis_result_id', message: MESSAGE_DUPLICATED}
 
-      belongs_to :result
+      belongs_to :result,
+                 foreign_key: 'analysis_result_id'
       has_many :nodes,
                foreign_key: 'analysis_result_decision_tree_id',
                dependent: :destroy,
