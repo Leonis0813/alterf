@@ -14,7 +14,8 @@ class Analysis
                 uniqueness: {scope: 'analysis_result_id', message: MESSAGE_DUPLICATED}
 
       belongs_to :result,
-                 foreign_key: 'analysis_result_id'
+                 foreign_key: 'analysis_result_id',
+                 inverse_of: :decision_tree
       has_many :nodes,
                foreign_key: 'analysis_result_decision_tree_id',
                dependent: :destroy,

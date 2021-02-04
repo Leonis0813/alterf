@@ -30,7 +30,8 @@ class Analysis
                   allow_nil: true
 
         belongs_to :decision_tree,
-                   foreign_key: 'analysis_result_decision_tree_id'
+                   foreign_key: 'analysis_result_decision_tree_id',
+                   inverse_of: :nodes
         belongs_to :parent,
                    class_name: 'Analysis::Result::DecisionTree::Node',
                    inverse_of: :children
