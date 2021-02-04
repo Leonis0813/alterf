@@ -20,7 +20,7 @@ class Analysis
       end
       importances.insert_all!(attributes)
 
-      attributes = metadata['num_tree'].times.map {|i| {tree_id: i}.merge(timestamp) }
+      attributes = Array.new(metadata['num_tree']) {|i| {tree_id: i}.merge(timestamp) }
       decision_trees.insert_all!(attributes)
       decision_trees.reload.each {|decision_tree| decision_tree.import! }
     end
