@@ -15,7 +15,7 @@ class Analysis
 
       belongs_to :result,
                  foreign_key: 'analysis_result_id',
-                 inverse_of: :decision_tree
+                 inverse_of: :decision_trees
       has_many :nodes,
                foreign_key: 'analysis_result_decision_tree_id',
                dependent: :destroy,
