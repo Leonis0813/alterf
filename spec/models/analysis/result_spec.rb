@@ -40,10 +40,6 @@ describe Analysis::Result, type: :model do
         tree['nodes'].each do |node|
           is_asserted_by { nodes.exists?(node.except('parent_id')) }
         end
-
-        nodes.where.not(node_type: 'root').each do |node|
-          is_asserted_by { node.parent.present? }
-        end
       end
     end
 
