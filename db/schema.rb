@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_01_151217) do
+ActiveRecord::Schema.define(version: 2021_02_04_153012) do
 
   create_table "analyses", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "analysis_id", default: "", null: false
@@ -50,7 +50,6 @@ ActiveRecord::Schema.define(version: 2021_02_01_151217) do
     t.datetime "updated_at", null: false
     t.index ["analysis_result_decision_tree_id", "node_id"], name: "index_unique_analysis_result_decision_tree_id_node_id_on_nodes", unique: true
     t.index ["analysis_result_decision_tree_id"], name: "index_analysis_result_decision_tree_id_on_nodes"
-    t.index ["parent_id"], name: "fk_rails_4ea2de4774"
   end
 
   create_table "analysis_result_decision_trees", id: :integer, charset: "utf8", force: :cascade do |t|
@@ -126,5 +125,4 @@ ActiveRecord::Schema.define(version: 2021_02_01_151217) do
     t.index ["prediction_id"], name: "index_predictions_on_prediction_id", unique: true
   end
 
-  add_foreign_key "analysis_result_decision_tree_nodes", "analysis_result_decision_tree_nodes", column: "parent_id"
 end

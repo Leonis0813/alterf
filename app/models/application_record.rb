@@ -16,4 +16,8 @@ class ApplicationRecord < ActiveRecord::Base
     STATE_COMPLETED,
     STATE_ERROR,
   ].freeze
+
+  def timestamp
+    {created_at: Time.zone.now, updated_at: Time.zone.now}
+  end
 end

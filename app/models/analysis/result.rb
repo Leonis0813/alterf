@@ -24,11 +24,5 @@ class Analysis
       decision_trees.insert_all!(attributes)
       decision_trees.reload.each {|decision_tree| decision_tree.import! }
     end
-
-    private
-
-    def timestamp
-      {created_at: Time.zone.now, updated_at: Time.zone.now}
-    end
   end
 end

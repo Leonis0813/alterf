@@ -32,14 +32,6 @@ class Analysis
         belongs_to :decision_tree,
                    foreign_key: 'analysis_result_decision_tree_id',
                    inverse_of: :nodes
-        belongs_to :parent,
-                   class_name: 'Analysis::Result::DecisionTree::Node',
-                   inverse_of: :children
-        has_many :children,
-                 class_name: 'Analysis::Result::DecisionTree::Node',
-                 foreign_key: 'parent_id',
-                 dependent: :destroy,
-                 inverse_of: :parent
       end
     end
   end
