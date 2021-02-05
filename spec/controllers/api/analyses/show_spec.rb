@@ -35,7 +35,7 @@ describe Api::AnalysesController, type: :controller do
                 :threshold,
                 :num_win,
                 :num_lose,
-              ).merge(parent_node_id: node.parent&.node_id)
+              ).merge(parent_node_id: node.parent_id)
             end,
           }
         end,

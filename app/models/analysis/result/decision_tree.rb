@@ -13,7 +13,9 @@ class Analysis
       validates :tree_id,
                 uniqueness: {scope: 'analysis_result_id', message: MESSAGE_DUPLICATED}
 
-      belongs_to :result
+      belongs_to :result,
+                 foreign_key: 'analysis_result_id',
+                 inverse_of: :decision_trees
       has_many :nodes,
                foreign_key: 'analysis_result_decision_tree_id',
                dependent: :destroy,
@@ -23,10 +25,10 @@ class Analysis
         output_dir = Rails.root.join('tmp', 'files', 'analyses', result.analysis.id.to_s)
         tree_file = File.join(output_dir, "tree_#{tree_id}.yml")
 
-        YAML.load_file(tree_file)['nodes'].each do |node_attribute|
-          parent = nodes.reload.find_by(node_id: node_attribute['parent_id'])
-          nodes.create!(node_attribute.except('parent_id').merge(parent: parent))
+        attributes = YAML.load_file(tree_file)['nodes'].map do |node_attribute|
+          node_attribute.merge(timestamp)
         end
+        nodes.insert_all!(attributes)
       end
     end
   end

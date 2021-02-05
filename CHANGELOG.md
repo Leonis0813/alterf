@@ -1,3 +1,7 @@
+# 4.19.1 (2021/02/06)
+- [UPDATE] rails to 6
+- [REFACTOR] import process to apply bulk insert
+
 # 4.19.0 (2021/02/03)
 - [UPDATE] evaluation view to show specificity
 - [UPDATE] gems

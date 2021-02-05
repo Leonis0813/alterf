@@ -46,6 +46,8 @@ def output_tree(classifier, training_data, outputdir):
       }
       nodes.append(node)
 
+    nodes[0]['group'] = None
+
     for i, left in enumerate(lefts):
       if left != -1:
         nodes[left]['parent_id'] = i

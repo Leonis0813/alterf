@@ -6,6 +6,7 @@ nodes:
   num_win: null
   num_lose: null
   parent_id: null
+  group: null
 - node_id: 1
   node_type: split
   feature_name: feature2
