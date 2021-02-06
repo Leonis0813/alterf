@@ -20,9 +20,20 @@ def normalize_racewise_feature(group):
   features = group[config['analysis']['racewise_features']]
   features['horse_average_prize_money'] = features['horse_average_prize_money'].astype(float)
   features['jockey_average_prize_money'] = features['jockey_average_prize_money'].astype(float)
+  unnormalizable_feature_names = features.loc[:, features.max() == features.min()].columns
+  normalizable_feature_names = np.setdiff1d(
+    config['analysis']['racewise_features'],
+    unnormalizable_feature_names
+  )
+  features = features[normalizable_feature_names]
   normalized = (features - features.min()) / (features.max() - features.min())
-  for name in config['analysis']['racewise_features']:
+
+  for name in unnormalizable_feature_names:
+    normalized[name] = 0.0
+
+  for name in normalizable_feature_names:
     group[name] = normalized[name]
+
   return group
 
 connection = mysql.connect(

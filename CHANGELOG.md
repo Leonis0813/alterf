@@ -1,4 +1,5 @@
 # 4.19.2 (2021/02/06)
+- [FIX] normalization process
 - [UPDATE] gems
 
 # 4.19.1 (2021/02/06)
