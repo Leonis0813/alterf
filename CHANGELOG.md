@@ -1,3 +1,6 @@
+# 4.19.2 (2021/02/07)
+- [FIX] normalization process
+
 # 4.19.1 (2021/02/06)
 - [UPDATE] rails to 6
 - [REFACTOR] import process to apply bulk insert
