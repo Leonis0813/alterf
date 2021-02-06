@@ -47,7 +47,7 @@ racewise = racewise[normalizable_feature_names]
 normalized = (racewise - racewise.min()) / (racewise.max() - racewise.min())
 
 for name in unnormalizable_feature_names:
-  normalized[name] = 0.5
+  normalized[name] = 0.0
 
 for name in config['analysis']['racewise_features']:
   feature[name] = normalized[name]
