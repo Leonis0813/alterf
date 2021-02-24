@@ -364,7 +364,7 @@ GEM
     redis-namespace (1.8.1)
       redis (>= 3.0.4)
     ref (2.0.0)
-    regexp_parser (2.1.0)
+    regexp_parser (2.1.1)
     remotipart (1.4.4)
     resque (2.0.0)
       mono_logger (~> 1.0)
