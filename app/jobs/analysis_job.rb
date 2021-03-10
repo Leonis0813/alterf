@@ -6,6 +6,7 @@ class AnalysisJob < ApplicationJob
     analysis.update!(state: Analysis::STATE_PROCESSING, performed_at: Time.zone.now)
 
     @output_dir = Rails.root.join('tmp', 'files', 'analyses', analysis_id.to_s)
+    FileUtils.rm_rf(@output_dir)
     FileUtils.mkdir_p(@output_dir)
     parameter = analysis.parameter.attributes.merge('num_data' => analysis.num_data)
     parameter.except!('id', 'analysis_id', 'created_at', 'updated_at')
