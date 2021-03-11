@@ -1,3 +1,6 @@
+# 4.19.4 (2021/03/11)
+- [FIX] deletion old tmp files
+
 # 4.19.3 (2021/03/03)
 - [UPDATE] ruby version to 2.7.2
 - [UPDATE] gems
