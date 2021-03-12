@@ -26,4 +26,12 @@ class Analysis < ApplicationRecord
     analysis.analysis_id = SecureRandom.hex
     analysis.state = DEFAULT_STATE
   end
+
+  def start!
+    update!(state: Analysis::STATE_PROCESSING, performed_at: Time.zone.now)
+  end
+
+  def complete!
+    update!(state: Analysis::STATE_COMPLETED, completed_at: Time.zone.now)
+  end
 end

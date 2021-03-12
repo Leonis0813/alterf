@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_04_153012) do
+ActiveRecord::Schema.define(version: 2021_03_11_142246) do
 
   create_table "analyses", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "analysis_id", default: "", null: false
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 2021_02_04_153012) do
     t.integer "num_entry"
     t.string "state"
     t.datetime "performed_at"
+    t.datetime "completed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -100,6 +101,7 @@ ActiveRecord::Schema.define(version: 2021_02_04_153012) do
     t.float "specificity"
     t.float "f_measure"
     t.datetime "performed_at"
+    t.datetime "completed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["analysis_id"], name: "index_evaluations_on_analysis_id"

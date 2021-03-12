@@ -3,7 +3,7 @@ class AnalysisJob < ApplicationJob
 
   def perform(analysis_id)
     analysis = Analysis.find(analysis_id)
-    analysis.update!(state: Analysis::STATE_PROCESSING, performed_at: Time.zone.now)
+    analysis.start!
 
     @output_dir = Rails.root.join('tmp', 'files', 'analyses', analysis_id.to_s)
     FileUtils.rm_rf(@output_dir)
@@ -33,8 +33,7 @@ class AnalysisJob < ApplicationJob
     create_zip(%w[model.zip analysis.zip], 'result.zip')
 
     AnalysisMailer.completed(analysis).deliver_now
-
-    analysis.update!(state: Analysis::STATE_COMPLETED)
+    analysis.complete!
   rescue StandardError => e
     Rails.logger.error(e.message)
     Rails.logger.error(e.backtrace.join("\n"))

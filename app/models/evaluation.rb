@@ -123,6 +123,14 @@ class Evaluation < ApplicationRecord
     end
   end
 
+  def start!
+    update!(state: Analysis::STATE_PROCESSING, performed_at: Time.zone.now)
+  end
+
+  def complete!
+    update!(state: Analysis::STATE_COMPLETED, completed_at: Time.zone.now)
+  end
+
   private
 
   def remote?
