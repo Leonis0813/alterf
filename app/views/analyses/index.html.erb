@@ -9,7 +9,7 @@
       <h4>
         <span style='color: red'>* </span>は必須項目です
       </h4>
-      <%= form_for @analysis, url: analyses_path, remote: true do |f| %>
+      <%= form_for @new_analysis, url: analyses_path, remote: true do |f| %>
         <div class='form-group'>
           <%= f.label :num_data, '学習データ数', class: 'required' %><br>
           <%= f.text_field :num_data, class: 'form-control', name: :num_data %>

@@ -1,9 +1,9 @@
 class AnalysesController < ApplicationController
   before_action :check_request_analysis, only: %i[show download]
 
-  def manage
-    @analysis = Analysis.new
-    @analysis.build_parameter
+  def index
+    @new_analysis = Analysis.new
+    @new_analysis.build_parameter
     @analyses = Analysis.all
                         .includes(:parameter)
                         .order(created_at: :desc)
