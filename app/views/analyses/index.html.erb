@@ -4,68 +4,124 @@
 
 <div class='row center-block'>
   <div class='col-lg-3'>
-    <div id='new-analysis' class='well'>
-      <h3>レースを分析</h3>
-      <h4>
-        <span style='color: red'>* </span>は必須項目です
-      </h4>
-      <%= form_for @new_analysis, url: analyses_path, remote: true do |f| %>
-        <div class='form-group'>
-          <%= f.label :num_data, '学習データ数', class: 'required' %><br>
-          <%= f.text_field :num_data, class: 'form-control', name: :num_data %>
-        </div>
-        <div class='form-group'>
-          <%= f.label :num_entry, 'エントリー数' %><br>
-          <%= f.text_field :num_entry, class: 'form-control', name: :num_entry %>
-        </div>
-        <div class='form-group'>
-          <a href='#parameter' id='collapse-parameter' class='collapse-parameter glyphicon glyphicon-chevron-right' data-toggle='collapse' aria-expanded='false' aria-controls='parameter'>
-          パラメーター設定
-          </a>
-        </div>
-        <div id='parameter' class='collapse'>
-          <%= f.fields_for :parameter do |param_form| %>
+    <ul class='nav nav-tabs'>
+      <li class='active'>
+        <%= link_to '登録', '#new-analysis', 'data-toggle' => 'tab' %>
+      </li>
+      <li>
+        <%= link_to '検索', '#search-form', 'data-toggle' => 'tab' %>
+      </li>
+    </ul>
+
+    <div class='tab-content'>
+      <div id='new-analysis' class='well tab-pane active'>
+        <h3>レースを分析</h3>
+        <h4>
+          <span style='color: red'>* </span>は必須項目です
+        </h4>
+        <%= form_for @new_analysis, url: analyses_path, remote: true do |f| %>
+          <div class='form-group'>
+            <%= f.label :num_data, '学習データ数', class: 'required' %><br>
+            <%= f.text_field :num_data, class: 'form-control', name: :num_data %>
+          </div>
+          <div class='form-group'>
+            <%= f.label :num_entry, 'エントリー数' %><br>
+            <%= f.text_field :num_entry, class: 'form-control', name: :num_entry %>
+          </div>
+          <div class='form-group'>
+            <a href='#parameter' id='collapse-parameter' class='collapse-parameter glyphicon glyphicon-chevron-right' data-toggle='collapse' aria-expanded='false' aria-controls='parameter'>
+              パラメーター設定
+            </a>
+          </div>
+          <div id='parameter' class='collapse'>
+            <%= f.fields_for :parameter do |param_form| %>
+              <div class='form-group'>
+                <%= param_form.label :max_depth, 'max_depth' %>
+                <%= question_sign(:max_depth) %>
+                <% option = {name: 'parameter[max_depth]', class: 'form-control'} %>
+                <%= param_form.text_field :max_depth, option %>
+              </div>
+              <div class='form-group'>
+                <%= param_form.label :max_features, 'max_features' %>
+                <%= question_sign(:max_features) %>
+                <% option = {name: 'parameter[max_features]', class: 'form-control'} %>
+                <%= param_form.select :max_features, [['sqrt'], ['log2'], ['all']], {}, option %>
+              </div>
+              <div class='form-group'>
+                <%= param_form.label :max_leaf_nodes, 'max_leaf_nodes' %>
+                <%= question_sign(:max_leaf_nodes) %>
+                <% option = {name: 'parameter[max_leaf_nodes]', class: 'form-control'} %>
+                <%= param_form.text_field :max_leaf_nodes, option %>
+              </div>
+              <div class='form-group'>
+                <%= param_form.label :min_samples_leaf, 'min_samples_leaf' %>
+                <%= question_sign(:min_samples_leaf) %>
+                <% option = {name: 'parameter[min_samples_leaf]', class: 'form-control'} %>
+                <%= param_form.text_field :min_samples_leaf, option %>
+              </div>
+              <div class='form-group'>
+                <%= param_form.label :min_samples_split, 'min_samples_split' %>
+                <%= question_sign(:min_samples_split) %>
+                <% option = {name: 'parameter[min_samples_split]', class: 'form-control'} %>
+                <%= param_form.text_field :min_samples_split, option %>
+              </div>
+              <div class='form-group'>
+                <%= param_form.label :num_tree, 'num_tree' %>
+                <%= question_sign(:num_tree) %>
+                <% option = {name: 'parameter[num_tree]', class: 'form-control'} %>
+                <%= param_form.text_field :num_tree, option %>
+              </div>
+            <% end %>
+          </div>
+          <%= f.submit '実行', class: 'btn btn-primary btn-sm btn-submit' %>
+          <%= f.submit 'リセット', type: 'reset', class: 'btn btn-default btn-sm' %>
+        <% end %>
+      </div>
+
+      <div id='search-form' class='well tab-pane'>
+        <%= form_with url: analyses_path, method: :get do |f| %>
+          <div class='form-group'>
+            <%= f.label :num_data, '学習データ数' %>
+            <%= f.text_field :num_data, class: 'form-control' %>
+          </div>
+
+          <div style='font-weight: bold'>パラメーター</div>
+          <%= f.fields :parameter do |param_form| %>
             <div class='form-group'>
-              <%= param_form.label :max_depth, 'max_depth' %>
-              <%= question_sign(:max_depth) %>
+              <%= param_form.label :max_depth, 'max_depth', style: 'font-weight: normal' %>
               <% option = {name: 'parameter[max_depth]', class: 'form-control'} %>
               <%= param_form.text_field :max_depth, option %>
             </div>
             <div class='form-group'>
-              <%= param_form.label :max_features, 'max_features' %>
-              <%= question_sign(:max_features) %>
+              <%= param_form.label :max_features, 'max_features', style: 'font-weight: normal' %>
               <% option = {name: 'parameter[max_features]', class: 'form-control'} %>
-              <%= param_form.select :max_features, [['sqrt'], ['log2'], ['all']], {}, option %>
+              <%= param_form.select :max_features, [[], ['sqrt'], ['log2'], ['all']], {}, option %>
             </div>
             <div class='form-group'>
-              <%= param_form.label :max_leaf_nodes, 'max_leaf_nodes' %>
-              <%= question_sign(:max_leaf_nodes) %>
+              <%= param_form.label :max_leaf_nodes, 'max_leaf_nodes', style: 'font-weight: normal' %>
               <% option = {name: 'parameter[max_leaf_nodes]', class: 'form-control'} %>
               <%= param_form.text_field :max_leaf_nodes, option %>
             </div>
             <div class='form-group'>
-              <%= param_form.label :min_samples_leaf, 'min_samples_leaf' %>
-              <%= question_sign(:min_samples_leaf) %>
+              <%= param_form.label :min_samples_leaf, 'min_sammples_leaf', style: 'font-weight: normal' %>
               <% option = {name: 'parameter[min_samples_leaf]', class: 'form-control'} %>
               <%= param_form.text_field :min_samples_leaf, option %>
             </div>
             <div class='form-group'>
-              <%= param_form.label :min_samples_split, 'min_samples_split' %>
-              <%= question_sign(:min_samples_split) %>
+              <%= param_form.label :min_samples_split, 'min_samples_split', style: 'font-weight: normal' %>
               <% option = {name: 'parameter[min_samples_split]', class: 'form-control'} %>
               <%= param_form.text_field :min_samples_split, option %>
             </div>
             <div class='form-group'>
-              <%= param_form.label :num_tree, 'num_tree' %>
-              <%= question_sign(:num_tree) %>
+              <%= param_form.label :num_tree, 'num_tree', style: 'font-weight: normal' %>
               <% option = {name: 'parameter[num_tree]', class: 'form-control'} %>
               <%= param_form.text_field :num_tree, option %>
             </div>
           <% end %>
-        </div>
-        <%= f.submit '実行', class: 'btn btn-primary btn-sm btn-submit' %>
-        <%= f.submit 'リセット', type: 'reset', class: 'btn btn-default btn-sm' %>
-      <% end %>
+
+          <%= f.submit '検索', class: 'btn btn-primary' %>
+        <% end %>
+      </div>
     </div>
   </div>
 
