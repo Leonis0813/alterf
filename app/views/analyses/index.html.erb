@@ -79,7 +79,7 @@
       </div>
 
       <div id='search-form' class='well tab-pane'>
-        <%= form_with url: analyses_path, method: :get, id: 'form-index', :html => {:onClick => 'return false;'} do |f| %>
+        <%= form_with url: analyses_path, method: :get, id: 'form-index', html: {onClick: 'return false;'} do |f| %>
           <div class='form-group'>
             <%= f.label :num_data, '学習データ数' %>
             <%= f.text_field :num_data, name: 'num_data', value: @index_form.num_data, class: 'form-control' %>
@@ -89,8 +89,8 @@
           <%= f.fields :parameter do |param_form| %>
             <div class='form-group'>
               <%= param_form.label :max_depth, 'max_depth', style: 'font-weight: normal' %>
-              <% option = {name: 'parameter[max_depth]', value: @index_form.parameter['max_depth'], class: 'form-control'} %>
-              <%= param_form.text_field :max_depth, option %>
+              <% option = {name: 'parameter[max_depth]', value: @index_form.parameter['max_depth']} %>
+              <%= param_form.text_field :max_depth, {class: 'form-control'}.merge(option) %>
             </div>
             <div class='form-group'>
               <%= param_form.label :max_features, 'max_features', style: 'font-weight: normal' %>
@@ -99,18 +99,18 @@
             </div>
             <div class='form-group'>
               <%= param_form.label :max_leaf_nodes, 'max_leaf_nodes', style: 'font-weight: normal' %>
-              <% option = {name: 'parameter[max_leaf_nodes]', value: @index_form.parameter['max_leaf_nodes'], class: 'form-control'} %>
-              <%= param_form.text_field :max_leaf_nodes, option %>
+              <% option = {name: 'parameter[max_leaf_nodes]', value: @index_form.parameter['max_leaf_nodes']} %>
+              <%= param_form.text_field :max_leaf_nodes, {class: 'form-control'}.merge(option) %>
             </div>
             <div class='form-group'>
               <%= param_form.label :min_samples_leaf, 'min_sammples_leaf', style: 'font-weight: normal' %>
-              <% option = {name: 'parameter[min_samples_leaf]', value: @index_form.parameter['min_samples_leaf'], class: 'form-control'} %>
-              <%= param_form.text_field :min_samples_leaf, option %>
+              <% option = {name: 'parameter[min_samples_leaf]', value: @index_form.parameter['min_samples_leaf']} %>
+              <%= param_form.text_field :min_samples_leaf, {class: 'form-control'}.merge(option) %>
             </div>
             <div class='form-group'>
               <%= param_form.label :min_samples_split, 'min_samples_split', style: 'font-weight: normal' %>
-              <% option = {name: 'parameter[min_samples_split]', value: @index_form.parameter['min_samples_split'], class: 'form-control'} %>
-              <%= param_form.text_field :min_samples_split, option %>
+              <% option = {name: 'parameter[min_samples_split]', value: @index_form.parameter['min_samples_split']} %>
+              <%= param_form.text_field :min_samples_split, {class: 'form-control'}.merge(option) %>
             </div>
             <div class='form-group'>
               <%= param_form.label :num_tree, 'num_tree', style: 'font-weight: normal' %>
