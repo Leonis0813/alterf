@@ -18,8 +18,8 @@ class Analysis
 
     def to_query
       PARAMETER_ATTRIBUTE_NAMES.map do |name|
-        ["analysis_parameters.#{name}", self.parameter[name]]
-      end.to_h.merge('num_data' => self.num_data).compact
+        ["analysis_parameters.#{name}", parameter[name]]
+      end.to_h.merge('num_data' => num_data).compact
     end
   end
 end
