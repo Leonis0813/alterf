@@ -94,8 +94,10 @@
             </div>
             <div class='form-group'>
               <%= param_form.label :max_features, 'max_features', style: 'font-weight: normal' %>
+              <% values = [[], ['sqrt'], ['log2'], ['all']] %>
+              <% value_option = {selected: @index_form.parameter['max_features']} %>
               <% option = {name: 'parameter[max_features]', class: 'form-control'} %>
-              <%= param_form.select :max_features, [[], ['sqrt'], ['log2'], ['all']], {selected: @index_form.parameter['max_features']}, option %>
+              <%= param_form.select :max_features, values, value_option, option %>
             </div>
             <div class='form-group'>
               <%= param_form.label :max_leaf_nodes, 'max_leaf_nodes', style: 'font-weight: normal' %>
@@ -114,8 +116,8 @@
             </div>
             <div class='form-group'>
               <%= param_form.label :num_tree, 'num_tree', style: 'font-weight: normal' %>
-              <% option = {name: 'parameter[num_tree]', value: @index_form.parameter['num_tree'], class: 'form-control'} %>
-              <%= param_form.text_field :num_tree, option %>
+              <% option = {name: 'parameter[num_tree]', value: @index_form.parameter['num_tree']} %>
+              <%= param_form.text_field :num_tree, {class: 'form-control'}.merge(option) %>
             </div>
           <% end %>
 
