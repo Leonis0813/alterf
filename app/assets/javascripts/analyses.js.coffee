@@ -83,4 +83,23 @@ $ ->
       return
     xhr.send()
     return
+
+  $('#btn-analysis-search').on 'click', ->
+    allQueries = $('#form-index').serializeArray()
+    queries = $.grep(allQueries, (query) ->
+      console.log(query)
+      return query.name != "utf8" && query.value != ""
+    )
+
+    $.ajax({
+      type: 'GET',
+      url: '/alterf/analyses?' + $.param(queries)
+    }).done((data) ->
+      location.href = '/alterf/analyses?' + $.param(queries)
+      return
+    ).fail((xhr, status, error) ->
+      $('#dialog-execute-error').modal('show')
+      return
+    )
+    return
   return

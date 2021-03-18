@@ -79,7 +79,7 @@
       </div>
 
       <div id='search-form' class='well tab-pane'>
-        <%= form_with url: analyses_path, method: :get do |f| %>
+        <%= form_with url: analyses_path, method: :get, remote: true, id: 'form-index', :html => {:onClick => 'return false;'} do |f| %>
           <div class='form-group'>
             <%= f.label :num_data, '学習データ数' %>
             <%= f.text_field :num_data, class: 'form-control' %>
@@ -119,7 +119,7 @@
             </div>
           <% end %>
 
-          <%= f.submit '検索', class: 'btn btn-primary' %>
+          <%= f.submit '検索', id: 'btn-analysis-search', class: 'btn btn-primary' %>
         <% end %>
       </div>
     </div>
