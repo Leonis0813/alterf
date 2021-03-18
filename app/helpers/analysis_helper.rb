@@ -12,6 +12,10 @@ module AnalysisHelper
     ]
   end
 
+  def parameter_form_option(name, parameter = {})
+    {name: "parameter[#{name}]", value: parameter[name], class: 'form-control'}.compact
+  end
+
   def question_sign(param_name)
     content_tag(
       :span,
