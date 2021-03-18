@@ -2,12 +2,15 @@ class AnalysesController < ApplicationController
   before_action :check_request_analysis, only: %i[show download]
 
   def index
+    check_schema(index_schema, index_params, 'analysis')
+
     @new_analysis = Analysis.new
     @new_analysis.build_parameter
-    @analyses = Analysis.all
+    @index_form = Analysis::IndexForm.new(index_params.except(:page))
+    @analyses = Analysis.where(@index_form.to_query)
                         .includes(:parameter)
                         .order(created_at: :desc)
-                        .page(params[:page])
+                        .page(index_params[:page])
   end
 
   def execute
@@ -47,6 +50,21 @@ class AnalysesController < ApplicationController
     @request_analysis ||= Analysis.find_by(request.path_parameters.slice(:analysis_id))
   end
 
+  def index_params
+    return @index_params if @index_params
+
+    @index_params = request.query_parameters.slice(:num_data, :page, :parameter)
+    parameter = @index_params['parameter']&.slice(
+      'max_depth',
+      'max_features',
+      'max_leaf_nodes',
+      'min_samples_leaf',
+      'min_samples_split',
+      'num_tree',
+    )
+    parameter ? @index_params.merge!('parameter' => parameter) : @index_params
+  end
+
   def execute_params
     return @execute_params if @execute_params
 
@@ -64,6 +82,27 @@ class AnalysesController < ApplicationController
       'num_tree',
     )
     parameter ? @execute_params.merge!('parameter' => parameter) : @execute_params
+  end
+
+  def index_schema
+    @index_schema ||= {
+      type: :object,
+      properties: {
+        num_data: {type: :string, pattern: '^[1-9][0-9]*$'},
+        page: {type: :string, pattern: '^[1-9][0-9]*$'},
+        parameter: {
+          type: :object,
+          properties: {
+            max_depth: {type: :string, pattern: '^[1-9][0-9]*$'},
+            max_features: {type: :string, enum: Analysis::Parameter::MAX_FEATURES_LIST},
+            max_leaf_nodes: {type: :string, pattern: '^[1-9][0-9]*$'},
+            min_samples_leaf: {type: :string, pattern: '^[1-9][0-9]*$'},
+            min_samples_split: {type: :string, pattern: '^[1-9][0-9]*$'},
+            num_tree: {type: :string, pattern: '^[1-9][0-9]*$'},
+          },
+        },
+      },
+    }
   end
 
   def execute_schema
