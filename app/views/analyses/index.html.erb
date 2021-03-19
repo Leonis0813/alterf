@@ -79,6 +79,8 @@
       </div>
 
       <div id='search-form' class='well tab-pane'>
+        <h3>ジョブを検索</h3>
+
         <%= form_with url: analyses_path, method: :get, id: 'form-index', html: {onClick: 'return false;'} do |f| %>
           <div class='form-group'>
             <%= f.label :num_data, '学習データ数' %>
