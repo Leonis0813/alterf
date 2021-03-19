@@ -74,7 +74,7 @@ describe AnalysesController, type: :controller do
 
       invalid_attribute = {
         max_depth: ['', '0', '1.0', ['1'], {depth: '1'}],
-        max_features: ['', 'invalid', ['all'], {type: 'all'}, nil],
+        max_features: ['', 'invalid', ['all'], {type: 'all'}],
         max_leaf_nodes: ['', '0', '1.0', ['1'], {nodes: '1'}],
         min_samples_leaf: ['', '0', '1.0', ['1'], {leaf: '1'}],
         min_samples_split: ['', '0', '1.0', ['1'], {split: '1'}],
