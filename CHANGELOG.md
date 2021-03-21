@@ -1,3 +1,6 @@
+# 4.20.0 (2021/03/21)
+- [ADD] index form to analysis view
+
 # 4.19.4 (2021/03/12)
 - [FIX] deletion old tmp files
 - [FIX] deletion files completed

@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  get '/analyses' => 'analyses#manage'
+  get '/analyses' => 'analyses#index'
   post '/analyses' => 'analyses#execute'
   resources :analyses, only: %i[] do
     get 'download' => 'analyses#download', param: :analysis_id
