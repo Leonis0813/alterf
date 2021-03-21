@@ -37,19 +37,21 @@ describe 'ジョブ情報を確認する', type: :request do
     it_behaves_like 'ダイアログが正しく表示されていること',
                     'エラーが発生しました',
                     '入力値を見直してください'
-  end
 
-  describe '分析ジョブ情報を検索する' do
-    before(:all) do
-      element = @driver.find_element(:id, 'input-index-num_data')
-      element.clear
-      element.send_keys('1')
-      @driver.find_element(:xpath, '//form/input[@value="検索"]').click
-    end
+    describe '分析ジョブ情報を検索する' do
+      before(:all) do
+        @driver.find_element(:id, 'btn-modal-execute-error-ok').click
+        @wait.until { not @driver.find_element(:id, 'dialog-execute-error').displayed? }
+        element = @driver.find_element(:id, 'input-index-num_data')
+        element.clear
+        element.send_keys('1')
+        @driver.find_element(:xpath, '//form/input[@value="検索"]').click
+      end
 
-    it '分析ジョブ一覧が表示されていること' do
-      is_asserted_by do
-        @wait.until { @driver.find_element(:id, 'table-analysis').displayed? }
+      it '分析ジョブ一覧が表示されていること' do
+        is_asserted_by do
+          @wait.until { @driver.find_element(:id, 'table-analysis').displayed? }
+        end
       end
     end
   end
