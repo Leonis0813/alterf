@@ -10,7 +10,7 @@ describe Analysis::IndexForm, type: :model do
       [1, nil, {}],
       [nil, nil, {}],
     ].each do |num_data, parameter, expected_parameter|
-      expected_parameter ||= parameter
+      expected_parameter ||= parameter.with_indifferent_access
 
       context "num_data: #{num_data}, parameter: #{parameter}を指定した場合" do
         before(:all) do
@@ -32,6 +32,29 @@ describe Analysis::IndexForm, type: :model do
   end
 
   describe '#to_query' do
+    [
+      [1, {max_depth: 1}, {'analysis_parameters.max_depth' => 1, 'num_data' => 1}],
+      [nil, {max_depth: 1}, {'analysis_parameters.max_depth' => 1}],
+      [nil, {max_features: 'sqrt'}, {'analysis_parameters.max_features' => 'sqrt'}],
+      [nil, {max_leaf_nodes: 1}, {'analysis_parameters.max_leaf_nodes' => 1}],
+      [nil, {min_samples_leaf: 1}, {'analysis_parameters.min_samples_leaf' => 1}],
+      [nil, {min_samples_split: 1}, {'analysis_parameters.min_samples_split' => 1}],
+      [nil, {num_tree: 1}, {'analysis_parameters.num_tree' => 1}],
+      [1, nil, {'num_data' => 1}],
+      [nil, nil, {}],
+    ].each do |num_data, parameter, expected_query|
+      context "num_data: #{num_data}, parameter: #{parameter}を指定した場合" do
+        before(:all) do
+          @index_form = Analysis::IndexForm.new(
+            num_data: num_data,
+            parameter: parameter,
+          )
+        end
 
+        it "#{expected_query}が返ること" do
+          is_asserted_by { @index_form.to_query == expected_query }
+        end
+      end
+    end
   end
 end

@@ -13,7 +13,7 @@ class Analysis
 
     def initialize(attribute = {})
       self.num_data = attribute[:num_data]
-      self.parameter = attribute[:parameter] || {}
+      self.parameter = attribute[:parameter]&.with_indifferent_access || {}
     end
 
     def to_query
