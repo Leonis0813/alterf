@@ -11,7 +11,7 @@ class Analysis
 
     attr_accessor :num_data, :parameter
 
-    def initialize(attribute)
+    def initialize(attribute = {})
       self.num_data = attribute['num_data']
       self.parameter = attribute['parameter'] || {}
     end

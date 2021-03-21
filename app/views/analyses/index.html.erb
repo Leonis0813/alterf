@@ -83,42 +83,50 @@
 
         <%= form_with url: analyses_path, method: :get, id: 'form-index', html: {onClick: 'return false;'} do |f| %>
           <div class='form-group'>
-            <%= f.label :num_data, '学習データ数' %>
-            <%= f.text_field :num_data, name: 'num_data', value: @index_form.num_data, class: 'form-control' %>
+            <% option = {id: 'label-index-num_data', for: 'input-index-num_data'} %>
+            <%= f.label :num_data, '学習データ数', option %>
+            <% option = index_input_common_option('num_data') %>
+            <%= f.text_field :num_data, option.merge(name: 'num_data', value: @index_form.num_data) %>
           </div>
 
-          <div style='font-weight: bold'>パラメーター</div>
+          <div id='label-index-parameter' style='font-weight: bold'>パラメーター</div>
           <%= f.fields :parameter do |param_form| %>
             <div class='form-group'>
-              <%= param_form.label :max_depth, 'max_depth', style: 'font-weight: normal' %>
-              <% option = parameter_form_option('max_depth', @index_form.parameter) %>
+              <% option = parameter_label_option('max_depth') %>
+              <%= param_form.label :max_depth, 'max_depth', option %>
+              <% option = parameter_input_option('max_depth', @index_form.parameter) %>
               <%= param_form.text_field :max_depth, option %>
             </div>
             <div class='form-group'>
-              <%= param_form.label :max_features, 'max_features', style: 'font-weight: normal' %>
+              <% option = parameter_label_option('max_fetures') %>
+              <%= param_form.label :max_features, 'max_features', option %>
               <% values = [[], ['sqrt'], ['log2'], ['all']] %>
               <% value_option = {selected: @index_form.parameter['max_features']} %>
-              <% option = parameter_form_option('max_features') %>
+              <% option = parameter_input_option('max_features') %>
               <%= param_form.select :max_features, values, value_option, option %>
             </div>
             <div class='form-group'>
-              <%= param_form.label :max_leaf_nodes, 'max_leaf_nodes', style: 'font-weight: normal' %>
-              <% option = parameter_form_option('max_leaf_nodes', @index_form.parameter) %>
+              <% option = parameter_label_option('max_leaf_nodes') %>
+              <%= param_form.label :max_leaf_nodes, 'max_leaf_nodes', option %>
+              <% option = parameter_input_option('max_leaf_nodes', @index_form.parameter) %>
               <%= param_form.text_field :max_leaf_nodes, option %>
             </div>
             <div class='form-group'>
-              <%= param_form.label :min_samples_leaf, 'min_sammples_leaf', style: 'font-weight: normal' %>
-              <% option = parameter_form_option('min_samples_leaf', @index_form.parameter) %>
+              <% option = parameter_label_option('min_samples_leaf') %>
+              <%= param_form.label :min_samples_leaf, 'min_sammples_leaf', option %>
+              <% option = parameter_input_option('min_samples_leaf', @index_form.parameter) %>
               <%= param_form.text_field :min_samples_leaf, option %>
             </div>
             <div class='form-group'>
-              <%= param_form.label :min_samples_split, 'min_samples_split', style: 'font-weight: normal' %>
-              <% option = parameter_form_option('min_samples_split', @index_form.parameter) %>
+              <% option = parameter_label_option('min_samples_split') %>
+              <%= param_form.label :min_samples_split, 'min_samples_split', option %>
+              <% option = parameter_input_option('min_samples_split', @index_form.parameter) %>
               <%= param_form.text_field :min_samples_split, option %>
             </div>
             <div class='form-group'>
-              <%= param_form.label :num_tree, 'num_tree', style: 'font-weight: normal' %>
-              <% option = parameter_form_option('num_tree', @index_form.parameter) %>
+              <% option = parameter_label_option('num_tree') %>
+              <%= param_form.label :num_tree, 'num_tree', option %>
+              <% option = parameter_input_option('num_tree', @index_form.parameter) %>
               <%= param_form.text_field :num_tree, option %>
             </div>
           <% end %>
