@@ -62,7 +62,7 @@ class AnalysesController < ApplicationController
       'min_samples_split',
       'num_tree',
     )
-    @index_params.merge!('parameter' => parameter) if parameter.present?
+    @index_params['parameter'] = parameter if parameter.present?
     @index_params = @index_params.with_indifferent_access
     @index_params
   end
@@ -83,7 +83,7 @@ class AnalysesController < ApplicationController
       'min_samples_split',
       'num_tree',
     )
-    @execute_params.merge!('parameter' => parameter) if parameter.present?
+    @execute_params['parameter'] = parameter if parameter.present?
     @execute_params = @execute_params.with_indifferent_access
     @execute_params
   end

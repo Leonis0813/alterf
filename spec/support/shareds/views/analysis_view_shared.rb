@@ -32,8 +32,8 @@ end
 
 shared_examples '分析情報入力フォームが表示されていること' do
   [
-    ['登録', 'new-analysis'],
-    ['検索', 'search-form'],
+    %w[登録 new-analysis],
+    %w[検索 search-form],
   ].each do |tab_name, tab_href|
     it "#{tab_name}タブが表示されていること" do
       tab = @html.xpath("#{form_tab_xpath}/li/a[@href='##{tab_href}']")
