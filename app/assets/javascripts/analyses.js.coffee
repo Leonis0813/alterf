@@ -87,7 +87,6 @@ $ ->
   $('#btn-analysis-search').on 'click', ->
     allQueries = $('#form-index').serializeArray()
     queries = $.grep(allQueries, (query) ->
-      console.log(query)
       return query.name != "utf8" && query.value != ""
     )
 
