@@ -17,7 +17,7 @@ module AnalysisHelper
   end
 
   def parameter_label_option(name)
-    {id: "label-index-#{name}", style: 'font-weight: normal'}
+    {id: "label-index-#{name}", for: "input-index-#{name}", style: 'font-weight: normal'}
   end
 
   def parameter_input_option(name, parameter = {})

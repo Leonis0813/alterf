@@ -15,8 +15,8 @@ describe Analysis::IndexForm, type: :model do
       context "num_data: #{num_data}, parameter: #{parameter}を指定した場合" do
         before(:all) do
           @index_form = Analysis::IndexForm.new(
-            'num_data' => num_data,
-            'parameter' => parameter,
+            num_data: num_data,
+            parameter: parameter,
           )
         end
 
@@ -29,5 +29,9 @@ describe Analysis::IndexForm, type: :model do
         end
       end
     end
+  end
+
+  describe '#to_query' do
+
   end
 end
