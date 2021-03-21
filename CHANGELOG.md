@@ -1,5 +1,10 @@
-# 4.19.4 (2021/03/19)
+# 4.20.0 (2021/03/21)
+- [ADD] index form to analysis view
 - [UPDATE] gems
+
+# 4.19.4 (2021/03/12)
+- [FIX] deletion old tmp files
+- [FIX] deletion files completed
 
 # 4.19.3 (2021/03/03)
 - [UPDATE] ruby version to 2.7.2
