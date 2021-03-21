@@ -184,7 +184,7 @@ shared_examples '分析ジョブ検索フォームが表示されていること
       input = @html.xpath("#{index_input_xpath}/input[@id='#{form_id}']")
       is_asserted_by { input.present? }
       is_asserted_by do
-        input.attribute('value')&.value == @index_form.parameter[param_name]
+        input.attribute('value')&.value&.to_i == @index_form.parameter[param_name]
       end
     end
   end
@@ -202,8 +202,9 @@ shared_examples '分析ジョブ検索フォームが表示されていること
       is_asserted_by { select.search("option[@value='#{value}']").present? }
     end
 
+    selected = select.search('option[@selected="selected"]')
     is_asserted_by do
-      select.search('option[@selected="selected"]').attribute('value').blank?
+      selected.attribute('value')&.value == @index_form.parameter[:max_features]
     end
   end
 
