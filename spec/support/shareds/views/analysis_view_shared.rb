@@ -15,7 +15,7 @@ shared_context '分析フォームオブジェクトを作成する' do |attribu
   before(:all) do
     @new_analysis = Analysis.new
     @new_analysis.build_parameter
-    @index_form = Analysis::IndexForm.new(attribute)
+    @index_form = Analyses::IndexForm.new(attribute)
   end
 end
 
