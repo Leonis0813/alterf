@@ -1,4 +1,4 @@
-class Analysis
+module Analysis
   class IndexForm
     PARAMETER_ATTRIBUTE_NAMES = %w[
       max_depth
