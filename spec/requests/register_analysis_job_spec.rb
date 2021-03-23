@@ -74,10 +74,12 @@ describe 'ブラウザで分析する', type: :request do
           res = @driver.find_element(:id, 'collapse-parameter').click rescue false
           res.nil?
         end
+
+        parameter_form_id = 'analysis_parameter_attributes_num_tree'
         @wait.until do
-          @driver.find_element(:id, 'analysis_parameter_attributes_num_tree').displayed?
+          @driver.find_element(:id, parameter_form_id).displayed? rescue false
         end
-        num_tree = @driver.find_element(:id, 'analysis_parameter_attributes_num_tree')
+        num_tree = @driver.find_element(:id, parameter_form_id)
         num_tree.clear
         num_tree.send_keys(10)
         @driver.find_element(:xpath, '//form/input[@value="実行"]').click
