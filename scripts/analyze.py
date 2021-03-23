@@ -39,7 +39,7 @@ def normalize_racewise_feature(group):
 
 connection = mysql.connect(
   host = database[parameter['env']]['host'],
-  user = database[parameter['env']]['user'],
+  user = database[parameter['env']]['username'],
   password = database[parameter['env']]['password'],
   database = database[parameter['env']]['database'],
 )
