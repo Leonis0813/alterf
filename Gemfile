@@ -19,7 +19,7 @@ gem 'rails', '~> 6.0'
 gem 'remotipart'
 gem 'resque'
 gem 'rsvg2'
-gem 'rubyzip'
+gem 'rubyzip', require: 'zip'
 gem 'sass-rails', '~> 5.0'
 gem 'sdoc', group: :doc
 gem 'therubyracer'
