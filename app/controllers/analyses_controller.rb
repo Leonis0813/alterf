@@ -6,7 +6,7 @@ class AnalysesController < ApplicationController
 
     @new_analysis = Analysis.new
     @new_analysis.build_parameter
-    @index_form = Analysis::IndexForm.new(index_params.except(:page))
+    @index_form = Analyses::IndexForm.new(index_params.except(:page))
     @analyses = Analysis.where(@index_form.to_query)
                         .includes(:parameter)
                         .order(created_at: :desc)

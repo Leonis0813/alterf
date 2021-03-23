@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe Analysis::IndexForm, type: :model do
+describe Analyses::IndexForm, type: :model do
   describe '.initialize' do
     [
       [1, {key: :value}],
@@ -14,7 +14,7 @@ describe Analysis::IndexForm, type: :model do
 
       context "num_data: #{num_data}, parameter: #{parameter}を指定した場合" do
         before(:all) do
-          @index_form = Analysis::IndexForm.new(
+          @index_form = Analyses::IndexForm.new(
             num_data: num_data,
             parameter: parameter,
           )
@@ -45,7 +45,7 @@ describe Analysis::IndexForm, type: :model do
     ].each do |num_data, parameter, expected_query|
       context "num_data: #{num_data}, parameter: #{parameter}を指定した場合" do
         before(:all) do
-          @index_form = Analysis::IndexForm.new(
+          @index_form = Analyses::IndexForm.new(
             num_data: num_data,
             parameter: parameter,
           )

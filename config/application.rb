@@ -15,10 +15,8 @@ module Alterf
   class Application < Rails::Application
     config.i18n.default_locale = :ja
     config.active_job.queue_adapter = :resque
-    config.autoload_paths += [
-      "#{config.root}/lib/clients",
-      "#{config.root}/lib/errors",
-      "#{config.root}/lib/utils",
-    ]
+    config.paths.add 'lib/clients', eager_load: true
+    config.paths.add 'lib/errors', eager_load: true
+    config.paths.add 'lib/utils', eager_load: true
   end
 end

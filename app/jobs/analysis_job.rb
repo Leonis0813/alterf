@@ -10,6 +10,7 @@ class AnalysisJob < ApplicationJob
     FileUtils.mkdir_p(@output_dir)
     parameter = analysis.parameter.attributes.merge('num_data' => analysis.num_data)
     parameter.except!('id', 'analysis_id', 'created_at', 'updated_at')
+    parameter['env'] = Rails.env.to_s
 
     if analysis.num_entry
       dump_yaml('parameter.yml', parameter.merge('num_entry' => analysis.num_entry))

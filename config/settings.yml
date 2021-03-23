@@ -1,13 +1,6 @@
 netkeiba:
   base_url: 'https://db.netkeiba.com'
 
-mysql:
-  database: 'denebola'
-  host: 'localhost'
-  port: 3306
-  user: 'root'
-  password: 'password'
-
 analysis:
   feature:
     races: &races
