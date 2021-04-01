@@ -5,20 +5,47 @@ require_relative 'common_view_helper'
 module AnalysisViewHelper
   include CommonViewHelper
 
-  def form_panel_xpath
-    [row_xpath, 'div[@class="col-lg-3"]', 'div[@id="new-analysis"]'].join('/')
+  def form_xpath
+    [row_xpath, 'div[@class="col-lg-3"]'].join('/')
   end
 
-  def form_xpath
+  def form_tab_xpath
+    [form_xpath, 'ul[@class="nav nav-tabs"]'].join('/')
+  end
+
+  def register_form_panel_xpath
+    [form_xpath, 'div[@class="tab-content"]', 'div[@id="new-analysis"]'].join('/')
+  end
+
+  def register_form_xpath
     [
-      form_panel_xpath,
+      register_form_panel_xpath,
       'form[@action="/analyses"][@data-remote="true"][@method="post"]' \
       '[@class="new_analysis"]',
     ].join('/')
   end
 
+  def register_input_xpath
+    [register_form_xpath, 'div[@class="form-group"]'].join('/')
+  end
+
   def parameter_form_block_xpath
-    [form_xpath, 'div[@class="collapse"]', 'div[@class="form-group"]'].join('/')
+    [register_form_xpath, 'div[@class="collapse"]', 'div[@class="form-group"]'].join('/')
+  end
+
+  def index_form_panel_xpath
+    [form_xpath, 'div[@class="tab-content"]', 'div[@id="search-form"]'].join('/')
+  end
+
+  def index_form_xpath
+    [
+      index_form_panel_xpath,
+      'form[@action="/analyses"][@method="get"][@id="form-index"]',
+    ].join('/')
+  end
+
+  def index_input_xpath
+    [index_form_xpath, 'div[@class="form-group"]'].join('/')
   end
 
   def link_two_xpath

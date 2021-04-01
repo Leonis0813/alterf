@@ -35,7 +35,7 @@ class Evaluation < ApplicationRecord
   validates :state,
             inclusion: {in: STATE_LIST, message: MESSAGE_INVALID},
             allow_nil: true
-  validates :precision, :recall, :f_measure,
+  validates :precision, :recall, :specificity, :f_measure,
             numericality: {
               greater_than_or_equal_to: 0,
               less_than_or_equal_to: 1,
@@ -95,17 +95,23 @@ class Evaluation < ApplicationRecord
   end
 
   def calculate!
-    precision = recall = f_measure = 0.0
+    precision = recall = 0.0
+    attribute = {}
     unless (true_positive + false_positive).zero?
       precision = true_positive / (true_positive + false_positive)
+      attribute[:precision] = precision
     end
     unless (true_positive + false_negative).zero?
       recall = true_positive / (true_positive + false_negative)
+      attribute[:recall] = recall
+    end
+    unless (true_negative + false_positive).zero?
+      attribute[:specificity] = true_negative / (true_negative + false_positive)
     end
     unless (precision + recall).zero?
-      f_measure = (2 * precision * recall) / (precision + recall)
+      attribute[:f_measure] = (2 * precision * recall) / (precision + recall)
     end
-    update!(precision: precision, recall: recall, f_measure: f_measure)
+    update!(attribute)
   end
 
   def output_race_ids
@@ -115,6 +121,14 @@ class Evaluation < ApplicationRecord
     File.open(file_path, 'w') do |file|
       data.pluck(:race_id).each {|race_id| file.puts(race_id) }
     end
+  end
+
+  def start!
+    update!(state: Analysis::STATE_PROCESSING, performed_at: Time.zone.now)
+  end
+
+  def complete!
+    update!(state: Analysis::STATE_COMPLETED, completed_at: Time.zone.now)
   end
 
   private
@@ -135,6 +149,12 @@ class Evaluation < ApplicationRecord
   def true_positive
     data.inject(0) do |tp, datum|
       tp + datum.prediction_results.won.where(number: datum.ground_truth).count
+    end.to_f
+  end
+
+  def true_negative
+    data.inject(0) do |tn, datum|
+      tn + datum.prediction_results.lost.where.not(number: datum.ground_truth).count
     end.to_f
   end
 

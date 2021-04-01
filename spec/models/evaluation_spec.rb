@@ -11,6 +11,7 @@ describe Evaluation, type: :model do
         state: %w[waiting processing completed error],
         precision: [0, 1, nil],
         recall: [0, 1, nil],
+        specificity: [0, 1, nil],
         f_measure: [0, 1, nil],
       }
 
@@ -48,6 +49,7 @@ describe Evaluation, type: :model do
         state: ['invalid'],
         precision: [-0.1, 1.1],
         recall: [-0.1, 1.1],
+        specificity: [-0.1, 1.1],
         f_measure: [-0.1, 1.1],
       }
 
@@ -165,9 +167,45 @@ describe Evaluation, type: :model do
         is_asserted_by { @evaluation.recall == 0.5 }
       end
 
+      it '特異度が正しいこと' do
+        is_asserted_by { @evaluation.specificity == 0.75 }
+      end
+
       it 'F値が正しいこと' do
         is_asserted_by { @evaluation.f_measure.round(3) == 0.444 }
       end
+    end
+  end
+
+  describe '#start!' do
+    include_context 'トランザクション作成'
+    before(:all) do
+      @evaluation = create(:evaluation)
+      @evaluation.start!
+    end
+
+    it '状態が進行中になっていること' do
+      is_asserted_by { @evaluation.state == Evaluation::STATE_PROCESSING }
+    end
+
+    it '実行開始日時が設定されていること' do
+      is_asserted_by { @evaluation.performed_at.present? }
+    end
+  end
+
+  describe '#complete!' do
+    include_context 'トランザクション作成'
+    before(:all) do
+      @evaluation = create(:evaluation)
+      @evaluation.complete!
+    end
+
+    it '状態が完了になっていること' do
+      is_asserted_by { @evaluation.state == Evaluation::STATE_COMPLETED }
+    end
+
+    it '完了日時が設定されていること' do
+      is_asserted_by { @evaluation.completed_at.present? }
     end
   end
 end

@@ -14,22 +14,34 @@ analysis_id = args[1]
 workdir = os.path.dirname(os.path.abspath(args[0]))
 outputdir = workdir + '/../tmp/files/analyses/' + analysis_id
 config = yaml.load(open(workdir + '/../config/settings.yml', 'r+'))
+database = yaml.load(open(workdir + '/../config/denebola/database.yml', 'r+'))
 parameter = yaml.load(open(outputdir + '/parameter.yml', 'r+'))
 
 def normalize_racewise_feature(group):
   features = group[config['analysis']['racewise_features']]
   features['horse_average_prize_money'] = features['horse_average_prize_money'].astype(float)
   features['jockey_average_prize_money'] = features['jockey_average_prize_money'].astype(float)
+  unnormalizable_feature_names = features.loc[:, features.max() == features.min()].columns
+  normalizable_feature_names = np.setdiff1d(
+    config['analysis']['racewise_features'],
+    unnormalizable_feature_names
+  )
+  features = features[normalizable_feature_names]
   normalized = (features - features.min()) / (features.max() - features.min())
-  for name in config['analysis']['racewise_features']:
+
+  for name in unnormalizable_feature_names:
+    normalized[name] = 0.0
+
+  for name in normalizable_feature_names:
     group[name] = normalized[name]
+
   return group
 
 connection = mysql.connect(
-  host = config['mysql']['host'],
-  user = config['mysql']['user'],
-  password = config['mysql']['password'],
-  database = config['mysql']['database'],
+  host = database[parameter['env']]['host'],
+  user = database[parameter['env']]['username'],
+  password = database[parameter['env']]['password'],
+  database = database[parameter['env']]['database'],
 )
 cursor = connection.cursor(dictionary=True)
 
@@ -102,4 +114,4 @@ metadata = {
 file.write(yaml.dump(metadata))
 
 pickle.dump(classifier, open(outputdir + '/model.rf', 'wb'))
-util.output_tree(classifier.estimators_, training_data, outputdir)
+util.output_tree(classifier, training_data, outputdir)

@@ -3,12 +3,14 @@ class AnalysisJob < ApplicationJob
 
   def perform(analysis_id)
     analysis = Analysis.find(analysis_id)
-    analysis.update!(state: Analysis::STATE_PROCESSING, performed_at: Time.zone.now)
+    analysis.start!
 
     @output_dir = Rails.root.join('tmp', 'files', 'analyses', analysis_id.to_s)
+    FileUtils.rm_rf(@output_dir)
     FileUtils.mkdir_p(@output_dir)
     parameter = analysis.parameter.attributes.merge('num_data' => analysis.num_data)
     parameter.except!('id', 'analysis_id', 'created_at', 'updated_at')
+    parameter['env'] = Rails.env.to_s
 
     if analysis.num_entry
       dump_yaml('parameter.yml', parameter.merge('num_entry' => analysis.num_entry))
@@ -32,8 +34,7 @@ class AnalysisJob < ApplicationJob
     create_zip(%w[model.zip analysis.zip], 'result.zip')
 
     AnalysisMailer.completed(analysis).deliver_now
-
-    analysis.update!(state: Analysis::STATE_COMPLETED)
+    analysis.complete!
   rescue StandardError => e
     Rails.logger.error(e.message)
     Rails.logger.error(e.backtrace.join("\n"))

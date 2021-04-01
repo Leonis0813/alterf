@@ -1,3 +1,40 @@
+# 4.20.1 (2021/03/23)
+- [FIX] for production
+
+# 4.20.0 (2021/03/21)
+- [ADD] index form to analysis view
+- [UPDATE] gems
+
+# 4.19.4 (2021/03/12)
+- [FIX] deletion old tmp files
+- [FIX] deletion files completed
+
+# 4.19.3 (2021/03/03)
+- [UPDATE] ruby version to 2.7.2
+- [UPDATE] gems
+
+# 4.19.2 (2021/02/06)
+- [FIX] normalization process
+- [UPDATE] gems
+
+# 4.19.1 (2021/02/06)
+- [UPDATE] rails to 6
+- [REFACTOR] import process to apply bulk insert
+
+# 4.19.0 (2021/02/03)
+- [UPDATE] evaluation view to show specificity
+- [UPDATE] gems
+
+# 4.18.0 (2021/01/17)
+- [UPDATE] analysis result view to show win rate
+- [FIX] decision tree area size
+- [REMOVE] collapsible feature of decision tree
+- [UPDATE] gems
+
+# 4.17.1 (2021/01/11)
+- [FIX] evaluation data of big decimal type
+- [UPDATE] gems
+
 # 4.17.0 (2020/12/20)
 - [UPDATE] analysis result view to show decision trees
 - [UPDATE] gems

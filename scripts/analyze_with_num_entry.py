@@ -14,6 +14,7 @@ analysis_id = args[1]
 workdir = os.path.dirname(os.path.abspath(args[0]))
 outputdir = workdir + '/../tmp/files/analyses/' + analysis_id
 config = yaml.load(open(workdir + '/../config/settings.yml', 'r+'))
+database = yaml.load(open(workdir + '/../config/denebola/database.yml', 'r+'))
 parameter = yaml.load(open(outputdir + '/parameter.yml', 'r+'))
 
 def create_race_feature(group):
@@ -45,10 +46,10 @@ def create_race_feature(group):
   return feature
 
 connection = mysql.connect(
-  host = config['mysql']['host'],
-  user = config['mysql']['user'],
-  password = config['mysql']['password'],
-  database = config['mysql']['database'],
+  host = database[parameter['env']]['host'],
+  user = database[parameter['env']]['username'],
+  password = database[parameter['env']]['password'],
+  database = database[parameter['env']]['database'],
 )
 cursor = connection.cursor(dictionary=True)
 
@@ -119,4 +120,4 @@ metadata = {
 file.write(yaml.dump(metadata))
 
 pickle.dump(classifier, open(outputdir + '/model.rf', 'wb'))
-util.output_tree(classifier.estimators_, training_data, outputdir)
+util.output_tree(classifier, training_data, outputdir)

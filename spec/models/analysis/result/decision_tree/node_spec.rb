@@ -10,6 +10,8 @@ describe Analysis::Result::DecisionTree::Node, type: :model do
         node_type: %w[root split leaf],
         group: %w[less greater],
         threshold: [0.1],
+        num_win: [1, nil],
+        num_lose: [1, nil],
       }
 
       CommonHelper.generate_test_case(valid_attribute).each do |attribute|
@@ -42,6 +44,8 @@ describe Analysis::Result::DecisionTree::Node, type: :model do
         node_type: %w[invalid],
         group: %w[invalid],
         threshold: %w[invalid],
+        num_win: [-1, 0.1],
+        num_lose: [-1, 0.1],
       }
 
       CommonHelper.generate_test_case(invalid_attribute).each do |attribute|

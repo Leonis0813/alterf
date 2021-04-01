@@ -50,7 +50,10 @@ class FeatureUtil
         feature['entries'] = []
 
         entry_features.each do |entry_feature|
-          feature['entries'] << entry_attributes.map {|name| entry_feature[name] }
+          feature['entries'] << entry_attributes.map do |name|
+            entry = entry_feature[name]
+            entry.is_a?(BigDecimal) ? entry.to_f : entry
+          end
         end
       end
     end

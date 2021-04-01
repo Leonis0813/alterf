@@ -3,7 +3,7 @@ pipeline {
 
   environment {
     PATH = '/usr/local/rvm/bin:/usr/local/bin:/usr/bin:/bin'
-    RUBY_VERSION = '2.6.3'
+    RUBY_VERSION = '2.7.2'
   }
 
   options {
@@ -46,6 +46,7 @@ pipeline {
 
       steps {
         sh "rvm ${RUBY_VERSION} do env COVERAGE=on bundle exec rake spec:models"
+        sh "rvm ${RUBY_VERSION} do env COVERAGE=on bundle exec rake spec:forms"
         sh "rvm ${RUBY_VERSION} do env COVERAGE=on bundle exec rake spec:lib"
       }
     }

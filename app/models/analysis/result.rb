@@ -15,14 +15,14 @@ class Analysis
       raise StandardError unless File.exist?(output_dir)
 
       metadata = YAML.load_file(File.join(output_dir, 'metadata.yml'))
-      metadata['importance'].each do |feature_name, value|
-        importances.create!(feature_name: feature_name, value: value)
+      attributes = metadata['importance'].map do |feature_name, value|
+        {feature_name: feature_name, value: value}.merge(timestamp)
       end
+      importances.insert_all!(attributes)
 
-      metadata['num_tree'].times do |i|
-        decision_tree = decision_trees.create!(tree_id: i)
-        decision_tree.import!
-      end
+      attributes = Array.new(metadata['num_tree']) {|i| {tree_id: i}.merge(timestamp) }
+      decision_trees.insert_all!(attributes)
+      decision_trees.reload.each(&:import!)
     end
   end
 end

@@ -22,6 +22,7 @@ class EvaluationsController < ApplicationController
     end
 
     output_dir = Rails.root.join('tmp', 'files', 'evaluations', evaluation.id.to_s)
+    FileUtils.rm_rf(output_dir)
     FileUtils.mkdir_p(output_dir)
     File.open(File.join(output_dir, model.original_filename), 'w+b') do |f|
       f.write(model.read)

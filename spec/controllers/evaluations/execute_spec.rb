@@ -13,6 +13,7 @@ describe EvaluationsController, type: :controller do
   shared_context 'リクエスト送信' do |params: default_params|
     before do
       allow(EvaluationJob).to receive(:perform_later).and_return(true)
+      data.rewind
       response = post(:execute, params: params)
       @response_status = response.status
       @response_body = JSON.parse(response.body) rescue response.body

@@ -1,8 +1,10 @@
 import yaml
 
-def output_tree(estimators, training_data, outputdir):
+def output_tree(classifier, training_data, outputdir):
+  leaf_id_map = classifier.apply(training_data.drop('won', axis=1))
+
   feature_names = training_data.columns
-  for i, estimator in enumerate(estimators):
+  for i, estimator in enumerate(classifier.estimators_):
     file = open(outputdir + '/tree_' + str(i) + '.yml', 'w+')
     nodes = []
 
@@ -10,22 +12,41 @@ def output_tree(estimators, training_data, outputdir):
     rights = estimator.tree_.children_right.astype(type('int', (float,), {}))
     feature_ids = estimator.tree_.feature
     thresholds = estimator.tree_.threshold.astype(type('float', (float,), {}))
+    leaf_ids = [l[i] for l in leaf_id_map]
 
-    for i in range(len(lefts)):
+    for node_id in range(len(lefts)):
       node_type = 'leaf'
-      if i == 0:
+      if node_id == 0:
         node_type = 'root'
-      elif lefts[i] != rights[i]:
+      elif lefts[node_id] != rights[node_id]:
         node_type = 'split'
 
+      num_win = None
+      num_lose = None
+      if node_type == 'leaf':
+        num_win = 0
+        num_lose = 0
+        for data_id, won in enumerate(training_data['won']):
+          if leaf_ids[data_id] == node_id:
+            if won == 1:
+              num_win += 1
+            else:
+              num_lose += 1
+
+      feature_id = feature_ids[node_id]
+
       node = {
-        'node_id': i,
+        'node_id': node_id,
         'node_type': node_type,
-        'feature_name': None if feature_ids[i] == -2 else feature_names[feature_ids[i]],
-        'threshold': None if thresholds[i] == -2.0 else thresholds[i],
+        'feature_name': None if feature_id == -2 else feature_names[feature_id],
+        'threshold': None if thresholds[node_id] == -2.0 else thresholds[node_id],
+        'num_win': num_win,
+        'num_lose': num_lose,
         'parent_id': None,
       }
       nodes.append(node)
+
+    nodes[0]['group'] = None
 
     for i, left in enumerate(lefts):
       if left != -1:

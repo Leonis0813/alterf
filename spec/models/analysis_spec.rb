@@ -41,4 +41,36 @@ describe Analysis, type: :model do
       end
     end
   end
+
+  describe '#start!' do
+    include_context 'トランザクション作成'
+    before(:all) do
+      @analysis = create(:analysis)
+      @analysis.start!
+    end
+
+    it '状態が進行中になっていること' do
+      is_asserted_by { @analysis.state == Analysis::STATE_PROCESSING }
+    end
+
+    it '実行開始日時が設定されていること' do
+      is_asserted_by { @analysis.performed_at.present? }
+    end
+  end
+
+  describe '#complete!' do
+    include_context 'トランザクション作成'
+    before(:all) do
+      @analysis = create(:analysis)
+      @analysis.complete!
+    end
+
+    it '状態が完了になっていること' do
+      is_asserted_by { @analysis.state == Analysis::STATE_COMPLETED }
+    end
+
+    it '完了日時が設定されていること' do
+      is_asserted_by { @analysis.completed_at.present? }
+    end
+  end
 end

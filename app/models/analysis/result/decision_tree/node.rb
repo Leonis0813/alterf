@@ -7,7 +7,7 @@ class Analysis
 
         validates :node_id, :node_type,
                   presence: {message: MESSAGE_ABSENT}
-        validates :node_id,
+        validates :node_id, :num_win, :num_lose,
                   numericality: {
                     only_integer: true,
                     greater_than_or_equal_to: 0,
@@ -29,15 +29,9 @@ class Analysis
                   numericality: {message: MESSAGE_INVALID},
                   allow_nil: true
 
-        belongs_to :decision_tree
-        belongs_to :parent,
-                   class_name: 'Analysis::Result::DecisionTree::Node',
-                   inverse_of: :children
-        has_many :children,
-                 class_name: 'Analysis::Result::DecisionTree::Node',
-                 foreign_key: 'parent_id',
-                 dependent: :destroy,
-                 inverse_of: :parent
+        belongs_to :decision_tree,
+                   foreign_key: 'analysis_result_decision_tree_id',
+                   inverse_of: :nodes
       end
     end
   end

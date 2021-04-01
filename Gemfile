@@ -14,12 +14,12 @@ gem 'jquery-rails'
 gem 'json-schema'
 gem 'kaminari'
 gem 'less-rails'
-gem 'mysql2', '~> 0.3.20'
-gem 'rails', '~> 5.0.0'
+gem 'mysql2'
+gem 'rails', '~> 6.0'
 gem 'remotipart'
 gem 'resque'
 gem 'rsvg2'
-gem 'rubyzip'
+gem 'rubyzip', require: 'zip'
 gem 'sass-rails', '~> 5.0'
 gem 'sdoc', group: :doc
 gem 'therubyracer'
@@ -30,11 +30,12 @@ gem 'unicorn', '~> 5.4.0'
 gem 'unicorn-worker-killer'
 
 group :development do
+  gem 'erb_lint', '< 0.0.36'
   gem 'pronto'
   gem 'pronto-coffeelint', require: false
   gem 'pronto-erb_lint', require: false
   gem 'pronto-rubocop', require: false
-  gem 'rubocop', '0.86.0'
+  gem 'rubocop'
   gem 'rubocop-performance'
   gem 'rubocop-rails'
   gem 'rugged', '~> 0.28.0'

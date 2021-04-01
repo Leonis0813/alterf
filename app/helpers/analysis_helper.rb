@@ -12,6 +12,21 @@ module AnalysisHelper
     ]
   end
 
+  def index_input_common_option(name)
+    {id: "input-index-#{name}", class: 'form-control'}
+  end
+
+  def parameter_label_option(name)
+    {id: "label-index-#{name}", for: "input-index-#{name}", style: 'font-weight: normal'}
+  end
+
+  def parameter_input_option(name, parameter = {})
+    index_input_common_option(name).merge(
+      name: "parameter[#{name}]",
+      value: parameter[name],
+    ).compact
+  end
+
   def question_sign(param_name)
     content_tag(
       :span,

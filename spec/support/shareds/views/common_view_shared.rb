@@ -36,7 +36,7 @@ shared_examples 'タイトルが表示されていること' do |expected_title|
   it do
     title = @html.xpath("#{form_panel_xpath}/h3")
     is_asserted_by { title.present? }
-    is_asserted_by { title.text == expected_title }
+    is_asserted_by { title.text.strip == expected_title }
   end
 end
 
