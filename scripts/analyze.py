@@ -74,7 +74,7 @@ feature = feature.groupby('race_id').apply(normalize_racewise_feature)
 feature = feature.dropna()
 
 positive = feature[feature['won'] == 1]
-negative = feature[feature['won'] == 0].sample(n=len(positive))
+negative = feature[feature['won'] == 0]
 training_data = pd.concat([positive, negative])
 
 columns = training_data.columns.to_list()
@@ -86,6 +86,7 @@ training_data[columns].sort_values(['race_id', 'number']).to_csv(outputdir + '/t
 training_data = training_data.drop('race_id', axis=1)
 
 classifier = RandomForestClassifier(
+  class_weight='balanced',
   max_depth=parameter['max_depth'],
   max_features=parameter['max_features'],
   max_leaf_nodes=parameter['max_leaf_nodes'],
