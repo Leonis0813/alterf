@@ -47,9 +47,7 @@ cursor = connection.cursor(dictionary=True)
 
 cursor.execute('SELECT race_id FROM features WHERE won = 1')
 race_ids = pd.DataFrame(cursor.fetchall())['race_id']
-
-if (len(race_ids) >= parameter['num_data'] / 2):
-  race_ids = np.random.choice(race_ids, int(parameter['num_data'] / 2), replace=False)
+race_ids = np.random.choice(race_ids, int(parameter['num_data']), replace=False)
 
 cursor.execute('desc features')
 fields = pd.DataFrame(cursor.fetchall())['Field']
