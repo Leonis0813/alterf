@@ -95,6 +95,7 @@ training_data[columns].to_csv(outputdir + '/training_data.csv', index=False)
 training_data = training_data.drop('race_id', axis=1)
 
 classifier = RandomForestClassifier(
+  class_weight='balanced',
   max_depth=parameter['max_depth'],
   max_features=parameter['max_features'],
   max_leaf_nodes=parameter['max_leaf_nodes'],

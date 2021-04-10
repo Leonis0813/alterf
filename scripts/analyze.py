@@ -47,9 +47,7 @@ cursor = connection.cursor(dictionary=True)
 
 cursor.execute('SELECT race_id FROM features WHERE won = 1')
 race_ids = pd.DataFrame(cursor.fetchall())['race_id']
-
-if (len(race_ids) >= parameter['num_data'] / 2):
-  race_ids = np.random.choice(race_ids, int(parameter['num_data'] / 2), replace=False)
+race_ids = np.random.choice(race_ids, int(parameter['num_data']), replace=False)
 
 cursor.execute('desc features')
 fields = pd.DataFrame(cursor.fetchall())['Field']
@@ -74,7 +72,7 @@ feature = feature.groupby('race_id').apply(normalize_racewise_feature)
 feature = feature.dropna()
 
 positive = feature[feature['won'] == 1]
-negative = feature[feature['won'] == 0].sample(n=len(positive))
+negative = feature[feature['won'] == 0]
 training_data = pd.concat([positive, negative])
 
 columns = training_data.columns.to_list()
@@ -86,6 +84,7 @@ training_data[columns].sort_values(['race_id', 'number']).to_csv(outputdir + '/t
 training_data = training_data.drop('race_id', axis=1)
 
 classifier = RandomForestClassifier(
+  class_weight='balanced',
   max_depth=parameter['max_depth'],
   max_features=parameter['max_features'],
   max_leaf_nodes=parameter['max_leaf_nodes'],
