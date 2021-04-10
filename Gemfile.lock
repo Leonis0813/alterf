@@ -110,7 +110,7 @@ GEM
     cork (0.3.0)
       colored2 (~> 3.1)
     crass (1.0.6)
-    d3-rails (6.6.2)
+    d3-rails (5.16.0)
       railties (>= 3.1)
     daemon-spawn (0.4.2)
     danger (8.2.3)
@@ -284,7 +284,7 @@ GEM
     native-package-installer (1.1.1)
     nio4r (2.5.7)
     no_proxy_fix (0.1.2)
-    nokogiri (1.11.2)
+    nokogiri (1.11.3)
       mini_portile2 (~> 2.5.0)
       racc (~> 1.4)
     octokit (4.20.0)
@@ -511,7 +511,7 @@ DEPENDENCIES
   cairo
   coffee-rails
   config
-  d3-rails
+  d3-rails (~> 5.0)
   daemon-spawn
   danger
   danger-simplecov_json
