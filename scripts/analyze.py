@@ -13,9 +13,9 @@ analysis_id = args[1]
 
 workdir = os.path.dirname(os.path.abspath(args[0]))
 outputdir = workdir + '/../tmp/files/analyses/' + analysis_id
-config = yaml.load(open(workdir + '/../config/settings.yml', 'r+'))
-database = yaml.load(open(workdir + '/../config/denebola/database.yml', 'r+'))
-parameter = yaml.load(open(outputdir + '/parameter.yml', 'r+'))
+config = yaml.safe_load(open(workdir + '/../config/settings.yml', 'r+'))
+database = yaml.safe_load(open(workdir + '/../config/denebola/database.yml', 'r+'))
+parameter = yaml.safe_load(open(outputdir + '/parameter.yml', 'r+'))
 
 def normalize_racewise_feature(group):
   features = group[config['analysis']['racewise_features']]
@@ -58,7 +58,7 @@ sql = 'SELECT ' + ','.join(feature_names) \
   + ' FROM features WHERE race_id IN (' + ','.join(race_ids) + ')'
 cursor.execute(sql)
 feature = pd.DataFrame(cursor.fetchall())
-mapping = yaml.load(open(workdir + '/mapping.yml', 'r+'))
+mapping = yaml.safe_load(open(workdir + '/mapping.yml', 'r+'))
 for name in mapping:
   feature[name] = feature[name].map(mapping[name]).astype(int)
 
