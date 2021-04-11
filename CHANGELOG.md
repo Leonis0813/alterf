@@ -1,3 +1,6 @@
+# 4.20.3 (2021/04/11)
+- [UPDATE] analysis scripts to add race list file
+
 # 4.20.2 (2021/04/10)
 - [UPDATE] analysis script to set class_weight parameter
 - [UPDATE] gems

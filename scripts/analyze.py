@@ -13,9 +13,9 @@ analysis_id = args[1]
 
 workdir = os.path.dirname(os.path.abspath(args[0]))
 outputdir = workdir + '/../tmp/files/analyses/' + analysis_id
-config = yaml.load(open(workdir + '/../config/settings.yml', 'r+'))
-database = yaml.load(open(workdir + '/../config/denebola/database.yml', 'r+'))
-parameter = yaml.load(open(outputdir + '/parameter.yml', 'r+'))
+config = yaml.safe_load(open(workdir + '/../config/settings.yml', 'r+'))
+database = yaml.safe_load(open(workdir + '/../config/denebola/database.yml', 'r+'))
+parameter = yaml.safe_load(open(outputdir + '/parameter.yml', 'r+'))
 
 def normalize_racewise_feature(group):
   features = group[config['analysis']['racewise_features']]
@@ -58,7 +58,7 @@ sql = 'SELECT ' + ','.join(feature_names) \
   + ' FROM features WHERE race_id IN (' + ','.join(race_ids) + ')'
 cursor.execute(sql)
 feature = pd.DataFrame(cursor.fetchall())
-mapping = yaml.load(open(workdir + '/mapping.yml', 'r+'))
+mapping = yaml.safe_load(open(workdir + '/mapping.yml', 'r+'))
 for name in mapping:
   feature[name] = feature[name].map(mapping[name]).astype(int)
 
@@ -81,6 +81,13 @@ columns.remove('number')
 columns.insert(0, 'number')
 columns.insert(0, 'race_id')
 training_data[columns].sort_values(['race_id', 'number']).to_csv(outputdir + '/training_data.csv', index=False)
+
+file = open(outputdir + '/race_list.txt', 'w+')
+race_ids = training_data['race_id'].unique()
+race_ids.sort()
+file.write("\n".join(race_ids))
+file.close()
+
 training_data = training_data.drop('race_id', axis=1)
 
 classifier = RandomForestClassifier(
