@@ -1,7 +1,13 @@
 class AnalysisJob < ApplicationJob
   queue_as :alterf
 
-  OUTPUT_FILES = %w[metadata.yml model.rf feature.csv race_list.txt training_data.csv]
+  OUTPUT_FILES = %w[
+    feature.csv
+    metadata.yml
+    model.rf
+    race_list.txt
+    training_data.csv
+  ].freeze
 
   def perform(analysis_id)
     analysis = Analysis.find(analysis_id)
