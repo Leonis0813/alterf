@@ -27,11 +27,17 @@ class Analysis < ApplicationRecord
     analysis.state = DEFAULT_STATE
   end
 
+  after_update do
+    updated_attribute = attributes.slice('analysis_id' 'state', 'num_feature')
+    updated_attribute['performed_at'] = performed_at.strftime('%Y/%m/%d %T')
+    ActionCable.server.broadcast('analysis', updated_attribute.compact)
+  end
+
   def start!
-    update!(state: Analysis::STATE_PROCESSING, performed_at: Time.zone.now)
+    update!(state: STATE_PROCESSING, performed_at: Time.zone.now)
   end
 
   def complete!
-    update!(state: Analysis::STATE_COMPLETED, completed_at: Time.zone.now)
+    update!(state: STATE_COMPLETED, completed_at: Time.zone.now)
   end
 end
