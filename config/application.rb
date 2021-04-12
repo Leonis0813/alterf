@@ -13,6 +13,7 @@ Bundler.require(*Rails.groups)
 
 module Alterf
   class Application < Rails::Application
+    config.generators.javascript_engine = :js
     config.i18n.default_locale = :ja
     config.active_job.queue_adapter = :resque
     config.paths.add 'lib/clients', eager_load: true
