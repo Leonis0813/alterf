@@ -5,7 +5,7 @@ class PredictionJob < ApplicationJob
 
   def perform(prediction_id)
     prediction = Prediction.find(prediction_id)
-    prediction.update!(state: Prediction::STATE_PROCESSING, performed_at: Time.zone.now)
+    prediction.start!
 
     data_dir = Rails.root.join('tmp', 'files', 'predictions', prediction_id.to_s)
     test_data = prediction.test_data
@@ -33,7 +33,7 @@ class PredictionJob < ApplicationJob
 
     prediction.import_results(Rails.root.join(data_dir, 'prediction.yml'))
     FileUtils.rm_rf(data_dir)
-    prediction.update!(state: Prediction::STATE_COMPLETED)
+    prediction.completed!
   rescue StandardError => e
     Rails.logger.error(e.message)
     Rails.logger.error(e.backtrace.join("\n"))

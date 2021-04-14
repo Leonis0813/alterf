@@ -29,9 +29,9 @@ class EvaluationJob < ApplicationJob
       result_file = File.join(data_dir, 'prediction.yml')
       datum.import_prediction_results(result_file)
       FileUtils.rm(result_file)
+      evaluation.calculate!
     end
 
-    evaluation.calculate!
     evaluation.output_race_ids
     evaluation.complete!
   rescue StandardError => e
