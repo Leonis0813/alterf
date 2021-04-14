@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  mount ActionCable.server => '/cable'
+
   get '/analyses' => 'analyses#index'
   post '/analyses' => 'analyses#execute'
   resources :analyses, only: %i[] do
