@@ -54,7 +54,6 @@ $ ->
 
   $('#btn-modal-execute-ok').on 'click', ->
     $('#dialog-execute').modal('hide')
-    location.reload()
     return
 
   $('#btn-modal-execute-error-ok').on 'click', ->
