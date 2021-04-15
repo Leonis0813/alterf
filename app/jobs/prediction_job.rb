@@ -37,6 +37,6 @@ class PredictionJob < ApplicationJob
   rescue StandardError => e
     Rails.logger.error(e.message)
     Rails.logger.error(e.backtrace.join("\n"))
-    prediction.update!(state: Prediction::STATE_ERROR)
+    prediction.failed!
   end
 end

@@ -45,9 +45,14 @@ class Prediction < ApplicationRecord
     broadcast('wons' => results.won.pluck(:number).sort)
   end
 
+  def failed!
+    update!(state: STATE_ERROR)
+    broadcast
+  end
+
   private
 
-  def broadcast(attribute)
+  def broadcast(attribute = {})
     updated_attribute = slice(:prediction_id, :state).merge(attribute)
     ActionCable.server.broadcast('prediction', updated_attribute)
   end
