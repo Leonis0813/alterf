@@ -10,6 +10,7 @@ class Prediction < ApplicationRecord
             inclusion: {in: STATE_LIST, message: MESSAGE_INVALID},
             allow_nil: true
 
+  belongs_to :analysis
   has_many :results, as: :predictable, dependent: :destroy, inverse_of: :predictable
 
   after_initialize if: :new_record? do |prediction|
