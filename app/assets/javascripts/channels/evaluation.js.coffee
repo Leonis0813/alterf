@@ -57,8 +57,8 @@ App.evaluation = App.cable.subscriptions.create "EvaluationChannel",
 
   updateProgress: (trId, evaluation) ->
     $("#{trId} span.state").text("#{evaluation.progress}%完了")
-    $("#{trId} > td[class*=precision]").text(evaluation.precision)
-    $("#{trId} > td[class*=recall]").text(evaluation.recall)
-    $("#{trId} > td[class*=specificity]").text(evaluation.specificity)
-    $("#{trId} > td[class*=f_measure]").text(evaluation.f_measure)
+    $("#{trId} > td[class*=precision]").text(Math.round(evaluation.precision, 3))
+    $("#{trId} > td[class*=recall]").text(Math.round(evaluation.recall, 3))
+    $("#{trId} > td[class*=specificity]").text(Math.round(evaluation.specificity, 3))
+    $("#{trId} > td[class*=f_measure]").text(Math.round(evaluation.f_measure, 3))
     return
