@@ -44,8 +44,9 @@ App.evaluation = App.cable.subscriptions.create "EvaluationChannel",
     return
 
   createDetailButton: (trId, evaluation) ->
+    href = '/alterf/evaluations/#{evaluation.evaluation_id}'
     $("#{trId} > td[class*=state]").append("""
-    <a target='_blank' rel='noopener noreferrer' href='/alterf/evaluations/#{evaluation.evaluation_id}'>
+    <a target='_blank' rel='noopener noreferrer' href='#{href}'>
       <button class='btn btn-xs btn-#{stateToClassMap[evaluation.state]}' title='詳細を確認'>
         <span class='progress'>完了</span>
         <span class='glyphicon glyphicon-new-window'></span>
