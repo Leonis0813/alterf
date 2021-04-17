@@ -1,6 +1,5 @@
 App.evaluation = App.cable.subscriptions.create "EvaluationChannel",
   received: (evaluation) ->
-    stateToClassMap = {processing: 'warning', completed: 'success', error: 'danger'}
     displayedState = {processing: '実行中', completed: '完了', error: 'エラー'}
 
     trId = "##{evaluation.evaluation_id}"
@@ -8,11 +7,13 @@ App.evaluation = App.cable.subscriptions.create "EvaluationChannel",
       switch evaluation.state
         when 'processing'
           @changeRowColor(trId, evaluation.state)
-          @createDetailButton(trId, evaluation)
           $("#{trId} > td[class*=performed_at]").text(evaluation.performed_at)
         when 'completed'
           @changeRowColor(trId, evaluation.state)
-          @createDetailButton(trId, evaluation)
+          column = $("#{trId} > td[class*=state] button")
+          column.removeClass('btn-warning')
+          column.addClass('btn-success')
+          $("#{trId} span.state").text(displayedState[evaluation.state])
         when 'error'
           @changeRowColor(trId, evaluation.state)
           $("#{trId} > td[class*=state]").text(displayedState[evaluation.state])
@@ -26,6 +27,7 @@ App.evaluation = App.cable.subscriptions.create "EvaluationChannel",
     return
 
   changeRowColor: (trId, state) ->
+    stateToClassMap = {processing: 'warning', completed: 'success', error: 'danger'}
     classNames = [
       'performed_at',
       'model',
@@ -44,22 +46,13 @@ App.evaluation = App.cable.subscriptions.create "EvaluationChannel",
     )
     return
 
-  createDetailButton: (trId, evaluation) ->
-    href = '/alterf/evaluations/#{evaluation.evaluation_id}'
-    $("#{trId} > td[class*=state]").append("""
-    <a target='_blank' rel='noopener noreferrer' href='#{href}'>
-      <button class='btn btn-xs btn-#{stateToClassMap[evaluation.state]}' title='詳細を確認'>
-        <span class='state'>完了</span>
-        <span class='glyphicon glyphicon-new-window'></span>
-      </button>
-    </a>
-    """)
-    return
-
   updateProgress: (trId, evaluation) ->
     $("#{trId} span.state").text("#{evaluation.progress}%完了")
-    $("#{trId} > td[class*=precision]").text(Math.round(evaluation.precision, 3))
-    $("#{trId} > td[class*=recall]").text(Math.round(evaluation.recall, 3))
-    $("#{trId} > td[class*=specificity]").text(Math.round(evaluation.specificity, 3))
-    $("#{trId} > td[class*=f_measure]").text(Math.round(evaluation.f_measure, 3))
+    $("#{trId} > td[class*=precision]").text(round(evaluation.precision))
+    $("#{trId} > td[class*=recall]").text(round(evaluation.recall))
+    $("#{trId} > td[class*=specificity]").text(round(evaluation.specificity))
+    $("#{trId} > td[class*=f_measure]").text(round(evaluation.f_measure))
     return
+
+  round: (value) ->
+    return Math.round(value * 1000) / 1000
