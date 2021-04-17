@@ -129,7 +129,7 @@ class Evaluation < ApplicationRecord
 
   def start!
     update!(state: STATE_PROCESSING, performed_at: Time.zone.now)
-    broadcast(state: state, performed_at: performed_at.strtime('%Y/%m/%d %T'))
+    broadcast(state: state, performed_at: performed_at.strftime('%Y/%m/%d %T'))
   end
 
   def complete!
