@@ -11,7 +11,7 @@
   <% else %>
     <%= link_to evaluation_path(evaluation.evaluation_id), target: :_blank, rel: 'noopener noreferrer' do %>
       <button class='btn btn-xs btn-<%= state_to_class(evaluation.state) %>' title='詳細を確認'>
-        <span class='progress'><%= progress(evaluation) %></span>
+        <span class='state'><%= progress(evaluation) %></span>
         <span class='glyphicon glyphicon-new-window'></span>
       </button>
     <% end %>

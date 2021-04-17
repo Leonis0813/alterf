@@ -48,7 +48,7 @@ App.evaluation = App.cable.subscriptions.create "EvaluationChannel",
     $("#{trId} > td[class*=state]").append("""
     <a target='_blank' rel='noopener noreferrer' href='#{href}'>
       <button class='btn btn-xs btn-#{stateToClassMap[evaluation.state]}' title='詳細を確認'>
-        <span class='progress'>完了</span>
+        <span class='state'>完了</span>
         <span class='glyphicon glyphicon-new-window'></span>
       </button>
     </a>
@@ -56,7 +56,7 @@ App.evaluation = App.cable.subscriptions.create "EvaluationChannel",
     return
 
   updateProgress: (trId, evaluation) ->
-    $("#{trId} span.progress").text("#{evaluation.progress}%完了")
+    $("#{trId} span.state").text("#{evaluation.progress}%完了")
     $("#{trId} > td[class*=precision]").text(evaluation.precision)
     $("#{trId} > td[class*=recall]").text(evaluation.recall)
     $("#{trId} > td[class*=specificity]").text(evaluation.specificity)
