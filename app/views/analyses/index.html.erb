@@ -139,10 +139,12 @@
 
   <div class='col-lg-9 well'>
     <h3 class='table-title'>ジョブ実行履歴</h3>
-    <% from = @analyses.total_count == 0 ? 0 : @analyses.offset_value + 1 %>
-    <% info = {total_count: @analyses.total_count, from: from, to: @analyses.offset_value + @analyses.size} %>
-    <h4 class='pagination-info'><%= t('views.pagination.info', info) %></h4>
-    <%= paginate @analyses %>
+    <span id='page-info'>
+      <%= render partial: 'layouts/page_info', locals: {resource: @analyses} %>
+    </span>
+    <span id='paginate'>
+      <%= paginate @analyses %>
+    </span>
     <table id='table-analysis' class='table table-hover'>
       <thead>
         <% analysis_table_headers.each do |header| %>
