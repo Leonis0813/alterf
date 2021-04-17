@@ -11,6 +11,7 @@ App.prediction = App.cable.subscriptions.create "PredictionChannel",
         when 'completed'
           $(trId).removeClass('warning')
           $(trId).addClass(stateToClassMap[prediction.state])
+          @showResults(trId, prediction.wons)
         when 'error'
           $(trId).removeClass('warning')
           $(trId).addClass(stateToClassMap[prediction.state])
@@ -22,4 +23,23 @@ App.prediction = App.cable.subscriptions.create "PredictionChannel",
         url: location.href,
         dataType: 'script',
       })
+    return
+
+  showResults: (trId, wons) ->
+    colors = ['orange', 'skyblue', 'magenta']
+    column = $("#{trId} > td[class*=td-result]")
+    column.append("""
+    <span title='#{wons.join(',')}' style='padding: 4px'>
+    """)
+    $.each(wons, (i, number) ->
+      column.append("""
+      <span class='fa-stack prediction-result' style='color: #{colors[i] || 'black'}'>
+        <i class='fa fa-circle fa-stack-2x'></i>
+        <i class='fa fa-stack-1x fa-inverse'>#{number}</i>
+      </span>
+      """)
+      return
+    )
+    if wons.length > 6
+      column.append('<span>...</span>')
     return
