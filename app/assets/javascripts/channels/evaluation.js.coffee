@@ -39,7 +39,7 @@ App.evaluation = App.cable.subscriptions.create "EvaluationChannel",
     ]
 
     $.each(classNames, (i, className) ->
-      column = $("#{trId} > td[class[*=#{className}]")
+      column = $("#{trId} > td[class*=#{className}]")
       column.removeClass('warning')
       column.addClass(stateToClassMap[state])
       return
@@ -48,10 +48,10 @@ App.evaluation = App.cable.subscriptions.create "EvaluationChannel",
 
   updateProgress: (trId, evaluation) ->
     $("#{trId} span.state").text("#{evaluation.progress}%完了")
-    $("#{trId} > td[class*=precision]").text(round(evaluation.precision))
-    $("#{trId} > td[class*=recall]").text(round(evaluation.recall))
-    $("#{trId} > td[class*=specificity]").text(round(evaluation.specificity))
-    $("#{trId} > td[class*=f_measure]").text(round(evaluation.f_measure))
+    $("#{trId} > td[class*=precision]").text(@round(evaluation.precision))
+    $("#{trId} > td[class*=recall]").text(@round(evaluation.recall))
+    $("#{trId} > td[class*=specificity]").text(@round(evaluation.specificity))
+    $("#{trId} > td[class*=f_measure]").text(@round(evaluation.f_measure))
     return
 
   round: (value) ->
