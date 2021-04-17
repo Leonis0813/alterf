@@ -2,16 +2,7 @@ App.evaluation = App.cable.subscriptions.create "EvaluationChannel",
   received: (evaluation) ->
     stateToClassMap = {processing: 'warning', completed: 'success', error: 'danger'}
     displayedState = {processing: '実行中', completed: '完了', error: 'エラー'}
-    classNames = [
-      'performed_at',
-      'model',
-      'state',
-      'precision',
-      'recall',
-      'specificity',
-      'f_measure',
-    ]
-    console.log(evaluation)
+
     trId = "##{evaluation.evaluation_id}"
     if $(trId).length
       switch evaluation.state
@@ -35,6 +26,16 @@ App.evaluation = App.cable.subscriptions.create "EvaluationChannel",
     return
 
   changeRowColor: (trId, state) ->
+    classNames = [
+      'performed_at',
+      'model',
+      'state',
+      'precision',
+      'recall',
+      'specificity',
+      'f_measure',
+    ]
+
     $.each(classNames, (i, className) ->
       column = $("#{trId} > td[class[*=#{className}]")
       column.removeClass('warning')
