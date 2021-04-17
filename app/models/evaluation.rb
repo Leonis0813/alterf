@@ -112,6 +112,9 @@ class Evaluation < ApplicationRecord
       attribute[:f_measure] = (2 * precision * recall) / (precision + recall)
     end
     update!(attribute)
+
+    completed_data_size = data.to_a.count {|datum| datum.prediction_results.present? }
+    attribute[:progress] = (100 * completed_data_size / data.size.to_f).round(0)
     broadcast(attribute)
   end
 
@@ -125,13 +128,17 @@ class Evaluation < ApplicationRecord
   end
 
   def start!
-    update!(state: Analysis::STATE_PROCESSING, performed_at: Time.zone.now)
+    update!(state: STATE_PROCESSING, performed_at: Time.zone.now)
     broadcast(state: state, performed_at: performed_at.strtime('%Y/%m/%d %T'))
   end
 
   def complete!
-    update!(state: Analysis::STATE_COMPLETED, completed_at: Time.zone.now)
+    update!(state: STATE_COMPLETED, completed_at: Time.zone.now)
     broadcast(state: state)
+  end
+
+  def failed!
+    update!(state: STATE_ERROR)
   end
 
   private

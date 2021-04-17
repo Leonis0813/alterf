@@ -2,7 +2,7 @@ App.prediction = App.cable.subscriptions.create "PredictionChannel",
   received: (prediction) ->
     stateToClassMap = {processing: 'warning', completed: 'success', error: 'danger'}
     displayedState = {processing: '実行中', completed: '完了', error: 'エラー'}
-    console.log(prediction)
+
     trId = "##{prediction.prediction_id}"
     if $(trId).length
       switch prediction.state
@@ -16,7 +16,7 @@ App.prediction = App.cable.subscriptions.create "PredictionChannel",
           $(trId).removeClass('warning')
           $(trId).addClass(stateToClassMap[prediction.state])
           $("#{trId} > td[class*=td-result]").append("""
-<span class='glyphicon glyphicon-remove' style='color: red'/>
+          <span class='glyphicon glyphicon-remove' style='color: red'/>
           """)
     else
       $.ajax({
