@@ -19,7 +19,9 @@ class PredictionJob < ApplicationJob
                 YAML.load_file(test_data)
               end.deep_stringify_keys
 
-    raise StandardError unless prediction.analysis.num_entry == feature['entries'].size
+    if prediction.analysis.num_entry.present?
+      raise StandardError if prediction.analysis.num_entry != feature['entries'].size
+    end
 
     feature_file = File.join(data_dir, Settings.prediction.tmp_file_name)
     File.open(feature_file, 'w') {|file| YAML.dump(feature, file) }
