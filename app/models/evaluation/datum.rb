@@ -42,7 +42,7 @@ class Evaluation
     private
 
     def broadcast(attribute)
-      attribute.merge!(slice(:race_id, :ground_truth)
+      attribute.merge!(slice(:race_id, :ground_truth))
       ActionCable.server.broadcast('evaluation_datum', attribute)
     end
   end
