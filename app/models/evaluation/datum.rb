@@ -23,7 +23,7 @@ class Evaluation
     after_create do
       attribute = slice(:race_name, :race_url).merge(
         'no' => evaluation.data.size,
-        'message_type' => 'create'
+        'message_type' => 'create',
       )
       broadcast(attribute)
     end
