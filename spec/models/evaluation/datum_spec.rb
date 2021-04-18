@@ -12,7 +12,10 @@ describe Evaluation::Datum, type: :model do
   }
 
   shared_context '評価データ情報を作成する' do |attribute: default_attribute|
-    before(:all) { @evaluation_datum = Evaluation::Datum.create!(attribute) }
+    before do
+      @evaluation ||= create(:evaluation)
+      @evaluation_datum = @evaluation.data.create!(attribute)
+    end
   end
 
   shared_examples '結果をインポートすると例外が発生すること' do |file, e|
@@ -82,9 +85,9 @@ describe Evaluation::Datum, type: :model do
     describe '正常系' do
       include_context 'トランザクション作成'
       include_context '評価データ情報を作成する'
-      before(:all) { @other_evaluation_datum = @evaluation_datum }
+      before { @other_evaluation_datum = @evaluation_datum }
       include_context '評価データ情報を作成する'
-      before(:all) do
+      before do
         @evaluation_datum.prediction_results.create!(number: 1)
         @other_evaluation_datum.prediction_results.create!(number: 1)
         @evaluation_datum.destroy
@@ -116,8 +119,12 @@ describe Evaluation::Datum, type: :model do
     describe '正常系' do
       file = Rails.root.join('spec', 'fixtures', 'prediction.yml')
       include_context 'トランザクション作成'
+      include_context 'ActionCableのモックを作成'
       include_context '評価データ情報を作成する'
-      before(:all) { @evaluation_datum.import_prediction_results(file) }
+      before do
+        @called = false
+        @evaluation_datum.import_prediction_results(file)
+      end
 
       it '予測結果情報が登録されていること' do
         won = [3, 5, 11, 17]
@@ -128,6 +135,10 @@ describe Evaluation::Datum, type: :model do
         is_asserted_by do
           results.where(won: false).pluck(:number).sort == (1..18).to_a - won
         end
+      end
+
+      it '予測結果がブロードキャストされていること' do
+        is_asserted_by { @called }
       end
     end
 

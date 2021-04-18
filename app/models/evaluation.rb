@@ -135,13 +135,14 @@ class Evaluation < ApplicationRecord
     broadcast(state: state, performed_at: performed_at.strftime('%Y/%m/%d %T'))
   end
 
-  def complete!
+  def completed!
     update!(state: STATE_COMPLETED, completed_at: Time.zone.now)
     broadcast(slice(:state, :data_source))
   end
 
   def failed!
     update!(state: STATE_ERROR)
+    broadcast(slice(:state))
   end
 
   private
