@@ -3,8 +3,16 @@ App.evaluation_datum = App.cable.subscriptions.create "Evaluation::DatumChannel"
     if !location.pathname.match(/evaluations\/[0-9a-f]{32}/)
       return
 
+    switch datum.message_type
+      when 'create'
+        @createRow(datum)
+      when 'update'
+        @showResults(datum)
+    return
+
+  createRow: (datum) ->
     $('tbody').append("""
-    <tr class='warning'>
+    <tr id='#{datum.race_id}' class='warning'>
       <td>#{datum.no}</td>
       <td>
         <a target='_blank' href='#{datum.race_url}'>
@@ -12,7 +20,7 @@ App.evaluation_datum = App.cable.subscriptions.create "Evaluation::DatumChannel"
           <span class='glyphicon glyphicon-new-window new-window'></span>
         </a>
       </td>
-      <td style='padding: 4px'></td>
+      <td class='results' style='padding: 4px'></td>
       <td style='padding: 4px'>
         <span class='fa-stack prediction-result' style='color: limegreen'>
           <i class='fa fa-circle fa-stack-2x'></i>
@@ -21,4 +29,18 @@ App.evaluation_datum = App.cable.subscriptions.create "Evaluation::DatumChannel"
       </td>
     </tr>
     """)
+    return
+
+  showResults: (datum) ->
+    column = $("tr##{datum.race_id} > td.result")
+    $.each(datum.wons, (i, number) ->
+      color = if number == datum.ground_truth then 'limegreen' else 'gray'
+      column.append("""
+      <span class='fa-stack prediction-result' style='color: #{color}'>
+        <i class='fa fa-circle fa-stack-2x'></i>
+        <i class='fa fa-stack-1x fa-inverse'>#{number}</i>
+      </span>
+      """)
+      return
+    )
     return

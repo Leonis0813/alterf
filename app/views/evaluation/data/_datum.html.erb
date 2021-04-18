@@ -1,5 +1,5 @@
 <% numbers = datum.prediction_results.where(won: true).map(&:number).sort %>
-<tr class='<%= row_class(numbers, datum) %>'>
+<tr id='<%= datum.race_id %>' class='<%= row_class(numbers, datum) %>'>
   <td>
     <%= datum_counter + 1 %>
   </td>
@@ -9,7 +9,7 @@
       <span class='glyphicon glyphicon-new-window new-window'></span>
     <% end %>
   </td>
-  <td style='padding: 4px'>
+  <td class='results' style='padding: 4px'>
   <% numbers.each do |number| %>
     <span class='fa-stack prediction-result' style='color: <%= span_color(number, datum.ground_truth) %>'>
       <i class='fa fa-circle fa-stack-2x'></i>
