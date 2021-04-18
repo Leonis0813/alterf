@@ -8,6 +8,9 @@ App.evaluation_datum = App.cable.subscriptions.create "Evaluation::DatumChannel"
         @createRow(datum)
       when 'update'
         @showResults(datum)
+      else
+        if location.pathname == "/alterf/evaluations/#{datum.evaluation_id}"
+          $('h4.fmeasure-info').text("F値: #{Math.round(datum.f_measure * 1000) / 1000}")
     return
 
   createRow: (datum) ->

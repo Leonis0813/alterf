@@ -117,6 +117,8 @@ class Evaluation < ApplicationRecord
     attribute[:f_measure] ||= 0
     attribute[:progress] = (100 * completed_data_size / data.size.to_f).round(0)
     broadcast(attribute)
+
+    ActionCable.server.broadcast('evaluation_datum', slice(:evaluation_id, :f_measure))
   end
 
   def output_race_ids
