@@ -1,5 +1,8 @@
 App.analysis = App.cable.subscriptions.create "AnalysisChannel",
   received: (analysis) ->
+    if location.pathname != '/alterf/analyses'
+      return
+
     stateToClassMap = {processing: 'warning', completed: 'success', error: 'error'}
     displayedState = {error: 'エラー'}
     classNames = [

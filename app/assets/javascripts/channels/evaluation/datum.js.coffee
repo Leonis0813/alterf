@@ -1,6 +1,8 @@
 App.evaluation_datum = App.cable.subscriptions.create "Evaluation::DatumChannel",
   received: (datum) ->
-    console.log(datum)
+    if !location.pathname.match(/evaluations\/[0-9a-f]{32}/)
+      return
+
     $('tbody').append("""
     <tr class='warning'>
       <td>#{datum.no}</td>

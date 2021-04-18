@@ -1,5 +1,8 @@
 App.evaluation = App.cable.subscriptions.create "EvaluationChannel",
   received: (evaluation) ->
+    if location.pathname != '/alterf/evaluations'
+      return
+
     displayedState = {processing: '実行中', completed: '完了', error: 'エラー'}
 
     trId = "##{evaluation.evaluation_id}"

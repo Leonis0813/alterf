@@ -1,5 +1,8 @@
 App.prediction = App.cable.subscriptions.create "PredictionChannel",
   received: (prediction) ->
+    if location.pathname != '/alterf/predictions'
+      return
+
     stateToClassMap = {processing: 'warning', completed: 'success', error: 'danger'}
     displayedState = {processing: '実行中', completed: '完了', error: 'エラー'}
 
