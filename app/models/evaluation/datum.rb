@@ -20,6 +20,12 @@ class Evaluation
              dependent: :destroy,
              inverse_of: :predictable
 
+    after_create do
+      attribute = slice(:race_name, :race_url, :ground_truth)
+        .merge('no' => evaluation.data.size)
+      ActionCable.server.broadcast('evaluation_datum', attribute)
+    end
+
     def import_prediction_results(result_file)
       race_result = YAML.load_file(result_file)
       raise ActiveRecord::RecordInvalid, self unless race_result.is_a?(Hash)
