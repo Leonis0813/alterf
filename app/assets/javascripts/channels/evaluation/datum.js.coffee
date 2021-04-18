@@ -32,9 +32,11 @@ App.evaluation_datum = App.cable.subscriptions.create "Evaluation::DatumChannel"
     return
 
   showResults: (datum) ->
+    includeTruePositive = false
     column = $("tr##{datum.race_id} > td.result")
     $.each(datum.wons, (i, number) ->
       color = if number == datum.ground_truth then 'limegreen' else 'gray'
+      includeTruePositive = includeTruePositive || color == 'limegreen'
       column.append("""
       <span class='fa-stack prediction-result' style='color: #{color}'>
         <i class='fa fa-circle fa-stack-2x'></i>
@@ -43,4 +45,7 @@ App.evaluation_datum = App.cable.subscriptions.create "Evaluation::DatumChannel"
       """)
       return
     )
+    row = $("tr##{datum.race_id}")
+    row.removeClass('warning')
+    row.addClass(if includeTruePositive then 'success' else 'danger')
     return
