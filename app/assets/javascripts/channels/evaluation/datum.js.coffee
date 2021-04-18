@@ -20,7 +20,7 @@ App.evaluation_datum = App.cable.subscriptions.create "Evaluation::DatumChannel"
           <span class='glyphicon glyphicon-new-window new-window'></span>
         </a>
       </td>
-      <td class='results' style='padding: 4px'></td>
+      <td class='result' style='padding: 4px'></td>
       <td style='padding: 4px'>
         <span class='fa-stack prediction-result' style='color: limegreen'>
           <i class='fa fa-circle fa-stack-2x'></i>
