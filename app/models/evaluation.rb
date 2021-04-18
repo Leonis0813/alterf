@@ -137,7 +137,7 @@ class Evaluation < ApplicationRecord
 
   def complete!
     update!(state: STATE_COMPLETED, completed_at: Time.zone.now)
-    broadcast(state: state)
+    broadcast(slice(:state, :data_source))
   end
 
   def failed!

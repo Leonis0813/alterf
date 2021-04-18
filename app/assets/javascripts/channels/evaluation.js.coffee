@@ -17,6 +17,7 @@ App.evaluation = App.cable.subscriptions.create "EvaluationChannel",
           column.removeClass('btn-warning')
           column.addClass('btn-success')
           $("#{trId} span.state").text(displayedState[evaluation.state])
+          @addDownloadButton(trId, evaluation)
         when 'error'
           @changeRowColor(trId, evaluation.state)
           $("#{trId} > td[class*=state]").text(displayedState[evaluation.state])
@@ -47,6 +48,20 @@ App.evaluation = App.cable.subscriptions.create "EvaluationChannel",
       column.addClass(stateToClassMap[state])
       return
     )
+    return
+
+  addDownloadButton: (trId, evaluation) ->
+    if evaluation.data_source == 'text' or evaluation.data_source == 'file'
+      return
+
+    href = "/alterf/evaluations/#{evaluation.evaluation_id}/download"
+    $("#{trId} > td.download").append("""
+    <a data-remote='true' href='#{href}'>
+      <button class='btn btn-success'>
+        <span class='glyphicon glyphicon-download-alt'></span>
+      </button>
+    </a>
+    """)
     return
 
   updateProgress: (trId, evaluation) ->
