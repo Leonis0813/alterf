@@ -25,7 +25,12 @@ module CommonViewHelper
   end
 
   def paging_xpath
-    [table_panel_xpath, 'nav', 'ul[@class="pagination"]'].join('/')
+    [
+      table_panel_xpath,
+      'span[@id="paginate"]',
+      'nav',
+      'ul[@class="pagination"]',
+    ].join('/')
   end
 
   def link_first_xpath
