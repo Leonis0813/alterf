@@ -3,8 +3,29 @@ App.analysis = App.cable.subscriptions.create "AnalysisChannel",
     if location.pathname != '/alterf/analyses'
       return
 
+    trId = "##{analysis.analysis_id}"
+    if $(trId).length
+      switch analysis.state
+        when 'processing'
+          @changeRowColor(trId, analysis)
+        when 'completed'
+          @changeRowColor(trId, analysis, 'processing')
+          @createDownloadButton(trId)
+        when 'error'
+          @changeRowColor(trId, analysis, 'processing')
+
+      @changeStateText(trId, analysis)
+      $("#{trId} > td[class*=performed_at]").text(analysis.performed_at || '')
+      $("#{trId} > td[class*=num_feature]").text(analysis.num_feature || '')
+    else
+      $.ajax({
+        url: location.href,
+        dataType: 'script',
+      })
+    return
+
+  changeRowColor: (trId, analysis, beforeState = null) ->
     stateToClassMap = {processing: 'warning', completed: 'success', error: 'error'}
-    displayedState = {error: 'エラー'}
     classNames = [
       'performed_at',
       'num_data',
@@ -14,51 +35,46 @@ App.analysis = App.cable.subscriptions.create "AnalysisChannel",
       'state',
     ]
 
-    trId = "##{analysis.analysis_id}"
-    if $(trId).length
-      $.each(classNames, (i, className) ->
-        column = $("#{trId} > td[class*=#{className}]")
-        column.removeClass('warning')
-        column.addClass(stateToClassMap[analysis.state])
+    $.each(classNames, (i, className) ->
+      column = $("#{trId} > td[class*=#{className}]")
+      column.removeClass(stateToClassMap[beforeState]) if beforeState
+      column.addClass(stateToClassMap[analysis.state])
+      return
+    )
 
-        if analysis.state == 'processing' and className == 'performed_at'
-          column.text(analysis.performed_at)
-        if className == 'num_feature'
-          column.text(analysis.num_feature || '')
-        if analysis.state == 'error' and className == 'state'
-          column.text(displayedState[analysis.state])
-        return
-      )
-
-      button = $("#{trId} button[class*=btn-param]")
-      button.removeClass('btn-warning')
-      button.addClass("btn-#{stateToClassMap[analysis.state]}")
-
-      if analysis.state == 'completed'
-        @createResultButton(trId, analysis.analysis_id)
-        @createDownloadButton(trId)
-    else
-      $.ajax({
-        url: location.href,
-        dataType: 'script',
-      })
-    return
-
-  createResultButton: (trId, analysisId) ->
-    $("#{trId} > td.state").text('')
-    $("#{trId} > td.state").append("""
-<a target='_blank' rel='noopener noreferrer' href='/alterf/analyses/#{analysisId}'>
-  <button class='btn btn-xs btn-success' title='結果を確認'>
-    完了
-    <span class='glyphicon glyphicon-new-window'></span>
-  </button>
-</a>
-    """)
+    button = $("#{trId} button[class*=btn-param]")
+    button.removeClass("btn-#{stateToClassMap[beforeState]}") if beforeState
+    button.addClass("btn-#{stateToClassMap[analysis.state]}")
     return
 
   createDownloadButton: (trId) ->
     $("#{trId} > td.download").append("""
-<button class='btn btn-default' title='結果をダウンロード'>
-  <span class='glyphicon glyphicon-download-alt'></span>
-</button>
+    <button class='btn btn-default' title='結果をダウンロード'>
+      <span class='glyphicon glyphicon-download-alt'></span>
+    </button>
     """)
+    return
+
+  changeStateText: (trId, analysis) ->
+    column = $("#{trId} > td.state")
+    column.text('')
+
+    switch analysis.state
+      when 'processing'
+        column.append("""
+        <span class='processing'>実行中</span>
+        <i class='fa fa-refresh fa-spin'></i>
+        """)
+      when 'completed'
+        href = "/alterf/analyses/#{analysis.analysis_id}"
+        column.append("""
+        <a target='_blank' rel='noopener noreferrer' href='#{href}'>
+          <button class='btn btn-xs btn-success' title='結果を確認'>
+            完了
+            <span class='glyphicon glyphicon-new-window'></span>
+          </button>
+        </a>
+        """)
+      when 'error'
+        column.text('エラー')
+    return

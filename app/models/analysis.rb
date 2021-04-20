@@ -28,8 +28,8 @@ class Analysis < ApplicationRecord
   end
 
   after_update do
-    updated_attribute = attributes.slice('analysis_id', 'state', 'num_feature')
-    updated_attribute['performed_at'] = performed_at.strftime('%Y/%m/%d %T')
+    updated_attribute = slice(:analysis_id, :state, :num_feature)
+    updated_attribute['performed_at'] = performed_at&.strftime('%Y/%m/%d %T')
     ActionCable.server.broadcast('analysis', updated_attribute.compact)
   end
 
