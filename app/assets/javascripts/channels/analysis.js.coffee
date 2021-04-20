@@ -22,11 +22,11 @@ App.analysis = App.cable.subscriptions.create "AnalysisChannel",
         column.addClass(stateToClassMap[analysis.state])
 
         if analysis.state == 'processing' and className == 'performed_at'
-          column[0].innerText = analysis.performed_at
+          column.text(analysis.performed_at)
         if className == 'num_feature'
-          column[0].innerText = analysis.num_feature
+          column.text(analysis.num_feature || '')
         if analysis.state == 'error' and className == 'state'
-          column[0].innerText = displayedState[analysis.state]
+          column.text(displayedState[analysis.state])
         return
       )
 
