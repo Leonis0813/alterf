@@ -112,6 +112,13 @@ class Evaluation < ApplicationRecord
       attribute[:f_measure] = (2 * precision * recall) / (precision + recall)
     end
     update!(attribute)
+
+    completed_data_size = data.to_a.count {|datum| datum.prediction_results.present? }
+    attribute[:f_measure] ||= 0
+    attribute[:progress] = (100 * completed_data_size / data.size.to_f).round(0)
+    broadcast(attribute)
+
+    ActionCable.server.broadcast('evaluation_datum', slice(:evaluation_id, :f_measure))
   end
 
   def output_race_ids
@@ -124,11 +131,18 @@ class Evaluation < ApplicationRecord
   end
 
   def start!
-    update!(state: Analysis::STATE_PROCESSING, performed_at: Time.zone.now)
+    update!(state: STATE_PROCESSING, performed_at: Time.zone.now)
+    broadcast(state: state, performed_at: performed_at.strftime('%Y/%m/%d %T'))
   end
 
-  def complete!
-    update!(state: Analysis::STATE_COMPLETED, completed_at: Time.zone.now)
+  def completed!
+    update!(state: STATE_COMPLETED, completed_at: Time.zone.now)
+    broadcast(slice(:state, :data_source))
+  end
+
+  def failed!
+    update!(state: STATE_ERROR)
+    broadcast(slice(:state))
   end
 
   private
@@ -168,5 +182,10 @@ class Evaluation < ApplicationRecord
     data.inject(0) do |fn, datum|
       fn + datum.prediction_results.lost.where(number: datum.ground_truth).count
     end.to_f
+  end
+
+  def broadcast(attribute)
+    updated_attribute = attribute.merge('evaluation_id' => evaluation_id)
+    ActionCable.server.broadcast('evaluation', updated_attribute)
   end
 end

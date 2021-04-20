@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_11_142246) do
+ActiveRecord::Schema.define(version: 2021_04_15_143923) do
 
   create_table "analyses", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "analysis_id", default: "", null: false
@@ -117,6 +117,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_142246) do
   end
 
   create_table "predictions", id: :integer, charset: "utf8", force: :cascade do |t|
+    t.bigint "analysis_id"
     t.string "prediction_id"
     t.string "model"
     t.string "test_data"
@@ -124,6 +125,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_142246) do
     t.datetime "performed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["analysis_id"], name: "index_predictions_on_analysis_id"
     t.index ["prediction_id"], name: "index_predictions_on_prediction_id", unique: true
   end
 

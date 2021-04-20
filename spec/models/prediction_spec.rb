@@ -17,6 +17,16 @@ describe Prediction, type: :model do
     end
   end
 
+  shared_examples '更新した状態がブロードキャストされていること' do |state|
+    it "状態が#{state}になっていること" do
+      is_asserted_by { @prediction.state == state }
+    end
+
+    it '状態がブロードキャストされていること' do
+      is_asserted_by { @called }
+    end
+  end
+
   describe '#validates' do
     describe '正常系' do
       valid_attribute = {
@@ -130,5 +140,46 @@ describe Prediction, type: :model do
         end
       end
     end
+  end
+
+  describe '#start!' do
+    include_context 'トランザクション作成'
+    include_context 'ActionCableのモックを作成'
+    before do
+      @prediction = create(:prediction)
+      @prediction.start!
+    end
+
+    it '実行開始日時が設定されていること' do
+      is_asserted_by { @prediction.performed_at.present? }
+    end
+
+    it_behaves_like '更新した状態がブロードキャストされていること',
+                    Prediction::STATE_PROCESSING
+  end
+
+  describe '#completed!' do
+    include_context 'トランザクション作成'
+    include_context 'ActionCableのモックを作成'
+    before do
+      @prediction = create(:prediction)
+      [3, 1].each {|number| @prediction.results.create!(number: number, won: true) }
+      @prediction.completed!
+    end
+
+    it_behaves_like '更新した状態がブロードキャストされていること',
+                    Prediction::STATE_COMPLETED
+  end
+
+  describe '#failed!' do
+    include_context 'トランザクション作成'
+    include_context 'ActionCableのモックを作成'
+    before do
+      @prediction = create(:prediction)
+      @prediction.failed!
+    end
+
+    it_behaves_like '更新した状態がブロードキャストされていること',
+                    Prediction::STATE_ERROR
   end
 end

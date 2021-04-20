@@ -3,6 +3,16 @@
 require 'rails_helper'
 
 describe Analysis, type: :model do
+  shared_examples '更新した状態がブロードキャストされていること' do |state|
+    it "状態が#{state}になっていること" do
+      is_asserted_by { @analysis.state == state }
+    end
+
+    it '状態がブロードキャストされていること' do
+      is_asserted_by { @called }
+    end
+  end
+
   describe '#validates' do
     describe '正常系' do
       valid_attribute = {
@@ -44,33 +54,33 @@ describe Analysis, type: :model do
 
   describe '#start!' do
     include_context 'トランザクション作成'
-    before(:all) do
+    include_context 'ActionCableのモックを作成'
+    before do
       @analysis = create(:analysis)
       @analysis.start!
-    end
-
-    it '状態が進行中になっていること' do
-      is_asserted_by { @analysis.state == Analysis::STATE_PROCESSING }
     end
 
     it '実行開始日時が設定されていること' do
       is_asserted_by { @analysis.performed_at.present? }
     end
+
+    it_behaves_like '更新した状態がブロードキャストされていること',
+                    Analysis::STATE_PROCESSING
   end
 
   describe '#complete!' do
     include_context 'トランザクション作成'
-    before(:all) do
-      @analysis = create(:analysis)
+    include_context 'ActionCableのモックを作成'
+    before do
+      @analysis = create(:analysis, performed_at: Time.zone.now)
       @analysis.complete!
-    end
-
-    it '状態が完了になっていること' do
-      is_asserted_by { @analysis.state == Analysis::STATE_COMPLETED }
     end
 
     it '完了日時が設定されていること' do
       is_asserted_by { @analysis.completed_at.present? }
     end
+
+    it_behaves_like '更新した状態がブロードキャストされていること',
+                    Analysis::STATE_COMPLETED
   end
 end

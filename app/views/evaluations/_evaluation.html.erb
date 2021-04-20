@@ -1,41 +1,33 @@
-<tr>
-  <td class='<%= state_to_class(evaluation.state) %>'>
+<tr id='<%= evaluation.evaluation_id %>'>
+  <td class='performed_at <%= state_to_class(evaluation.state) %>'>
     <%= time_to_string(evaluation.performed_at) %>
   </td>
-  <td class='<%= state_to_class(evaluation.state) %>'>
+  <td class='model <%= state_to_class(evaluation.state) %>'>
     <%= evaluation.model %>
   </td>
-  <td class='<%= state_to_class(evaluation.state) %>'>
+  <td class='state <%= state_to_class(evaluation.state) %>'>
   <% if %w[waiting error].include?(evaluation.state) %>
     <%= progress(evaluation) %>
   <% else %>
     <%= link_to evaluation_path(evaluation.evaluation_id), target: :_blank, rel: 'noopener noreferrer' do %>
       <button class='btn btn-xs btn-<%= state_to_class(evaluation.state) %>' title='詳細を確認'>
-        <%= progress(evaluation) %>
+        <span class='state'><%= progress(evaluation) %></span>
         <span class='glyphicon glyphicon-new-window'></span>
       </button>
     <% end %>
   <% end %>
   </td>
-  <td class='<%= state_to_class(evaluation.state) %>'>
-  <% if evaluation.state == 'completed' %>
+  <td class='precision <%= state_to_class(evaluation.state) %>'>
     <%= evaluation.precision&.round(3) %>
-  <% end %>
   </td>
-  <td class='<%= state_to_class(evaluation.state) %>'>
-  <% if evaluation.state == 'completed' %>
+  <td class='recall <%= state_to_class(evaluation.state) %>'>
     <%= evaluation.recall&.round(3) %>
-  <% end %>
   </td>
-  <td class='<%= state_to_class(evaluation.state) %>'>
-  <% if evaluation.state == 'completed' %>
+  <td class='specificity <%= state_to_class(evaluation.state) %>'>
     <%= evaluation.specificity&.round(3) %>
-  <% end %>
   </td>
-  <td class='<%= state_to_class(evaluation.state) %>'>
-  <% if evaluation.state == 'completed' %>
+  <td class='f_measure <%= state_to_class(evaluation.state) %>'>
     <%= evaluation.f_measure&.round(3) %>
-  <% end %>
   </td>
   <td class='download'>
     <%= evaluation_data_download_button(evaluation) %>

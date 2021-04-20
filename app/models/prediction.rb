@@ -10,6 +10,7 @@ class Prediction < ApplicationRecord
             inclusion: {in: STATE_LIST, message: MESSAGE_INVALID},
             allow_nil: true
 
+  belongs_to :analysis
   has_many :results, as: :predictable, dependent: :destroy, inverse_of: :predictable
 
   after_initialize if: :new_record? do |prediction|
@@ -18,7 +19,7 @@ class Prediction < ApplicationRecord
   end
 
   def set_analysis!
-    data_dir = Rails.root.join('tmp', 'files', id.to_s)
+    data_dir = Rails.root.join('tmp', 'files', 'predictions', id.to_s)
     analysis_id = read_analysis_id(File.join(data_dir, 'metadata.yml'))
     analysis = Analysis.find_by(analysis_id: analysis_id)
     raise StandardError if analysis.nil?
@@ -33,5 +34,27 @@ class Prediction < ApplicationRecord
     race_result.each do |number, result|
       results.create!(number: number, won: (result == 1))
     end
+  end
+
+  def start!
+    update!(state: STATE_PROCESSING, performed_at: Time.zone.now)
+    broadcast('performed_at' => performed_at.strftime('%Y/%m/%d %T'))
+  end
+
+  def completed!
+    update!(state: STATE_COMPLETED)
+    broadcast('wons' => results.won.pluck(:number).sort)
+  end
+
+  def failed!
+    update!(state: STATE_ERROR)
+    broadcast
+  end
+
+  private
+
+  def broadcast(attribute = {})
+    updated_attribute = slice(:prediction_id, :state).merge(attribute)
+    ActionCable.server.broadcast('prediction', updated_attribute)
   end
 end

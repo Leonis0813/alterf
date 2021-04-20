@@ -20,6 +20,14 @@ class Evaluation
              dependent: :destroy,
              inverse_of: :predictable
 
+    after_create do
+      attribute = slice(:race_name, :race_url).merge(
+        'no' => evaluation.data.size,
+        'message_type' => 'create',
+      )
+      broadcast(attribute)
+    end
+
     def import_prediction_results(result_file)
       race_result = YAML.load_file(result_file)
       raise ActiveRecord::RecordInvalid, self unless race_result.is_a?(Hash)
@@ -27,6 +35,15 @@ class Evaluation
       race_result.each do |number, result|
         prediction_results.create!(number: number, won: (result == 1))
       end
+
+      broadcast(wons: prediction_results.won.pluck(:number).sort, message_type: 'update')
+    end
+
+    private
+
+    def broadcast(attribute)
+      attribute.merge!(slice(:race_id, :ground_truth))
+      ActionCable.server.broadcast('evaluation_datum', attribute)
     end
   end
 end

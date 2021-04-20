@@ -51,6 +51,7 @@ group :development, :test do
   gem 'fuubar'
   gem 'headless'
   gem 'pry'
+  gem 'puma'
   gem 'rspec-power_assert'
   gem 'rspec-rails'
   gem 'selenium-webdriver', '3.142.4'
