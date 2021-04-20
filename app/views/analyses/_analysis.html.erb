@@ -1,22 +1,22 @@
 <tr id='<%= analysis.analysis_id %>'>
-  <td class='<%= state_to_class(analysis.state) %>'>
+  <td class='<%= state_to_class(analysis.state) %> performed_at'>
     <%= time_to_string(analysis.performed_at) %>
   </td>
-  <td class='<%= state_to_class(analysis.state) %>'>
+  <td class='<%= state_to_class(analysis.state) %> num_data'>
     <%= analysis.num_data %>
   </td>
-  <td class='<%= state_to_class(analysis.state) %>'>
+  <td class='<%= state_to_class(analysis.state) %> num_feature'>
     <%= analysis.num_feature %>
   </td>
-  <td class='<%= state_to_class(analysis.state) %>'>
+  <td class='<%= state_to_class(analysis.state) %> num_entry'>
     <%= analysis.num_entry %>
   </td>
-  <td class='<%= state_to_class(analysis.state) %>'>
+  <td class='<%= state_to_class(analysis.state) %> parameter'>
     <button class='btn btn-xs btn-<%= state_to_class(analysis.state) %> btn-param'>
       確認
     </button>
   </td>
-  <td class='<%= state_to_class(analysis.state) %>'>
+  <td class='<%= state_to_class(analysis.state) %> state'>
   <% case analysis.state %>
   <% when 'processing' %>
     <span class='processing'><%= state_to_title(analysis.state) %></span>

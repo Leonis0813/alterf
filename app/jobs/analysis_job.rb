@@ -1,6 +1,14 @@
 class AnalysisJob < ApplicationJob
   queue_as :alterf
 
+  OUTPUT_FILES = %w[
+    feature.csv
+    metadata.yml
+    model.rf
+    race_list.txt
+    training_data.csv
+  ].freeze
+
   def perform(analysis_id)
     analysis = Analysis.find(analysis_id)
     analysis.start!
@@ -30,7 +38,7 @@ class AnalysisJob < ApplicationJob
     dump_yaml('metadata.yml', metadata)
 
     create_zip(%w[metadata.yml model.rf], 'model.zip')
-    create_zip(%w[feature.csv training_data.csv], 'analysis.zip')
+    create_zip(%w[feature.csv race_list.txt training_data.csv], 'analysis.zip')
     create_zip(%w[model.zip analysis.zip], 'result.zip')
 
     AnalysisMailer.completed(analysis).deliver_now
@@ -45,8 +53,8 @@ class AnalysisJob < ApplicationJob
   private
 
   def check_output
-    %w[metadata.yml model.rf feature.csv training_data.csv].each do |file_name|
-      raise StandardError unless File.exist?(File.join(@output_dir, file_name))
+    OUTPUT_FILES.each do |output_file|
+      raise StandardError unless File.exist?(File.join(@output_dir, output_file))
     end
   end
 

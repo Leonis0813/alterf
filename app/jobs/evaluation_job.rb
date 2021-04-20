@@ -29,14 +29,14 @@ class EvaluationJob < ApplicationJob
       result_file = File.join(data_dir, 'prediction.yml')
       datum.import_prediction_results(result_file)
       FileUtils.rm(result_file)
+      evaluation.calculate!
     end
 
-    evaluation.calculate!
     evaluation.output_race_ids
     evaluation.complete!
   rescue StandardError => e
     Rails.logger.error(e.message)
     Rails.logger.error(e.backtrace.join("\n"))
-    evaluation.update!(state: Evaluation::STATE_ERROR)
+    evaluation.failed!
   end
 end

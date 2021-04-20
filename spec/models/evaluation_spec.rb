@@ -3,6 +3,16 @@
 require 'rails_helper'
 
 describe Evaluation, type: :model do
+  shared_examples '更新した状態がブロードキャストされていること' do |state|
+    it "状態が#{state}になっていること" do
+      is_asserted_by { @evaluation.state == state }
+    end
+
+    it '状態がブロードキャストされていること' do
+      is_asserted_by { @called }
+    end
+  end
+
   describe '#validates' do
     describe '正常系' do
       valid_attribute = {
@@ -139,9 +149,10 @@ describe Evaluation, type: :model do
       ]
 
       include_context 'トランザクション作成'
-      before(:all) do
+      include_context 'ActionCableのモックを作成'
+      before do
         attribute = {evaluation_id: '0' * 32, model: 'model', state: 'completed'}
-        @evaluation = Evaluation.create!(attribute)
+        @evaluation = create(:evaluation, attribute)
 
         data.each do |datum|
           evaluation_datum = @evaluation.data.create!(
@@ -156,6 +167,7 @@ describe Evaluation, type: :model do
           end
         end
 
+        @called = false
         @evaluation.calculate!
       end
 
@@ -174,38 +186,54 @@ describe Evaluation, type: :model do
       it 'F値が正しいこと' do
         is_asserted_by { @evaluation.f_measure.round(3) == 0.444 }
       end
+
+      it '精度がブロードキャストされていること' do
+        is_asserted_by { @called }
+      end
     end
   end
 
   describe '#start!' do
     include_context 'トランザクション作成'
-    before(:all) do
+    include_context 'ActionCableのモックを作成'
+    before do
       @evaluation = create(:evaluation)
       @evaluation.start!
-    end
-
-    it '状態が進行中になっていること' do
-      is_asserted_by { @evaluation.state == Evaluation::STATE_PROCESSING }
     end
 
     it '実行開始日時が設定されていること' do
       is_asserted_by { @evaluation.performed_at.present? }
     end
+
+    it_behaves_like '更新した状態がブロードキャストされていること',
+                    Evaluation::STATE_PROCESSING
   end
 
-  describe '#complete!' do
+  describe '#completed!' do
     include_context 'トランザクション作成'
-    before(:all) do
+    include_context 'ActionCableのモックを作成'
+    before do
       @evaluation = create(:evaluation)
-      @evaluation.complete!
-    end
-
-    it '状態が完了になっていること' do
-      is_asserted_by { @evaluation.state == Evaluation::STATE_COMPLETED }
+      @evaluation.completed!
     end
 
     it '完了日時が設定されていること' do
       is_asserted_by { @evaluation.completed_at.present? }
     end
+
+    it_behaves_like '更新した状態がブロードキャストされていること',
+                    Evaluation::STATE_COMPLETED
+  end
+
+  describe '#failed!' do
+    include_context 'トランザクション作成'
+    include_context 'ActionCableのモックを作成'
+    before do
+      @evaluation = create(:evaluation)
+      @evaluation.failed!
+    end
+
+    it_behaves_like '更新した状態がブロードキャストされていること',
+                    Evaluation::STATE_ERROR
   end
 end

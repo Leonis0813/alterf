@@ -5,7 +5,7 @@ class PredictionJob < ApplicationJob
 
   def perform(prediction_id)
     prediction = Prediction.find(prediction_id)
-    prediction.update!(state: Prediction::STATE_PROCESSING, performed_at: Time.zone.now)
+    prediction.start!
 
     data_dir = Rails.root.join('tmp', 'files', 'predictions', prediction_id.to_s)
     test_data = prediction.test_data
@@ -19,7 +19,9 @@ class PredictionJob < ApplicationJob
                 YAML.load_file(test_data)
               end.deep_stringify_keys
 
-    raise StandardError unless prediction.analysis.num_entry == feature['entries'].size
+    if prediction.analysis.num_entry.present?
+      raise StandardError if prediction.analysis.num_entry != feature['entries'].size
+    end
 
     feature_file = File.join(data_dir, Settings.prediction.tmp_file_name)
     File.open(feature_file, 'w') {|file| YAML.dump(feature, file) }
@@ -33,10 +35,10 @@ class PredictionJob < ApplicationJob
 
     prediction.import_results(Rails.root.join(data_dir, 'prediction.yml'))
     FileUtils.rm_rf(data_dir)
-    prediction.update!(state: Prediction::STATE_COMPLETED)
+    prediction.completed!
   rescue StandardError => e
     Rails.logger.error(e.message)
     Rails.logger.error(e.backtrace.join("\n"))
-    prediction.update!(state: Prediction::STATE_ERROR)
+    prediction.failed!
   end
 end
