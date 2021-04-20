@@ -1,3 +1,6 @@
+# 4.20.4 (2021/04/20)
+- [UPDATE] views to update table automatically by websocket
+
 # 4.20.3 (2021/04/11)
 - [UPDATE] analysis scripts to add race list file
 
