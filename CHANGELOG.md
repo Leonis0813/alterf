@@ -1,3 +1,6 @@
+# 4.20.5 (2021/04/22)
+- [FIX] requirement in config/application.rb
+
 # 4.20.4 (2021/04/20)
 - [UPDATE] views to update table automatically by websocket
 - [UPDATE] gems

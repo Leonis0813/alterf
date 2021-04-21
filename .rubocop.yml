@@ -36,6 +36,9 @@ Style/AndOr:
 Style/Encoding:
   Enabled: false
 
+Style/ClassAndModuleChildren:
+  EnforcedStyle: 'compact'
+
 Style/Documentation:
   Enabled: false
 
