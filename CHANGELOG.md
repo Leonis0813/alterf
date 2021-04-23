@@ -1,3 +1,6 @@
+# 4.20.6 (2021/04/23)
+- [UPDATE] gems
+
 # 4.20.5 (2021/04/22)
 - [FIX] requirement in config/application.rb
 
