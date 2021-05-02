@@ -51,7 +51,10 @@ for name in unnormalizable_feature_names:
 
 for name in config['analysis']['racewise_features']:
   feature[name] = normalized[name]
+
 feature = feature.sort_values(['number'])
+sorted_columns = sorted(feature.columns)
+feature = feature.reindex(columns=sorted_columns)
 
 won = classifier.predict(feature).astype(type('int', (int,), {}))
 
