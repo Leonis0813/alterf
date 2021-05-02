@@ -12,15 +12,15 @@ model_filename = args[2]
 test_data_filename = args[3]
 
 workdir = os.path.dirname(os.path.abspath(args[0]))
-config = yaml.load(open(workdir + '/../config/settings.yml', 'r+'))
+config = yaml.safe_load(open(workdir + '/../config/settings.yml', 'r+'))
 
 model_path = data_dir + '/' + model_filename
 classifier = pickle.load(open(model_path, 'rb'))
 
 test_data_path = data_dir + '/' + test_data_filename
-test_data = yaml.load(open(test_data_path, 'r+'))
+test_data = yaml.safe_load(open(test_data_path, 'r+'))
 
-mapping = yaml.load(open(workdir + '/mapping.yml', 'r+'))
+mapping = yaml.safe_load(open(workdir + '/mapping.yml', 'r+'))
 feature = pd.DataFrame()
 for key in test_data:
   if (key != 'entries'):

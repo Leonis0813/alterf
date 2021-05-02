@@ -12,13 +12,13 @@ model_filename = args[2]
 test_data_filename = args[3]
 
 workdir = os.path.dirname(os.path.abspath(args[0]))
-config = yaml.load(open(workdir + '/../config/settings.yml', 'r+'))
+config = yaml.safe_load(open(workdir + '/../config/settings.yml', 'r+'))
 
 model_path = data_dir + '/' + model_filename
 classifier = pickle.load(open(model_path, 'rb'))
 
 test_data_path = data_dir + '/' + test_data_filename
-test_data = yaml.load(open(test_data_path, 'r+'))
+test_data = yaml.safe_load(open(test_data_path, 'r+'))
 
 feature = pd.DataFrame()
 for key in test_data:
@@ -33,7 +33,7 @@ entry_feature_names = np.hstack((
 for i in range(len(entry_feature_names)):
   feature[entry_feature_names[i]] = [entry[i] for entry in test_data['entries']]
 
-mapping = yaml.load(open(workdir + '/mapping.yml', 'r+'))
+mapping = yaml.safe_load(open(workdir + '/mapping.yml', 'r+'))
 for name in mapping:
   feature[name] = feature[name].map(mapping[name]).astype(int)
 
