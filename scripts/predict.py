@@ -56,8 +56,9 @@ feature = feature.sort_values(['number'])
 won = classifier.predict(feature).astype(type('int', (int,), {}))
 
 result = {}
+numbers = feature['number'].to_list()
 for i in range(len(won)):
-  result[i + 1] = won[i]
+  result[numbers[i]] = won[i]
 
 file = open(data_dir + '/prediction.yml', 'w+')
 file.write(yaml.dump(result))
