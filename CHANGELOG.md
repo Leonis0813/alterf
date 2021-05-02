@@ -1,5 +1,6 @@
 # 4.20.6 (2021/05/02)
 - [FIX] prediction script to sort by number
+- [FIX] evaluation view to set 0 as default
 
 # 4.20.5 (2021/04/22)
 - [FIX] requirement in config/application.rb
