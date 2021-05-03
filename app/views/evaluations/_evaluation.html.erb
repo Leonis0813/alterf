@@ -1,21 +1,18 @@
-<tr id='<%= evaluation.evaluation_id %>'>
+<tr id='<%= evaluation.evaluation_id %>' style='cursor: pointer'>
   <td class='performed_at <%= state_to_class(evaluation.state) %>'>
     <%= time_to_string(evaluation.performed_at) %>
   </td>
   <td class='model <%= state_to_class(evaluation.state) %>'>
     <%= evaluation.model %>
   </td>
+  <td class='data_source <%= state_to_class(evaluation.state) %>'>
+    <%= data_source_option.invert[evaluation.data_source] %>
+  </td>
+  <td class='num_data <%= state_to_class(evaluation.state) %>'>
+    <%= evaluation.num_data %>
+  </td>
   <td class='state <%= state_to_class(evaluation.state) %>'>
-  <% if %w[waiting error].include?(evaluation.state) %>
     <%= progress(evaluation) %>
-  <% else %>
-    <%= link_to evaluation_path(evaluation.evaluation_id), target: :_blank, rel: 'noopener noreferrer' do %>
-      <button class='btn btn-xs btn-<%= state_to_class(evaluation.state) %>' title='詳細を確認'>
-        <span class='state'><%= progress(evaluation) %></span>
-        <span class='glyphicon glyphicon-new-window'></span>
-      </button>
-    <% end %>
-  <% end %>
   </td>
   <td class='precision <%= state_to_class(evaluation.state) %>'>
     <%= evaluation.precision&.round(3) %>
@@ -29,7 +26,7 @@
   <td class='f_measure <%= state_to_class(evaluation.state) %>'>
     <%= evaluation.f_measure&.round(3) %>
   </td>
-  <td class='download'>
+  <td class='download' style='background-color: white; cursor: default'>
     <%= evaluation_data_download_button(evaluation) %>
   </td>
 </tr>

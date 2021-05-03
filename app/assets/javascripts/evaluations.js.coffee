@@ -1,4 +1,16 @@
 $ ->
+  $('#form-evaluation').on 'show.bs.collapse', ->
+    $('a#collapse-form > span')
+      .removeClass('glyphicon-plus-sign')
+      .addClass('glyphicon-minus-sign')
+    return
+
+  $('#form-evaluation').on 'hide.bs.collapse', ->
+    $('a#collapse-form > span')
+      .removeClass('glyphicon-minus-sign')
+      .addClass('glyphicon-plus-sign')
+    return
+
   $('#new_evaluation').on 'ajax:success', (event, xhr, status, error) ->
     bootbox.alert({
       title: '評価を開始しました',
@@ -21,6 +33,11 @@ $ ->
     $('.form-data-source').addClass('not-selected')
     $('#evaluation_data_' + $(this).val()).prop('disabled', false)
     $('#evaluation_data_' + $(this).val()).removeClass('not-selected')
+    return
+
+  $('#table-evaluation td').on 'click', ->
+    evaluationId = $(@).parents('tr').attr('id')
+    window.open("/alterf/evaluations/#{evaluationId}", '_blank')
     return
 
   $('#table-evaluation').on 'ajax:success', (event, data, status, xhr) ->
