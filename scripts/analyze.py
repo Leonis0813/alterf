@@ -1,4 +1,5 @@
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import confusion_matrix
 import analysis_util as util
 import mysql.connector as mysql
 import numpy as np
@@ -101,6 +102,8 @@ classifier = RandomForestClassifier(
   random_state=0
 )
 classifier.fit(training_data.drop('won', axis=1), training_data['won'])
+predictions = classifier.predict(training_data.drop('won', axis=1))
+print(confusion_matrix(training_data['won'], predictions))
 
 file = open(outputdir + '/metadata.yml', 'w+')
 importance_values = classifier.feature_importances_.astype(type('float', (float,), {}))

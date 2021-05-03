@@ -114,7 +114,8 @@ class Evaluation < ApplicationRecord
     update!(attribute)
 
     completed_data_size = data.to_a.count {|datum| datum.prediction_results.present? }
-    attribute[:f_measure] ||= 0
+
+    %i[precision recall f_measure].each {|key| attribute[key] ||= 0 }
     attribute[:progress] = (100 * completed_data_size / data.size.to_f).round(0)
     broadcast(attribute)
 
@@ -135,7 +136,7 @@ class Evaluation < ApplicationRecord
     broadcast(state: state, performed_at: performed_at.strftime('%Y/%m/%d %T'))
   end
 
-  def completed!
+  def complete!
     update!(state: STATE_COMPLETED, completed_at: Time.zone.now)
     broadcast(slice(:state, :data_source))
   end
