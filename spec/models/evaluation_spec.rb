@@ -209,12 +209,12 @@ describe Evaluation, type: :model do
                     Evaluation::STATE_PROCESSING
   end
 
-  describe '#completed!' do
+  describe '#complete!' do
     include_context 'トランザクション作成'
     include_context 'ActionCableのモックを作成'
     before do
       @evaluation = create(:evaluation)
-      @evaluation.completed!
+      @evaluation.complete!
     end
 
     it '完了日時が設定されていること' do
