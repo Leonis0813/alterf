@@ -1,4 +1,4 @@
-# 4.20.6 (2021/05/02)
+# 4.20.6 (2021/05/03)
 - [FIX] prediction script to sort by number
 - [FIX] evaluation view to set 0 as default
 - [FIX] evaluation model method when completed
