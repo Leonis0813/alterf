@@ -35,7 +35,24 @@ module EvaluationHelper
     end
   end
 
-  def row_class(numbers, datum)
+  def row_class(state)
+    case state
+    when 'waiting'
+      'cursor-auto'
+    when 'processing'
+      'warning cursor-pointer'
+    when 'completed'
+      'success cursor-pointer'
+    when 'error'
+      'danger cursor-auto'
+    end
+  end
+
+  def row_title(state)
+    %w[processing completed].include?(state) ? '結果を確認' : ''
+  end
+
+  def datum_row_class(numbers, datum)
     return 'warning' if datum.prediction_results.empty?
 
     numbers.include?(datum.ground_truth) ? 'success' : 'danger'

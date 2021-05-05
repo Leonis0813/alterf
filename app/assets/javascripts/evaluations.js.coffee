@@ -36,8 +36,11 @@ $ ->
     return
 
   $('#table-evaluation td').on 'click', ->
-    evaluationId = $(@).parents('tr').attr('id')
-    window.open("/alterf/evaluations/#{evaluationId}", '_blank')
+    row = $(@).parents('tr')
+    state = row.data('state')
+    return if state == 'waiting' or state == 'error'
+
+    open("/alterf/evaluations/#{row.attr('id')}", '_blank')
     return
 
   $('#table-evaluation').on 'ajax:success', (event, data, status, xhr) ->

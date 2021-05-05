@@ -1,29 +1,30 @@
-<tr id='<%= evaluation.evaluation_id %>' style='cursor: pointer'>
-  <td class='performed_at <%= state_to_class(evaluation.state) %>'>
+<tr id='<%= evaluation.evaluation_id %>' class='<%= row_class(evaluation.state) %>'
+    title='<%= row_title(evaluation.state) %>' data-state='<%= evaluation.state %>'>
+  <td class='performed_at'>
     <%= time_to_string(evaluation.performed_at) %>
   </td>
-  <td class='model <%= state_to_class(evaluation.state) %>'>
+  <td class='model'>
     <%= evaluation.model %>
   </td>
-  <td class='data_source <%= state_to_class(evaluation.state) %>'>
+  <td class='data_source'>
     <%= data_source_option.invert[evaluation.data_source] %>
   </td>
-  <td class='num_data <%= state_to_class(evaluation.state) %>'>
+  <td class='num_data'>
     <%= evaluation.num_data %>
   </td>
-  <td class='state <%= state_to_class(evaluation.state) %>'>
+  <td class='state'>
     <%= progress(evaluation) %>
   </td>
-  <td class='precision <%= state_to_class(evaluation.state) %>'>
+  <td class='precision'>
     <%= evaluation.precision&.round(3) %>
   </td>
-  <td class='recall <%= state_to_class(evaluation.state) %>'>
+  <td class='recall'>
     <%= evaluation.recall&.round(3) %>
   </td>
-  <td class='specificity <%= state_to_class(evaluation.state) %>'>
+  <td class='specificity'>
     <%= evaluation.specificity&.round(3) %>
   </td>
-  <td class='f_measure <%= state_to_class(evaluation.state) %>'>
+  <td class='f_measure'>
     <%= evaluation.f_measure&.round(3) %>
   </td>
   <td class='download' style='background-color: white; cursor: default'>
