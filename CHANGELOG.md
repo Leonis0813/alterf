@@ -1,3 +1,6 @@
+# 4.20.7 (2021/05/06)
+- [UPDATE] gems
+
 # 4.20.6 (2021/05/03)
 - [UPDATE] gems
 - [FIX] prediction script to sort by number
