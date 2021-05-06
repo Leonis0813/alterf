@@ -16,16 +16,16 @@
     <%= progress(evaluation) %>
   </td>
   <td class='precision'>
-    <%= evaluation.precision&.round(3) %>
+    <%= evaluation.precision&.round(3) || 0.0 %>
   </td>
   <td class='recall'>
-    <%= evaluation.recall&.round(3) %>
+    <%= evaluation.recall&.round(3) || 0.0 %>
   </td>
   <td class='specificity'>
-    <%= evaluation.specificity&.round(3) %>
+    <%= evaluation.specificity&.round(3) || 0.0 %>
   </td>
   <td class='f_measure'>
-    <%= evaluation.f_measure&.round(3) %>
+    <%= evaluation.f_measure&.round(3) || 0.0 %>
   </td>
   <td class='download' style='background-color: white; cursor: default'>
     <%= evaluation_data_download_button(evaluation) %>
