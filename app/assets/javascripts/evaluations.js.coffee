@@ -35,7 +35,7 @@ $ ->
     $('#evaluation_data_' + $(this).val()).removeClass('not-selected')
     return
 
-  $('#table-evaluation td').on 'click', ->
+  $('#table-evaluation').on 'click', 'td', ->
     row = $(@).parents('tr')
     state = row.data('state')
     return if state == 'waiting' or state == 'error'
