@@ -1,6 +1,6 @@
 App.evaluation_datum = App.cable.subscriptions.create "Evaluation::DatumChannel",
   received: (datum) ->
-    if !location.pathname.match(/evaluations\/[0-9a-f]{32}/)
+    if location.pathname != "/alterf/evaluations/#{datum.evaluation_id}"
       return
 
     switch datum.message_type
@@ -9,8 +9,13 @@ App.evaluation_datum = App.cable.subscriptions.create "Evaluation::DatumChannel"
       when 'update'
         @showResults(datum)
       else
-        if location.pathname == "/alterf/evaluations/#{datum.evaluation_id}"
-          $('h4.fmeasure-info').text("F値: #{Math.round(datum.f_measure * 1000) / 1000}")
+        values = [
+          datum.f_measure,
+          datum.specificity,
+          datum.recall,
+          datum.precision,
+        ]
+        result.updateBars(values)
     return
 
   createRow: (datum) ->
