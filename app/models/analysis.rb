@@ -1,8 +1,19 @@
 class Analysis < ApplicationRecord
-  validates :analysis_id, :state,
+  DATA_SOURCE_RANDOM = 'random'.freeze
+  DATA_SOURCE_FILE = 'file'.freeze
+  DATA_SOURCE_LIST = [
+    DATA_SOURCE_RANDOM,
+    DATA_SOURCE_FILE,
+  ].freeze
+  DATA_SOURCE_DEFAULT = DATA_SOURCE_RANDOM
+
+  validates :analysis_id, :data_source, :state,
             presence: {message: MESSAGE_ABSENT}
   validates :analysis_id,
             format: {with: /\A[0-9a-f]{32}\z/, message: MESSAGE_INVALID},
+            allow_nil: true
+  validates :data_source,
+            inclusion: {in: DATA_SOURCE_LIST, message: MESSAGE_INVALID},
             allow_nil: true
   validates :num_feature,
             numericality: {
@@ -16,6 +27,7 @@ class Analysis < ApplicationRecord
             allow_nil: true
 
   has_one :parameter, dependent: :destroy
+  has_many :data, dependent: :destroy
   has_one :result, dependent: :destroy
   has_many :predictions, dependent: :destroy
   has_many :evaluations, dependent: :destroy
