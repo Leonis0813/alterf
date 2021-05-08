@@ -3,9 +3,11 @@
 module EvaluationHelper
   def evaluation_table_headers
     [
-      {name: '実行開始日時', width: 21},
-      {name: 'モデル', width: 20},
-      {name: '状態', width: 16},
+      {name: '実行開始日時', width: 13},
+      {name: 'モデル', width: 15},
+      {name: '指定方法', width: 10},
+      {name: 'データ数', width: 8},
+      {name: '状態', width: 11},
       {name: '適合率', width: 9},
       {name: '再現率', width: 9},
       {name: '特異度', width: 9},
@@ -33,7 +35,24 @@ module EvaluationHelper
     end
   end
 
-  def row_class(numbers, datum)
+  def row_class(state)
+    case state
+    when 'waiting'
+      'cursor-auto'
+    when 'processing'
+      'warning cursor-pointer'
+    when 'completed'
+      'success cursor-pointer'
+    when 'error'
+      'danger cursor-auto'
+    end
+  end
+
+  def row_title(state)
+    %w[processing completed].include?(state) ? '結果を確認' : ''
+  end
+
+  def datum_row_class(numbers, datum)
     return 'warning' if datum.prediction_results.empty?
 
     numbers.include?(datum.ground_truth) ? 'success' : 'danger'

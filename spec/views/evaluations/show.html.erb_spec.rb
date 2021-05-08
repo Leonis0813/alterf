@@ -41,11 +41,9 @@ describe 'evaluations/show', type: :view do
       is_asserted_by { @html.xpath(xpath).text.strip == '評価結果詳細' }
     end
 
-    it 'F値が表示されていること' do
-      xpath = [table_panel_xpath, 'h4'].join('/')
-      is_asserted_by do
-        @html.xpath(xpath).text.strip == "F値: #{@evaluation.f_measure.round(3)}"
-      end
+    it 'グラフ描画領域があること' do
+      xpath = [table_panel_xpath, 'svg[@id="performance"]'].join('/')
+      is_asserted_by { @html.xpath(xpath).present? }
     end
   end
 
