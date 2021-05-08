@@ -16,18 +16,43 @@
         <%= form_for @evaluation, html: {multipart: true}, url: evaluations_path, remote: true do |f| %>
           <div class='row'>
             <div class='col-xs-6 form-group'>
-              <%= f.label :model, 'モデル' %><br />
+              <%= f.label :model, 'モデル' %>
               <%= f.file_field :model, name: :model %>
             </div>
             <div class='col-xs-6 form-group'>
               <%= f.label :data, '評価データ' %>
               <%= label_tag :data_source, '指定方法:' %>
               <%= select_tag :data_source, options_for_select(data_source_option) %>
-              <% params = {class: 'form-data-source not-selected', name: :data, disabled: true} %>
-              <%= f.file_field :data, params.merge(id: 'evaluation_data_file') %>
-              <% params = {class: 'form-control form-data-source not-selected', name: :data, disabled: true} %>
-              <%= f.text_area :data, params.merge(id: 'evaluation_data_text', value: '', style: 'resize:vertical') %>
-              <%= f.text_field :data, params.merge(id: 'evaluation_data_random', name: :num_data, value: '') %>
+              <%
+                params = {
+                  id: 'evaluation_data_file',
+                  class: 'form-data-source not-selected',
+                  name: :data,
+                  disabled: true,
+                }
+              %>
+              <%= f.file_field :data, params %>
+              <%
+                params = {
+                  id: 'evaluation_data_text',
+                  class: 'form-control form-data-source not-selected',
+                  name: :data,
+                  value: '',
+                  disabled: true,
+                  style: 'resize:vertical',
+                }
+              %>
+              <%= f.text_area :data, params %>
+              <%
+                params = {
+                  id: 'evaluation_data_random',
+                  class: 'form-control form-data-source not-selected',
+                  name: :num_data,
+                  value: '',
+                  disabled: true,
+                }
+              %>
+              <%= f.text_field :data, params %>
             </div>
           </div>
           <div class='row text-right'>

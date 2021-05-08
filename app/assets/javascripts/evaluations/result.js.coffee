@@ -12,7 +12,11 @@ class window.EvaluationResult
   @LABELS = ['F値', '特異度', '再現率', '適合率']
 
   constructor: ->
-    _performanceBar = new Bar('performance', EvaluationResult.WIDTH, EvaluationResult.HEIGHT)
+    _performanceBar = new Bar(
+      'performance',
+      EvaluationResult.WIDTH,
+      EvaluationResult.HEIGHT
+    )
 
     _scale = {
       x: d3.scaleLinear().range(EvaluationResult.X_AXIS.RANGE),
