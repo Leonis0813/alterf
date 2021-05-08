@@ -17,14 +17,12 @@
 </div>
 
 <script>
-  <%
-    values = [
-      @evaluation.f_measure || 0,
-      @evaluation.specificity || 0,
-      @evaluation.recall || 0,
-      @evaluation.precision || 0,
-    ]
-  %>
+  <% values = [
+       @evaluation.f_measure || 0,
+       @evaluation.specificity || 0,
+       @evaluation.recall || 0,
+       @evaluation.precision || 0,
+     ] %>
   $(document).ready(function() {
     result = new EvaluationResult();
     result.drawPerformance(<%= values %>);
