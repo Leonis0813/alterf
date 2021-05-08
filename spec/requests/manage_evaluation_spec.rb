@@ -11,12 +11,12 @@ describe 'ブラウザで予測する', type: :request do
     it '評価画面が表示されていること' do
       is_asserted_by { @driver.current_url == "#{base_url}/evaluations" }
       is_asserted_by { @driver.find_element(:id, 'evaluation_model') }
-      is_asserted_by { @driver.find_element(:xpath, '//form/input[@value="実行"]') }
+      is_asserted_by { @driver.find_element(:xpath, '//form//input[@value="実行"]') }
     end
 
     describe 'モデルを指定せずに実行する' do
       before(:all) do
-        @driver.find_element(:xpath, '//form/input[@value="実行"]').click
+        @driver.find_element(:xpath, '//form//input[@value="実行"]').click
         @wait.until { @driver.find_element(:class, 'modal-body').displayed? }
       end
 
