@@ -1,35 +1,33 @@
-<tr id='<%= evaluation.evaluation_id %>'>
-  <td class='performed_at <%= state_to_class(evaluation.state) %>'>
+<tr id='<%= evaluation.evaluation_id %>' class='<%= row_class(evaluation.state) %>'
+    title='<%= row_title(evaluation.state) %>' data-state='<%= evaluation.state %>'>
+  <td class='performed_at'>
     <%= time_to_string(evaluation.performed_at) %>
   </td>
-  <td class='model <%= state_to_class(evaluation.state) %>'>
+  <td class='model'>
     <%= evaluation.model %>
   </td>
-  <td class='state <%= state_to_class(evaluation.state) %>'>
-  <% if %w[waiting error].include?(evaluation.state) %>
+  <td class='data_source'>
+    <%= data_source_option.invert[evaluation.data_source] %>
+  </td>
+  <td class='num_data'>
+    <%= evaluation.num_data %>
+  </td>
+  <td class='state'>
     <%= progress(evaluation) %>
-  <% else %>
-    <%= link_to evaluation_path(evaluation.evaluation_id), target: :_blank, rel: 'noopener noreferrer' do %>
-      <button class='btn btn-xs btn-<%= state_to_class(evaluation.state) %>' title='詳細を確認'>
-        <span class='state'><%= progress(evaluation) %></span>
-        <span class='glyphicon glyphicon-new-window'></span>
-      </button>
-    <% end %>
-  <% end %>
   </td>
-  <td class='precision <%= state_to_class(evaluation.state) %>'>
-    <%= evaluation.precision&.round(3) %>
+  <td class='precision'>
+    <%= evaluation.precision&.round(3) || 0.0 %>
   </td>
-  <td class='recall <%= state_to_class(evaluation.state) %>'>
-    <%= evaluation.recall&.round(3) %>
+  <td class='recall'>
+    <%= evaluation.recall&.round(3) || 0.0 %>
   </td>
-  <td class='specificity <%= state_to_class(evaluation.state) %>'>
-    <%= evaluation.specificity&.round(3) %>
+  <td class='specificity'>
+    <%= evaluation.specificity&.round(3) || 0.0 %>
   </td>
-  <td class='f_measure <%= state_to_class(evaluation.state) %>'>
-    <%= evaluation.f_measure&.round(3) %>
+  <td class='f_measure'>
+    <%= evaluation.f_measure&.round(3) || 0.0 %>
   </td>
-  <td class='download'>
+  <td class='download' style='background-color: white; cursor: default'>
     <%= evaluation_data_download_button(evaluation) %>
   </td>
 </tr>

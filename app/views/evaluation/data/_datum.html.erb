@@ -1,5 +1,5 @@
 <% numbers = datum.prediction_results.where(won: true).map(&:number).sort %>
-<tr id='<%= datum.race_id %>' class='<%= row_class(numbers, datum) %>'>
+<tr id='<%= datum.race_id %>' class='<%= datum_row_class(numbers, datum) %>'>
   <td>
     <%= datum_counter + 1 %>
   </td>

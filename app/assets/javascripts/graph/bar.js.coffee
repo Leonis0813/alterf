@@ -26,8 +26,11 @@ class window.Bar
         .attr('class', 'bar')
         .attr('x', (bar) -> bar.x)
         .attr('y', (bar) -> bar.y)
-        .attr('width', (bar) -> bar.width)
         .attr('height', (bar) -> bar.height)
+        .attr('width', 0)
+        .transition()
+        .duration(1000)
+        .attr('width', (bar) -> bar.width)
 
       if options['color']
         _svg.selectAll('.bar').attr('fill', options['color'])
