@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_15_143923) do
+ActiveRecord::Schema.define(version: 2021_05_08_080153) do
 
   create_table "analyses", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "analysis_id", default: "", null: false
+    t.string "data_source"
     t.integer "num_data"
     t.integer "num_feature"
     t.integer "num_entry"
@@ -22,6 +23,15 @@ ActiveRecord::Schema.define(version: 2021_04_15_143923) do
     t.datetime "completed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "analysis_data", charset: "utf8", force: :cascade do |t|
+    t.bigint "analysis_id", null: false
+    t.string "race_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["analysis_id", "race_id"], name: "index_analysis_data_on_analysis_id_and_race_id", unique: true
+    t.index ["analysis_id"], name: "index_analysis_data_on_analysis_id"
   end
 
   create_table "analysis_parameters", id: :integer, charset: "utf8", force: :cascade do |t|
