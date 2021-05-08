@@ -16,7 +16,7 @@ App.evaluation = App.cable.subscriptions.create "EvaluationChannel",
           column = $("#{trId} > td[class*=state] button")
           column.removeClass('btn-warning')
           column.addClass('btn-success')
-          $("#{trId} span.state").text(displayedState[evaluation.state])
+          $("#{trId} > td[class*=state]").text(displayedState[evaluation.state])
           @addDownloadButton(trId, evaluation)
         when 'error'
           @changeRowColor(trId, evaluation.state)
