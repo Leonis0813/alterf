@@ -39,6 +39,7 @@ $ ->
     row = $(@).parents('tr')
     state = row.data('state')
     return if state == 'waiting' or state == 'error'
+    return if $(@).attr('class') == 'download'
 
     open("/alterf/evaluations/#{row.attr('id')}", '_blank')
     return
