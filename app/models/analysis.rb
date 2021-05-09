@@ -69,7 +69,7 @@ class Analysis < ApplicationRecord
     return unless data_source == DATA_SOURCE_FILE
 
     File.open(File.join(tmp_dir, 'training_data.txt'), 'w') do |file|
-      analysis.data.each {|datum| file.puts(datum.race_id) }
+      data.each {|datum| file.puts(datum.race_id) }
     end
   end
 
