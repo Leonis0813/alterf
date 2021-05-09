@@ -13,6 +13,13 @@ module AnalysisHelper
     ]
   end
 
+  def analysis_data_source_option
+    {
+      'ランダム' => 'random',
+      'ファイル' => 'file',
+    }
+  end
+
   def index_input_common_option(name)
     {id: "input-index-#{name}", class: 'form-control'}
   end

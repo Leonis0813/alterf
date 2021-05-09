@@ -22,7 +22,8 @@
             <div class='col-xs-6 form-group'>
               <%= f.label :data, '評価データ' %>
               <%= label_tag :data_source, '指定方法:' %>
-              <%= select_tag :data_source, options_for_select(data_source_option) %>
+              <% params = {id: 'evaluation_data_source' %>
+              <%= select_tag :data_source, options_for_select(evaluation_data_source_option), params %>
               <% params = {
                    id: 'evaluation_data_file',
                    class: 'form-data-source not-selected',

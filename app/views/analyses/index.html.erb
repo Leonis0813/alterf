@@ -21,15 +21,28 @@
         </h4>
         <%= form_for @new_analysis, url: analyses_path, remote: true do |f| %>
           <div class='form-group'>
-            <%= f.label :num_data, '学習データ数', class: 'required' %><br>
-            <%= f.text_field :num_data, class: 'form-control', name: :num_data %>
+            <%= f.label :data, '学習データ', class: 'required' %><br>
+            <%= label_tag :data_source, '指定方法:', {style: 'font-weight: normal'} %>
+            <% params = {id: 'analysis_data_source'} %>
+            <%= select_tag :data_source, options_for_select(analysis_data_source_option), params %>
+            <div class='form-block-data-source'>
+              <% params = {class: 'required', style: 'font-weight: normal'} %>
+              <%= f.label :num_data, 'データ数', params %>
+              <% params = {id: 'analysis_data_random', class: 'form-control form-data-source', name: :num_data} %>
+              <%= f.text_field :num_data, params %>
+            </div>
+            <div class='form-block-data-source not-selected'>
+              <% params = {id: 'analysis_data_file', class: 'form-data-source', name: 'data_file', disabled: true} %>
+              <%= f.file_field :data_file, params %>
+            </div>
           </div>
           <div class='form-group'>
             <%= f.label :num_entry, 'エントリー数' %><br>
             <%= f.text_field :num_entry, class: 'form-control', name: :num_entry %>
           </div>
           <div class='form-group'>
-            <a href='#parameter' id='collapse-parameter' class='collapse-parameter glyphicon glyphicon-chevron-right' data-toggle='collapse' aria-expanded='false' aria-controls='parameter'>
+            <a href='#parameter' id='collapse-parameter' class='collapse-parameter glyphicon glyphicon-chevron-right'
+               data-toggle='collapse' aria-expanded='false' aria-controls='parameter'>
               パラメーター設定
             </a>
           </div>

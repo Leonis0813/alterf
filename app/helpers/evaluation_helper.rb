@@ -62,7 +62,7 @@ module EvaluationHelper
     number == ground_truth ? 'limegreen' : 'gray'
   end
 
-  def data_source_option
+  def evaluation_data_source_option
     {
       'Top20' => 'remote',
       'ファイル' => 'file',
