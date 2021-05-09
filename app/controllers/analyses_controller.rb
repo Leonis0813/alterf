@@ -1,5 +1,5 @@
 class AnalysesController < ApplicationController
-  before_action :check_request_analysis, only: %i[show download]
+  before_action :check_request_analysis, only: %i[show download rebuild]
 
   def index
     check_schema(index_schema, index_params, 'analysis')
@@ -26,12 +26,7 @@ class AnalysesController < ApplicationController
       analysis.num_data = race_ids.size
     end
 
-    unless analysis.save
-      raise BadRequest, messages: analysis.errors.messages, resource: 'analysis'
-    end
-
-    AnalysisJob.perform_later(analysis.id)
-    render status: :ok, json: {}
+    check_and_perform(analysis)
   end
 
   def show
@@ -45,6 +40,11 @@ class AnalysesController < ApplicationController
 
     stat = File.stat(file_path)
     send_file(file_path, filename: 'result.zip', length: stat.size)
+  end
+
+  def rebuild
+    analysis = request_analysis.copy
+    check_and_perform(analysis)
   end
 
   private
@@ -166,5 +166,14 @@ class AnalysesController < ApplicationController
 
   def race_ids
     @race_ids ||= execute_params[:data_file].read.lines.map(&:chomp)
+  end
+
+  def check_and_perform(analysis)
+    unless analysis.save
+      raise BadRequest, messages: analysis.errors.messages, resource: 'analysis'
+    end
+
+    AnalysisJob.perform_later(analysis.id)
+    render status: :ok, json: {}
   end
 end

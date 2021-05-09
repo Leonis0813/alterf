@@ -80,9 +80,21 @@ class Analysis < ApplicationRecord
     race_ids.each {|race_id| data.create!(race_id: race_id) }
   end
 
+  def copy
+    analysis = self.class.new(copy_attributes)
+    analysis.build_parameter(parameter.copy_attributes)
+    analysis.build_result
+    data.each {|datum| analysis.data.build(datum.copy_attributes) }
+    analysis
+  end
+
   private
 
   def tmp_dir
     Rails.root.join('tmp', 'files', 'analyses', id.to_s)
+  end
+
+  def copy_attributes
+    slice(:data_source, :num_data, :num_entry)
   end
 end

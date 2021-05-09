@@ -3,4 +3,8 @@ class Analysis::Datum < ApplicationRecord
             presence: {message: MESSAGE_ABSENT}
 
   belongs_to :analysis
+
+  def copy_attributes
+    slice(:race_id)
+  end
 end
