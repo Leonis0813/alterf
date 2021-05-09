@@ -26,21 +26,10 @@ App.analysis = App.cable.subscriptions.create "AnalysisChannel",
 
   changeRowColor: (trId, analysis, beforeState = null) ->
     stateToClassMap = {processing: 'warning', completed: 'success', error: 'error'}
-    classNames = [
-      'performed_at',
-      'num_data',
-      'num_feature',
-      'num_entry',
-      'parameter',
-      'state',
-    ]
 
-    $.each(classNames, (i, className) ->
-      column = $("#{trId} > td[class*=#{className}]")
-      column.removeClass(stateToClassMap[beforeState]) if beforeState
-      column.addClass(stateToClassMap[analysis.state])
-      return
-    )
+    column = $(trId)
+    column.removeClass(stateToClassMap[beforeState]) if beforeState
+    column.addClass(stateToClassMap[analysis.state])
 
     button = $("#{trId} button[class*=btn-param]")
     button.removeClass("btn-#{stateToClassMap[beforeState]}") if beforeState

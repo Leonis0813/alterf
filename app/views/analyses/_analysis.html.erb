@@ -3,7 +3,7 @@
     <%= time_to_string(analysis.performed_at) %>
   </td>
   <td class='data_source'>
-    <%= analysis.data_source %>
+    <%= analysis_data_source_option.invert[analysis.data_source] %>
   </td>
   <td class='num_data'>
     <%= analysis.num_data %>
