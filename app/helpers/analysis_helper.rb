@@ -3,11 +3,12 @@
 module AnalysisHelper
   def analysis_table_headers
     [
-      {name: '実行開始日時', width: 20},
-      {name: '学習データ数', width: 15},
+      {name: '実行開始日時', width: 19},
+      {name: '指定方法', width: 10},
+      {name: '学習データ数', width: 13},
       {name: '特徴量の数', width: 12},
-      {name: 'エントリー数', width: 15},
-      {name: 'パラメーター', width: 18},
+      {name: 'エントリー数', width: 13},
+      {name: 'パラメーター', width: 13},
       {name: '状態', width: 10},
     ]
   end

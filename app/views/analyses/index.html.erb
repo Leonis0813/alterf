@@ -150,8 +150,8 @@
         <% analysis_table_headers.each do |header| %>
           <th width='<%= header[:width] %>%'><%= header[:name] %></th>
         <% end %>
-        <th class='download'></th>
-        <th class='rebuild'></th>
+        <th width='5%' class='download'></th>
+        <th width='5%' class='rebuild'></th>
       </thead>
       <tbody id='tbody-analysis'>
         <%= render @analyses %>

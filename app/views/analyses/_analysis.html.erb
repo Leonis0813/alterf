@@ -1,22 +1,25 @@
-<tr id='<%= analysis.analysis_id %>'>
-  <td class='<%= state_to_class(analysis.state) %> performed_at'>
+<tr id='<%= analysis.analysis_id %>' class='<%= state_to_class(analysis.state) %>'>
+  <td class='performed_at'>
     <%= time_to_string(analysis.performed_at) %>
   </td>
-  <td class='<%= state_to_class(analysis.state) %> num_data'>
+  <td class='data_source'>
+    <%= analysis.data_source %>
+  </td>
+  <td class='num_data'>
     <%= analysis.num_data %>
   </td>
-  <td class='<%= state_to_class(analysis.state) %> num_feature'>
+  <td class='num_feature'>
     <%= analysis.num_feature %>
   </td>
-  <td class='<%= state_to_class(analysis.state) %> num_entry'>
+  <td class='num_entry'>
     <%= analysis.num_entry %>
   </td>
-  <td class='<%= state_to_class(analysis.state) %> parameter'>
+  <td class='parameter'>
     <button class='btn btn-xs btn-<%= state_to_class(analysis.state) %> btn-param'>
       確認
     </button>
   </td>
-  <td class='<%= state_to_class(analysis.state) %> state'>
+  <td class='state'>
   <% case analysis.state %>
   <% when 'processing' %>
     <span class='processing'><%= state_to_title(analysis.state) %></span>
@@ -32,10 +35,10 @@
     <%= state_to_title(analysis.state) %>
   <% end %>
   </td>
-  <td class='download'>
+  <td class='download' style='background-color: #f5f5f5'>
     <%= analysis_result_download_button(analysis) %>
   </td>
-  <td class='rebuild'>
+  <td class='rebuild' style='background-color: #f5f5f5'>
     <%= form_tag analyses_path, remote: true, style: 'padding: 0px' do %>
       <%= hidden_field_tag :num_data, analysis.num_data, id: "num_data-#{analysis.analysis_id}" %>
       <%= hidden_field_tag :num_entry, analysis.num_entry, id: "num_entry-#{analysis.analysis_id}" %>
