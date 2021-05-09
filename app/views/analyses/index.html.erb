@@ -28,11 +28,20 @@
             <div class='form-block-data-source'>
               <% params = {class: 'required', style: 'font-weight: normal'} %>
               <%= f.label :num_data, 'データ数', params %>
-              <% params = {id: 'analysis_data_random', class: 'form-control form-data-source', name: :num_data} %>
+              <% params = {
+                   id: 'analysis_data_random',
+                   class: 'form-control form-data-source',
+                   name: 'num_data',
+                 } %>
               <%= f.text_field :num_data, params %>
             </div>
             <div class='form-block-data-source not-selected'>
-              <% params = {id: 'analysis_data_file', class: 'form-data-source', name: 'data_file', disabled: true} %>
+              <% params = {
+                   id: 'analysis_data_file',
+                   class: 'form-data-source',
+                   name: 'data_file',
+                   disabled: true,
+                 } %>
               <%= f.file_field :data_file, params %>
             </div>
           </div>
