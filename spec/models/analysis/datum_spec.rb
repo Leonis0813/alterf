@@ -27,7 +27,7 @@ describe Analysis::Datum, type: :model do
 
       CommonHelper.generate_test_case(invalid_attribute).each do |attribute|
         context "#{attribute.keys.join(',')}が不正な場合" do
-          expected_error = attribute.keys.map {|key| [key, 'absent_parameter'] }.to_h
+          expected_error = attribute.keys.index_with {|_| 'absent_parameter' }
 
           before(:all) do
             @object = build(:analysis_datum, attribute)

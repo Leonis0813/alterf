@@ -50,6 +50,7 @@ describe Api::AnalysesController, type: :controller do
       )
       @body = analysis.slice(
         :analysis_id,
+        :data_source,
         :num_data,
         :num_feature,
         :num_entry,

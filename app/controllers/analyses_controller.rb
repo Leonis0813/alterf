@@ -17,7 +17,7 @@ class AnalysesController < ApplicationController
     check_schema(execute_schema, execute_params, 'analysis')
     check_invalid_file
 
-    analysis = Analysis.new(execute_params.except(:parameter))
+    analysis = Analysis.new(execute_params.except(:data_file, :parameter))
     analysis.build_result
     analysis.build_parameter(execute_params[:parameter])
 
