@@ -5,6 +5,13 @@ require_relative 'common_view_helper'
 module AnalysisViewHelper
   include CommonViewHelper
 
+  def data_source_map
+    {
+      'random' => 'ランダム',
+      'file' => 'ファイル',
+    }
+  end
+
   def form_xpath
     [row_xpath, 'div[@class="col-lg-3"]'].join('/')
   end

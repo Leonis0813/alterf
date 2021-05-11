@@ -26,7 +26,7 @@
             <% params = {id: 'analysis_data_source'} %>
             <%= select_tag :data_source, options_for_select(analysis_data_source_option), params %>
             <div class='form-block-data-source'>
-              <% params = {class: 'required', style: 'font-weight: normal'} %>
+              <% params = {class: 'required', for: 'analysis_data_random', style: 'font-weight: normal'} %>
               <%= f.label :num_data, 'データ数', params %>
               <% params = {
                    id: 'analysis_data_random',
