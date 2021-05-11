@@ -7,7 +7,7 @@ class PredictionJob < ApplicationJob
     prediction = Prediction.find(prediction_id)
     prediction.start!
 
-    data_dir = Rails.root.join('tmp', 'files', 'predictions', prediction_id.to_s)
+    data_dir = Rails.root.join('tmp/files/predictions', prediction_id.to_s)
     test_data = prediction.test_data
     unzip_model(File.join(data_dir, prediction.model), data_dir)
 

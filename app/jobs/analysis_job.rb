@@ -13,7 +13,7 @@ class AnalysisJob < ApplicationJob
     analysis = Analysis.find(analysis_id)
     analysis.start!
 
-    @tmp_dir = Rails.root.join('tmp', 'files', 'analyses', analysis_id.to_s)
+    @tmp_dir = Rails.root.join('tmp/files/analyses', analysis_id.to_s)
 
     analysis.dump_parameter
     analysis.dump_training_data

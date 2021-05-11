@@ -59,7 +59,7 @@ class Evaluation < ApplicationRecord
   end
 
   def set_analysis!
-    data_dir = Rails.root.join('tmp', 'files', 'evaluations', id.to_s)
+    data_dir = Rails.root.join('tmp/files/evaluations', id.to_s)
     analysis_id = read_analysis_id(File.join(data_dir, 'metadata.yml'))
     analysis = Analysis.find_by(analysis_id: analysis_id)
     raise StandardError if analysis.nil?
@@ -75,9 +75,7 @@ class Evaluation < ApplicationRecord
                  NetkeibaClient.new.http_get_race_top
                else
                  file_path = Rails.root.join(
-                   'tmp',
-                   'files',
-                   'evaluations',
+                   'tmp/files/evaluations',
                    id.to_s,
                    Settings.evaluation.race_list_filename,
                  )
@@ -126,7 +124,7 @@ class Evaluation < ApplicationRecord
   def output_race_ids
     return if [DATA_SOURCE_FILE, DATA_SOURCE_TEXT].include?(data_source)
 
-    file_path = Rails.root.join('tmp', 'files', 'evaluations', id.to_s, 'data.txt')
+    file_path = Rails.root.join('tmp/files/evaluations', id.to_s, 'data.txt')
     File.open(file_path, 'w') do |file|
       data.pluck(:race_id).each {|race_id| file.puts(race_id) }
     end

@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 describe AnalysesController, type: :controller do
-  data_file_path = Rails.root.join('spec', 'fixtures', 'training_data.txt')
+  data_file_path = Rails.root.join('spec/fixtures/training_data.txt')
   data_file = Rack::Test::UploadedFile.new(File.open(data_file_path))
 
   describe '#execute' do
@@ -52,8 +52,8 @@ describe AnalysesController, type: :controller do
       ].each do |data_source, data_params|
         context "data_sourceに#{data_source}を指定した場合" do
           params = default_params.except(:num_data)
-            .merge(data_source: data_source)
-            .merge(data_params)
+                                 .merge(data_source: data_source)
+                                 .merge(data_params)
           include_context 'トランザクション作成'
           before { allow(Denebola::Race).to receive(:where).and_return(%w[12345678]) }
           include_context 'リクエスト送信', params: params
@@ -180,7 +180,7 @@ describe AnalysesController, type: :controller do
         ['空行が含まれている場合', ['12345678', '', '23456789']],
       ].each do |desc, lines|
         context desc do
-          invalid_file_path = Rails.root.join('spec', 'fixtures', 'invalid_data.txt')
+          invalid_file_path = Rails.root.join('spec/fixtures/invalid_data.txt')
           File.open(invalid_file_path, 'w') do |file|
             lines.each {|line| file.puts(line) }
           end

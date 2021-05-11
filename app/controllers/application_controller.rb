@@ -44,14 +44,14 @@ class ApplicationController < ActionController::Base
 
   def remove_old_files
     Analysis.where('completed_at <= ?', 3.days.ago).pluck(:id).each do |id|
-      result_file = Rails.root.join('tmp', 'files', 'analyses', id.to_s)
+      result_file = Rails.root.join('tmp/files/analyses', id.to_s)
       next unless File.exist?(result_file)
 
       FileUtils.rm_rf(result_file)
     end
 
     Evaluation.where('completed_at <= ?', 1.month.ago).pluck(:id).each do |id|
-      data_file = Rails.root.join('tmp', 'files', 'evaluations', id.to_s)
+      data_file = Rails.root.join('tmp/files/evaluations', id.to_s)
       next unless File.exist?(data_file)
 
       FileUtils.rm_rf(data_file)

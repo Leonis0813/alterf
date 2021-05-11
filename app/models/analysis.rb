@@ -91,7 +91,7 @@ class Analysis < ApplicationRecord
   private
 
   def tmp_dir
-    Rails.root.join('tmp', 'files', 'analyses', id.to_s)
+    Rails.root.join('tmp/files/analyses', id.to_s)
   end
 
   def copy_attributes

@@ -96,7 +96,7 @@ describe Analysis, type: :model do
       context desc do
         before do
           analysis = create(:analysis, attribute)
-          @tmp_dir = Rails.root.join('tmp', 'files', 'analyses', analysis.id.to_s)
+          @tmp_dir = Rails.root.join('tmp/files/analyses', analysis.id.to_s)
 
           attribute_names = %i[
             max_depth
@@ -132,7 +132,7 @@ describe Analysis, type: :model do
     context '指定方法がランダムの場合' do
       before do
         analysis = create(:analysis, {data_source: 'random'})
-        @tmp_dir = Rails.root.join('tmp', 'files', 'analyses', analysis.id.to_s)
+        @tmp_dir = Rails.root.join('tmp/files/analyses', analysis.id.to_s)
 
         FileUtils.mkdir_p(@tmp_dir)
         analysis.dump_training_data
@@ -148,7 +148,7 @@ describe Analysis, type: :model do
     context '指定方法がファイルの場合' do
       before do
         @analysis = create(:analysis, {data_source: 'file'})
-        @tmp_dir = Rails.root.join('tmp', 'files', 'analyses', @analysis.id.to_s)
+        @tmp_dir = Rails.root.join('tmp/files/analyses', @analysis.id.to_s)
 
         FileUtils.mkdir_p(@tmp_dir)
         @analysis.dump_training_data
@@ -174,7 +174,7 @@ describe Analysis, type: :model do
       before do
         @analysis = create(:analysis, {data_source: 'random', data: []})
 
-        @tmp_dir = Rails.root.join('tmp', 'files', 'analyses', @analysis.id.to_s)
+        @tmp_dir = Rails.root.join('tmp/files/analyses', @analysis.id.to_s)
 
         FileUtils.mkdir_p(@tmp_dir)
         File.open(File.join(@tmp_dir, 'race_list.txt'), 'w') do |file|
@@ -194,7 +194,7 @@ describe Analysis, type: :model do
       before do
         @analysis = create(:analysis, {data_source: 'file', data: []})
 
-        @tmp_dir = Rails.root.join('tmp', 'files', 'analyses', @analysis.id.to_s)
+        @tmp_dir = Rails.root.join('tmp/files/analyses', @analysis.id.to_s)
 
         FileUtils.mkdir_p(@tmp_dir)
         File.open(File.join(@tmp_dir, 'race_list.txt'), 'w') do |file|

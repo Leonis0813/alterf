@@ -35,7 +35,7 @@ class AnalysesController < ApplicationController
 
   def download
     file_path =
-      Rails.root.join('tmp', 'files', 'analyses', request_analysis.id.to_s, 'result.zip')
+      Rails.root.join('tmp/files/analyses', request_analysis.id.to_s, 'result.zip')
     raise NotFound unless File.exist?(file_path)
 
     stat = File.stat(file_path)
