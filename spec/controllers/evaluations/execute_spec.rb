@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 describe EvaluationsController, type: :controller do
-  model_file_path = Rails.root.join('spec', 'fixtures', 'model.txt')
+  model_file_path = Rails.root.join('spec/fixtures/model.txt')
   model = Rack::Test::UploadedFile.new(File.open(model_file_path))
-  race_list_file_path = Rails.root.join('spec', 'fixtures', 'race_list.txt')
+  race_list_file_path = Rails.root.join('spec/fixtures/race_list.txt')
   data = Rack::Test::UploadedFile.new(File.open(race_list_file_path))
   default_params = {model: model, data_source: 'remote'}
   tmp_dir = Rails.root.join('tmp/files/evaluations')

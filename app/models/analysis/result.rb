@@ -11,7 +11,7 @@ class Analysis
              inverse_of: :result
 
     def import!
-      output_dir = Rails.root.join('tmp', 'files', 'analyses', analysis.id.to_s)
+      output_dir = Rails.root.join('tmp/files/analyses', analysis.id.to_s)
       raise StandardError unless File.exist?(output_dir)
 
       metadata = YAML.load_file(File.join(output_dir, 'metadata.yml'))

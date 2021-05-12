@@ -46,9 +46,13 @@ connection = mysql.connect(
 )
 cursor = connection.cursor(dictionary=True)
 
-cursor.execute('SELECT race_id FROM features WHERE won = 1')
-race_ids = pd.DataFrame(cursor.fetchall())['race_id']
-race_ids = np.random.choice(race_ids, int(parameter['num_data']), replace=False)
+if parameter['data_source'] == 'random':
+  cursor.execute('SELECT race_id FROM features WHERE won = 1')
+  race_ids = pd.DataFrame(cursor.fetchall())['race_id']
+  race_ids = np.random.choice(race_ids, int(parameter['num_data']), replace=False)
+else:
+  with open(outputdir + '/training_data.txt') as f:
+    race_ids = [line.strip() for line in f.readlines()]
 
 cursor.execute('desc features')
 fields = pd.DataFrame(cursor.fetchall())['Field']

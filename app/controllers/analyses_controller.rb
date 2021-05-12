@@ -1,5 +1,5 @@
 class AnalysesController < ApplicationController
-  before_action :check_request_analysis, only: %i[show download]
+  before_action :check_request_analysis, only: %i[show download rebuild]
 
   def index
     check_schema(index_schema, index_params, 'analysis')
@@ -15,16 +15,18 @@ class AnalysesController < ApplicationController
 
   def execute
     check_schema(execute_schema, execute_params, 'analysis')
+    check_invalid_file
 
-    analysis = Analysis.new(execute_params.except(:parameter))
+    analysis = Analysis.new(execute_params.except(:data_file, :parameter))
     analysis.build_result
     analysis.build_parameter(execute_params[:parameter])
-    unless analysis.save
-      raise BadRequest, messages: analysis.errors.messages, resource: 'analysis'
+
+    if user_specified_data?
+      race_ids.each {|race_id| analysis.data.build(race_id: race_id) }
+      analysis.num_data = race_ids.size
     end
 
-    AnalysisJob.perform_later(analysis.id)
-    render status: :ok, json: {}
+    check_and_perform(analysis)
   end
 
   def show
@@ -33,11 +35,16 @@ class AnalysesController < ApplicationController
 
   def download
     file_path =
-      Rails.root.join('tmp', 'files', 'analyses', request_analysis.id.to_s, 'result.zip')
+      Rails.root.join('tmp/files/analyses', request_analysis.id.to_s, 'result.zip')
     raise NotFound unless File.exist?(file_path)
 
     stat = File.stat(file_path)
     send_file(file_path, filename: 'result.zip', length: stat.size)
+  end
+
+  def rebuild
+    analysis = request_analysis.copy
+    check_and_perform(analysis)
   end
 
   private
@@ -71,7 +78,9 @@ class AnalysesController < ApplicationController
     return @execute_params if @execute_params
 
     @execute_params = request.request_parameters.slice(
+      :data_source,
       :num_data,
+      :data_file,
       :num_entry,
       :parameter,
     )
@@ -92,6 +101,7 @@ class AnalysesController < ApplicationController
     @index_schema ||= {
       type: :object,
       properties: {
+        data_source: {type: :string, enum: Analysis::DATA_SOURCE_LIST},
         num_data: {type: :string, pattern: '^[1-9][0-9]*$'},
         page: {type: :string, pattern: '^[1-9][0-9]*$'},
         parameter: {
@@ -112,9 +122,10 @@ class AnalysesController < ApplicationController
   def execute_schema
     @execute_schema ||= {
       type: :object,
-      required: %i[num_data parameter],
+      required: %i[data_source parameter],
       properties: {
-        num_data: {type: :string, pattern: '^[1-9][0-9]*$'},
+        data_source: {type: :string, enum: Analysis::DATA_SOURCE_LIST},
+        num_data: {type: :string, pattern: '^([1-9][0-9]*|\s*)$'},
         num_entry: {type: :string, pattern: '^([1-9][0-9]*|\s*)$'},
         parameter: {
           type: :object,
@@ -129,5 +140,40 @@ class AnalysesController < ApplicationController
         },
       },
     }
+  end
+
+  def check_invalid_file
+    return unless user_specified_data?
+
+    messages = {data_file: %w[invalid_parameter]}
+
+    unless execute_params[:data_file].respond_to?(:read)
+      raise BadRequest, messages: messages, resource: 'analysis'
+    end
+
+    if race_ids.empty? or race_ids.any?(&:empty?)
+      raise BadRequest, messages: messages, resource: 'analysis'
+    end
+
+    return if race_ids.size == Denebola::Race.where(race_id: race_ids).count
+
+    raise BadRequest, messages: messages, resource: 'analysis'
+  end
+
+  def user_specified_data?
+    execute_params[:data_source] == Analysis::DATA_SOURCE_FILE
+  end
+
+  def race_ids
+    @race_ids ||= execute_params[:data_file].read.lines.map(&:chomp)
+  end
+
+  def check_and_perform(analysis)
+    unless analysis.save
+      raise BadRequest, messages: analysis.errors.messages, resource: 'analysis'
+    end
+
+    AnalysisJob.perform_later(analysis.id)
+    render status: :ok, json: {}
   end
 end

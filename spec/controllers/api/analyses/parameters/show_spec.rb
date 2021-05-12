@@ -19,14 +19,7 @@ describe Api::Analyses::ParametersController, type: :controller do
       before do
         analysis = create(:analysis)
         @analysis_id = analysis.analysis_id
-        @body = analysis.parameter.slice(
-          :max_depth,
-          :max_features,
-          :max_leaf_nodes,
-          :min_samples_leaf,
-          :min_samples_split,
-          :num_tree,
-        ).deep_stringify_keys
+        @body = analysis.parameter.slice(*parameter_attribute_names).deep_stringify_keys
       end
       include_context 'リクエスト送信'
       it_behaves_like 'レスポンスが正常であること', status: 200

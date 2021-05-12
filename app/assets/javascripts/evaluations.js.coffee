@@ -28,7 +28,7 @@ $ ->
     })
     return
 
-  $('#data_source').on 'change', ->
+  $('#evaluation_data_source').on 'change', ->
     $('.form-data-source').prop('disabled', true)
     $('.form-data-source').addClass('not-selected')
     $('#evaluation_data_' + $(this).val()).prop('disabled', false)

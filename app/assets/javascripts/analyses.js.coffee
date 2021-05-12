@@ -15,6 +15,13 @@ $ ->
     $('#dialog-execute-error').modal('show')
     return
 
+  $('#analysis_data_source').on 'change', ->
+    $('.form-data-source').prop('disabled', true)
+    $('.form-block-data-source').addClass('not-selected')
+    $("#analysis_data_#{$(@).val()}").prop('disabled', false)
+    $("#analysis_data_#{$(@).val()}").parents('div').removeClass('not-selected')
+    return
+
   $('#parameter').on 'show.bs.collapse', ->
     $('a[href="#parameter"]')
       .removeClass('glyphicon-chevron-right')

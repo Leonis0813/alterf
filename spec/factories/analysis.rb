@@ -6,5 +6,6 @@ FactoryBot.define do
     state { 'waiting' }
     result { build(:analysis_result) }
     parameter { build(:analysis_parameter) }
+    data { [build(:analysis_datum)] }
   end
 end

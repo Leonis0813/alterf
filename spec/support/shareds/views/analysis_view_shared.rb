@@ -65,20 +65,62 @@ shared_examples '分析ジョブ登録フォームが表示されていること
   end
 
   [
-    %w[num_data 学習データ数],
-    %w[num_entry エントリー数],
+    %w[analysis_data 学習データ],
+    %w[data_source 指定方法:],
+    %w[analysis_num_entry エントリー数],
   ].each do |param_name, label_name|
-    it "#{label_name}入力フォームのラベルがあること" do
-      label = @html.xpath("#{register_input_xpath}/label[@for='analysis_#{param_name}']")
+    it "入力フォームのラベルがあること(ラベル: #{label_name})" do
+      label = @html.xpath("#{register_input_xpath}/label[@for='#{param_name}']")
       is_asserted_by { label.present? }
       is_asserted_by { label.text.strip == label_name }
     end
+  end
 
-    it "#{label_name}入力フォームがあること" do
-      input = @html.xpath("#{register_input_xpath}/input[@id='analysis_#{param_name}']")
-      is_asserted_by { input.present? }
-      is_asserted_by { input.attribute('value').nil? }
+  it '指定方法を選択するセレクトボックスが表示されていること' do
+    select = @html.xpath("#{register_input_xpath}/select[@id='analysis_data_source']")
+    is_asserted_by { select.present? }
+  end
+
+  [
+    %w[random ランダム],
+    %w[file ファイル],
+  ].each do |value, text|
+    it "指定方法として#{text}が選択できること" do
+      xpath = "#{register_input_xpath}/select[@id='analysis_data_source']" \
+              "/option[@value='#{value}']"
+      option = @html.xpath(xpath)
+      is_asserted_by { option.present? }
+      is_asserted_by { option.text.strip == text }
     end
+  end
+
+  it 'データ数入力フォームのラベルが表示されていること' do
+    xpath = "#{register_input_xpath}/div[@class='form-block-data-source']" \
+            '/label[@for="analysis_data_random"]'
+    label = @html.xpath(xpath)
+
+    is_asserted_by { label.present? }
+    is_asserted_by { label.text.strip == 'データ数' }
+  end
+
+  it 'データ数入力フォームが表示されていること' do
+    xpath = "#{register_input_xpath}/div[@class='form-block-data-source']" \
+            '/input[@id="analysis_data_random"][@name="num_data"]'
+    input = @html.xpath(xpath)
+    is_asserted_by { input.present? }
+  end
+
+  it '非表示で無効になっているファイル入力フォームがあること' do
+    xpath = "#{register_input_xpath}/div[@class='form-block-data-source not-selected']" \
+            '/input[@id="analysis_data_file"][@name="data_file"][@disabled]'
+    input = @html.xpath(xpath)
+    is_asserted_by { input.present? }
+  end
+
+  it 'エントリー数入力フォームが表示されていること' do
+    xpath = "#{register_input_xpath}/input[@id='analysis_num_entry'][@name='num_entry']"
+    input = @html.xpath(xpath)
+    is_asserted_by { input.present? }
   end
 
   it 'パラメーター入力フォームが閉じた状態で表示されていること' do
@@ -221,11 +263,19 @@ shared_examples '分析ジョブテーブルが表示されていること' do |
     @rows = @table.search('tbody/tr')
   end
 
-  it '8列のテーブルが表示されていること' do
-    is_asserted_by { @table.search('thead/th').size == 8 }
+  it '9列のテーブルが表示されていること' do
+    is_asserted_by { @table.search('thead/th').size == 9 }
   end
 
-  %w[実行開始日時 学習データ数 特徴量の数 エントリー数 パラメーター 状態].each_with_index do |text, i|
+  %w[
+    実行開始日時
+    指定方法
+    学習データ数
+    特徴量の数
+    エントリー数
+    パラメーター
+    状態
+  ].each_with_index do |text, i|
     it "#{i + 1}列目のヘッダーが#{text}であること" do
       is_asserted_by { @table.search('thead/th')[i].text == text }
     end
@@ -248,16 +298,17 @@ shared_examples '分析ジョブテーブルが表示されていること' do |
       performed_at = analysis.performed_at&.strftime('%Y/%m/%d %T')
       tds = @rows[i].search('td')
       is_asserted_by { tds[0].text.strip == performed_at.to_s }
-      is_asserted_by { tds[1].text.strip == analysis.num_data.to_s }
-      is_asserted_by { tds[2].text.strip == analysis.num_feature.to_s }
-      is_asserted_by { tds[3].text.strip == analysis.num_entry.to_s }
-      is_asserted_by { tds[5].text.strip == state_map[analysis.state] }
+      is_asserted_by { tds[1].text.strip == data_source_map[analysis.data_source] }
+      is_asserted_by { tds[2].text.strip == analysis.num_data.to_s }
+      is_asserted_by { tds[3].text.strip == analysis.num_feature.to_s }
+      is_asserted_by { tds[4].text.strip == analysis.num_entry.to_s }
+      is_asserted_by { tds[6].text.strip == state_map[analysis.state] }
     end
   end
 
   it 'パラメーター表示ボタンが表示されていること' do
     @rows.each do |row|
-      button = row.search('td')[4].search('button')
+      button = row.search('td')[5].search('button')
       is_asserted_by { button.present? }
       is_asserted_by { button.text.strip == '確認' }
     end
@@ -265,17 +316,11 @@ shared_examples '分析ジョブテーブルが表示されていること' do |
 
   it '再実行ボタンが表示されていること' do
     @analyses.each_with_index do |analysis, i|
-      rebuild_form = @rows[i].search('td')[7].search('form')
+      rebuild_form = @rows[i].search('td')[8].search('form')
       is_asserted_by { rebuild_form.present? }
 
-      inputs = rebuild_form.search('input')
-      analysis_id = analysis.analysis_id
-      is_asserted_by { inputs[1].attribute('id').value == "num_data-#{analysis_id}" }
-      is_asserted_by { inputs[1].attribute('value').value == analysis.num_data.to_s }
-      is_asserted_by { inputs[2].attribute('id').value == "num_entry-#{analysis_id}" }
-      is_asserted_by do
-        inputs[2].attribute('value')&.value.to_i == analysis.num_entry.to_i
-      end
+      expected_action = "/analyses/#{analysis.analysis_id}/rebuild"
+      is_asserted_by { rebuild_form.attr('action').value == expected_action }
     end
   end
 end
@@ -285,19 +330,19 @@ shared_examples '分析ジョブの状態が正しいこと' do |state, num_entr
 
   it do
     @rows.each do |row|
-      is_asserted_by { row.search('td')[5].text.strip == state }
+      is_asserted_by { row.search('td')[6].text.strip == state }
     end
   end
 
   it 'エントリー数が表示されていること', if: num_entry > 0 do
     @rows.each do |row|
-      is_asserted_by { row.search('td')[3].text.strip.to_i == num_entry }
+      is_asserted_by { row.search('td')[4].text.strip.to_i == num_entry }
     end
   end
 
   it '実行中の場合はアイコンが表示されていること', if: state == '実行中' do
     @rows.each do |row|
-      td_children = row.search('td')[5].children
+      td_children = row.search('td')[6].children
 
       is_asserted_by { td_children.search('span[@class="processing"]').present? }
 
@@ -309,14 +354,14 @@ shared_examples '分析ジョブの状態が正しいこと' do |state, num_entr
 
   it '完了の場合は結果画面へのボタンが表示されていること', if: state == '完了' do
     @rows.each do |row|
-      result_button = row.search('td')[5].search(result_button_xpath)
+      result_button = row.search('td')[6].search(result_button_xpath)
       is_asserted_by { result_button.present? }
     end
   end
 
   it '完了の場合はダウンロードボタンが表示されていること', if: state == '完了' do
     @rows.each do |row|
-      download_link = row.search('td')[6].search(download_link_xpath)
+      download_link = row.search('td')[7].search(download_link_xpath)
       is_asserted_by { download_link.present? }
     end
   end

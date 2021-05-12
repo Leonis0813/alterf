@@ -62,7 +62,7 @@ shared_examples 'ジョブ登録フォームが表示されていること' do
   end
 
   it '指定方法を選択するセレクトボックスが表示されていること' do
-    select = @html.xpath("#{input_xpath}/select[@id='data_source']")
+    select = @html.xpath("#{input_xpath}/select[@id='evaluation_data_source']")
     is_asserted_by { select.present? }
   end
 
@@ -73,7 +73,8 @@ shared_examples 'ジョブ登録フォームが表示されていること' do
     %w[random ランダム],
   ].each do |value, text|
     it "指定方法として#{text}が選択できること" do
-      xpath = "#{input_xpath}/select[@id='data_source']/option[@value='#{value}']"
+      xpath = "#{input_xpath}/select[@id='evaluation_data_source']" \
+              "/option[@value='#{value}']"
       option = @html.xpath(xpath)
       is_asserted_by { option.present? }
       is_asserted_by { option.text.strip == text }

@@ -35,7 +35,7 @@ describe 'ブラウザで予測する', type: :request do
       describe '評価データを指定方法をファイルに変更する' do
         before(:all) do
           @driver.get("#{base_url}/evaluations")
-          element = @wait.until { @driver.find_element(:id, 'data_source') }
+          element = @wait.until { @driver.find_element(:id, 'evaluation_data_source') }
           select = Selenium::WebDriver::Support::Select.new(element)
           @wait.until { select.select_by(:value, 'file') || true rescue false }
         end
@@ -50,7 +50,7 @@ describe 'ブラウザで予測する', type: :request do
 
       describe '評価データを指定方法を直接入力に変更する' do
         before(:all) do
-          element = @wait.until { @driver.find_element(:id, 'data_source') }
+          element = @wait.until { @driver.find_element(:id, 'evaluation_data_source') }
           select = Selenium::WebDriver::Support::Select.new(element)
           @wait.until { select.select_by(:value, 'text') || true rescue false }
         end

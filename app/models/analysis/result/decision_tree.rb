@@ -22,7 +22,7 @@ class Analysis
                inverse_of: :decision_tree
 
       def import!
-        output_dir = Rails.root.join('tmp', 'files', 'analyses', result.analysis.id.to_s)
+        output_dir = Rails.root.join('tmp/files/analyses', result.analysis.id.to_s)
         tree_file = File.join(output_dir, "tree_#{tree_id}.yml")
 
         attributes = YAML.load_file(tree_file)['nodes'].map do |node_attribute|
