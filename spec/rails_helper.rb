@@ -72,6 +72,7 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
   config.run_all_when_everything_filtered = true
   config.include CommonHelper
+  config.include AnalysisHelper
   config.include FactoryBot::Syntax::Methods
   config.fuubar_auto_refresh = false
 

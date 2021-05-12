@@ -3,6 +3,15 @@
 require 'rails_helper'
 
 describe Analysis, type: :model do
+  shared_context '一時ディレクトリを作成する' do
+    before do
+      @tmp_dir = Rails.root.join('tmp/files/analyses', @analysis.id.to_s)
+      FileUtils.mkdir_p(@tmp_dir)
+    end
+
+    after { FileUtils.rm_rf(@tmp_dir) }
+  end
+
   shared_examples '更新した状態がブロードキャストされていること' do |state|
     it "状態が#{state}になっていること" do
       is_asserted_by { @analysis.state == state }
@@ -94,30 +103,18 @@ describe Analysis, type: :model do
       ['エントリー数を指定する場合', {num_entry: 10}],
     ].each do |desc, attribute|
       context desc do
+        before { @analysis = create(:analysis, attribute) }
+        include_context '一時ディレクトリを作成する'
         before do
-          analysis = create(:analysis, attribute)
-          @tmp_dir = Rails.root.join('tmp/files/analyses', analysis.id.to_s)
+          attribute.merge!(@analysis.slice(:data_source, :num_data).merge(env: 'test'))
+          @expected_parameter = @analysis.parameter
+                                         .slice(*parameter_attribute_names)
+                                         .merge(attribute)
+                                         .stringify_keys
 
-          attribute_names = %i[
-            max_depth
-            max_features
-            max_leaf_nodes
-            min_samples_leaf
-            min_samples_split
-            num_tree
-          ]
-          @expected_parameter = analysis.parameter.slice(*attribute_names).merge(
-            data_source: analysis.data_source,
-            num_data: analysis.num_data,
-            env: 'test',
-          ).merge(attribute).stringify_keys
-          FileUtils.mkdir_p(@tmp_dir)
-
-          analysis.dump_parameter
+          @analysis.dump_parameter
           @parameter = YAML.load_file(File.join(@tmp_dir, 'parameter.yml'))
         end
-
-        after { FileUtils.rm_rf(@tmp_dir) }
 
         it 'パラメーターが出力されていること' do
           is_asserted_by { @parameter == @expected_parameter }
@@ -130,15 +127,9 @@ describe Analysis, type: :model do
     include_context 'トランザクション作成'
 
     context '指定方法がランダムの場合' do
-      before do
-        analysis = create(:analysis, {data_source: 'random'})
-        @tmp_dir = Rails.root.join('tmp/files/analyses', analysis.id.to_s)
-
-        FileUtils.mkdir_p(@tmp_dir)
-        analysis.dump_training_data
-      end
-
-      after { FileUtils.rm_rf(@tmp_dir) }
+      before { @analysis = create(:analysis, {data_source: 'random'}) }
+      include_context '一時ディレクトリを作成する'
+      before { @analysis.dump_training_data }
 
       it '学習データが出力されていないこと' do
         is_asserted_by { not File.exist?(File.join(@tmp_dir, 'training_data.txt')) }
@@ -146,18 +137,14 @@ describe Analysis, type: :model do
     end
 
     context '指定方法がファイルの場合' do
+      before { @analysis = create(:analysis, {data_source: 'file'}) }
+      include_context '一時ディレクトリを作成する'
       before do
-        @analysis = create(:analysis, {data_source: 'file'})
-        @tmp_dir = Rails.root.join('tmp/files/analyses', @analysis.id.to_s)
-
-        FileUtils.mkdir_p(@tmp_dir)
         @analysis.dump_training_data
 
         file_path = File.join(@tmp_dir, 'training_data.txt')
         @race_ids = File.read(file_path).lines.map(&:chomp)
       end
-
-      after { FileUtils.rm_rf(@tmp_dir) }
 
       it 'レースIDが出力されていること' do
         is_asserted_by { @race_ids == @analysis.data.pluck(:race_id) }
@@ -166,47 +153,26 @@ describe Analysis, type: :model do
   end
 
   describe '#import_data!' do
-    include_context 'トランザクション作成'
+    race_id = '12345'
 
-    context '指定方法がランダムの場合' do
-      race_id = '12345'
-
-      before do
-        @analysis = create(:analysis, {data_source: 'random', data: []})
-
-        @tmp_dir = Rails.root.join('tmp/files/analyses', @analysis.id.to_s)
-
-        FileUtils.mkdir_p(@tmp_dir)
-        File.open(File.join(@tmp_dir, 'race_list.txt'), 'w') do |file|
-          file.puts(race_id)
+    [
+      ['ランダム', 'random', [race_id]],
+      ['ファイル', 'file', []],
+    ].each do |desc, data_source, expected_race_ids|
+      context "指定方法が#{desc}の場合" do
+        include_context 'トランザクション作成'
+        before { @analysis = create(:analysis, {data_source: data_source, data: []}) }
+        include_context '一時ディレクトリを作成する'
+        before do
+          File.open(File.join(@tmp_dir, 'race_list.txt'), 'w') do |file|
+            file.puts(race_id)
+          end
+          @analysis.import_data!
         end
-        @analysis.import_data!
-      end
 
-      after { FileUtils.rm_rf(@tmp_dir) }
-
-      it '学習データがインポートされていること' do
-        is_asserted_by { @analysis.data.pluck(:race_id) == [race_id] }
-      end
-    end
-
-    context '指定方法がファイルの場合' do
-      before do
-        @analysis = create(:analysis, {data_source: 'file', data: []})
-
-        @tmp_dir = Rails.root.join('tmp/files/analyses', @analysis.id.to_s)
-
-        FileUtils.mkdir_p(@tmp_dir)
-        File.open(File.join(@tmp_dir, 'race_list.txt'), 'w') do |file|
-          file.puts('12345')
+        it '学習データが正しいこと' do
+          is_asserted_by { @analysis.data.pluck(:race_id) == expected_race_ids }
         end
-        @analysis.import_data!
-      end
-
-      after { FileUtils.rm_rf(@tmp_dir) }
-
-      it '学習データがインポートされていないこと' do
-        is_asserted_by { @analysis.data.empty? }
       end
     end
   end
@@ -226,16 +192,8 @@ describe Analysis, type: :model do
     end
 
     it '分析パラメーター情報がコピーされていること' do
-      attribute_names = %i[
-        max_depth
-        max_features
-        max_leaf_nodes
-        min_samples_leaf
-        min_samples_split
-        num_tree
-      ]
-      parameter = @analysis.parameter.slice(*attribute_names)
-      copied_parameter = @copied_analysis.parameter.slice(*attribute_names)
+      parameter = @analysis.parameter.slice(*parameter_attribute_names)
+      copied_parameter = @copied_analysis.parameter.slice(*parameter_attribute_names)
       is_asserted_by { parameter == copied_parameter }
     end
 
