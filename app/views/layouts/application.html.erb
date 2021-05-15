@@ -8,18 +8,24 @@
   </head>
   <body>
 
-    <div class='navbar navbar-default navbar-static-top' style='background-color:#111111;font-weight:900'>
-      <div class='container'>
-        <span class='navbar-brand'>Horse-Race Estimator</span>
-        <div class='navbar-collapse collapse navbar-responsive-collapse'>
-          <ul class='nav navbar-nav'>
-            <li><%= link_to '分析画面', analyses_path, {style: 'color:white'} %></li>
-            <li><%= link_to '予測画面', predictions_path, {style: 'color:white'} %></li>
-            <li><%= link_to '評価画面', evaluations_path, {style: 'color:white'} %></li>
+    <nav class='navbar navbar-expand-lg navbar-dark bg-dark' style='font-weight:200'>
+      <div class='container-fluid'>
+        <span class='navbar-brand' style='color: gray'>Horse-Race Estimator</span>
+        <div class='collapse navbar-collapse'>
+          <ul class='navbar-nav'>
+            <li class='nav-item'>
+              <%= link_to '分析画面', analyses_path, {id: 'nav-link-analysis', class: 'nav-link'} %>
+            </li>
+            <li class='nav-item'>
+              <%= link_to '予測画面', predictions_path, {id: 'nav-link-prediction', class: 'nav-link'} %>
+            </li>
+            <li class='nav-item'>
+              <%= link_to '評価画面', evaluations_path, {id: 'nav-link-evaluation', class: 'nav-link'} %>
+            </li>
           </ul>
         </div>
       </div>
-    </div>
+    </nav>
 
     <div id='main-content' class='container'>
       <%= bootstrap_flash %>
