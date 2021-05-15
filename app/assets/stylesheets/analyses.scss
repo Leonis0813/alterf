@@ -1,8 +1,9 @@
-// Place all the styles related to the analyses controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
 form {
   padding: 10px;
+}
+
+.not-selected {
+  display: none !important;
 }
 
 .input-custom {
@@ -16,7 +17,7 @@ span.first, span.prev, span.next, span.last {
   }
 }
 
-.collapse-parameter {
+#collapse-parameter {
   text-decoration: none !important;
   color: black !important;
 }

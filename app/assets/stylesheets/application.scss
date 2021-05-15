@@ -1,1 +1,15 @@
 @import '~bootstrap/scss/bootstrap';
+
+.required:after {
+  color: red;
+  content: ' *';
+}
+
+.label-bold {
+  font-weight: bold;
+}
+
+#analysis_data_file {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}

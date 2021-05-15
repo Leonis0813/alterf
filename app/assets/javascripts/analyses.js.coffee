@@ -1,38 +1,12 @@
 $ ->
-  $('#new_analysis').on 'ajax:success', (event, xhr, status, error) ->
-    $('#dialog-execute').modal('show')
-    return
 
-  $('#new_analysis').on 'ajax:error', (event, xhr, status, error) ->
-    $('#dialog-execute-error').modal('show')
-    return
 
-  $('#table-analysis').on 'ajax:success', '.rebuild', (event, data, status, xhr) ->
-    $('#dialog-execute').modal('show')
-    return
 
-  $('#table-analysis').on 'ajax:error', '.rebuild', (event, xhr, status, error) ->
-    $('#dialog-execute-error').modal('show')
-    return
 
-  $('#analysis_data_source').on 'change', ->
-    $('.form-data-source').prop('disabled', true)
-    $('.form-block-data-source').addClass('not-selected')
-    $("#analysis_data_#{$(@).val()}").prop('disabled', false)
-    $("#analysis_data_#{$(@).val()}").parents('div').removeClass('not-selected')
-    return
 
-  $('#parameter').on 'show.bs.collapse', ->
-    $('a[href="#parameter"]')
-      .removeClass('glyphicon-chevron-right')
-      .addClass('glyphicon-chevron-down')
-    return
 
-  $('#parameter').on 'hide.bs.collapse', ->
-    $('a[href="#parameter"]')
-      .removeClass('glyphicon-chevron-down')
-      .addClass('glyphicon-chevron-right')
-    return
+
+
 
   $('tbody').on 'click', '.btn-param', ->
     analysisId = $(@).parents('tr').attr('id')
