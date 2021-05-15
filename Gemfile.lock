@@ -182,7 +182,7 @@ GEM
       rubocop (~> 0.79)
       smart_properties
     erubi (1.10.0)
-    execjs (2.8.0)
+    execjs (2.8.1)
     factory_bot (6.2.0)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.2.0)
@@ -288,7 +288,7 @@ GEM
     native-package-installer (1.1.1)
     nio4r (2.5.7)
     no_proxy_fix (0.1.2)
-    nokogiri (1.11.3)
+    nokogiri (1.11.4)
       mini_portile2 (~> 2.5.0)
       racc (~> 1.4)
     octokit (4.21.0)
