@@ -28,7 +28,7 @@
     <%= link_to analysis_path(analysis.analysis_id), target: :_blank, rel: 'noopener noreferrer' do %>
       <button class='btn btn-sm btn-success' title='結果を確認'>
         <%= state_to_title(analysis.state) %>
-        <span class='glyphicon glyphicon-new-window'></span>
+        <span class='bi bi-box-arrow-up-right'></span>
       </button>
     <% end %>
   <% else %>

@@ -15,10 +15,16 @@
 // const images = require.context('../images', true)
 // const imagePath = (name) => images(name, true)
 
-import 'jquery';
+import $ from 'jquery';
 import 'bootstrap';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import '../stylesheets/application';
-import 'channels';
 import Rails from '@rails/ujs';
+
+window.$ = $;
 Rails.start();
+
+import '@fortawesome/fontawesome-free/js/fontawesome';
+import '@fortawesome/fontawesome-free/js/solid';
+import '@fortawesome/fontawesome-free/js/regular';
+import '@fortawesome/fontawesome-free/js/brands';
