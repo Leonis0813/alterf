@@ -1,4 +1,4 @@
-<tr id='<%= analysis.analysis_id %>' class='<%= state_to_class(analysis.state) %>'>
+<tr id='<%= analysis.analysis_id %>' class='table-<%= state_to_class(analysis.state) %>'>
   <td class='performed_at'>
     <%= time_to_string(analysis.performed_at) %>
   </td>
@@ -15,7 +15,7 @@
     <%= analysis.num_entry %>
   </td>
   <td class='parameter'>
-    <button class='btn btn-xs btn-<%= state_to_class(analysis.state) %> btn-param'>
+    <button class='btn btn-sm btn-<%= state_to_class(analysis.state) %> btn-param'>
       確認
     </button>
   </td>
@@ -26,7 +26,7 @@
     <i class='fa fa-refresh fa-spin'></i>
   <% when 'completed' %>
     <%= link_to analysis_path(analysis.analysis_id), target: :_blank, rel: 'noopener noreferrer' do %>
-      <button class='btn btn-xs btn-success' title='結果を確認'>
+      <button class='btn btn-sm btn-success' title='結果を確認'>
         <%= state_to_title(analysis.state) %>
         <span class='glyphicon glyphicon-new-window'></span>
       </button>
@@ -40,8 +40,8 @@
   </td>
   <td class='rebuild' style='background-color: #f5f5f5'>
     <%= form_tag analysis_rebuild_path(analysis.analysis_id), remote: true, style: 'padding: 0px' do %>
-      <%= button_tag type: :submit, class: 'btn btn-default' do %>
-        <span class='glyphicon glyphicon-repeat' />
+      <%= button_tag type: :submit, class: 'btn btn-light btn-sm' do %>
+        <span class='bi bi-arrow-repeat' />
       <% end %>
     <% end %>
   </td>

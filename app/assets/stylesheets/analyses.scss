@@ -22,6 +22,10 @@ span.first, span.prev, span.next, span.last {
   color: black !important;
 }
 
+#table-analysis {
+  font-size: 14px;
+}
+
 .link {
   fill: none;
   stroke: #ccc;
@@ -31,4 +35,47 @@ span.first, span.prev, span.next, span.last {
 .node circle {
   stroke: steelblue;
   stroke-width: 2px;
+}
+
+
+
+
+
+hr {
+  margin: 0px;
+}
+
+.table > thead > tr > th.rebuild {
+  border: none;
+  width: 5%;
+}
+
+.table > tbody > tr > td.rebuild {
+  border-style: none;
+  padding: 0px 5px;
+  vertical-align: middle;
+}
+
+.table > thead > tr > th.download {
+  border: none;
+  width: 5%;
+}
+
+.table > tbody > tr > td.download {
+  border-style: none;
+  padding: 2px 2px 2px 5px;
+  vertical-align: middle;
+}
+
+.table-title {
+  padding: 10px 0px;
+}
+
+.pagination-info, .fmeasure-info {
+  padding: 10px 0px;
+  display: inline;
+}
+
+.prediction-result {
+  font-size: 1em;
 }

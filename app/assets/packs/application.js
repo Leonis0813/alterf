@@ -15,7 +15,10 @@
 // const images = require.context('../images', true)
 // const imagePath = (name) => images(name, true)
 
+import 'jquery';
 import 'bootstrap';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import '../stylesheets/application';
-import 'jquery';
+import 'channels';
+import Rails from '@rails/ujs';
+Rails.start();

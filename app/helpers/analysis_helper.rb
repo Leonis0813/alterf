@@ -46,8 +46,8 @@ module AnalysisHelper
   def analysis_result_download_button(analysis)
     return unless analysis.state == 'completed'
 
-    content_tag(:button, class: 'btn btn-default', title: '結果をダウンロード') do
-      content_tag(:span, nil, class: 'glyphicon glyphicon-download-alt')
+    content_tag(:button, class: 'btn btn-light btn-sm', title: '結果をダウンロード') do
+      content_tag(:span, nil, class: 'bi bi-download')
     end
   end
 
