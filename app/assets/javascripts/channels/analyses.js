@@ -2,7 +2,7 @@ import consumer from './consumer'
 
 consumer.subscriptions.create('AnalysisChannel', {
   received(analysis) {
-    if (location.pathname != '/alterf/analyses') {
+    if (location.pathname !== '/alterf/analyses') {
       return;
     }
 
