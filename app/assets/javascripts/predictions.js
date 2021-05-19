@@ -1,24 +1,15 @@
 $(function() {
+  const executeDialog = new bootstrap.Modal(document.getElementById('dialog-execute'));
+  const executeErrorDialog = new bootstrap.Modal(document.getElementById('dialog-execute-error'));
+
   $('#nav-link-prediction').addClass('active');
 
   $('#new_prediction').on('ajax:success', function(event) {
-    bootbox.alert({
-      title: '予測を開始しました',
-      message: '終了後、メールにて結果を通知します',
-      callback: function() {
-        $('.btn-submit').prop('disabled', false);
-      }
-    });
+    executeDialog.show();
   });
 
   $('#new_prediction').on('ajax:error', function(event) {
-    bootbox.alert({
-      title: 'エラーが発生しました',
-      message: '入力値を見直してください',
-      callback: function() {
-        $('.btn-submit').prop('disabled', false);
-      }
-    });
+    executeErrorDialog.show();
   });
 
   $('input[name="type"]:radio').on('change', function(event) {
