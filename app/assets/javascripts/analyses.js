@@ -1,8 +1,12 @@
 $(function() {
-  $('#nav-link-analysis').addClass('active');
-
   const executeDialog = new bootstrap.Modal(document.getElementById('dialog-execute'));
   const executeErrorDialog = new bootstrap.Modal(document.getElementById('dialog-execute-error'));
+  const parameterDialog = new bootstrap.Modal(document.getElementById('dialog-parameter'));
+  const parameterErrorDialog = new bootstrap.Modal(document.getElementById('dialog-parameter-error'));
+  const downloadErrorDialog = new bootstrap.Modal(document.getElementById('dialog-download-error'));
+  const collapse = document.getElementById('parameter');
+
+  $('#nav-link-analysis').addClass('active');
 
   $('#new_analysis').on('ajax:success', function(event) {
     executeDialog.show();
@@ -27,8 +31,6 @@ $(function() {
     $('#analysis_data_' + $(this).val()).parents('div').removeClass('not-selected');
   });
 
-  const collapse = document.getElementById('parameter')
-
   collapse.addEventListener('show.bs.collapse', function () {
     $('#collapse-parameter').removeClass('bi-chevron-right').addClass('bi-chevron-down');
   })
@@ -36,8 +38,6 @@ $(function() {
   collapse.addEventListener('hide.bs.collapse', function () {
     $('#collapse-parameter').removeClass('bi-chevron-down').addClass('bi-chevron-right');
   });
-
-  const parameterDialog = new bootstrap.Modal(document.getElementById('dialog-parameter'));
 
   $('tbody').on('click', '.btn-param', function(event) {
     analysisId = $(this).parents('tr').attr('id')
@@ -53,24 +53,8 @@ $(function() {
       $('#parameter-num_tree').text(parameter.num_tree);
       parameterDialog.show();
     }).fail(function(xhr, status, error) {
-      bootbox.alert({
-        title: 'エラーが発生しました',
-        message: 'パラメーターの取得に失敗しました',
-      });
+      parameterErrorDialog.show();
     })
-  });
-
-  $('#btn-modal-parameter-ok').on('click', function(event) {
-    parameterDialog.hide();
-  });
-
-  $('#btn-modal-execute-ok').on('click', function(event) {
-    executeDialog.hide();
-  });
-
-  $('#btn-modal-execute-error-ok').on('click', function(event) {
-    executeErrorDialog.hide();
-    $('.btn-submit').prop('disabled', false);
   });
 
   $('#tbody-analysis').on('click', '.download', function(event) {
@@ -87,10 +71,7 @@ $(function() {
         $('<a>', {href: blobUrl, download: filename})[0].click();
         (URL || webkitURL).revokeObjectURL(blobUrl);
       } else {
-        bootbox.alert({
-          title: 'エラーが発生しました',
-          message: '分析結果が存在しません',
-        });
+        downloadErrorDialog.show();
       }
     }
     xhr.send();
@@ -108,7 +89,7 @@ $(function() {
     }).done(function(data) {
       location.href = '/alterf/analyses?' + $.param(queries);
     }).fail(function(xhr, status, error) {
-      $('#dialog-execute-error').modal('show');
+      executeErrorDialog.show();
     });
   });
 });
