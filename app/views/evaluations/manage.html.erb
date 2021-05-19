@@ -1,26 +1,26 @@
 <ul class='nav nav-tabs' style='border-bottom: 0px'>
-  <li>
-    <a id='collapse-form' class='btn btn-default' data-toggle='collapse' data-target='#form-evaluation' style='border-color: #cccccc'>
-      <span class='glyphicon glyphicon-minus-sign' aria-hidden='true'></span>
-    </a>
+  <li class='nav-item'>
+    <%= button_tag id: 'collapse-form', class: 'btn btn-light nav-link', 'data-bs-toggle' => 'collapse', 'data-bs-target' => '#form-evaluation', 'aria-expanded' => true, 'aria-controls' => 'form-evaluation', style: 'border-color: #cccccc' do %>
+      <span class='bi bi-dash-circle' aria-hidden='true'></span>
+    <% end %>
   </li>
-  <li class='active'>
-    <%= link_to 'ジョブ登録', '#new-evaluation', id: 'tab-register', 'data-toggle' => 'tab' %>
+  <li class='nav-item active'>
+    <%= button_tag 'ジョブ登録', id: 'tab-register', class: 'nav-link', 'data-bs-toggle' => 'tab', 'data-bs-target' => '#new-evaluation', type: 'button', role: 'tab', 'aria-controls' => 'new-evaluation', 'aria-selected' => true %>
   </li>
 </ul>
 
-<div class='panel panel-default'>
-  <div id='form-evaluation' class='panel-body collapse in'>
+<div class='card mb-4'>
+  <div id='form-evaluation' class='card-body collapse show'>
     <div class='tab-content'>
       <div id='new-evaluation'>
         <%= form_for @evaluation, html: {multipart: true}, url: evaluations_path, remote: true do |f| %>
           <div class='row'>
-            <div class='col-xs-6 form-group'>
-              <%= f.label :model, 'モデル' %>
+            <div class='col-6 mb-3'>
+              <%= f.label :model, 'モデル', class: 'label-bold' %><br>
               <%= f.file_field :model, name: :model %>
             </div>
-            <div class='col-xs-6 form-group'>
-              <%= f.label :data, '評価データ' %>
+            <div class='col-6 mb-3'>
+              <%= f.label :data, '評価データ', class: 'label-bold' %>
               <%= label_tag :data_source, '指定方法:' %>
               <% params = {id: 'evaluation_data_source'} %>
               <%= select_tag :data_source, options_for_select(evaluation_data_source_option), params %>
@@ -50,10 +50,10 @@
               <%= f.text_field :data, params %>
             </div>
           </div>
-          <div class='row text-right'>
-            <div class='col-xs-12'>
+          <div class='row text-end'>
+            <div class='col-12'>
               <%= f.submit '実行', class: 'btn btn-primary btn-sm btn-submit' %>
-              <%= f.submit 'リセット', type: 'reset', class: 'btn btn-default btn-sm' %>
+              <%= f.submit 'リセット', type: 'reset', class: 'btn btn-light btn-sm' %>
             </div>
           </div>
         <% end %>
