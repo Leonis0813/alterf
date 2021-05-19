@@ -1,11 +1,13 @@
+<%= javascript_pack_tag 'evaluations' %>
+
 <ul class='nav nav-tabs' style='border-bottom: 0px'>
   <li class='nav-item'>
-    <%= button_tag id: 'collapse-form', class: 'btn btn-light nav-link', 'data-bs-toggle' => 'collapse', 'data-bs-target' => '#form-evaluation', 'aria-expanded' => true, 'aria-controls' => 'form-evaluation', style: 'border-color: #cccccc' do %>
+    <%= button_tag id: 'collapse-form', class: 'btn btn-light nav-link nav-link-evaluation', 'data-bs-toggle' => 'collapse', 'data-bs-target' => '#form-evaluation', 'aria-expanded' => true, 'aria-controls' => 'form-evaluation'  do %>
       <span class='bi bi-dash-circle' aria-hidden='true'></span>
     <% end %>
   </li>
   <li class='nav-item active'>
-    <%= button_tag 'ジョブ登録', id: 'tab-register', class: 'nav-link', 'data-bs-toggle' => 'tab', 'data-bs-target' => '#new-evaluation', type: 'button', role: 'tab', 'aria-controls' => 'new-evaluation', 'aria-selected' => true %>
+    <%= button_tag 'ジョブ登録', id: 'tab-register', class: 'nav-link nav-link-evaluation', 'data-bs-toggle' => 'tab', 'data-bs-target' => '#new-evaluation', type: 'button', role: 'tab', 'aria-controls' => 'new-evaluation', 'aria-selected' => true %>
   </li>
 </ul>
 
@@ -17,7 +19,7 @@
           <div class='row'>
             <div class='col-6 mb-3'>
               <%= f.label :model, 'モデル', class: 'label-bold' %><br>
-              <%= f.file_field :model, name: :model %>
+              <%= f.file_field :model, class: 'form-control', name: :model %>
             </div>
             <div class='col-6 mb-3'>
               <%= f.label :data, '評価データ', class: 'label-bold' %>
@@ -26,7 +28,7 @@
               <%= select_tag :data_source, options_for_select(evaluation_data_source_option), params %>
               <% params = {
                    id: 'evaluation_data_file',
-                   class: 'form-data-source not-selected',
+                   class: 'form-control form-data-source not-selected',
                    name: :data,
                    disabled: true,
                  } %>
@@ -62,14 +64,14 @@
   </div>
 </div>
 
-<h3 class='table-title'>ジョブ実行履歴</h3>
+<h4 class='table-title'>ジョブ実行履歴</h4>
 <span id='page-info'>
   <%= render partial: 'layouts/page_info', locals: {resources: @evaluations} %>
 </span>
 <span id='paginate'>
   <%= paginate @evaluations %>
 </span>
-<table id='table-evaluation' class='table table-hover'>
+<table id='table-evaluations' class='table table-hover'>
   <thead>
     <% evaluation_table_headers.each do |header| %>
       <th width='<%= header[:width] %>%'><%= header[:name] %></th>

@@ -3,9 +3,9 @@
 module EvaluationHelper
   def evaluation_table_headers
     [
-      {name: '実行開始日時', width: 13},
+      {name: '実行開始日時', width: 14},
       {name: 'モデル', width: 15},
-      {name: '指定方法', width: 10},
+      {name: '指定方法', width: 9},
       {name: 'データ数', width: 8},
       {name: '状態', width: 11},
       {name: '適合率', width: 9},
