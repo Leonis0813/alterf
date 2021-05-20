@@ -22,6 +22,7 @@ import '../stylesheets/application';
 import Rails from '@rails/ujs';
 
 window.$ = $;
+window.bs = bs;
 Rails.start();
 
 import '@fortawesome/fontawesome-free/js/fontawesome';

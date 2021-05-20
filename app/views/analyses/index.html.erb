@@ -54,45 +54,39 @@
               <%= f.text_field :num_entry, class: 'form-control', name: :num_entry %>
             </div>
             <div class='mb-3'>
-              <a id='collapse-parameter' class='bi bi-chevron-right' href='#parameter'
-                 role='button' data-bs-toggle='collapse'
-                 aria-expanded='false' aria-controls='parameter'>
-                パラメーター設定
-              </a>
-            </div>
-            <div id='parameter' class='collapse'>
+              <div id='label-index-parameter' class='label-bold'>パラメーター</div>
               <%= f.fields_for :parameter do |param_form| %>
-                <div class='mb-3'>
+                <div class='mb-2'>
                   <%= param_form.label :max_depth, 'max_depth' %>
                   <%= question_sign(:max_depth) %>
                   <% option = {name: 'parameter[max_depth]', class: 'form-control'} %>
                   <%= param_form.text_field :max_depth, option %>
                 </div>
-                <div class='mb-3'>
+                <div class='mb-2'>
                   <%= param_form.label :max_features, 'max_features' %>
                   <%= question_sign(:max_features) %>
-                  <% option = {name: 'parameter[max_features]', class: 'form-control'} %>
+                  <% option = {name: 'parameter[max_features]', class: 'form-select'} %>
                   <%= param_form.select :max_features, [['sqrt'], ['log2'], ['all']], {}, option %>
                 </div>
-                <div class='mb-3'>
+                <div class='mb-2'>
                   <%= param_form.label :max_leaf_nodes, 'max_leaf_nodes' %>
                   <%= question_sign(:max_leaf_nodes) %>
                   <% option = {name: 'parameter[max_leaf_nodes]', class: 'form-control'} %>
                   <%= param_form.text_field :max_leaf_nodes, option %>
                 </div>
-                <div class='mb-3'>
+                <div class='mb-2'>
                   <%= param_form.label :min_samples_leaf, 'min_samples_leaf' %>
                   <%= question_sign(:min_samples_leaf) %>
                   <% option = {name: 'parameter[min_samples_leaf]', class: 'form-control'} %>
                   <%= param_form.text_field :min_samples_leaf, option %>
                 </div>
-                <div class='mb-3'>
+                <div class='mb-2'>
                   <%= param_form.label :min_samples_split, 'min_samples_split' %>
                   <%= question_sign(:min_samples_split) %>
                   <% option = {name: 'parameter[min_samples_split]', class: 'form-control'} %>
                   <%= param_form.text_field :min_samples_split, option %>
                 </div>
-                <div class='mb-3'>
+                <div class='mb-2'>
                   <%= param_form.label :num_tree, 'num_tree' %>
                   <%= question_sign(:num_tree) %>
                   <% option = {name: 'parameter[num_tree]', class: 'form-control'} %>
@@ -118,7 +112,7 @@
               <%= f.text_field :num_data, option.merge(name: 'num_data', value: @index_form.num_data) %>
             </div>
 
-            <div id='label-index-parameter' style='font-weight: bold'>パラメーター</div>
+            <div id='label-index-parameter' class='label-bold'>パラメーター</div>
             <%= f.fields :parameter do |param_form| %>
               <div class='mb-2'>
                 <% option = parameter_label_option('max_depth') %>
@@ -191,3 +185,7 @@
     </div>
   </div>
 </div>
+
+<script>
+
+</script>

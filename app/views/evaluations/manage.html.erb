@@ -85,3 +85,22 @@
     <%= render @evaluations %>
   </tbody>
 </table>
+
+<script>
+  $(function() {
+    $('#new_evaluation').on('ajax:success', function(event) {
+      var dialog = new bs.Modal(document.getElementById('dialog-execute'));
+      dialog.show();
+    });
+
+    $('#new_evaluation').on('ajax:error', function(event) {
+      var dialog = new bs.Modal(document.getElementById('dialog-execute-error'));
+      dialog.show();
+    });
+
+    $('#table-evaluation').on('ajax:error', function(event) {
+      var dialog = new bs.Modal(document.getElementById('dialog-download-error'));
+      dialog.show();
+    });
+  });
+</script>

@@ -14,7 +14,7 @@ environment.plugins.prepend(
     $: 'jquery',
     jQuery: 'jquery',
     Popper: '@popperjs/core',
-    bootstrap: 'bootstrap'
+    bs: 'bootstrap'
   })
 )
 

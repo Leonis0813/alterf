@@ -77,7 +77,7 @@ module EvaluationHelper
 
     link_to(evaluation_download_path(evaluation.evaluation_id), remote: true) do
       content_tag(:button, class: 'btn btn-success') do
-        content_tag(:span, nil, class: 'glyphicon glyphicon-download-alt')
+        content_tag(:span, nil, class: 'bi bi-download')
       end
     end
   end

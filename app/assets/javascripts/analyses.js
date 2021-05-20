@@ -1,27 +1,20 @@
 $(function() {
-  const executeDialog = new bootstrap.Modal(document.getElementById('dialog-execute'));
-  const executeErrorDialog = new bootstrap.Modal(document.getElementById('dialog-execute-error'));
-  const parameterDialog = new bootstrap.Modal(document.getElementById('dialog-parameter'));
-  const parameterErrorDialog = new bootstrap.Modal(document.getElementById('dialog-parameter-error'));
-  const downloadErrorDialog = new bootstrap.Modal(document.getElementById('dialog-download-error'));
-  const collapse = document.getElementById('parameter');
-
   $('#nav-link-analysis').addClass('active');
 
   $('#new_analysis').on('ajax:success', function(event) {
-    executeDialog.show();
+    bs.Modal.getInstance(document.getElementById('dialog-execute')).show();
   });
 
   $('#new_analysis').on('ajax:error', function(event) {
-    executeErrorDialog.show();
+    bs.Modal.getInstance(document.getElementById('dialog-execute-error')).show();
   });
 
   $('#table-analysis').on('ajax:success', '.rebuild', function(event) {
-    executeDialog.show();
+    bs.Modal.getInstance(document.getElementById('dialog-execute')).show();
   });
 
   $('#table-analysis').on('ajax:error', '.rebuild', function(event) {
-    executeErrorDialog.show();
+    bs.Modal.getInstance(document.getElementById('dialog-execute-error')).show();
   });
 
   $('#analysis_data_source').on('change', function(event) {
@@ -29,14 +22,6 @@ $(function() {
     $('.form-block-data-source').addClass('not-selected');
     $('#analysis_data_' + $(this).val()).prop('disabled', false);
     $('#analysis_data_' + $(this).val()).parents('div').removeClass('not-selected');
-  });
-
-  collapse.addEventListener('show.bs.collapse', function () {
-    $('#collapse-parameter').removeClass('bi-chevron-right').addClass('bi-chevron-down');
-  })
-
-  collapse.addEventListener('hide.bs.collapse', function () {
-    $('#collapse-parameter').removeClass('bi-chevron-down').addClass('bi-chevron-right');
   });
 
   $('tbody').on('click', '.btn-param', function(event) {
@@ -51,9 +36,9 @@ $(function() {
       $('#parameter-min_samples_leaf').text(parameter.min_samples_leaf);
       $('#parameter-min_samples_split').text(parameter.min_samples_split);
       $('#parameter-num_tree').text(parameter.num_tree);
-      parameterDialog.show();
+      bs.Modal.getInstance(document.getElementById('dialog-parameter')).show();
     }).fail(function(xhr, status, error) {
-      parameterErrorDialog.show();
+      bs.Modal.getInstance(document.getElementById('dialog-parameter-error')).show();
     })
   });
 
@@ -71,7 +56,7 @@ $(function() {
         $('<a>', {href: blobUrl, download: filename})[0].click();
         (URL || webkitURL).revokeObjectURL(blobUrl);
       } else {
-        downloadErrorDialog.show();
+        bs.Modal.getInstance(document.getElementById('dialog-download-error')).show();
       }
     }
     xhr.send();
@@ -89,7 +74,7 @@ $(function() {
     }).done(function(data) {
       location.href = '/alterf/analyses?' + $.param(queries);
     }).fail(function(xhr, status, error) {
-      executeErrorDialog.show();
+      bs.Modal.getInstance(document.getElementById('dialog-execute-error')).show();
     });
   });
 });
