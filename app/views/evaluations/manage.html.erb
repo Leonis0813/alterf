@@ -1,13 +1,16 @@
 <%= javascript_pack_tag 'evaluations' %>
+<%= render 'dialogs/execute_error' %>
+<%= render 'evaluations/dialogs/execute' %>
+<%= render 'evaluations/dialogs/download_error' %>
 
 <ul class='nav nav-tabs' style='border-bottom: 0px'>
   <li class='nav-item'>
-    <%= button_tag id: 'collapse-form', class: 'btn btn-light nav-link nav-link-evaluation', 'data-bs-toggle' => 'collapse', 'data-bs-target' => '#form-evaluation', 'aria-expanded' => true, 'aria-controls' => 'form-evaluation'  do %>
+    <%= button_tag id: 'collapse-form', class: 'btn btn-light nav-link', 'data-bs-toggle' => 'collapse', 'data-bs-target' => '#form-evaluation', type: 'button', 'aria-expanded' => true, 'aria-controls' => 'form-evaluation'  do %>
       <span class='bi bi-dash-circle' aria-hidden='true'></span>
     <% end %>
   </li>
   <li class='nav-item active'>
-    <%= button_tag 'ジョブ登録', id: 'tab-register', class: 'nav-link nav-link-evaluation', 'data-bs-toggle' => 'tab', 'data-bs-target' => '#new-evaluation', type: 'button', role: 'tab', 'aria-controls' => 'new-evaluation', 'aria-selected' => true %>
+    <%= button_tag 'ジョブ登録', id: 'tab-register', class: 'nav-link', 'data-bs-toggle' => 'tab', 'data-bs-target' => '#new-evaluation', type: 'button', role: 'tab', 'aria-controls' => 'new-evaluation', 'aria-selected' => true %>
   </li>
 </ul>
 
