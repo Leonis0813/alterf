@@ -1,55 +1,67 @@
-class window.EvaluationResult
-  @WIDTH = 1100
-  @HEIGHT = 200
-  @X_AXIS = {
+const EvaluationResult = class {
+  static WIDTH = 1100;
+  static HEIGHT = 200;
+  static X_AXIS = {
     ORIGIN: {x: 50, y: 25},
-    RANGE: [0, AnalysisResult.WIDTH - 100],
-  }
-  @Y_AXIS = {
+    RANGE: [0, 1000],
+  };
+  static Y_AXIS = {
     ORIGIN: {x: 50, y: 0},
-    RANGE: [25, AnalysisResult.HEIGHT - 50],
-  }
-  @LABELS = ['F値', '特異度', '再現率', '適合率']
+    RANGE: [25, 150],
+  };
+  static LABELS = ['F値', '特異度', '再現率', '適合率'];
 
-  constructor: ->
-    _performanceBar = new Bar(
-      'performance',
-      EvaluationResult.WIDTH,
-      EvaluationResult.HEIGHT
-    )
+  #performanceBar;
+  #scale;
 
-    _scale = {
-      x: d3.scaleLinear().range(EvaluationResult.X_AXIS.RANGE),
+  constructor() {
+    this.#performanceBar = new Bar('performance', this.WIDTH, this.HEIGHT);
+
+    this.#scale = {
+      x: d3.scaleLinear().range(this.X_AXIS.RANGE),
       y: d3.scaleBand().rangeRound([165, 25]),
-    }
+    };
+  }
 
-    @drawPerformance = (values) ->
-      _scale.x.domain([0, 1])
-      _scale.y.domain(EvaluationResult.LABELS)
-      _performanceBar.drawXAxis(EvaluationResult.X_AXIS.ORIGIN, _scale.x)
-      _performanceBar.drawYAxis(EvaluationResult.Y_AXIS.ORIGIN, _scale.y)
+  drawPerformance(values) {
+    const labels = this.constructor.LABELS;
+    const x_axis = this.constructor.X_AXIS;
+    const y_axis = this.constructor.Y_AXIS;
 
-      bars = _createBars(values, _scale)
-      _performanceBar.drawBars(bars, {color: 'orange', opacity: 0.5})
-      return
+    this.#scale.x.domain([0, 1]);
+    this.#scale.y.domain(labels);
+    this.#performanceBar.drawXAxis(x_axis.ORIGIN, this.#scale.x);
+    this.#performanceBar.drawYAxis(y_axis.ORIGIN, this.#scale.y);
 
-    @updateBars = (values) ->
-      bars = _createBars(values, _scale)
-      d3.selectAll('.bar')
-        .transition()
-        .duration(1000)
-        .attr('width', (bar) -> _scale.x(values[bar.index]))
-      return
+    const bars = this.#createBars(values);
+    this.#performanceBar.drawBars(bars, {color: 'orange', opacity: 0.5});
+  }
 
-    _createBars = (performances, scale) ->
-      performances.map((performance, i) ->
-        {
-          x: EvaluationResult.X_AXIS.ORIGIN.x + scale.x(0),
-          y: EvaluationResult.Y_AXIS.ORIGIN.y + scale.y(EvaluationResult.LABELS[i]) + 7.5,
-          width: scale.x(performance),
-          height: scale.y.bandwidth() - 15,
-          index: i,
-        }
-      )
+  updateBars(values) {
+    const that = this;
 
-    return
+    const bars = this.#createBars(values);
+    d3.selectAll('.bar')
+      .transition()
+      .duration(1000)
+      .attr('width', function(bar) {
+        that.#scale.x(values[bar.index]);
+      });
+  }
+
+  #createBars(performances) {
+    const that = this;
+    const labels = this.constructor.LABELS;
+    const x_axis = this.constructor.X_AXIS;
+    const y_axis = this.constructor.Y_AXIS;
+
+    return performances.map(function(performance, i) {
+      return {
+        x: x_axis.ORIGIN.x + that.#scale.x(0),
+        y: y_axis.ORIGIN.y + that.#scale.y(labels[i]) + 7.5,
+        width: that.#scale.x(performance),
+        height: that.#scale.y.bandwidth() - 15,
+        index: i,
+      };
+    });
+  }
