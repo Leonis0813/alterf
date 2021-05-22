@@ -4,14 +4,12 @@ $(function() {
   $('#nav-link-evaluation').addClass('active');
 
   formCollapse.addEventListener('show.bs.collapse', function(event) {
-    console.log('show');
     $('button#collapse-form > span')
       .removeClass('bi-plus-circle')
       .addClass('bi-dash-circle');
   });
 
   formCollapse.addEventListener('hide.bs.collapse', function(event) {
-    console.log('hide');
     $('button#collapse-form > span')
       .removeClass('bi-dash-circle')
       .addClass('bi-plus-circle');
@@ -20,8 +18,8 @@ $(function() {
   $('#evaluation_data_source').on('change', function(event) {
     $('.form-data-source').prop('disabled', true);
     $('.form-data-source').addClass('not-selected');
-    $('#evaluation_data_' + $(this).val()).prop('disabled', false);
-    $('#evaluation_data_' + $(this).val()).removeClass('not-selected');
+    $(`#evaluation_data_${$(this).val()}`).prop('disabled', false);
+    $(`#evaluation_data_${$(this).val()}`).removeClass('not-selected');
   });
 
   $('#table-evaluation').on('click', 'td', function(event) {
@@ -35,7 +33,7 @@ $(function() {
       return;
     }
 
-    open('/alterf/evaluations/' + row.attr('id'), '_blank');
+    open(`/alterf/evaluations/${row.attr('id')}`, '_blank');
   });
 
   $('#table-evaluation').on('ajax:success', function(event) {

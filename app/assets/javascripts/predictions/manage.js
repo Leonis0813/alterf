@@ -1,15 +1,14 @@
 $(function() {
-  const executeDialog = new bootstrap.Modal(document.getElementById('dialog-execute'));
-  const executeErrorDialog = new bootstrap.Modal(document.getElementById('dialog-execute-error'));
-
   $('#nav-link-prediction').addClass('active');
 
   $('#new_prediction').on('ajax:success', function(event) {
-    executeDialog.show();
+    const dialog = new bs.Modal(document.getElementById('dialog-execute'));
+    dialog.show();
   });
 
   $('#new_prediction').on('ajax:error', function(event) {
-    executeErrorDialog.show();
+    const dialog = new bs.Modal(document.getElementById('dialog-execute-error'));
+    dialog.show();
   });
 
   $('input[name="type"]:radio').on('change', function(event) {

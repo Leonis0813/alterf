@@ -13,7 +13,7 @@ const AnalysisResult = class {
   #requestAnalysis;
 
   constructor(analysisId) {
-    this.#requestAnalysis = d3.json('/alterf/api/analyses/' + analysisId);
+    this.#requestAnalysis = d3.json(`/alterf/api/analyses/${analysisId}`);
   }
 
   drawImportance() {
@@ -78,11 +78,11 @@ const AnalysisResult = class {
 
       if (width < decisionTree.getWidth()) {
         const width = decisionTree.getWidth() + 50;
-        d3.select('#tab-decision_tree').style('width', width + 'px');
+        d3.select('#tab-decision_tree').style('width', `${width}px`);
       }
       if (height < decisionTree.getHeight()) {
         const height = decisionTree.getHeight() + 100;
-        d3.select('#tab-decision_tree').style('height', height + 'px');
+        d3.select('#tab-decision_tree').style('height', `${height}px`);
       }
       decisionTree.drawNodes();
       decisionTree.drawLinks();

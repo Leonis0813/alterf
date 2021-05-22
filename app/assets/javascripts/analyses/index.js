@@ -25,15 +25,15 @@ $(function() {
   $('#analysis_data_source').on('change', function(event) {
     $('.form-data-source').prop('disabled', true);
     $('.form-block-data-source').addClass('not-selected');
-    $('#analysis_data_' + $(this).val()).prop('disabled', false);
-    $('#analysis_data_' + $(this).val()).parents('div').removeClass('not-selected');
+    $(`#analysis_data_${$(this).val()}`).prop('disabled', false);
+    $(`#analysis_data_${$(this).val()}`).parents('div').removeClass('not-selected');
   });
 
   $('tbody').on('click', '.btn-param', function(event) {
-    analysisId = $(this).parents('tr').attr('id')
+    const analysisId = $(this).parents('tr').attr('id');
     $.ajax({
       type: 'GET',
-      url: '/alterf/api/analyses/' + analysisId + '/parameter',
+      url: `/alterf/api/analyses/${analysisId}/parameter`,
     }).done(function(parameter) {
       $('#parameter-max_depth').text(parameter.max_depth || '指定なし');
       $('#parameter-max_features').text(parameter.max_features);
@@ -44,13 +44,13 @@ $(function() {
       showDialog('dialog-parameter');
     }).fail(function(xhr, status, error) {
       showDialog('dialog-parameter-error');
-    })
+    });
   });
 
   $('#tbody-analysis').on('click', '.download', function(event) {
-    analysisId = $(this).parents('tr').attr('id');
-    xhr = new XMLHttpRequest();
-    xhr.open('GET', '/alterf/analyses/' + analysisId + '/download');
+    const analysisId = $(this).parents('tr').attr('id');
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', `/alterf/analyses/${analysisId}/download`);
     xhr.responseType = 'blob';
     xhr.onload = function(e) {
       if (this.status == 200) {
@@ -63,21 +63,21 @@ $(function() {
       } else {
         showDialog('dialog-download-error');
       }
-    }
+    };
     xhr.send();
   });
 
   $('#btn-analysis-search').on('click', function(event) {
-    allQueries = $('#form-index').serializeArray();
-    queries = $.grep(allQueries, function(query) {
-      return query.name != "utf8" && query.value != ""
+    const allQueries = $('#form-index').serializeArray();
+    const queries = $.grep(allQueries, function(query) {
+      return query.name !== "utf8" && query.value !== "";
     });
 
     $.ajax({
       type: 'GET',
-      url: '/alterf/analyses?' + $.param(queries)
+      url: `/alterf/analyses?${$.param(queries)}`,
     }).done(function(data) {
-      location.href = '/alterf/analyses?' + $.param(queries);
+      location.href = `/alterf/analyses?${$.param(queries)}`;
     }).fail(function(xhr, status, error) {
       showDialog('dialog-execute-error');
     });
