@@ -22,32 +22,8 @@ span.first, span.prev, span.next, span.last {
   }
 }
 
-#collapse-parameter {
-  text-decoration: none !important;
-  color: black !important;
-}
-
 #table-analysis {
   font-size: 14px;
-}
-
-.link {
-  fill: none;
-  stroke: #ccc;
-  stroke-width: 2px;
-}
-
-.node circle {
-  stroke: steelblue;
-  stroke-width: 2px;
-}
-
-
-
-
-
-hr {
-  margin: 0px;
 }
 
 .table > thead > tr > th.rebuild {
@@ -68,8 +44,4 @@ hr {
 .pagination-info, .fmeasure-info {
   padding: 10px 0px;
   display: inline;
-}
-
-.prediction-result {
-  font-size: 1em;
 }

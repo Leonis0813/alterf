@@ -1,3 +1,3 @@
-import '../javascripts/analyses'
-import '../javascripts/channels/analyses'
-import '../stylesheets/analyses'
+import '../../stylesheets/analyses/index'
+import '../../javascripts/analyses/index'
+import '../../javascripts/channels/analyses'

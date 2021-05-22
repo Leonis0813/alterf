@@ -2,35 +2,31 @@
 
 <h3>分析結果</h3>
 <ul class='nav nav-tabs'>
-  <li class='active'>
-    <%= link_to '重要度', '#tab-importance', 'data-toggle' => 'tab' %>
+  <li class='nav-item active'>
+    <%= button_tag '重要度', class: 'nav-link active', 'data-bs-toggle' => 'tab', 'data-bs-target' => '#tab-importance', type: 'button', role: 'tab', 'aria-controls' => 'tab-importance', 'aria-selected' => true %>
   </li>
-  <li>
-    <%= link_to '決定木', '#tab-decision_tree', 'data-toggle' => 'tab' %>
+  <li class='nav-item'>
+    <%= button_tag '決定木', class: 'nav-link', 'data-bs-toggle' => 'tab', 'data-bs-target' => '#tab-decision_tree', type: 'button', role: 'tab', 'aria-controls' => 'tab-decision_tree', 'aria-selected' => true %>
   </li>
 </ul>
 
 <div class='tab-content'>
-  <div id='tab-importance' class='well tab-pane active'>
-    <h4>重要度</h4>
-    <svg id='importance'></svg>
+  <div id='tab-importance' class='card text-dark bg-light tab-pane active'>
+    <div class='card-body'>
+      <h4 class='card-title'>重要度</h4>
+      <svg id='importance'></svg>
+    </div>
   </div>
 
-  <div id='tab-decision_tree' class='well tab-pane'>
-    <h4>決定木</h4>
-    <div class='form-inline'>
-      <%= label_tag :tree_id, 'Tree ID' %>
-      <% options = @analysis.result.decision_trees.map(&:tree_id).sort %>
-      <%= select_tag :tree_id, options_for_select(options, 0), class: 'form-control' %>
+  <div id='tab-decision_tree' class='card text-dark bg-light tab-pane'>
+    <div class='card-body'>
+      <h4 class='card-title'>決定木</h4>
+      <div class='form-inline'>
+        <%= label_tag :tree_id, 'Tree ID' %>
+        <% options = @analysis.result.decision_trees.map(&:tree_id).sort %>
+        <%= select_tag :tree_id, options_for_select(options, 0), class: 'form-select' %>
+      </div>
+      <svg id='decision_tree'></svg>
     </div>
-    <svg id='decision_tree'></svg>
   </div>
 </div>
-
-<script>
-  $(document).ready(function() {
-    result = new AnalysisResult('<%= @analysis.analysis_id %>');
-    result.drawImportance();
-    result.drawTree(0);
-  });
-</script>

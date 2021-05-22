@@ -1,4 +1,4 @@
-class Tree {
+export default class Tree {
   #svg;
   #width;
   #height;
@@ -24,22 +24,24 @@ class Tree {
   }
 
   buildTreeStructure(tree) {
-    root = tree.nodes[0];
-    hierarchy = d3.hierarchy({
+    const that = this;
+
+    const root = tree.nodes[0];
+    const hierarchy = d3.hierarchy({
       node_id: root.node_id,
       name: root.feature_name,
       threshold: root.threshold,
       group: root.group,
-      children: this.#buildChildren(root.node_id, tree.nodes),
+      children: that.#buildChildren(root.node_id, tree.nodes),
     });
 
-    depths = hierarchy.descendants().map(function(node) {
+    const depths = hierarchy.descendants().map(function(node) {
       return node.depth;
     });
-    maxDepth = depths.reduce(function(a, b) {
+    const maxDepth = depths.reduce(function(a, b) {
       return Math.max(a, b);
     });
-    depthCount = {};
+    const depthCount = {};
     $.each(depths, function(i, depth) {
       if (depthCount[depth]) {
         depthCount[depth] += 1;
@@ -47,7 +49,7 @@ class Tree {
         depthCount[depth] = 1;
       }
     });
-    maxDepthCount = $.map(depthCount, function(depth, count) {
+    const maxDepthCount = $.map(depthCount, function(depth, count) {
       return count;
     }).reduce(function(a, b) {
       return Math.max(a, b);
@@ -61,7 +63,7 @@ class Tree {
     });
 
     this.#data = tree(hierarchy);
-    nodes = this.#data.descendants();
+    const nodes = this.#data.descendants();
     nodes.forEach(function(node) {
       node.x = node.x * maxDepth * 0.28;
       node.y = node.depth * 170;
@@ -84,9 +86,11 @@ class Tree {
   }
 
   drawNodes() {
-    nodes = this.#data.descendants();
+    const that = this;
 
-    g = this.#svg.selectAll('g.node')
+    const nodes = this.#data.descendants();
+
+    const g = this.#svg.selectAll('g.node')
       .data(nodes)
       .enter()
       .append('g')
@@ -134,10 +138,10 @@ class Tree {
         }
       });
 
-    leaves = $.grep(nodes, function(node, i) {
+    const leaves = $.grep(nodes, function(node, i) {
         return node.data.type === 'leaf';
     });
-    linearGradient = this.#svg.selectAll('linearGradient')
+    const linearGradient = this.#svg.selectAll('linearGradient')
       .data(leaves)
       .enter()
       .append('linearGradient')
@@ -150,13 +154,13 @@ class Tree {
       .attr('stop-color', 'red');
     linearGradient.append('stop')
       .attr('offset', function(leaf) {
-        return this.#winRate(leaf.data) + '%';
+        return that.#winRate(leaf.data) + '%';
       })
       .attr('stop-opacity', 0.7)
       .attr('stop-color', 'red');
     linearGradient.append('stop')
       .attr('offset', function(leaf) {
-        return this.#winRate(leaf.data) + '%';
+        return that.#winRate(leaf.data) + '%';
       })
       .attr('stop-opacity', 0.7)
       .attr('stop-color', 'blue')
@@ -167,23 +171,27 @@ class Tree {
   }
 
   drawLinks() {
+    const that = this;
+
     this.#svg.selectAll('path.link')
       .data(this.#data.descendants().slice(1))
       .enter()
       .insert('path', 'g')
       .attr('class', 'link')
       .attr('d', function(node) {
-        return this.#calcDiagonal(node, node.parent);
+        return that.#calcDiagonal(node, node.parent);
       });
   }
 
   #buildChildren(node_id, nodes) {
-    children = nodes.filter(function(node) {
+    const that = this;
+
+    const children = nodes.filter(function(node) {
       return node.parent_node_id === node_id;
     });
 
     if (children.length) {
-      children = children.map(function(child) {
+      return children.map(function(child) {
         return {
           node_id: child.node_id,
           name: child.feature_name,
@@ -192,10 +200,9 @@ class Tree {
           group: child.group,
           num_win: child.num_win,
           num_lose: child.num_lose,
-          children: this.#buildChildren(child.node_id, nodes),
+          children: that.#buildChildren(child.node_id, nodes),
         };
       });
-      return children;
     } else {
       return [];
     }

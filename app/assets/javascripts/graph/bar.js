@@ -1,4 +1,4 @@
-class Bar {
+export default class Bar {
   #svg;
 
   constructor(id, width, height) {

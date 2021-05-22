@@ -1,20 +1,25 @@
 $(function() {
+  const showDialog = function(id) {
+    const dialog = new bs.Modal(document.getElementById(id));
+    dialog.show();
+  };
+
   $('#nav-link-analysis').addClass('active');
 
   $('#new_analysis').on('ajax:success', function(event) {
-    bs.Modal.getInstance(document.getElementById('dialog-execute')).show();
+    showDialog('dialog-execute');
   });
 
   $('#new_analysis').on('ajax:error', function(event) {
-    bs.Modal.getInstance(document.getElementById('dialog-execute-error')).show();
+    showDialog('dialog-execute-error');
   });
 
   $('#table-analysis').on('ajax:success', '.rebuild', function(event) {
-    bs.Modal.getInstance(document.getElementById('dialog-execute')).show();
+    showDialog('dialog-execute');
   });
 
   $('#table-analysis').on('ajax:error', '.rebuild', function(event) {
-    bs.Modal.getInstance(document.getElementById('dialog-execute-error')).show();
+    showDialog('dialog-execute-error');
   });
 
   $('#analysis_data_source').on('change', function(event) {
@@ -36,9 +41,9 @@ $(function() {
       $('#parameter-min_samples_leaf').text(parameter.min_samples_leaf);
       $('#parameter-min_samples_split').text(parameter.min_samples_split);
       $('#parameter-num_tree').text(parameter.num_tree);
-      bs.Modal.getInstance(document.getElementById('dialog-parameter')).show();
+      showDialog('dialog-parameter');
     }).fail(function(xhr, status, error) {
-      bs.Modal.getInstance(document.getElementById('dialog-parameter-error')).show();
+      showDialog('dialog-parameter-error');
     })
   });
 
@@ -56,7 +61,7 @@ $(function() {
         $('<a>', {href: blobUrl, download: filename})[0].click();
         (URL || webkitURL).revokeObjectURL(blobUrl);
       } else {
-        bs.Modal.getInstance(document.getElementById('dialog-download-error')).show();
+        showDialog('dialog-download-error');
       }
     }
     xhr.send();
@@ -74,7 +79,7 @@ $(function() {
     }).done(function(data) {
       location.href = '/alterf/analyses?' + $.param(queries);
     }).fail(function(xhr, status, error) {
-      bs.Modal.getInstance(document.getElementById('dialog-execute-error')).show();
+      showDialog('dialog-execute-error');
     });
   });
 });
