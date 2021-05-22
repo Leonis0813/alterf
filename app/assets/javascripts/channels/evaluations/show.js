@@ -1,9 +1,10 @@
-import consumer from './consumer';
+import consumer from '../consumer';
 
 consumer.subscriptions.create('Evaluation::DatumChannel', {
   received(datum) {
-    if (location.pathname !== `/alterf/evaluations/${datum.evaluation_id}`)
+    if (location.pathname !== `/alterf/evaluations/${datum.evaluation_id}`) {
       return;
+    }
 
     switch (datum.message_type) {
       case 'create':
@@ -61,4 +62,4 @@ consumer.subscriptions.create('Evaluation::DatumChannel', {
     row.removeClass('warning');
     row.addClass(includeTruePositive ? 'success' : 'danger');
   }
-}
+});

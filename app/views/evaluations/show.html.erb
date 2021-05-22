@@ -1,29 +1,33 @@
-<div class='col-lg-12 well'>
-  <h3 class='table-title'>評価結果詳細</h3>
+<%= javascript_pack_tag 'evaluations/show' %>
 
-  <svg id='performance'></svg>
+<div class='col-lg-12 card text-dark bg-light'>
+  <div class='card-body'>
+    <h4 class='card-title table-title'>評価結果詳細</h4>
 
-  <table class='table table-hover'>
-    <thead>
-      <th width='10%'>No</th>
-      <th width='30%'>レース名</th>
-      <th width='50%'>予測結果</th>
-      <th width='10%'>正解</th>
-    </thead>
-    <tbody>
-      <%= render @evaluation.data %>
-    </tbody>
-  </table>
+    <svg id='performance'></svg>
+
+    <table class='table table-hover'>
+      <thead>
+        <th width='10%'>No</th>
+        <th width='30%'>レース名</th>
+        <th width='50%'>予測結果</th>
+        <th width='10%'>正解</th>
+      </thead>
+      <tbody>
+        <%= render @evaluation.data %>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <script>
-  <% values = [
-       @evaluation.f_measure || 0,
-       @evaluation.specificity || 0,
-       @evaluation.recall || 0,
-       @evaluation.precision || 0,
-     ] %>
-  $(document).ready(function() {
+  $(function() {
+    <% values = [
+         @evaluation.f_measure || 0,
+         @evaluation.specificity || 0,
+         @evaluation.recall || 0,
+         @evaluation.precision || 0,
+       ] %>
     result = new EvaluationResult();
     result.drawPerformance(<%= values %>);
   });

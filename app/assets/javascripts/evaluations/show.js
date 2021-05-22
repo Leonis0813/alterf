@@ -1,4 +1,4 @@
-const EvaluationResult = class {
+export default class EvaluationResult {
   static WIDTH = 1100;
   static HEIGHT = 200;
   static X_AXIS = {
@@ -15,10 +15,14 @@ const EvaluationResult = class {
   #scale;
 
   constructor() {
-    this.#performanceBar = new Bar('performance', this.WIDTH, this.HEIGHT);
+    const width = this.constructor.WIDTH;
+    const height = this.constructor.HEIGHT;
+    const x_axis = this.constructor.X_AXIS;
+
+    this.#performanceBar = new Bar('performance', width, height);
 
     this.#scale = {
-      x: d3.scaleLinear().range(this.X_AXIS.RANGE),
+      x: d3.scaleLinear().range(x_axis.RANGE),
       y: d3.scaleBand().rangeRound([165, 25]),
     };
   }
@@ -30,10 +34,10 @@ const EvaluationResult = class {
 
     this.#scale.x.domain([0, 1]);
     this.#scale.y.domain(labels);
-    this.#performanceBar.drawXAxis(x_axis.ORIGIN, this.#scale.x);
-    this.#performanceBar.drawYAxis(y_axis.ORIGIN, this.#scale.y);
 
     const bars = this.#createBars(values);
+    this.#performanceBar.drawXAxis(x_axis.ORIGIN, this.#scale.x);
+    this.#performanceBar.drawYAxis(y_axis.ORIGIN, this.#scale.y);
     this.#performanceBar.drawBars(bars, {color: 'orange', opacity: 0.5});
   }
 
@@ -45,7 +49,7 @@ const EvaluationResult = class {
       .transition()
       .duration(1000)
       .attr('width', function(bar) {
-        that.#scale.x(values[bar.index]);
+        return that.#scale.x(values[bar.index]);
       });
   }
 
@@ -65,3 +69,4 @@ const EvaluationResult = class {
       };
     });
   }
+};

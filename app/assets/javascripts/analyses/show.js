@@ -103,7 +103,7 @@ const AnalysisResult = class {
       };
     });
   }
-}
+};
 
 $(function() {
   $('#tree_id').on('change', function() {

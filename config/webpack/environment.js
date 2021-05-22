@@ -5,8 +5,8 @@ if (process.env.RAILS_RELATIVE_URL_ROOT) {
   config.publicPathWithoutCDN = path.join(process.env.RAILS_RELATIVE_URL_ROOT, `${config.public_output_path}/`);
 }
 
-const { environment } = require('@rails/webpacker')
-const webpack = require('webpack')
+const { environment } = require('@rails/webpacker');
+const webpack = require('webpack');
 
 environment.plugins.prepend(
   'Provide',
@@ -19,4 +19,4 @@ environment.plugins.prepend(
   })
 )
 
-module.exports = environment
+module.exports = environment;
