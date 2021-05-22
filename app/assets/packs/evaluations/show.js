@@ -1,3 +1,4 @@
+import '../../stylesheets/evaluations/show';
 import EvaluationResult from '../../javascripts/evaluations/show';
 import '../../javascripts/channels/evaluations/show';
 import Bar from '../../javascripts/graph/bar';

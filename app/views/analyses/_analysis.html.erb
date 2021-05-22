@@ -23,7 +23,7 @@
   <% case analysis.state %>
   <% when 'processing' %>
     <span class='processing'><%= state_to_title(analysis.state) %></span>
-    <i class='fa fa-refresh fa-spin'></i>
+    <i class='fas fa-sync-alt fa-spin'></i>
   <% when 'completed' %>
     <%= link_to analysis_path(analysis.analysis_id), target: :_blank, rel: 'noopener noreferrer' do %>
       <button class='btn btn-sm btn-success' title='結果を確認'>

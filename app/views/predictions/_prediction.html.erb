@@ -17,14 +17,14 @@
   </td>
   <td class='td-result'>
   <% if prediction.state == 'processing' %>
-    <span class='processing'>実行中</span><i class='fa fa-refresh fa-spin'></i>
+    <span class='processing'>実行中</span><i class='fas fa-sync-alt fa-spin'></i>
   <% elsif prediction.state == 'completed' %>
     <% numbers = prediction.results.where(won: true).map(&:number).sort %>
     <span title='<%= numbers.join(',') %>' style='padding: 4px'>
     <% numbers.first(6).each_with_index do |number, i| %>
-      <span class='fa-stack prediction-result' style='color: <%= number_color(i) %>'>
-        <i class='fa fa-circle fa-stack-2x'></i>
-        <i class='fa fa-stack-1x fa-inverse'><%= number %></i>
+      <span class='fa-layers fa-fw fa-2x prediction-result' style='color: <%= number_color(i) %>'>
+        <i class='fa fa-circle'></i>
+        <i class='fa-layers-text fa-inverse fa-xs'><%= number %></i>
       </span>
     <% end %>
     <% if numbers.size > 6 %>

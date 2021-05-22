@@ -39,9 +39,9 @@ consumer.subscriptions.create('PredictionChannel', {
 
     $.each(wons, function(i, number) {
       column.append(
-        `<span class='fa-stack prediction-result' style='color: ${colors[i] || 'black'}'>` +
-          '<i class="fa fa-circle fa-stack-2x"></i>' +
-          `<i class="fa fa-stack-1x fa-inverse">${number}</i>` +
+        `<span class='fa-layers fa-fw fa-2x prediction-result' style='color: ${colors[i] || 'black'}'>` +
+          '<i class="fa fa-circle"></i>' +
+          `<i class="fa-layers-text fa-inverse fa-xs">${number}</i>` +
         '</span>'
       );
     });

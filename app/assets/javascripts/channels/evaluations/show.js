@@ -36,9 +36,9 @@ consumer.subscriptions.create('Evaluation::DatumChannel', {
         '</td>' +
         '<td class="result" style="padding: 4px"></td>' +
         '<td style="padding: 4px">' +
-          '<span class="fa-stack prediction-result" style="color: limegreen">' +
-            '<i class="fa fa-circle fa-stack-2x"></i>' +
-            `<i class='fa fa-stack-1x fa-inverse'>${datum.ground_truth}</i>` +
+          '<span class="fa-layers fa-fw fa-2x prediction-result" style="color: limegreen">' +
+            '<i class="fa fa-circle"></i>' +
+            `<i class='fa-layers-text fa-inverse fa-xs'>${datum.ground_truth}</i>` +
           '</span>' +
         '</td>' +
       '</tr>'
@@ -52,9 +52,9 @@ consumer.subscriptions.create('Evaluation::DatumChannel', {
       const color = number === datum.ground_truth ? 'limegreen' : 'gray';
       const includeTruePositive = includeTruePositive || color === 'limegreen';
       column.append(
-        `<span class='fa-stack prediction-result' style='color: ${color}'>` +
-          '<i class="fa fa-circle fa-stack-2x"></i>' +
-          `<i class='fa fa-stack-1x fa-inverse'>${number}</i>` +
+        `<span class='fa-layers fa-fw fa-2x prediction-result' style='color: ${color}'>` +
+          '<i class="fa fa-circle"></i>' +
+          `<i class='fa-layers-text fa-inverse fa-xs'>${number}</i>` +
         '</span>'
       );
     });

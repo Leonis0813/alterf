@@ -57,7 +57,7 @@ consumer.subscriptions.create('AnalysisChannel', {
       case 'processing':
         column.append(
           '<span class="processing">実行中</span>' +
-          '<i class="fa fa-refresh fa-spin"></i>'
+          '<i class="fas fa-sync-alt fa-spin"></i>'
         );
         break;
       case 'completed':
