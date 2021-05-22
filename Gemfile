@@ -25,7 +25,6 @@ gem 'webpacker'
 group :development do
   gem 'erb_lint', '< 0.0.36'
   gem 'pronto'
-  gem 'pronto-coffeelint', require: false
   gem 'pronto-erb_lint', require: false
   gem 'pronto-rubocop', require: false
   gem 'rubocop'
