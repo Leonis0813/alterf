@@ -1,3 +1,3 @@
-import '../javascripts/evaluations'
+import '../stylesheets/evaluations/manage'
+import '../javascripts/evaluations/manage'
 import '../javascripts/channels/evaluations'
-import '../stylesheets/evaluations'

@@ -1,3 +1,3 @@
-import '../javascripts/predictions'
+import '../stylesheets/predictions/manage'
+import '../javascripts/predictions/manage'
 import '../javascripts/channels/predictions'
-import '../stylesheets/predictions'
