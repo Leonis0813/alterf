@@ -1,15 +1,11 @@
-import consumer from './consumer'
+import consumer from '../consumer';
 
 consumer.subscriptions.create('PredictionChannel', {
   received(prediction) {
-    if (location.pathname != '/alterf/predictions') {
-      return;
-    }
-
     const stateToClassMap = {processing: 'warning', completed: 'success', error: 'danger'};
     const displayedState = {processing: '実行中', completed: '完了', error: 'エラー'};
 
-    const trId = '#' + prediction.prediction_id;
+    const trId =`#${prediction.prediction_id}`;
     if ($(trId).length) {
       switch (prediction.state) {
         case 'processing':
@@ -23,7 +19,7 @@ consumer.subscriptions.create('PredictionChannel', {
         case 'error':
           $(trId).removeClass('warning');
           $(trId).addClass(stateToClassMap[prediction.state]);
-          $(trId + ' > td[class*=td-result]').append(
+          $(`${trId} > td[class*=td-result]`).append(
             '<span class="glyphicon glyphicon-remove" style="color: red"/>'
           );
       }
@@ -37,16 +33,16 @@ consumer.subscriptions.create('PredictionChannel', {
 
   showResults: function(trId, wons) {
     const colors = ['orange', 'skyblue', 'magenta'];
+
     const column = $(trId + ' > td[class*=td-result]');
-    column.append(
-      '<span title="' + wons.join(',') + '" style="padding: 4px">'
-    );
+    column.append(`<span title='${wons.join(',')}' style='padding: 4px'>`);
+
     $.each(wons, function(i, number) {
       column.append(
-      '<span class="fa-stack prediction-result" style="color: ' + (colors[i] || 'black') + '">' +
-        '<i class="fa fa-circle fa-stack-2x"></i>' +
-        '<i class="fa fa-stack-1x fa-inverse">' + number + '</i>' +
-      '</span>'
+        `<span class='fa-stack prediction-result' style='color: ${colors[i] || 'black'}'>` +
+          '<i class="fa fa-circle fa-stack-2x"></i>' +
+          `<i class="fa fa-stack-1x fa-inverse">${number}</i>` +
+        '</span>'
       );
     });
     if (wons.length > 6) {
