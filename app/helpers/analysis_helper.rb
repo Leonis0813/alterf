@@ -51,9 +51,6 @@ module AnalysisHelper
         content_tag(:span, nil, class: 'bi bi-download', title: '結果をダウンロード')
       end
     end
-#    content_tag(:button, class: 'btn btn-light btn-sm', title: '結果をダウンロード') do
-#      content_tag(:span, nil, class: 'bi bi-download')
-#    end
   end
 
   private

@@ -100,7 +100,7 @@ shared_examples 'テストデータがリンクになっていること' do
       link = test_data.search("a[@href='#{prediction.test_data}']")
       is_asserted_by { link.present? }
 
-      icon = link.search('span[@class="glyphicon glyphicon-new-window new-window"]')
+      icon = link.search('span[@class="bi bi-box-arrow-up-right"]')
       is_asserted_by { icon.present? }
     end
   end
@@ -135,7 +135,7 @@ shared_examples 'ジョブがエラー状態になっていること' do
 
     @predictions.each_with_index do |_, i|
       error_span = rows[i].search('td[@class="td-result"]')
-                          .search('span[@class="glyphicon glyphicon-remove"]')
+                          .search('span[@class="bi bi-x"]')
       is_asserted_by { error_span.present? }
     end
   end

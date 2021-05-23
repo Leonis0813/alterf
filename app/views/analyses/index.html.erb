@@ -54,7 +54,7 @@
               <%= f.text_field :num_entry, class: 'form-control', name: :num_entry %>
             </div>
             <div class='mb-3'>
-              <div id='label-index-parameter' class='label-bold'>パラメーター</div>
+              <div id='label-register-parameter' class='label-bold'>パラメーター</div>
               <%= f.fields_for :parameter do |param_form| %>
                 <div class='mb-2'>
                   <%= param_form.label :max_depth, 'max_depth' %>
@@ -163,7 +163,7 @@
 
   <div class='col-lg-9 card text-dark bg-light'>
     <div class='card-body'>
-      <h4 class='card-title'>ジョブ実行履歴</h4>
+      <h4 class='card-title table-title'>ジョブ実行履歴</h4>
       <span id='page-info'>
         <%= render partial: 'layouts/page_info', locals: {resources: @analyses} %>
       </span>
