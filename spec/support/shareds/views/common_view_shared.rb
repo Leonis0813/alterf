@@ -5,12 +5,15 @@ shared_context 'HTML初期化' do
 end
 
 shared_examples 'ヘッダーが表示されていること' do
-  base_xpath =
-    '//div[@class="navbar navbar-default navbar-static-top"]/div[@class="container"]'
+  base_xpath = [
+    '//nav[@class="navbar navbar-expand-lg navbar-dark bg-dark"]',
+    'div[@class="container-fluid"]',
+  ].join('/')
+
   ul_xpath = [
     base_xpath,
-    'div[@class="navbar-collapse collapse navbar-responsive-collapse"]',
-    'ul[@class="nav navbar-nav"]',
+    'div[@class="collapse navbar-collapse"]',
+    'ul[@class="navbar-nav"]',
   ].join('/')
 
   it 'アプリ名が表示されていること' do
@@ -25,7 +28,7 @@ shared_examples 'ヘッダーが表示されていること' do
     ['/evaluations', '評価画面'],
   ].each do |href, text|
     it 'リンクが表示されていること' do
-      link = @html.xpath("#{ul_xpath}/li/a[@href='#{href}']")
+      link = @html.xpath("#{ul_xpath}/li[@class='nav-item']/a[@href='#{href}']")
       is_asserted_by { link.present? }
       is_asserted_by { link.text == text }
     end

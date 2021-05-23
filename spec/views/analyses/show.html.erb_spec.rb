@@ -27,17 +27,26 @@ describe 'analyses/show', type: :view do
     %w[decision_tree 決定木],
   ].each do |tab_id, text|
     it "#{text}を表示するタブが表示されていること" do
-      link_xpath = "#{content_xpath}/ul[@class='nav nav-tabs']" \
-                   "/li/a[@href='#tab-#{tab_id}']"
+      link_xpath = [
+        "#{content_xpath}/ul[@class='nav nav-tabs']",
+        'li[contains(@class, "nav-item")]',
+        "button[contains(@class, 'nav-link')][@data-bs-target='#tab-#{tab_id}']",
+      ].join('/')
+
       link = @html.xpath(link_xpath)
       is_asserted_by { link.present? }
       is_asserted_by { link.text == text }
     end
 
     it "#{text}描画領域があること" do
-      base_xpath = "#{content_xpath}/div[@class='tab-content']/div[@id='tab-#{tab_id}']"
+      base_xpath = [
+        content_xpath,
+        'div[@class="tab-content"]',
+        "div[@id='tab-#{tab_id}'][contains(@class, 'card')]",
+        'div[@class="card-body"]',
+      ].join('/')
 
-      title = @html.xpath("#{base_xpath}/h4")
+      title = @html.xpath("#{base_xpath}/h4[@class='card-title']")
       is_asserted_by { title.present? }
       is_asserted_by { title.text.strip == text }
 
@@ -47,26 +56,22 @@ describe 'analyses/show', type: :view do
   end
 
   it '決定木選択フォームが表示されていること' do
-    form_xpath = "#{content_xpath}/div[@class='tab-content']" \
-                 '/div[@id="tab-decision_tree"]/div[@class="form-inline"]'
+    form_xpath = [
+      content_xpath,
+      'div[@class="tab-content"]',
+      'div[@id="tab-decision_tree"]',
+      'div[@class="card-body"]',
+      'div[@class="form-inline"]',
+    ].join('/')
     select_label = @html.xpath("#{form_xpath}/label[@for='tree_id']")
     is_asserted_by { select_label.present? }
     is_asserted_by { select_label.text == 'Tree ID' }
 
-    select_form_xpath = "#{form_xpath}/select[@id='tree_id']"
+    select_form_xpath = "#{form_xpath}/select[@id='tree_id'][@class='form-select']"
     select_form = @html.xpath(select_form_xpath)
     is_asserted_by { select_form.present? }
 
     selected_option = @html.xpath("#{select_form_xpath}/option[@selected]")
     is_asserted_by { selected_option.attribute('value').value == '0' }
-  end
-
-  it '描画クラスのコンストラクタに引数が設定されていること' do
-    script_lines = @html.search('script').children.first.text.lines
-    is_asserted_by do
-      script_lines.any? do |line|
-        line.strip.include?("new AnalysisResult('#{@analysis.analysis_id}');")
-      end
-    end
   end
 end
