@@ -36,20 +36,14 @@ module AnalysisHelper
   end
 
   def question_sign(param_name)
-    content_tag(
-      :span,
-      nil,
-      class: 'bi bi-question-circle-fill', title: question_title[param_name],
-    )
+    tag.span(class: 'bi bi-question-circle-fill', title: question_title[param_name])
   end
 
   def analysis_result_download_button(analysis)
     return unless analysis.state == 'completed'
 
-    link_to(analysis_download_path(analysis.analysis_id), remote: true) do
-      content_tag(:button, class: 'btn btn-light btn-sm') do
-        content_tag(:span, nil, class: 'bi bi-download', title: '結果をダウンロード')
-      end
+    tag.button(class: 'btn btn-light btn-sm') do
+      tag.span(class: 'bi bi-download', title: '結果をダウンロード')
     end
   end
 

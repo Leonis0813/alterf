@@ -5,12 +5,13 @@
 
 <ul class='nav nav-tabs' style='border-bottom: 0px'>
   <li class='nav-item'>
-    <%= button_tag id: 'collapse-form', class: 'btn btn-light nav-link', 'data-bs-toggle' => 'collapse', 'data-bs-target' => '#form-evaluation', type: 'button', 'aria-expanded' => true, 'aria-controls' => 'form-evaluation'  do %>
+    <% params = collapse_params('form-evaluation', true) %>
+    <%= button_tag {id: 'collapse-form', class: 'btn btn-light nav-link'}.merge(params) do %>
       <span class='bi bi-dash-circle' aria-hidden='true'></span>
     <% end %>
   </li>
   <li class='nav-item active'>
-    <%= button_tag 'ジョブ登録', id: 'tab-register', class: 'nav-link', 'data-bs-toggle' => 'tab', 'data-bs-target' => '#new-evaluation', type: 'button', role: 'tab', 'aria-controls' => 'new-evaluation', 'aria-selected' => true %>
+    <%= button_tag 'ジョブ登録', {id: 'tab-register'}.merge(tab_params('new-evaluation', true)) %>
   </li>
 </ul>
 
