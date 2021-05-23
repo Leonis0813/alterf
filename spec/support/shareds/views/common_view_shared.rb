@@ -35,23 +35,15 @@ shared_examples 'ヘッダーが表示されていること' do
   end
 end
 
-shared_examples 'タイトルが表示されていること' do |expected_title|
-  it do
-    title = @html.xpath("#{form_panel_xpath}/h3")
-    is_asserted_by { title.present? }
-    is_asserted_by { title.text.strip == expected_title }
-  end
-end
-
 shared_examples '表示件数情報が表示されていること' do |total: 0, from: 0, to: 0|
   it 'タイトルが表示されていること' do
-    title = @html.xpath("#{table_panel_xpath}/h3")
+    title = @html.xpath("#{table_panel_xpath}/h4[@class='card-title table-title']")
     is_asserted_by { title.present? }
     is_asserted_by { title.text == 'ジョブ実行履歴' }
   end
 
   it '件数情報が表示されていること' do
-    number = @html.xpath("#{table_panel_xpath}/span[@id='page-info']/h4")
+    number = @html.xpath("#{table_panel_xpath}/span[@id='page-info']/h5")
     is_asserted_by { number.present? }
     is_asserted_by { number.text == "#{total}件中#{from}〜#{to}件を表示" }
   end

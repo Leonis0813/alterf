@@ -9,7 +9,7 @@
   <% if prediction.test_data.match(URI.regexp(%w[http https])) %>
     <%= link_to prediction.test_data, {:target => :_blank} do %>
       <%= link_text(prediction.test_data) %>
-      <span class='glyphicon glyphicon-new-window new-window'></span>
+      <span class='bi bi-box-arrow-up-right'></span>
     <% end %>
   <% else %>
     <%= prediction.test_data %>
