@@ -39,7 +39,7 @@ module AnalysisHelper
     content_tag(
       :span,
       nil,
-      class: 'glyphicon glyphicon-question-sign', title: question_title[param_name],
+      class: 'bi bi-question-circle-fill', title: question_title[param_name],
     )
   end
 

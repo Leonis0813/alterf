@@ -20,7 +20,7 @@ consumer.subscriptions.create('PredictionChannel', {
           $(trId).removeClass('warning');
           $(trId).addClass(stateToClassMap[prediction.state]);
           $(`${trId} > td[class*=td-result]`).append(
-            '<span class="glyphicon glyphicon-remove" style="color: red"/>'
+            '<span class="bi bi-x" style="color: red"/>'
           );
       }
     } else {

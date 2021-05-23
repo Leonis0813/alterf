@@ -50,7 +50,7 @@ consumer.subscriptions.create('EvaluationChannel', {
     $(`${trId} > td.download`).append(
       `<a data-remote='true' href='${href}'>` +
         '<button class="btn btn-success">' +
-          '<span class="glyphicon glyphicon-download-alt"></span>' +
+          '<span class="bi bi-download"></span>' +
         '</button>' +
       '</a>'
     );
