@@ -37,7 +37,7 @@ end
 
 shared_examples '表示件数情報が表示されていること' do |total: 0, from: 0, to: 0|
   it 'タイトルが表示されていること' do
-    title = @html.xpath("#{table_panel_xpath}/h4[@class='card-title table-title']")
+    title = @html.xpath(table_title_xpath)
     is_asserted_by { title.present? }
     is_asserted_by { title.text == 'ジョブ実行履歴' }
   end

@@ -28,6 +28,10 @@ module CommonViewHelper
     ].join('/')
   end
 
+  def table_title_xpath
+    [table_panel_xpath, 'h4[@class="card-title table-title"]'].join('/')
+  end
+
   def paging_xpath
     [
       table_panel_xpath,

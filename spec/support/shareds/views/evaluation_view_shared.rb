@@ -30,14 +30,24 @@ end
 
 shared_examples '入力フォーム用のタブが表示されていること' do
   it '表示切り替え用のタブが表示されていること' do
-    collapse = @html.xpath("#{form_tab_xpath}/li/a[@id='collapse-form']")
+    xpath = [
+      form_tab_xpath,
+      'li[@class="nav-item"]',
+      'button[@id="collapse-form"]',
+    ].join('/')
+    collapse = @html.xpath(xpath)
     is_asserted_by { collapse.present? }
   end
 
   it 'ジョブ登録用のタブが表示されていること' do
-    tab_register_xpath = "#{form_tab_xpath}/li[@class='active']/a[@id='tab-register']"
-    tab_register = @html.xpath(tab_register_xpath)
+    xpath = [
+      form_tab_xpath,
+      'li[@class="nav-item active"]',
+      'button[@id="tab-register"][@class="nav-link"][@data-bs-target="#new-evaluation"]',
+    ].join('/')
+    tab_register = @html.xpath(xpath)
     is_asserted_by { tab_register.present? }
+    is_asserted_by { tab_register.text.strip == 'ジョブ登録' }
   end
 
   it_behaves_like 'ジョブ登録フォームが表示されていること'
@@ -81,22 +91,20 @@ shared_examples 'ジョブ登録フォームが表示されていること' do
     end
   end
 
-  it '非表示で無効になっているファイル入力フォームがあること' do
-    xpath = "#{input_xpath}/input[@id='evaluation_data_file']" \
-            "[@class='form-data-source not-selected'][@disabled]"
-    is_asserted_by { @html.xpath(xpath).present? }
-  end
-
-  it '非表示で無効になっているテキスト入力フォームがあること' do
-    xpath = "#{input_xpath}/textarea[@id='evaluation_data_text']" \
-            "[@class='form-control form-data-source not-selected'][@disabled]"
-    is_asserted_by { @html.xpath(xpath).present? }
-  end
-
-  it '非表示で無効になっているデータ数入力フォームがあること' do
-    xpath = "#{input_xpath}/input[@id='evaluation_data_random']" \
-            "[@class='form-control form-data-source not-selected'][@disabled]"
-    is_asserted_by { @html.xpath(xpath).present? }
+  [
+    %w[file input ファイル],
+    %w[text textarea テキスト],
+    %w[random input データ数],
+  ].each do |id, tag, desc|
+    it "非表示で無効になっている#{desc}入力フォームがあること" do
+      xpath = [
+        input_xpath,
+        "#{tag}[@id='evaluation_data_#{id}'][@disabled]" \
+        '[@class="form-control form-data-source not-selected"][@disabled]',
+      ].join('/')
+      form = @html.xpath(xpath)
+      is_asserted_by { form.present? }
+    end
   end
 
   [
@@ -104,8 +112,12 @@ shared_examples 'ジョブ登録フォームが表示されていること' do
     %w[reset リセット],
   ].each do |type, value|
     it "typeが#{type}のボタンがあること" do
-      xpath = "#{form_xpath}/div[@class='row text-right']/div[@class='col-xs-12']" \
-              "/input[@type='#{type}']"
+      xpath = [
+        form_xpath,
+        'div[@class="row text-end"]',
+        'div[@class="col-12"]',
+        "input[@type='#{type}']",
+      ].join('/')
       button = @html.xpath(xpath)
       is_asserted_by { button.present? }
       is_asserted_by { button.attribute('value').value == value }
@@ -116,7 +128,7 @@ end
 shared_examples '評価ジョブテーブルが表示されていること' do |rows: 0|
   before { @table = @html.xpath(table_xpath) }
 
-  it '8列のテーブルが表示されていること' do
+  it '10列のテーブルが表示されていること' do
     is_asserted_by { @table.search('thead/th').size == 10 }
   end
 
