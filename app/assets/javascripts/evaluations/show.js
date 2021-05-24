@@ -70,3 +70,7 @@ export default class EvaluationResult {
     });
   }
 };
+
+$(function() {
+  $('#nav-link-evaluation').addClass('active');
+});

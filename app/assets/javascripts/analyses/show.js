@@ -106,6 +106,8 @@ const AnalysisResult = class {
 };
 
 $(function() {
+  $('#nav-link-analysis').addClass('active');
+
   $('#tree_id').on('change', function() {
     $('#decision_tree').children().remove();
     result.drawTree(parseInt($(this).val()));
