@@ -9,16 +9,16 @@ consumer.subscriptions.create('PredictionChannel', {
     if ($(trId).length) {
       switch (prediction.state) {
         case 'processing':
-          $(trId).addClass(stateToClassMap[prediction.state]);
+          $(trId).addClass(`table-${stateToClassMap[prediction.state]}`);
           break;
         case 'completed':
-          $(trId).removeClass('warning');
-          $(trId).addClass(stateToClassMap[prediction.state]);
+          $(trId).removeClass('table-warning');
+          $(trId).addClass(`table-${stateToClassMap[prediction.state]}`);
           this.showResults(trId, prediction.wons);
           break;
         case 'error':
-          $(trId).removeClass('warning');
-          $(trId).addClass(stateToClassMap[prediction.state]);
+          $(trId).removeClass('table-warning');
+          $(trId).addClass(`table-${stateToClassMap[prediction.state]}`);
           $(`${trId} > td[class*=td-result]`).append(
             '<span class="bi bi-x" style="color: red"/>'
           );
