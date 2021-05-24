@@ -6,7 +6,7 @@
 <ul class='nav nav-tabs' style='border-bottom: 0px'>
   <li class='nav-item'>
     <% params = collapse_params('form-evaluation', true) %>
-    <%= button_tag {id: 'collapse-form', class: 'btn btn-light nav-link'}.merge(params) do %>
+    <%= button_tag nil, {id: 'collapse-form', class: 'btn btn-light nav-link'}.merge(params) do %>
       <span class='bi bi-dash-circle' aria-hidden='true'></span>
     <% end %>
   </li>

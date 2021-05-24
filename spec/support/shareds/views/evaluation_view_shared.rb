@@ -43,7 +43,8 @@ shared_examples '入力フォーム用のタブが表示されていること' d
     xpath = [
       form_tab_xpath,
       'li[@class="nav-item active"]',
-      'button[@id="tab-register"][@class="nav-link"][@data-bs-target="#new-evaluation"]',
+      'button[@id="tab-register"][@class="nav-link active"]' \
+      '[@data-bs-target="#new-evaluation"]',
     ].join('/')
     tab_register = @html.xpath(xpath)
     is_asserted_by { tab_register.present? }
