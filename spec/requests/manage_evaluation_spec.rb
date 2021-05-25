@@ -17,20 +17,13 @@ describe 'ブラウザで予測する', type: :request do
     describe 'モデルを指定せずに実行する' do
       before(:all) do
         @driver.find_element(:xpath, '//form//input[@value="実行"]').click
-        @wait.until { @driver.find_element(:class, 'modal-body').displayed? }
+        @wait.until { @driver.find_element(:id, 'dialog-execute-error').displayed? }
+        @dialog = @driver.find_element(:id, 'dialog-execute-error')
       end
 
-      it 'タイトルが正しいこと' do
-        xpath = '//div[@class="modal-header"]/h5[@class="modal-title"]'
-        text = 'エラーが発生しました'
-        is_asserted_by { @driver.find_element(:xpath, xpath).text == text }
-      end
-
-      it 'エラーメッセージが正しいこと' do
-        xpath = '//div[@class="modal-body"]/div'
-        text = '入力値を見直してください'
-        is_asserted_by { @driver.find_element(:xpath, xpath).text == text }
-      end
+      it_behaves_like 'ダイアログが正しく表示されていること',
+                      'エラーが発生しました',
+                      '入力値を見直してください'
 
       describe '評価データを指定方法をファイルに変更する' do
         before(:all) do
@@ -44,7 +37,9 @@ describe 'ブラウザで予測する', type: :request do
           element = @driver.find_element(:id, 'evaluation_data_file')
 
           is_asserted_by { @wait.until { element.enabled? } }
-          is_asserted_by { element.attribute('class') == 'form-data-source' }
+          is_asserted_by do
+            element.attribute('class') == 'form-control form-data-source'
+          end
         end
       end
 
