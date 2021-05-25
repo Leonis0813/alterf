@@ -12,7 +12,7 @@
         <%= button_tag '登録', tab_params('new-analysis', true) %>
       </li>
       <li class='nav-item'>
-        <%= button_tag '検索', tab_params('search-form', false) %>
+        <%= button_tag '検索', tab_params('search-form', false).merge(id: 'tab-index') %>
       </li>
     </ul>
 

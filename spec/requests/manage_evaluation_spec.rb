@@ -21,7 +21,7 @@ describe 'ブラウザで予測する', type: :request do
       end
 
       it 'タイトルが正しいこと' do
-        xpath = '//div[@class="modal-header"]/h4[@class="modal-title"]'
+        xpath = '//div[@class="modal-header"]/h5[@class="modal-title"]'
         text = 'エラーが発生しました'
         is_asserted_by { @driver.find_element(:xpath, xpath).text == text }
       end
