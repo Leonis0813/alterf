@@ -1,3 +1,7 @@
+# 4.22.1 (2021/05/27)
+- [REFACTOR] javascripts and stylesheets with ES6
+- [CHANGE] compile process to webpacker
+
 # 4.22.0 (2021/05/13)
 - [UPDATE] analysis view to specify training data
 
