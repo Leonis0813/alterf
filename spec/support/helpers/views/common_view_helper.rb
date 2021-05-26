@@ -17,11 +17,19 @@ module CommonViewHelper
   end
 
   def input_xpath
-    [form_xpath, 'div[@class="form-group"]'].join('/')
+    [form_xpath, 'div[@class="mb-3"]'].join('/')
   end
 
   def table_panel_xpath
-    [row_xpath, 'div[@class="col-lg-8 well"]'].join('/')
+    [
+      row_xpath,
+      'div[@class="col-lg-8 card text-dark bg-light"]',
+      'div[@class="card-body"]',
+    ].join('/')
+  end
+
+  def table_title_xpath
+    [table_panel_xpath, 'h4[@class="card-title table-title"]'].join('/')
   end
 
   def paging_xpath

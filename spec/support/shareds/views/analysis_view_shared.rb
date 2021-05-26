@@ -34,16 +34,26 @@ shared_examples '分析情報入力フォームが表示されていること' d
   [
     %w[登録 new-analysis],
     %w[検索 search-form],
-  ].each do |tab_name, tab_href|
+  ].each do |tab_name, tab_id|
     it "#{tab_name}タブが表示されていること" do
-      tab = @html.xpath("#{form_tab_xpath}/li/a[@href='##{tab_href}']")
+      xpath = [
+        form_tab_xpath,
+        'li[@class="nav-item"]',
+        "button[contains(@class, 'nav-link')][@data-bs-target='##{tab_id}']",
+      ].join('/')
+      tab = @html.xpath(xpath)
       is_asserted_by { tab.present? }
       is_asserted_by { tab.text.strip == tab_name }
     end
   end
 
   it '分析ジョブ登録フォームがアクティブになっていること' do
-    tab = @html.xpath("#{form_tab_xpath}/li[@class='active']/a[@href='#new-analysis']")
+    xpath = [
+      form_tab_xpath,
+      'li[@class="nav-item"]',
+      'button[@class="nav-link active"][@data-bs-target="#new-analysis"]',
+    ].join('/')
+    tab = @html.xpath(xpath)
     is_asserted_by { tab.present? }
   end
 
@@ -53,13 +63,13 @@ end
 
 shared_examples '分析ジョブ登録フォームが表示されていること' do
   it 'タイトルが表示されていること' do
-    title = @html.xpath("#{register_form_panel_xpath}/h3")
+    title = @html.xpath("#{register_form_panel_xpath}/h4")
     is_asserted_by { title.present? }
     is_asserted_by { title.text.strip == 'レースを分析' }
   end
 
   it '必須項目の説明が表示されていること' do
-    description = @html.xpath("#{register_form_panel_xpath}/h4")
+    description = @html.xpath("#{register_form_panel_xpath}/h5")
     is_asserted_by { description.present? }
     is_asserted_by { description.text.strip == '* は必須項目です' }
   end
@@ -123,13 +133,11 @@ shared_examples '分析ジョブ登録フォームが表示されていること
     is_asserted_by { input.present? }
   end
 
-  it 'パラメーター入力フォームが閉じた状態で表示されていること' do
-    link = @html.xpath(register_input_xpath).search('a[@href="#parameter"]')
-    is_asserted_by { link.present? }
-    is_asserted_by { link.text.strip == 'パラメーター設定' }
-
-    block = @html.xpath(register_form_xpath).search('div[@class="collapse"]')
-    is_asserted_by { block.present? }
+  it 'パラメーター入力フォームが表示されていること' do
+    xpath = "#{register_input_xpath}/div[@id='label-register-parameter']"
+    input = @html.xpath(xpath)
+    is_asserted_by { input.present? }
+    is_asserted_by { input.text.strip == 'パラメーター' }
   end
 
   [
@@ -140,28 +148,28 @@ shared_examples '分析ジョブ登録フォームが表示されていること
     %w[num_tree 100],
   ].each do |param_name, value|
     it "#{param_name}入力フォームがあること" do
-      parameter_form_block = @html.xpath(parameter_form_block_xpath)
+      parameter_form = @html.xpath(register_parameter_form_xpath)
 
       form_id = "analysis_parameter_attributes_#{param_name}"
-      label = parameter_form_block.search("label[@for='#{form_id}']")
+      label = parameter_form.search("label[@for='#{form_id}']")
       is_asserted_by { label.present? }
       is_asserted_by { label.text.strip == param_name }
 
-      input = parameter_form_block.search("input[@id='#{form_id}']")
+      input = parameter_form.search("input[@id='#{form_id}']")
       is_asserted_by { input.present? }
       is_asserted_by { input.attribute('value')&.value == value }
     end
   end
 
   it 'max_features入力フォームがあること' do
-    parameter_form_block = @html.xpath(parameter_form_block_xpath)
+    parameter_form = @html.xpath(register_parameter_form_xpath)
 
     form_id = 'analysis_parameter_attributes_max_features'
-    label = parameter_form_block.search("label[@for='#{form_id}']")
+    label = parameter_form.search("label[@for='#{form_id}']")
     is_asserted_by { label.present? }
     is_asserted_by { label.text == 'max_features' }
 
-    select = parameter_form_block.search("select[@id='#{form_id}']")
+    select = parameter_form.search("select[@id='#{form_id}']")
     is_asserted_by { select.present? }
 
     %w[sqrt log2 all].each do |value|
@@ -187,7 +195,7 @@ end
 
 shared_examples '分析ジョブ検索フォームが表示されていること' do
   it 'タイトルが表示されていること' do
-    title = @html.xpath("#{index_form_panel_xpath}/h3")
+    title = @html.xpath("#{index_form_panel_xpath}/h4[@class='card-title']")
     is_asserted_by { title.present? }
     is_asserted_by { title.text.strip == 'ジョブを検索' }
   end
@@ -219,11 +227,11 @@ shared_examples '分析ジョブ検索フォームが表示されていること
   ].each do |param_name|
     it "#{param_name}入力フォームがあること" do
       form_id = "input-index-#{param_name}"
-      label = @html.xpath("#{index_input_xpath}/label[@for='#{form_id}']")
+      label = @html.xpath("#{index_parameter_form_xpath}/label[@for='#{form_id}']")
       is_asserted_by { label.present? }
       is_asserted_by { label.text.strip == param_name }
 
-      input = @html.xpath("#{index_input_xpath}/input[@id='#{form_id}']")
+      input = @html.xpath("#{index_parameter_form_xpath}/input[@id='#{form_id}']")
       is_asserted_by { input.present? }
       is_asserted_by do
         input.attribute('value')&.value&.to_i == @index_form.parameter[param_name]
@@ -233,11 +241,11 @@ shared_examples '分析ジョブ検索フォームが表示されていること
 
   it 'max_features入力フォームがあること' do
     form_id = 'input-index-max_features'
-    label = @html.xpath("#{index_input_xpath}/label[@for='#{form_id}']")
+    label = @html.xpath("#{index_parameter_form_xpath}/label[@for='#{form_id}']")
     is_asserted_by { label.present? }
     is_asserted_by { label.text.strip == 'max_features' }
 
-    select = @html.xpath("#{index_input_xpath}/select[@id='#{form_id}']")
+    select = @html.xpath("#{index_parameter_form_xpath}/select[@id='#{form_id}']")
     is_asserted_by { select.present? }
 
     %w[sqrt log2 all].each do |value|
@@ -347,7 +355,7 @@ shared_examples '分析ジョブの状態が正しいこと' do |state, num_entr
       is_asserted_by { td_children.search('span[@class="processing"]').present? }
 
       is_asserted_by do
-        td_children.search('i[@class="fa fa-refresh fa-spin"]').present?
+        td_children.search('i[@class="fas fa-sync-alt fa-spin"]').present?
       end
     end
   end

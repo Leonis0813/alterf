@@ -4,7 +4,12 @@ module PredictionViewHelper
   include CommonViewHelper
 
   def form_panel_xpath
-    [row_xpath, 'div[@class="col-lg-4"]', 'div[@id="new-prediction"]'].join('/')
+    [
+      row_xpath,
+      'div[@class="col-lg-4"]',
+      'div[@id="new-prediction"][@class="card text-dark bg-light"]',
+      'div[@class="card-body"]',
+    ].join('/')
   end
 
   def form_xpath

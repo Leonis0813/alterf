@@ -25,8 +25,8 @@ module EvaluationViewHelper
   def form_panel_xpath
     [
       container_xpath,
-      'div[@class="panel panel-default"]',
-      'div[@id="form-evaluation"][@class="panel-body collapse in"]',
+      'div[@class="card mb-4"]',
+      'div[@id="form-evaluation"][@class="card-body collapse show"]',
       'div[@class="tab-content"]',
     ].join('/')
   end
@@ -44,12 +44,16 @@ module EvaluationViewHelper
     [
       form_xpath,
       'div[@class="row"]',
-      'div[@class="col-xs-6 form-group"]',
+      'div[@class="col-6 mb-3"]',
     ].join('/')
   end
 
   def table_panel_xpath
     container_xpath
+  end
+
+  def table_title_xpath
+    [table_panel_xpath, 'h4[@class="table-title"]'].join('/')
   end
 
   def link_two_xpath
@@ -61,14 +65,14 @@ module EvaluationViewHelper
   end
 
   def table_xpath
-    [table_panel_xpath, 'table[@id="table-evaluation"]'].join('/')
+    [table_panel_xpath, 'table[@id="table-evaluations"]'].join('/')
   end
 
   def download_link_xpath(evaluation)
     [
       "a[@href='/evaluations/#{evaluation.evaluation_id}/download']",
       'button[@class="btn btn-success"]',
-      'span[@class="glyphicon glyphicon-download-alt"]',
+      'span[@class="bi bi-download"]',
     ].join('/')
   end
 end

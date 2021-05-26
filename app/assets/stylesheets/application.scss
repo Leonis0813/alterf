@@ -1,0 +1,21 @@
+@import '~bootstrap/scss/bootstrap';
+
+.required:after {
+  color: red;
+  content: ' *';
+}
+
+.label-bold {
+  font-weight: bold;
+}
+
+.table > thead > tr > th.download {
+  border: none;
+  width: 5%;
+}
+
+.table > tbody > tr > td.download {
+  border-style: none;
+  padding: 2px 2px 2px 5px;
+  vertical-align: middle;
+}

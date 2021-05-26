@@ -3,13 +3,13 @@
 module AnalysisHelper
   def analysis_table_headers
     [
-      {name: '実行開始日時', width: 19},
-      {name: '指定方法', width: 10},
+      {name: '実行開始日時', width: 20},
+      {name: '指定方法', width: 9},
       {name: '学習データ数', width: 13},
-      {name: '特徴量の数', width: 12},
+      {name: '特徴量の数', width: 11},
       {name: 'エントリー数', width: 13},
       {name: 'パラメーター', width: 13},
-      {name: '状態', width: 10},
+      {name: '状態', width: 11},
     ]
   end
 
@@ -36,18 +36,14 @@ module AnalysisHelper
   end
 
   def question_sign(param_name)
-    content_tag(
-      :span,
-      nil,
-      class: 'glyphicon glyphicon-question-sign', title: question_title[param_name],
-    )
+    tag.span(class: 'bi bi-question-circle-fill', title: question_title[param_name])
   end
 
   def analysis_result_download_button(analysis)
     return unless analysis.state == 'completed'
 
-    content_tag(:button, class: 'btn btn-default', title: '結果をダウンロード') do
-      content_tag(:span, nil, class: 'glyphicon glyphicon-download-alt')
+    tag.button(class: 'btn btn-light btn-sm') do
+      tag.span(class: 'bi bi-download', title: '結果をダウンロード')
     end
   end
 

@@ -1,32 +1,39 @@
+<%= javascript_pack_tag 'evaluations/manage' %>
+<%= stylesheet_pack_tag 'evaluations/manage' %>
+<%= render 'dialogs/execute_error' %>
+<%= render 'evaluations/dialogs/execute' %>
+<%= render 'evaluations/dialogs/download_error' %>
+
 <ul class='nav nav-tabs' style='border-bottom: 0px'>
-  <li>
-    <a id='collapse-form' class='btn btn-default' data-toggle='collapse' data-target='#form-evaluation' style='border-color: #cccccc'>
-      <span class='glyphicon glyphicon-minus-sign' aria-hidden='true'></span>
-    </a>
+  <li class='nav-item'>
+    <% params = collapse_params('form-evaluation', true) %>
+    <%= button_tag nil, {id: 'collapse-form', class: 'btn btn-light nav-link'}.merge(params) do %>
+      <span class='bi bi-dash-circle' aria-hidden='true'></span>
+    <% end %>
   </li>
-  <li class='active'>
-    <%= link_to 'ジョブ登録', '#new-evaluation', id: 'tab-register', 'data-toggle' => 'tab' %>
+  <li class='nav-item active'>
+    <%= button_tag 'ジョブ登録', {id: 'tab-register'}.merge(tab_params('new-evaluation', true)) %>
   </li>
 </ul>
 
-<div class='panel panel-default'>
-  <div id='form-evaluation' class='panel-body collapse in'>
+<div class='card mb-4'>
+  <div id='form-evaluation' class='card-body collapse show'>
     <div class='tab-content'>
       <div id='new-evaluation'>
         <%= form_for @evaluation, html: {multipart: true}, url: evaluations_path, remote: true do |f| %>
           <div class='row'>
-            <div class='col-xs-6 form-group'>
-              <%= f.label :model, 'モデル' %>
-              <%= f.file_field :model, name: :model %>
+            <div class='col-6 mb-3'>
+              <%= f.label :model, 'モデル', class: 'label-bold' %><br>
+              <%= f.file_field :model, class: 'form-control', name: :model %>
             </div>
-            <div class='col-xs-6 form-group'>
-              <%= f.label :data, '評価データ' %>
+            <div class='col-6 mb-3'>
+              <%= f.label :data, '評価データ', class: 'label-bold' %>
               <%= label_tag :data_source, '指定方法:' %>
               <% params = {id: 'evaluation_data_source'} %>
               <%= select_tag :data_source, options_for_select(evaluation_data_source_option), params %>
               <% params = {
                    id: 'evaluation_data_file',
-                   class: 'form-data-source not-selected',
+                   class: 'form-control form-data-source not-selected',
                    name: :data,
                    disabled: true,
                  } %>
@@ -50,10 +57,10 @@
               <%= f.text_field :data, params %>
             </div>
           </div>
-          <div class='row text-right'>
-            <div class='col-xs-12'>
+          <div class='row text-end'>
+            <div class='col-12'>
               <%= f.submit '実行', class: 'btn btn-primary btn-sm btn-submit' %>
-              <%= f.submit 'リセット', type: 'reset', class: 'btn btn-default btn-sm' %>
+              <%= f.submit 'リセット', type: 'reset', class: 'btn btn-light btn-sm' %>
             </div>
           </div>
         <% end %>
@@ -62,14 +69,14 @@
   </div>
 </div>
 
-<h3 class='table-title'>ジョブ実行履歴</h3>
+<h4 class='table-title'>ジョブ実行履歴</h4>
 <span id='page-info'>
   <%= render partial: 'layouts/page_info', locals: {resources: @evaluations} %>
 </span>
 <span id='paginate'>
   <%= paginate @evaluations %>
 </span>
-<table id='table-evaluation' class='table table-hover'>
+<table id='table-evaluations' class='table table-hover'>
   <thead>
     <% evaluation_table_headers.each do |header| %>
       <th width='<%= header[:width] %>%'><%= header[:name] %></th>
@@ -80,3 +87,22 @@
     <%= render @evaluations %>
   </tbody>
 </table>
+
+<script>
+  $(function() {
+    $('#new_evaluation').on('ajax:success', function(event) {
+      var dialog = new bs.Modal(document.getElementById('dialog-execute'));
+      dialog.show();
+    });
+
+    $('#new_evaluation').on('ajax:error', function(event) {
+      var dialog = new bs.Modal(document.getElementById('dialog-execute-error'));
+      dialog.show();
+    });
+
+    $('#table-evaluation').on('ajax:error', function(event) {
+      var dialog = new bs.Modal(document.getElementById('dialog-download-error'));
+      dialog.show();
+    });
+  });
+</script>

@@ -1,4 +1,4 @@
-<tr id='<%= evaluation.evaluation_id %>' class='<%= row_class(evaluation.state) %>'
+<tr id='<%= evaluation.evaluation_id %>' class='table-<%= row_class(evaluation.state) %>'
     title='<%= row_title(evaluation.state) %>' data-state='<%= evaluation.state %>'>
   <td class='performed_at'>
     <%= time_to_string(evaluation.performed_at) %>

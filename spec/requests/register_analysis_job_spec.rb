@@ -3,18 +3,6 @@
 require 'rails_helper'
 
 describe 'ブラウザで分析する', type: :request do
-  shared_examples 'ダイアログが正しく表示されていること' do |title, message|
-    it 'タイトルが正しいこと' do
-      xpath = 'div//h4[@class="modal-title"]'
-      is_asserted_by { @dialog.find_element(:xpath, xpath).text == title }
-    end
-
-    it 'メッセージが正しいこと' do
-      xpath = 'div//div[@class="modal-body"]'
-      is_asserted_by { @dialog.find_element(:xpath, xpath).text == message }
-    end
-  end
-
   include_context 'Webdriver起動'
 
   describe '分析画面を開く' do
@@ -91,10 +79,6 @@ describe 'ブラウザで分析する', type: :request do
       before(:all) do
         @driver.get("#{base_url}/analyses")
         @driver.find_element(:id, 'analysis_data_random').send_keys(100)
-        @wait.until do
-          res = @driver.find_element(:id, 'collapse-parameter').click rescue false
-          res.nil?
-        end
 
         parameter_form_id = 'analysis_parameter_attributes_num_tree'
         @wait.until do
@@ -120,7 +104,7 @@ describe 'ブラウザで分析する', type: :request do
         end
 
         it 'パラメーター確認ダイアログが表示されていること' do
-          xpath = '//div[@id="dialog-parameter"]//h4[@class="modal-title"]'
+          xpath = '//div[@id="dialog-parameter"]//h5[@class="modal-title"]'
           title = 'パラメーター'
           is_asserted_by { @driver.find_element(:xpath, xpath).text == title }
         end

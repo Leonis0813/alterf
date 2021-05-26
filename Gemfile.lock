@@ -72,7 +72,6 @@ GEM
       parser (>= 2.4)
       smart_properties
     bindex (0.8.1)
-    bootbox-rails (0.5.0)
     builder (3.2.4)
     byebug (11.1.3)
     cairo (1.17.5)
@@ -90,19 +89,7 @@ GEM
       nap
       open4 (~> 1.3)
     coderay (1.1.3)
-    coffee-rails (5.0.0)
-      coffee-script (>= 2.2.0)
-      railties (>= 5.2.0)
-    coffee-script (2.4.1)
-      coffee-script-source
-      execjs
-    coffee-script-source (1.12.2)
-    coffeelint (1.16.1)
-      coffee-script
-      execjs
-      json
     colored2 (3.1.2)
-    commonjs (0.2.7)
     concurrent-ruby (1.1.8)
     config (3.1.0)
       deep_merge (~> 1.2, >= 1.2.1)
@@ -110,8 +97,6 @@ GEM
     cork (0.3.0)
       colored2 (~> 3.1)
     crass (1.0.6)
-    d3-rails (5.16.0)
-      railties (>= 3.1)
     daemon-spawn (0.4.2)
     danger (8.2.3)
       claide (~> 1.0)
@@ -182,7 +167,6 @@ GEM
       rubocop (~> 0.79)
       smart_properties
     erubi (1.10.0)
-    execjs (2.7.0)
     factory_bot (6.2.0)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.2.0)
@@ -200,8 +184,6 @@ GEM
     faraday-net_http (1.0.1)
     faraday-net_http_persistent (1.1.0)
     ffi (1.15.0)
-    font-awesome-rails (4.7.0.7)
-      railties (>= 3.2, < 7)
     fuubar (2.5.1)
       rspec-core (~> 3.0)
       ruby-progressbar (~> 1.4)
@@ -233,10 +215,6 @@ GEM
       concurrent-ruby (~> 1.0)
     jbuilder (2.11.2)
       activesupport (>= 5.0.0)
-    jquery-rails (4.4.0)
-      rails-dom-testing (>= 1, < 3)
-      railties (>= 4.2.0)
-      thor (>= 0.14, < 2.0)
     json (2.5.1)
     json-schema (2.8.1)
       addressable (>= 2.4)
@@ -257,13 +235,6 @@ GEM
       rexml
     kramdown-parser-gfm (1.1.0)
       kramdown (~> 2.0)
-    less (2.6.0)
-      commonjs (~> 0.2.7)
-    less-rails (5.0.0)
-      actionpack (>= 5.0)
-      less (~> 2.6.0)
-      sprockets (~> 3.0)
-    libv8 (3.16.14.19)
     loofah (2.9.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -308,9 +279,6 @@ GEM
       rexml (~> 3.2)
       rugged (>= 0.23.0, < 1.1.0)
       thor (>= 0.20.3, < 2.0)
-    pronto-coffeelint (0.6.0)
-      coffeelint (~> 1.14)
-      pronto (~> 0.6)
     pronto-erb_lint (0.1.5)
       erb_lint (~> 0.0.24)
       pronto (> 0.9.0)
@@ -326,6 +294,8 @@ GEM
     racc (1.5.2)
     rack (2.2.3)
     rack-protection (2.1.0)
+      rack
+    rack-proxy (0.6.5)
       rack
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
@@ -358,16 +328,12 @@ GEM
     rainbow (3.0.0)
     raindrops (0.19.1)
     rake (12.3.3)
-    rb-fsevent (0.10.4)
-    rb-inotify (0.10.1)
-      ffi (~> 1.0)
     rchardet (1.8.0)
     rdoc (6.3.1)
     red-colors (0.1.1)
     redis (4.2.5)
     redis-namespace (1.8.1)
       redis (>= 3.0.4)
-    ref (2.0.0)
     regexp_parser (2.1.1)
     remotipart (1.4.4)
     resque (2.0.0)
@@ -426,17 +392,6 @@ GEM
     ruby2_keywords (0.0.4)
     rubyzip (1.3.0)
     rugged (0.28.5)
-    sass (3.7.4)
-      sass-listen (~> 4.0.0)
-    sass-listen (4.0.0)
-      rb-fsevent (~> 0.9, >= 0.9.4)
-      rb-inotify (~> 0.9, >= 0.9.7)
-    sass-rails (5.1.0)
-      railties (>= 5.2.0)
-      sass (~> 3.1)
-      sprockets (>= 2.8, < 4.0)
-      sprockets-rails (>= 2.0, < 4.0)
-      tilt (>= 1.1, < 3)
     sawyer (0.8.2)
       addressable (>= 2.3.5)
       faraday (> 0.8, < 2.0)
@@ -445,6 +400,7 @@ GEM
     selenium-webdriver (3.142.4)
       childprocess (>= 0.5, < 3.0)
       rubyzip (~> 1.2, >= 1.2.2)
+    semantic_range (3.0.0)
     simplecov (0.21.2)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
@@ -472,23 +428,13 @@ GEM
       sprockets (>= 3.0.0)
     terminal-table (1.8.0)
       unicode-display_width (~> 1.1, >= 1.1.1)
-    therubyracer (0.12.3)
-      libv8 (~> 3.16.14.15)
-      ref
     thor (1.1.0)
     tilt (2.0.10)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
-    twitter-bootstrap-rails (3.2.2)
-      actionpack (>= 3.1)
-      execjs (>= 2.2.2, >= 2.2)
-      less-rails (>= 2.5.0)
-      railties (>= 3.1)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
-    uglifier (4.2.0)
-      execjs (>= 0.3.0, < 3)
     unicode-display_width (1.7.0)
     unicorn (5.4.1)
       kgio (~> 2.6)
@@ -503,6 +449,11 @@ GEM
       activemodel (>= 6.0.0)
       bindex (>= 0.4.0)
       railties (>= 6.0.0)
+    webpacker (5.3.0)
+      activesupport (>= 5.2)
+      rack-proxy (>= 0.6.1)
+      railties (>= 5.2)
+      semantic_range (>= 2.3.0)
     websocket-driver (0.7.3)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -512,31 +463,23 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bootbox-rails
   byebug
   cairo
-  coffee-rails
   config
-  d3-rails (~> 5.0)
   daemon-spawn
   danger
   danger-simplecov_json
   database_cleaner
   erb_lint (< 0.0.36)
-  execjs
   factory_bot_rails
-  font-awesome-rails
   fuubar
   headless
   httpclient
   jbuilder
-  jquery-rails
   json-schema
   kaminari
-  less-rails
   mysql2
   pronto
-  pronto-coffeelint
   pronto-erb_lint
   pronto-rubocop
   pry
@@ -552,20 +495,17 @@ DEPENDENCIES
   rubocop-rails
   rubyzip
   rugged (~> 0.28.0)
-  sass-rails (~> 5.0)
   sdoc
   selenium-webdriver (= 3.142.4)
   simplecov
   simplecov-json
   simplecov-rcov
   spring
-  therubyracer
   turbolinks
-  twitter-bootstrap-rails (= 3.2.2)
-  uglifier
   unicorn (~> 5.4.0)
   unicorn-worker-killer
   web-console
+  webpacker
 
 BUNDLED WITH
    2.1.4
