@@ -167,7 +167,6 @@ GEM
       rubocop (~> 0.79)
       smart_properties
     erubi (1.10.0)
-    execjs (2.7.0)
     factory_bot (6.2.0)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.2.0)
@@ -236,7 +235,6 @@ GEM
       rexml
     kramdown-parser-gfm (1.1.0)
       kramdown (~> 2.0)
-    libv8 (3.16.14.19)
     loofah (2.9.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -336,7 +334,6 @@ GEM
     redis (4.2.5)
     redis-namespace (1.8.1)
       redis (>= 3.0.4)
-    ref (2.0.0)
     regexp_parser (2.1.1)
     remotipart (1.4.4)
     resque (2.0.0)
@@ -431,9 +428,6 @@ GEM
       sprockets (>= 3.0.0)
     terminal-table (1.8.0)
       unicode-display_width (~> 1.1, >= 1.1.1)
-    therubyracer (0.12.3)
-      libv8 (~> 3.16.14.15)
-      ref
     thor (1.1.0)
     tilt (2.0.10)
     turbolinks (5.2.1)
@@ -441,8 +435,6 @@ GEM
     turbolinks-source (5.2.0)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
-    uglifier (4.2.0)
-      execjs (>= 0.3.0, < 3)
     unicode-display_width (1.7.0)
     unicorn (5.4.1)
       kgio (~> 2.6)
@@ -479,7 +471,6 @@ DEPENDENCIES
   danger-simplecov_json
   database_cleaner
   erb_lint (< 0.0.36)
-  execjs
   factory_bot_rails
   fuubar
   headless
@@ -510,9 +501,7 @@ DEPENDENCIES
   simplecov-json
   simplecov-rcov
   spring
-  therubyracer
   turbolinks
-  uglifier
   unicorn (~> 5.4.0)
   unicorn-worker-killer
   web-console
