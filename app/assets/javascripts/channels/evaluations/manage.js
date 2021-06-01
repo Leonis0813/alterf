@@ -2,7 +2,7 @@ import consumer from '../consumer';
 
 consumer.subscriptions.create('EvaluationChannel', {
   received(evaluation) {
-    const displayedState = {processing: '実行中', completed: '完了', error: 'エラー'};
+    const displayedState = {processing: '0%完了', completed: '完了', error: 'エラー'};
 
     const trId = `#${evaluation.evaluation_id}`;
     if ($(trId).length) {
@@ -10,12 +10,10 @@ consumer.subscriptions.create('EvaluationChannel', {
         case 'processing':
           this.changeRowColor(trId, evaluation.state);
           $(`${trId} > td[class*=performed_at]`).text(evaluation.performed_at);
+          $(`${trId} > td[class*=state]`).text(displayedState[evaluation.state]);
           break;
         case 'completed':
           this.changeRowColor(trId, evaluation.state);
-          const column = $(`${trId} > td[class*=state] button`);
-          column.removeClass('btn-warning');
-          column.addClass('btn-success');
           $(`${trId} > td[class*=state]`).text(displayedState[evaluation.state]);
           this.addDownloadButton(trId, evaluation);
           break;
@@ -37,8 +35,8 @@ consumer.subscriptions.create('EvaluationChannel', {
   changeRowColor(trId, state) {
     const stateToClassMap = {processing: 'warning', completed: 'success', error: 'danger'};
     const column = $(trId);
-    column.removeClass('warning');
-    column.addClass(stateToClassMap[state]);
+    column.removeClass('table-warning');
+    column.addClass(`table-${stateToClassMap[state]}`);
   },
 
   addDownloadButton(trId, evaluation) {
