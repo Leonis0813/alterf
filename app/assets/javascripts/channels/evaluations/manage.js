@@ -10,18 +10,23 @@ consumer.subscriptions.create('EvaluationChannel', {
         case 'processing':
           column.removeClass('cursor-auto');
           column.addClass('table-warning cursor-pointer');
+          column.attr('data-state', evaluation.state);
+          column.attr('title', '結果を確認');
           $(`${trId} > td[class*=performed_at]`).text(evaluation.performed_at);
           $(`${trId} > td[class*=state]`).text('0%完了');
           break;
         case 'completed':
           column.removeClass('table-warning');
           column.addClass('table-success');
+          column.attr('data-state', evaluation.state);
+          column.attr('title', '結果を確認');
           $(`${trId} > td[class*=state]`).text('完了');
           this.addDownloadButton(trId, evaluation);
           break;
         case 'error':
           column.removeClass('table-warning cursor-pointer');
           column.addClass('table-danger cursor-auto');
+          column.attr('data-state', evaluation.state);
           $(`${trId} > td[class*=state]`).text('エラー');
           break;
         default:
