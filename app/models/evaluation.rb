@@ -58,6 +58,8 @@ class Evaluation < ApplicationRecord
     end
   end
 
+  after_create :broadcast
+
   def set_analysis!
     data_dir = Rails.root.join('tmp/files/evaluations', id.to_s)
     analysis_id = read_analysis_id(File.join(data_dir, 'metadata.yml'))
@@ -184,7 +186,7 @@ class Evaluation < ApplicationRecord
     end.to_f
   end
 
-  def broadcast(attribute)
+  def broadcast(attribute = {})
     updated_attribute = attribute.merge('evaluation_id' => evaluation_id)
     ActionCable.server.broadcast('evaluation', updated_attribute)
   end

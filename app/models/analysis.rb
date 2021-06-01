@@ -40,6 +40,10 @@ class Analysis < ApplicationRecord
     analysis.state = DEFAULT_STATE
   end
 
+  after_create do
+    ActionCable.server.broadcast('analysis', slice(:analysis_id))
+  end
+
   after_update do
     updated_attribute = slice(:analysis_id, :state, :num_feature)
     updated_attribute['performed_at'] = performed_at&.strftime('%Y/%m/%d %T')
