@@ -2,24 +2,27 @@ import consumer from '../consumer';
 
 consumer.subscriptions.create('EvaluationChannel', {
   received(evaluation) {
-    const displayedState = {processing: '0%完了', completed: '完了', error: 'エラー'};
-
     const trId = `#${evaluation.evaluation_id}`;
-    if ($(trId).length) {
+    const column = $(trId);
+
+    if (column.length) {
       switch (evaluation.state) {
         case 'processing':
-          this.changeRowColor(trId, evaluation.state);
+          column.removeClass('cursor-auto');
+          column.addClass('table-warning cursor-pointer');
           $(`${trId} > td[class*=performed_at]`).text(evaluation.performed_at);
-          $(`${trId} > td[class*=state]`).text(displayedState[evaluation.state]);
+          $(`${trId} > td[class*=state]`).text('0%完了');
           break;
         case 'completed':
-          this.changeRowColor(trId, evaluation.state);
-          $(`${trId} > td[class*=state]`).text(displayedState[evaluation.state]);
+          column.removeClass('table-warning');
+          column.addClass('table-success');
+          $(`${trId} > td[class*=state]`).text('完了');
           this.addDownloadButton(trId, evaluation);
           break;
         case 'error':
-          this.changeRowColor(trId, evaluation.state);
-          $(`${trId} > td[class*=state]`).text(displayedState[evaluation.state]);
+          column.removeClass('table-warning cursor-pointer');
+          column.addClass('table-danger cursor-auto');
+          $(`${trId} > td[class*=state]`).text('エラー');
           break;
         default:
           this.updateProgress(trId, evaluation);
@@ -30,13 +33,6 @@ consumer.subscriptions.create('EvaluationChannel', {
         dataType: 'script',
       });
     }
-  },
-
-  changeRowColor(trId, state) {
-    const stateToClassMap = {processing: 'warning', completed: 'success', error: 'danger'};
-    const column = $(trId);
-    column.removeClass('table-warning');
-    column.addClass(`table-${stateToClassMap[state]}`);
   },
 
   addDownloadButton(trId, evaluation) {
