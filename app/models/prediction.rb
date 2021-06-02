@@ -18,6 +18,8 @@ class Prediction < ApplicationRecord
     prediction.state = DEFAULT_STATE
   end
 
+  after_create :broadcast
+
   def set_analysis!
     data_dir = Rails.root.join('tmp/files/predictions', id.to_s)
     analysis_id = read_analysis_id(File.join(data_dir, 'metadata.yml'))

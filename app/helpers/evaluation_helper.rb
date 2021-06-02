@@ -50,11 +50,11 @@ module EvaluationHelper
     when 'waiting'
       'cursor-auto'
     when 'processing'
-      'warning cursor-pointer'
+      'table-warning cursor-pointer'
     when 'completed'
-      'success cursor-pointer'
+      'table-success cursor-pointer'
     when 'error'
-      'danger cursor-auto'
+      'table-danger cursor-auto'
     end
   end
 

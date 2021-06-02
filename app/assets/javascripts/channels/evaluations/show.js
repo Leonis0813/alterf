@@ -26,7 +26,7 @@ consumer.subscriptions.create('Evaluation::DatumChannel', {
 
   createRow(datum) {
     $('tbody').append(
-      `<tr id='${datum.race_id}' class='warning'>` +
+      `<tr id='${datum.race_id}' class='table-warning'>` +
         `<td>${datum.no}</td>` +
         '<td>' +
           `<a target='_blank' href='${datum.race_url}'>` +
@@ -59,7 +59,7 @@ consumer.subscriptions.create('Evaluation::DatumChannel', {
       );
     });
     const row = $(`tr#${datum.race_id}`);
-    row.removeClass('warning');
-    row.addClass(includeTruePositive ? 'success' : 'danger');
+    row.removeClass('table-warning');
+    row.addClass(includeTruePositive ? 'table-success' : 'table-danger');
   }
 });

@@ -1,3 +1,8 @@
+# 4.22.2 (2021/06/02)
+- [FIX] circle size of prediction results
+- [FIX] table row attributes of evaluation views
+- [UPDATE] channels to broadcast after creating job
+
 # 4.22.1 (2021/05/27)
 - [REFACTOR] javascripts and stylesheets with ES6
 - [CHANGE] compile process to webpacker
