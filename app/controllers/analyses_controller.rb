@@ -27,8 +27,9 @@ class AnalysesController < ApplicationController
 
     if user_specified_data?
       file_path =
-        Rails.root.join('tmp/files/analyses', analysis_id.to_s, 'training_data.txt')
+        Rails.root.join('tmp/files/analyses', analysis_id.to_s, 'race_list.txt')
       File.open(file_path, 'w') {|file| file.puts(race_ids.join("\n")) }
+      analysis.update!(num_data: race_ids.size)
     end
 
     AnalysisJob.perform_later(analysis.id)

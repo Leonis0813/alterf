@@ -45,7 +45,7 @@ class Analysis < ApplicationRecord
   end
 
   after_update do
-    updated_attribute = slice(:analysis_id, :state, :num_feature)
+    updated_attribute = slice(:analysis_id, :state, :num_feature, :num_data)
     updated_attribute['performed_at'] = performed_at&.strftime('%Y/%m/%d %T')
     ActionCable.server.broadcast('analysis', updated_attribute.compact)
   end
@@ -69,17 +69,7 @@ class Analysis < ApplicationRecord
     File.open(File.join(tmp_dir, 'parameter.yml'), 'w') {|file| YAML.dump(param, file) }
   end
 
-  def import_training_data!
-    return unless data_source == DATA_SOURCE_FILE
-
-    race_ids = File.read(File.join(tmp_dir, 'training_data.txt')).lines.map(&:chomp)
-    race_ids.each {|race_id| data.create!(race_id: race_id) }
-    update!(num_data: race_ids.size)
-  end
-
   def import_data!
-    return unless data_source == DATA_SOURCE_RANDOM
-
     race_ids = File.read(File.join(tmp_dir, 'race_list.txt')).lines.map(&:chomp)
     race_ids.each {|race_id| data.create!(race_id: race_id) }
   end
