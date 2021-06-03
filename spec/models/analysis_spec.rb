@@ -123,57 +123,21 @@ describe Analysis, type: :model do
     end
   end
 
-  describe '#dump_training_data' do
-    include_context 'トランザクション作成'
-
-    context '指定方法がランダムの場合' do
-      before { @analysis = create(:analysis, {data_source: 'random'}) }
-      include_context '一時ディレクトリを作成する'
-      before { @analysis.dump_training_data }
-
-      it '学習データが出力されていないこと' do
-        is_asserted_by { not File.exist?(File.join(@tmp_dir, 'training_data.txt')) }
-      end
-    end
-
-    context '指定方法がファイルの場合' do
-      before { @analysis = create(:analysis, {data_source: 'file'}) }
-      include_context '一時ディレクトリを作成する'
-      before do
-        @analysis.dump_training_data
-
-        file_path = File.join(@tmp_dir, 'training_data.txt')
-        @race_ids = File.read(file_path).lines.map(&:chomp)
-      end
-
-      it 'レースIDが出力されていること' do
-        is_asserted_by { @race_ids == @analysis.data.pluck(:race_id) }
-      end
-    end
-  end
-
   describe '#import_data!' do
     race_id = '12345'
 
-    [
-      ['ランダム', 'random', [race_id]],
-      ['ファイル', 'file', []],
-    ].each do |desc, data_source, expected_race_ids|
-      context "指定方法が#{desc}の場合" do
-        include_context 'トランザクション作成'
-        before { @analysis = create(:analysis, {data_source: data_source, data: []}) }
-        include_context '一時ディレクトリを作成する'
-        before do
-          File.open(File.join(@tmp_dir, 'race_list.txt'), 'w') do |file|
-            file.puts(race_id)
-          end
-          @analysis.import_data!
-        end
-
-        it '学習データが正しいこと' do
-          is_asserted_by { @analysis.data.pluck(:race_id) == expected_race_ids }
-        end
+    include_context 'トランザクション作成'
+    before { @analysis = create(:analysis, {data: []}) }
+    include_context '一時ディレクトリを作成する'
+    before do
+      File.open(File.join(@tmp_dir, 'race_list.txt'), 'w') do |file|
+        file.puts(race_id)
       end
+      @analysis.import_data!
+    end
+
+    it '学習データが正しいこと' do
+      is_asserted_by { @analysis.data.pluck(:race_id) == [race_id] }
     end
   end
 
