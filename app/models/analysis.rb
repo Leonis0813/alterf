@@ -69,12 +69,12 @@ class Analysis < ApplicationRecord
     File.open(File.join(tmp_dir, 'parameter.yml'), 'w') {|file| YAML.dump(param, file) }
   end
 
-  def dump_training_data
+  def import_training_data!
     return unless data_source == DATA_SOURCE_FILE
 
-    File.open(File.join(tmp_dir, 'training_data.txt'), 'w') do |file|
-      data.each {|datum| file.puts(datum.race_id) }
-    end
+    race_ids = File.read(File.join(tmp_dir, 'training_data.txt')).lines.map(&:chomp)
+    race_ids.each {|race_id| data.create!(race_id: race_id) }
+    update!(num_data: race_ids.size)
   end
 
   def import_data!
