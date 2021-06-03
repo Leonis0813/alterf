@@ -22,7 +22,7 @@ $(function() {
     $(`#evaluation_data_${$(this).val()}`).removeClass('not-selected');
   });
 
-  $('#table-evaluations').on('click', 'td', function(event) {
+  $('#table-evaluation').on('click', 'td', function(event) {
     const row = $(this).parents('tr');
     const state = row.data('state');
 
