@@ -22,6 +22,11 @@ $(function() {
     $(`#evaluation_data_${$(this).val()}`).removeClass('not-selected');
   });
 
+  $('#btn-reset').on('click', function(event) {
+    $('.form-data-source').prop('disabled', true);
+    $('.form-data-source').addClass('not-selected');
+  });
+
   $('#table-evaluation').on('click', 'td', function(event) {
     const row = $(this).parents('tr');
     const state = row.data('state');

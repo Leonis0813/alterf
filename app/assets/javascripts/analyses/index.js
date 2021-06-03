@@ -29,6 +29,13 @@ $(function() {
     $(`#analysis_data_${$(this).val()}`).parents('div').removeClass('not-selected');
   });
 
+  $('#btn-register-reset').on('click', function(event) {
+    $('.form-data-source').prop('disabled', true);
+    $('.form-block-data-source').addClass('not-selected');
+    $('#analysis_data_random').prop('disabled', false);
+    $('#analysis_data_random').parents('div').removeClass('not-selected');
+  });
+
   $('tbody').on('click', '.btn-param', function(event) {
     const analysisId = $(this).parents('tr').attr('id');
     $.ajax({

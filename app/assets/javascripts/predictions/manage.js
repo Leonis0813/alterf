@@ -13,10 +13,9 @@ $(function() {
 
   $('input[name="type"]:radio').on('change', function(event) {
     $('#prediction_test_data').get(0).type = $(this).val();
-    if ($(this).val() === 'file') {
-      $('#prediction_test_data').removeClass('form-control');
-    } else {
-      $('#prediction_test_data').addClass('form-control');
-    }
+  });
+
+  $('#btn-reset').on('click', function(event) {
+    $('#prediction_test_data').get(0).type = 'file';
   });
 });
