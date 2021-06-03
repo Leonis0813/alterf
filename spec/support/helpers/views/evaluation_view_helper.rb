@@ -65,7 +65,7 @@ module EvaluationViewHelper
   end
 
   def table_xpath
-    [table_panel_xpath, 'table[@id="table-evaluations"]'].join('/')
+    [table_panel_xpath, 'table[@id="table-evaluation"]'].join('/')
   end
 
   def download_link_xpath(evaluation)
