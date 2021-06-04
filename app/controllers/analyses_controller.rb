@@ -21,12 +21,22 @@ class AnalysesController < ApplicationController
     analysis.build_result
     analysis.build_parameter(execute_params[:parameter])
 
-    if user_specified_data?
-      race_ids.each {|race_id| analysis.data.build(race_id: race_id) }
-      analysis.num_data = race_ids.size
+    unless analysis.save
+      raise BadRequest, messages: analysis.errors.messages, resource: 'analysis'
     end
 
-    check_and_perform(analysis)
+    tmp_dir = Rails.root.join('tmp/files/analyses', analysis.id.to_s)
+    FileUtils.rm_rf(tmp_dir)
+    FileUtils.mkdir_p(tmp_dir)
+
+    if user_specified_data?
+      file_path = File.join(tmp_dir, 'race_list.txt')
+      File.open(file_path, 'w') {|file| file.puts(race_ids.join("\n")) }
+      analysis.update!(num_data: race_ids.size)
+    end
+
+    AnalysisJob.perform_later(analysis.id)
+    render status: :ok, json: {}
   end
 
   def show
@@ -44,7 +54,13 @@ class AnalysesController < ApplicationController
 
   def rebuild
     analysis = request_analysis.copy
-    check_and_perform(analysis)
+
+    unless analysis.save
+      raise BadRequest, messages: analysis.errors.messages, resource: 'analysis'
+    end
+
+    AnalysisJob.perform_later(analysis.id)
+    render status: :ok, json: {}
   end
 
   private
@@ -166,14 +182,5 @@ class AnalysesController < ApplicationController
 
   def race_ids
     @race_ids ||= execute_params[:data_file].read.lines.map(&:chomp)
-  end
-
-  def check_and_perform(analysis)
-    unless analysis.save
-      raise BadRequest, messages: analysis.errors.messages, resource: 'analysis'
-    end
-
-    AnalysisJob.perform_later(analysis.id)
-    render status: :ok, json: {}
   end
 end

@@ -51,7 +51,7 @@ if parameter['data_source'] == 'random':
   race_ids = pd.DataFrame(cursor.fetchall())['race_id']
   race_ids = np.random.choice(race_ids, int(parameter['num_data']), replace=False)
 else:
-  with open(outputdir + '/training_data.txt') as f:
+  with open(outputdir + '/race_list.txt') as f:
     race_ids = [line.strip() for line in f.readlines()]
 
 cursor.execute('desc features')

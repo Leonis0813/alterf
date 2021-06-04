@@ -60,7 +60,7 @@
           <div class='row text-end'>
             <div class='col-12'>
               <%= f.submit '実行', class: 'btn btn-primary btn-sm btn-submit' %>
-              <%= f.submit 'リセット', type: 'reset', class: 'btn btn-light btn-sm' %>
+              <%= f.submit 'リセット', type: 'reset', id: 'btn-reset', class: 'btn btn-light btn-sm' %>
             </div>
           </div>
         <% end %>
@@ -76,7 +76,7 @@
 <span id='paginate'>
   <%= paginate @evaluations %>
 </span>
-<table id='table-evaluations' class='table table-hover'>
+<table id='table-evaluation' class='table table-hover'>
   <thead>
     <% evaluation_table_headers.each do |header| %>
       <th width='<%= header[:width] %>%'><%= header[:name] %></th>

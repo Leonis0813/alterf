@@ -1,3 +1,9 @@
+# 4.22.3 (2021/06/04)
+- [FIX] table row color of evaluation result
+- [FIX] evaluation data download button
+- [FIX] timeout error on executing analysis
+- [FIX] reset button behavior
+
 # 4.22.2 (2021/06/02)
 - [FIX] circle size of prediction results
 - [FIX] table row attributes of evaluation views

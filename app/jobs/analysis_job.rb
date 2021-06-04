@@ -16,7 +16,6 @@ class AnalysisJob < ApplicationJob
     @tmp_dir = Rails.root.join('tmp/files/analyses', analysis_id.to_s)
 
     analysis.dump_parameter
-    analysis.dump_training_data
 
     script_name = analysis.num_entry ? 'analyze_with_num_entry.py' : 'analyze.py'
     execute_script(script_name, [analysis_id])

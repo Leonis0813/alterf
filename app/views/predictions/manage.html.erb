@@ -22,7 +22,7 @@
             <%= f.file_field :test_data, class: 'form-control', name: :test_data %>
           </div>
           <%= f.submit '実行', class: 'btn btn-primary btn-sm btn-submit' %>
-          <%= f.submit 'リセット', type: 'reset', class: 'btn btn-default btn-sm' %>
+          <%= f.submit 'リセット', type: 'reset', id: 'btn-reset', class: 'btn btn-default btn-sm' %>
         <% end %>
       </div>
     </div>
@@ -37,7 +37,7 @@
       <span id='paginate'>
         <%= paginate @predictions %>
       </span>
-      <table id='table-predictions' class='table table-hover'>
+      <table id='table-prediction' class='table table-hover'>
         <thead>
           <th width='22%'>実行開始日時</th>
           <th width='26%'>モデル</th>

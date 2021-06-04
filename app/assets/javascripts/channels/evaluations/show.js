@@ -46,11 +46,11 @@ consumer.subscriptions.create('Evaluation::DatumChannel', {
   },
 
   showResults(datum) {
-    const includeTruePositive = false;
+    let includeTruePositive = false;
     const column = $(`tr#${datum.race_id} > td.result`);
     $.each(datum.wons, function(i, number) {
       const color = number === datum.ground_truth ? 'limegreen' : 'gray';
-      const includeTruePositive = includeTruePositive || color === 'limegreen';
+      includeTruePositive = includeTruePositive || color === 'limegreen';
       column.append(
         `<span class='fa-layers fa-fw fa-2x prediction-result' style='color: ${color}'>` +
           '<i class="fa fa-circle"></i>' +
