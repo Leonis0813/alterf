@@ -52,8 +52,6 @@ class Analysis < ApplicationRecord
 
   def start!
     update!(state: STATE_PROCESSING, performed_at: Time.zone.now)
-    FileUtils.rm_rf(tmp_dir)
-    FileUtils.mkdir_p(tmp_dir)
   end
 
   def complete!

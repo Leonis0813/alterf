@@ -25,9 +25,11 @@ class AnalysesController < ApplicationController
       raise BadRequest, messages: analysis.errors.messages, resource: 'analysis'
     end
 
+    tmp_dir = Rails.root.join('tmp/files/analyses', analysis.id.to_s)
+    FileUtils.rm_rf(tmp_dir)
+    FileUtils.mkdir_p(tmp_dir)
+
     if user_specified_data?
-      tmp_dir = Rails.root.join('tmp/files/analyses', analysis.id.to_s)
-      FileUtils.mkdir_p(tmp_dir)
       file_path = File.join(tmp_dir, 'race_list.txt')
       File.open(file_path, 'w') {|file| file.puts(race_ids.join("\n")) }
       analysis.update!(num_data: race_ids.size)
