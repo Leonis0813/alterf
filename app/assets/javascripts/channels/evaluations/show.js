@@ -46,7 +46,7 @@ consumer.subscriptions.create('Evaluation::DatumChannel', {
   },
 
   showResults(datum) {
-    const includeTruePositive = false;
+    let includeTruePositive = false;
     const column = $(`tr#${datum.race_id} > td.result`);
     $.each(datum.wons, function(i, number) {
       const color = number === datum.ground_truth ? 'limegreen' : 'gray';
