@@ -58,6 +58,7 @@ consumer.subscriptions.create('Evaluation::DatumChannel', {
         '</span>'
       );
     });
+    $(`tr#${datum.race_id} > td.num_entry`).text(datum.num_entry);
     const row = $(`tr#${datum.race_id}`);
     row.removeClass('table-warning');
     row.addClass(includeTruePositive ? 'table-success' : 'table-danger');
