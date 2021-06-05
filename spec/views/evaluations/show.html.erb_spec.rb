@@ -54,11 +54,11 @@ describe 'evaluations/show', type: :view do
       @table = @html.xpath(xpath)
     end
 
-    it '4列のテーブルが表示されていること' do
-      is_asserted_by { @table.xpath('//thead/th').size == 4 }
+    it '5列のテーブルが表示されていること' do
+      is_asserted_by { @table.xpath('//thead/th').size == 5 }
     end
 
-    %w[No レース名 予測結果 正解].each_with_index do |text, i|
+    %w[No レース名 エントリー数 予測結果 正解].each_with_index do |text, i|
       it "#{i + 1}列目のヘッダーが#{text}であること" do
         is_asserted_by { @table.xpath('//thead/th')[i].text == text }
       end
@@ -101,11 +101,25 @@ describe 'evaluations/show', type: :view do
       end
     end
 
-    it '予測結果が表示されていること', unless: tr_class == 'warning' do
+    it 'エントリー数が表示されていないこと', if: tr_class == 'table-warning' do
+      @rows.each do |row|
+        num_entry = row.children.search('td')[2]
+        is_asserted_by { num_entry.text.strip.blank? }
+      end
+    end
+
+    it 'エントリー数が正しいこと', unless: tr_class == 'table-warning' do
+      @evaluation.data.each_with_index do |datum, i|
+        num_entry = @rows[i].children.search('td')[2]
+        is_asserted_by { num_entry.text.strip == datum.prediction_results.size.to_s }
+      end
+    end
+
+    it '予測結果が表示されていること', unless: tr_class == 'table-warning' do
       expected_span_class = 'fa-layers fa-fw fa-2x prediction-result'
 
       @evaluation.data.each_with_index do |datum, i|
-        span_stacks = @rows[i].children.search('td')[2].children.search('span')
+        span_stacks = @rows[i].children.search('td')[3].children.search('span')
 
         datum.prediction_results.won.each_with_index do |result, j|
           is_asserted_by do
@@ -131,7 +145,7 @@ describe 'evaluations/show', type: :view do
       expected_span_class = 'fa-layers fa-fw fa-2x prediction-result'
 
       @evaluation.data.each_with_index do |datum, i|
-        span_stack = @rows[i].children.search('td')[3].children.search('span')
+        span_stack = @rows[i].children.search('td')[4].children.search('span')
         is_asserted_by do
           span_stack.attribute('class').value == expected_span_class
         end

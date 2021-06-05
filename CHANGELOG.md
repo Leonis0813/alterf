@@ -1,3 +1,6 @@
+# 4.22.4 (2021/06/05)
+- [UPDATE] evaluation result table to show number of entries
+
 # 4.22.3 (2021/06/04)
 - [FIX] table row color of evaluation result
 - [FIX] evaluation data download button
