@@ -36,8 +36,9 @@ class Evaluation
       race_result.each do |number, result|
         prediction_results.create!(number: number, won: (result == 1))
       end
+      wons = prediction_results.won.pluck(:number).sort
 
-      broadcast(wons: prediction_results.won.pluck(:number).sort, message_type: 'update')
+      broadcast(num_entry: prediction_results.size, wons: wons, message_type: 'update')
     end
 
     private
