@@ -9,6 +9,9 @@
       <span class='bi bi-box-arrow-up-right'></span>
     <% end %>
   </td>
+  <td>
+    <%= datum.prediction_results.empty? ? '' : datum.prediction_results.size %>
+  </td>
   <td class='result' style='padding: 4px'>
   <% numbers.each do |number| %>
     <% color = span_color(number, datum.ground_truth) %>
