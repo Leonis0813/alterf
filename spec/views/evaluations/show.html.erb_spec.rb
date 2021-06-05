@@ -102,8 +102,8 @@ describe 'evaluations/show', type: :view do
     end
 
     it 'エントリー数が表示されていないこと', if: tr_class == 'table-warning' do
-      @evaluation.data.each_with_index do |datum, i|
-        num_entry = @rows[i].children.search('td')[2]
+      @rows.each do |row|
+        num_entry = row.children.search('td')[2]
         is_asserted_by { num_entry.text.strip.blank? }
       end
     end
