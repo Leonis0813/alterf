@@ -34,6 +34,7 @@ consumer.subscriptions.create('Evaluation::DatumChannel', {
             '<span class="bi bi-box-arrow-up-right"></span>' +
           '</a>' +
         '</td>' +
+        '<td class="num_entry"></td>' +
         '<td class="result" style="padding: 4px"></td>' +
         '<td style="padding: 4px">' +
           '<span class="fa-layers fa-fw fa-2x prediction-result" style="color: limegreen">' +
