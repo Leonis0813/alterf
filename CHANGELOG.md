@@ -1,4 +1,4 @@
-# 4.22.3 (2021/06/04)
+# 4.22.3 (2021/06/06)
 - [FIX] table row color of evaluation result
 - [FIX] evaluation data download button
 - [FIX] timeout error on executing analysis
