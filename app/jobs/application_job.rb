@@ -1,6 +1,4 @@
 class ApplicationJob < ActiveJob::Base
-  attr_accessor :num_entry
-
   def execute_script(filename, args)
     ENV['PYENV_ROOT'] = '/usr/local/pyenv'
     ENV['PATH'] = [

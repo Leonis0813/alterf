@@ -19,19 +19,11 @@ class PredictionJob < ApplicationJob
                 YAML.load_file(test_data)
               end.deep_stringify_keys
 
-    if prediction.analysis.num_entry.present?
-      raise StandardError if prediction.analysis.num_entry != feature['entries'].size
-    end
-
     feature_file = File.join(data_dir, Settings.prediction.tmp_file_name)
     File.open(feature_file, 'w') {|file| YAML.dump(feature, file) }
 
     args = [data_dir, 'model.rf', Settings.prediction.tmp_file_name]
-    if num_entry
-      execute_script('predict_with_num_entry.py', args)
-    else
-      execute_script('predict.py', args)
-    end
+    execute_script('predict.py', args)
 
     prediction.import_results(Rails.root.join(data_dir, 'prediction.yml'))
     FileUtils.rm_rf(data_dir)
