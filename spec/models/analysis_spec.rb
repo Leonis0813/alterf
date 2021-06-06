@@ -97,29 +97,21 @@ describe Analysis, type: :model do
 
   describe '#dump_parameter' do
     include_context 'トランザクション作成'
+    before { @analysis = create(:analysis) }
+    include_context '一時ディレクトリを作成する'
+    before do
+      attribute = @analysis.slice(:data_source, :num_data).merge(env: 'test')
+      @expected_parameter = @analysis.parameter
+                                     .slice(*parameter_attribute_names)
+                                     .merge(attribute)
+                                     .stringify_keys
 
-    [
-      ['エントリー数を指定しない場合', {}],
-      ['エントリー数を指定する場合', {num_entry: 10}],
-    ].each do |desc, attribute|
-      context desc do
-        before { @analysis = create(:analysis, attribute) }
-        include_context '一時ディレクトリを作成する'
-        before do
-          attribute.merge!(@analysis.slice(:data_source, :num_data).merge(env: 'test'))
-          @expected_parameter = @analysis.parameter
-                                         .slice(*parameter_attribute_names)
-                                         .merge(attribute)
-                                         .stringify_keys
+      @analysis.dump_parameter
+      @parameter = YAML.load_file(File.join(@tmp_dir, 'parameter.yml'))
+    end
 
-          @analysis.dump_parameter
-          @parameter = YAML.load_file(File.join(@tmp_dir, 'parameter.yml'))
-        end
-
-        it 'パラメーターが出力されていること' do
-          is_asserted_by { @parameter == @expected_parameter }
-        end
-      end
+    it 'パラメーターが出力されていること' do
+      is_asserted_by { @parameter == @expected_parameter }
     end
   end
 
@@ -149,7 +141,7 @@ describe Analysis, type: :model do
     end
 
     it '分析ジョブ情報がコピーされていること' do
-      attribute_names = %i[data_source num_data num_entry]
+      attribute_names = %i[data_source num_data]
       is_asserted_by do
         @analysis.slice(*attribute_names) == @copied_analysis.slice(*attribute_names)
       end
