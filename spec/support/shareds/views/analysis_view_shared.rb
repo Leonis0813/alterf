@@ -77,7 +77,6 @@ shared_examples '分析ジョブ登録フォームが表示されていること
   [
     %w[analysis_data 学習データ],
     %w[data_source 指定方法:],
-    %w[analysis_num_entry エントリー数],
   ].each do |param_name, label_name|
     it "入力フォームのラベルがあること(ラベル: #{label_name})" do
       label = @html.xpath("#{register_input_xpath}/label[@for='#{param_name}']")
@@ -123,12 +122,6 @@ shared_examples '分析ジョブ登録フォームが表示されていること
   it '非表示で無効になっているファイル入力フォームがあること' do
     xpath = "#{register_input_xpath}/div[@class='form-block-data-source not-selected']" \
             '/input[@id="analysis_data_file"][@name="data_file"][@disabled]'
-    input = @html.xpath(xpath)
-    is_asserted_by { input.present? }
-  end
-
-  it 'エントリー数入力フォームが表示されていること' do
-    xpath = "#{register_input_xpath}/input[@id='analysis_num_entry'][@name='num_entry']"
     input = @html.xpath(xpath)
     is_asserted_by { input.present? }
   end
@@ -271,8 +264,8 @@ shared_examples '分析ジョブテーブルが表示されていること' do |
     @rows = @table.search('tbody/tr')
   end
 
-  it '9列のテーブルが表示されていること' do
-    is_asserted_by { @table.search('thead/th').size == 9 }
+  it '8列のテーブルが表示されていること' do
+    is_asserted_by { @table.search('thead/th').size == 8 }
   end
 
   %w[
@@ -280,7 +273,6 @@ shared_examples '分析ジョブテーブルが表示されていること' do |
     指定方法
     学習データ数
     特徴量の数
-    エントリー数
     パラメーター
     状態
   ].each_with_index do |text, i|
@@ -309,14 +301,13 @@ shared_examples '分析ジョブテーブルが表示されていること' do |
       is_asserted_by { tds[1].text.strip == data_source_map[analysis.data_source] }
       is_asserted_by { tds[2].text.strip == analysis.num_data.to_s }
       is_asserted_by { tds[3].text.strip == analysis.num_feature.to_s }
-      is_asserted_by { tds[4].text.strip == analysis.num_entry.to_s }
-      is_asserted_by { tds[6].text.strip == state_map[analysis.state] }
+      is_asserted_by { tds[5].text.strip == state_map[analysis.state] }
     end
   end
 
   it 'パラメーター表示ボタンが表示されていること' do
     @rows.each do |row|
-      button = row.search('td')[5].search('button')
+      button = row.search('td')[4].search('button')
       is_asserted_by { button.present? }
       is_asserted_by { button.text.strip == '確認' }
     end
@@ -324,7 +315,7 @@ shared_examples '分析ジョブテーブルが表示されていること' do |
 
   it '再実行ボタンが表示されていること' do
     @analyses.each_with_index do |analysis, i|
-      rebuild_form = @rows[i].search('td')[8].search('form')
+      rebuild_form = @rows[i].search('td')[7].search('form')
       is_asserted_by { rebuild_form.present? }
 
       expected_action = "/analyses/#{analysis.analysis_id}/rebuild"
@@ -338,19 +329,13 @@ shared_examples '分析ジョブの状態が正しいこと' do |state, num_entr
 
   it do
     @rows.each do |row|
-      is_asserted_by { row.search('td')[6].text.strip == state }
-    end
-  end
-
-  it 'エントリー数が表示されていること', if: num_entry > 0 do
-    @rows.each do |row|
-      is_asserted_by { row.search('td')[4].text.strip.to_i == num_entry }
+      is_asserted_by { row.search('td')[5].text.strip == state }
     end
   end
 
   it '実行中の場合はアイコンが表示されていること', if: state == '実行中' do
     @rows.each do |row|
-      td_children = row.search('td')[6].children
+      td_children = row.search('td')[5].children
 
       is_asserted_by { td_children.search('span[@class="processing"]').present? }
 
@@ -362,14 +347,14 @@ shared_examples '分析ジョブの状態が正しいこと' do |state, num_entr
 
   it '完了の場合は結果画面へのボタンが表示されていること', if: state == '完了' do
     @rows.each do |row|
-      result_button = row.search('td')[6].search(result_button_xpath)
+      result_button = row.search('td')[5].search(result_button_xpath)
       is_asserted_by { result_button.present? }
     end
   end
 
   it '完了の場合はダウンロードボタンが表示されていること', if: state == '完了' do
     @rows.each do |row|
-      download_link = row.search('td')[7].search(download_link_xpath)
+      download_link = row.search('td')[6].search(download_link_xpath)
       is_asserted_by { download_link.present? }
     end
   end
