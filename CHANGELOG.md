@@ -1,4 +1,4 @@
-# 4.23.0 (2021/06/06)
+# 4.23.0 (2021/06/07)
 - [REMOVE] analysis with specifing the number of entries
 
 # 4.22.4 (2021/06/05)
