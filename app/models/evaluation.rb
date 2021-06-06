@@ -154,7 +154,7 @@ class Evaluation < ApplicationRecord
   end
 
   def sample_race_ids
-    Denebola::Feature.pluck(:race_id).uniq.sample(self.num_data)
+    Denebola::Feature.distinct.pluck(:race_id).sample(num_data)
   end
 
   def true_positive
