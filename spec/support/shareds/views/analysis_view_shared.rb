@@ -324,7 +324,7 @@ shared_examples '分析ジョブテーブルが表示されていること' do |
   end
 end
 
-shared_examples '分析ジョブの状態が正しいこと' do |state, num_entry: 0|
+shared_examples '分析ジョブの状態が正しいこと' do |state|
   before { @rows = @html.xpath(table_xpath).search('tbody/tr') }
 
   it do
