@@ -1,3 +1,6 @@
+# 4.23.0 (2021/06/06)
+- [REMOVE] analysis with specifing the number of entries
+
 # 4.22.4 (2021/06/05)
 - [UPDATE] evaluation result table to show number of entries
 
