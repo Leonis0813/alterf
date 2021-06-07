@@ -62,7 +62,6 @@ class Analysis < ApplicationRecord
     param = parameter.attributes.merge('env' => Rails.env.to_s)
     param.merge!(slice(:data_source, :num_data))
     param.except!('id', 'analysis_id', 'created_at', 'updated_at')
-    param['num_entry'] = num_entry if num_entry
 
     File.open(File.join(tmp_dir, 'parameter.yml'), 'w') {|file| YAML.dump(param, file) }
   end
@@ -87,6 +86,6 @@ class Analysis < ApplicationRecord
   end
 
   def copy_attributes
-    slice(:data_source, :num_data, :num_entry)
+    slice(:data_source, :num_data)
   end
 end

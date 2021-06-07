@@ -17,8 +17,7 @@ class AnalysisJob < ApplicationJob
 
     analysis.dump_parameter
 
-    script_name = analysis.num_entry ? 'analyze_with_num_entry.py' : 'analyze.py'
-    execute_script(script_name, [analysis_id])
+    execute_script('analyze.py', [analysis_id])
 
     check_output
     analysis.import_data!

@@ -97,7 +97,6 @@ class AnalysesController < ApplicationController
       :data_source,
       :num_data,
       :data_file,
-      :num_entry,
       :parameter,
     )
     parameter = @execute_params['parameter']&.slice(
@@ -142,7 +141,6 @@ class AnalysesController < ApplicationController
       properties: {
         data_source: {type: :string, enum: Analysis::DATA_SOURCE_LIST},
         num_data: {type: :string, pattern: '^([1-9][0-9]*|\s*)$'},
-        num_entry: {type: :string, pattern: '^([1-9][0-9]*|\s*)$'},
         parameter: {
           type: :object,
           properties: {

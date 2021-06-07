@@ -154,12 +154,7 @@ class Evaluation < ApplicationRecord
   end
 
   def sample_race_ids
-    if analysis&.num_entry
-      Denebola::Feature.group(:race_id).having('count_all = ?', analysis.num_entry)
-                       .count.keys
-    else
-      Denebola::Feature.pluck(:race_id)
-    end.uniq.sample(self.num_data)
+    Denebola::Feature.distinct.pluck(:race_id).sample(num_data)
   end
 
   def true_positive

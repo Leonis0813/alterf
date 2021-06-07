@@ -98,7 +98,7 @@ describe Evaluation, type: :model do
           create(:race)
           create(:feature, won: true)
           @evaluation = create(:evaluation, data_source: 'random', num_data: 1)
-          @evaluation.update!(analysis: create(:analysis, num_entry: 1))
+          @evaluation.update!(analysis: create(:analysis))
           @evaluation.fetch_data!
         end
 
