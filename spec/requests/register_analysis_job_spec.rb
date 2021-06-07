@@ -25,7 +25,7 @@ describe 'ブラウザで分析する', type: :request do
                     'エラーが発生しました',
                     '入力値を見直してください'
 
-    describe 'エントリー数を指定せずに分析を実行する' do
+    describe '分析を実行する' do
       before(:all) do
         @driver.get("#{base_url}/analyses")
         @driver.find_element(:id, 'analysis_data_random').send_keys(100)
@@ -58,21 +58,6 @@ describe 'ブラウザで分析する', type: :request do
       it_behaves_like 'ダイアログが正しく表示されていること',
                       'エラーが発生しました',
                       '入力値を見直してください'
-    end
-
-    describe 'エントリー数を指定して分析を実行する' do
-      before(:all) do
-        @driver.get("#{base_url}/analyses")
-        @driver.find_element(:id, 'analysis_data_random').send_keys(100)
-        @driver.find_element(:id, 'analysis_num_entry').send_keys(10)
-        @driver.find_element(:xpath, '//form/input[@value="実行"]').click
-        @wait.until { @driver.find_element(:id, 'dialog-execute').displayed? }
-        @dialog = @driver.find_element(:id, 'dialog-execute')
-      end
-
-      it_behaves_like 'ダイアログが正しく表示されていること',
-                      '分析を開始しました',
-                      '終了後、メールにて結果を通知します'
     end
 
     describe 'パラメーターを指定して分析を実行する' do

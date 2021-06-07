@@ -10,7 +10,6 @@ describe AnalysesController, type: :controller do
     default_params = {
       data_source: 'random',
       num_data: '1000',
-      num_entry: '9',
       parameter: {
         max_depth: '',
         max_features: 'all',
@@ -56,18 +55,6 @@ describe AnalysesController, type: :controller do
                                  .merge(data_params)
           include_context 'トランザクション作成'
           before { allow(Denebola::Race).to receive(:where).and_return(%w[12345678]) }
-          include_context 'リクエスト送信', params: params
-          before { @analysis = Analysis.find_by(state: 'waiting') }
-
-          it_behaves_like 'レスポンスが正常であること', status: 200, body: {}
-          it_behaves_like 'DBにレコードが登録されていること'
-        end
-      end
-
-      ['9', ''].each do |num_entry|
-        context "num_entryに'#{num_entry}'を指定した場合" do
-          params = default_params.merge(num_entry: num_entry)
-          include_context 'トランザクション作成'
           include_context 'リクエスト送信', params: params
           before { @analysis = Analysis.find_by(state: 'waiting') }
 
@@ -124,7 +111,6 @@ describe AnalysesController, type: :controller do
       invalid_attribute = {
         data_source: ['invalid', [1], {source: 'random'}, nil],
         num_data: ['invalid', [1], {data: 1}],
-        num_entry: ['invalid', [1], {entry: 1}],
       }
 
       CommonHelper.generate_test_case(invalid_attribute).each do |invalid_param|
@@ -211,16 +197,11 @@ describe AnalysesController, type: :controller do
           },
           {
             'error_code' => 'invalid_parameter',
-            'parameter' => 'num_entry',
-            'resource' => 'analysis',
-          },
-          {
-            'error_code' => 'invalid_parameter',
             'parameter' => 'num_tree',
             'resource' => 'analysis',
           },
         ]
-        params = {num_entry: 'invalid', parameter: {num_tree: 'invalid'}}
+        params = {parameter: {num_tree: 'invalid'}}
         include_context 'リクエスト送信', params: params
         it_behaves_like 'レスポンスが正常であること',
                         status: 400, body: {'errors' => errors}

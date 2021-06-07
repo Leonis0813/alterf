@@ -20,11 +20,7 @@ class EvaluationJob < ApplicationJob
       end
 
       args = [data_dir, 'model.rf', Settings.evaluation.tmp_file_name]
-      if evaluation.analysis.num_entry
-        execute_script('predict_with_num_entry.py', args)
-      else
-        execute_script('predict.py', args)
-      end
+      execute_script('predict.py', args)
 
       result_file = File.join(data_dir, 'prediction.yml')
       datum.import_prediction_results(result_file)

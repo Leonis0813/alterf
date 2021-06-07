@@ -51,10 +51,6 @@
               </div>
             </div>
             <div class='mb-3'>
-              <%= f.label :num_entry, 'エントリー数', class: 'label-bold' %><br>
-              <%= f.text_field :num_entry, class: 'form-control', name: :num_entry %>
-            </div>
-            <div class='mb-3'>
               <div id='label-register-parameter' class='label-bold'>パラメーター</div>
               <%= f.fields_for :parameter do |param_form| %>
                 <div class='mb-2'>

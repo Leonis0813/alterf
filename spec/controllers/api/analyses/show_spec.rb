@@ -46,7 +46,6 @@ describe Api::AnalysesController, type: :controller do
         :data_source,
         :num_data,
         :num_feature,
-        :num_entry,
         :performed_at,
         :state,
       ).merge(parameter: parameter, result: result).deep_stringify_keys

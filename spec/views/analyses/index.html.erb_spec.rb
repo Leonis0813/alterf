@@ -46,17 +46,6 @@ describe 'analyses/index', type: :view do
     it_behaves_like '分析ジョブの状態が正しいこと', '実行中'
   end
 
-  context 'エントリー数が指定されている場合' do
-    update_attribute = {num_entry: 10, state: 'processing', performed_at: Time.zone.now}
-    include_context 'トランザクション作成'
-    include_context '分析ジョブを作成する', update_attribute: update_attribute
-    include_context '分析フォームオブジェクトを作成する'
-    include_context 'HTML初期化'
-    it_behaves_like '分析画面共通テスト'
-    it_behaves_like 'ページングボタンが表示されていないこと'
-    it_behaves_like '分析ジョブの状態が正しいこと', '実行中', num_entry: 10
-  end
-
   context '完了している場合' do
     update_attribute = {state: 'completed', performed_at: Time.zone.now}
     include_context 'トランザクション作成'

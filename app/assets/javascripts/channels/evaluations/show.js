@@ -34,6 +34,7 @@ consumer.subscriptions.create('Evaluation::DatumChannel', {
             '<span class="bi bi-box-arrow-up-right"></span>' +
           '</a>' +
         '</td>' +
+        '<td class="num_entry"></td>' +
         '<td class="result" style="padding: 4px"></td>' +
         '<td style="padding: 4px">' +
           '<span class="fa-layers fa-fw fa-2x prediction-result" style="color: limegreen">' +
@@ -58,6 +59,7 @@ consumer.subscriptions.create('Evaluation::DatumChannel', {
         '</span>'
       );
     });
+    $(`tr#${datum.race_id} > td.num_entry`).text(datum.num_entry);
     const row = $(`tr#${datum.race_id}`);
     row.removeClass('table-warning');
     row.addClass(includeTruePositive ? 'table-success' : 'table-danger');

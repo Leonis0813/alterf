@@ -10,14 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_08_080153) do
+ActiveRecord::Schema.define(version: 2021_06_06_042203) do
 
   create_table "analyses", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "analysis_id", default: "", null: false
     t.string "data_source"
     t.integer "num_data"
     t.integer "num_feature"
-    t.integer "num_entry"
     t.string "state"
     t.datetime "performed_at"
     t.datetime "completed_at"
