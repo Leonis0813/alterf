@@ -1,3 +1,6 @@
+# 4.23.1 (2021/06/11)
+- [UPDATE] gems
+
 # 4.23.0 (2021/06/07)
 - [REMOVE] analysis with specifing the number of entries
 - [UPDATE] gems
