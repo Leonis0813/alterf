@@ -335,7 +335,7 @@ GEM
     rake (12.3.3)
     rchardet (1.8.0)
     rdoc (6.3.1)
-    red-colors (0.2.0)
+    red-colors (0.3.0)
       matrix
     redis (4.3.1)
     redis-namespace (1.8.1)
