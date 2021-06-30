@@ -7,7 +7,7 @@ class EvaluationJob < ApplicationJob
     evaluation = Evaluation.find(evaluation_id)
     evaluation.start!
 
-    data_dir = Rails.root.join('tmp', 'files', 'evaluations', evaluation_id.to_s)
+    data_dir = Rails.root.join('tmp/files/evaluations', evaluation_id.to_s)
     unzip_model(File.join(data_dir, evaluation.model), data_dir)
 
     evaluation.set_analysis!
@@ -20,23 +20,19 @@ class EvaluationJob < ApplicationJob
       end
 
       args = [data_dir, 'model.rf', Settings.evaluation.tmp_file_name]
-      if evaluation.analysis.num_entry
-        execute_script('predict_with_num_entry.py', args)
-      else
-        execute_script('predict.py', args)
-      end
+      execute_script('predict.py', args)
 
       result_file = File.join(data_dir, 'prediction.yml')
       datum.import_prediction_results(result_file)
       FileUtils.rm(result_file)
+      evaluation.calculate!
     end
 
-    evaluation.calculate!
     evaluation.output_race_ids
     evaluation.complete!
   rescue StandardError => e
     Rails.logger.error(e.message)
     Rails.logger.error(e.backtrace.join("\n"))
-    evaluation.update!(state: Evaluation::STATE_ERROR)
+    evaluation.failed!
   end
 end

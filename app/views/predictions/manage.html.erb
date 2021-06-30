@@ -1,43 +1,53 @@
+<%= javascript_pack_tag 'predictions/manage' %>
+<%= stylesheet_pack_tag 'predictions/manage' %>
+<%= render 'dialogs/execute_error' %>
+<%= render 'predictions/dialogs/execute' %>
+
 <div class='row center-block'>
   <div class='col-lg-4'>
-    <div id='new-prediction' class='well'>
-      <h3>レースを予測</h3>
-      <p>テストデータは<a href='http://db.netkeiba.com' target='_brank'>こちら</a>から</p>
-      <%= form_for @prediction, html: {multipart: true}, url: predictions_path, remote: true do |f| %>
-        <div class='form-group'>
-          <%= f.label :model, 'モデル' %><br>
-          <%= f.file_field :model, name: :model %>
-        </div>
-        <div class='form-group'>
-          <%= f.label :test_data, 'テストデータ' %>
-          <label><%= radio_button_tag :type, 'file', :checked %> ファイル</label>
-          <label><%= radio_button_tag :type, 'url' %> URL</label>
-          <br>
-          <%= f.file_field :test_data, name: :test_data %>
-        </div>
-        <%= f.submit '実行', class: 'btn btn-primary btn-sm btn-submit' %>
-        <%= f.submit 'リセット', type: 'reset', class: 'btn btn-default btn-sm' %>
-      <% end %>
+    <div id='new-prediction' class='card text-dark bg-light'>
+      <div class='card-body'>
+        <h4 class='card-title'>レースを予測</h4>
+        <p>テストデータは<a href='http://db.netkeiba.com' target='_brank'>こちら</a>から</p>
+        <%= form_for @prediction, html: {multipart: true}, url: predictions_path, remote: true do |f| %>
+          <div class='mb-3'>
+            <%= f.label :model, 'モデル', class: 'required label-bold' %><br>
+            <%= f.file_field :model, class: 'form-control', name: :model %>
+          </div>
+          <div class='mb-3'>
+            <%= f.label :test_data, 'テストデータ', class: 'label-bold' %>
+            <label><%= radio_button_tag :type, 'file', :checked %> ファイル</label>
+            <label><%= radio_button_tag :type, 'url' %> URL</label>
+            <br>
+            <%= f.file_field :test_data, class: 'form-control', name: :test_data %>
+          </div>
+          <%= f.submit '実行', class: 'btn btn-primary btn-sm btn-submit' %>
+          <%= f.submit 'リセット', type: 'reset', id: 'btn-reset', class: 'btn btn-default btn-sm' %>
+        <% end %>
+      </div>
     </div>
   </div>
 
-  <div class='col-lg-8 well'>
-    <h3 class='table-title'>ジョブ実行履歴</h3>
-    <% from = @predictions.total_count == 0 ? 0 : @predictions.offset_value + 1 %>
-    <% to = @predictions.offset_value + @predictions.size %>
-    <% info = {total_count: @predictions.total_count, from: from, to: to} %>
-    <h4 class='pagination-info'><%= t('views.pagination.info', info) %></h4>
-    <%= paginate @predictions %>
-    <table class='table table-hover'>
-      <thead>
-        <th width='150px'>実行開始日時</th>
-        <th>モデル</th>
-        <th width='20%'>テストデータ</th>
-        <th width='30%'>予測結果</th>
-      </thead>
-      <tbody>
-        <%= render @predictions %>
-      </tbody>
-    </table>
+  <div class='col-lg-8 card text-dark bg-light'>
+    <div class='card-body'>
+      <h4 class='card-title table-title'>ジョブ実行履歴</h4>
+      <span id='page-info'>
+        <%= render partial: 'layouts/page_info', locals: {resources: @predictions} %>
+      </span>
+      <span id='paginate'>
+        <%= paginate @predictions %>
+      </span>
+      <table id='table-prediction' class='table table-hover'>
+        <thead>
+          <th width='22%'>実行開始日時</th>
+          <th width='26%'>モデル</th>
+          <th width='20%'>テストデータ</th>
+          <th width='32%'>予測結果</th>
+        </thead>
+        <tbody>
+          <%= render @predictions %>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

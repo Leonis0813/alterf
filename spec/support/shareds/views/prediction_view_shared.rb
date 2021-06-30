@@ -28,7 +28,11 @@ shared_examples '予測画面共通テスト' do |expected: {}|
 end
 
 shared_examples '予測情報入力フォームが表示されていること' do
-  it_behaves_like 'タイトルが表示されていること', 'レースを予測'
+  it 'タイトルが表示されていること' do
+    title = @html.xpath("#{form_panel_xpath}/h4[@class='card-title']")
+    is_asserted_by { title.present? }
+    is_asserted_by { title.text.strip == 'レースを予測' }
+  end
 
   it 'テストデータへのリンクが表示されていること' do
     link = @html.xpath("#{form_panel_xpath}/p/a[@href='http://db.netkeiba.com']")
@@ -96,7 +100,7 @@ shared_examples 'テストデータがリンクになっていること' do
       link = test_data.search("a[@href='#{prediction.test_data}']")
       is_asserted_by { link.present? }
 
-      icon = link.search('span[@class="glyphicon glyphicon-new-window new-window"]')
+      icon = link.search('span[@class="bi bi-box-arrow-up-right"]')
       is_asserted_by { icon.present? }
     end
   end
@@ -120,7 +124,7 @@ shared_examples 'ジョブが実行中状態になっていること' do
     @predictions.each_with_index do |_, i|
       test_data = rows[i].search('td[@class="td-result"]')
       is_asserted_by { test_data.search('span').text == '実行中' }
-      is_asserted_by { test_data.search('i[@class="fa fa-refresh fa-spin"]').present? }
+      is_asserted_by { test_data.search('i[@class="fas fa-sync-alt fa-spin"]').present? }
     end
   end
 end
@@ -131,7 +135,7 @@ shared_examples 'ジョブがエラー状態になっていること' do
 
     @predictions.each_with_index do |_, i|
       error_span = rows[i].search('td[@class="td-result"]')
-                          .search('span[@class="glyphicon glyphicon-remove"]')
+                          .search('span[@class="bi bi-x"]')
       is_asserted_by { error_span.present? }
     end
   end

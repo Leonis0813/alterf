@@ -1,3 +1,54 @@
+# 4.23.0 (2021/06/07)
+- [REMOVE] analysis with specifing the number of entries
+- [UPDATE] gems
+
+# 4.22.4 (2021/06/05)
+- [UPDATE] evaluation result table to show number of entries
+
+# 4.22.3 (2021/06/04)
+- [FIX] table row color of evaluation result
+- [FIX] evaluation data download button
+- [FIX] timeout error on executing analysis
+- [FIX] reset button behavior
+
+# 4.22.2 (2021/06/02)
+- [FIX] circle size of prediction results
+- [FIX] table row attributes of evaluation views
+- [UPDATE] channels to broadcast after creating job
+
+# 4.22.1 (2021/05/27)
+- [REFACTOR] javascripts and stylesheets with ES6
+- [CHANGE] compile process to webpacker
+
+# 4.22.0 (2021/05/13)
+- [UPDATE] analysis view to specify training data
+
+# 4.21.0 (2021/05/08)
+- [UPDATE] evaluation view to improve design and show data source and the number of data
+- [UPDATE] evaluation data view to show performance graph
+- [UPDATE] gems
+
+# 4.20.6 (2021/05/03)
+- [UPDATE] gems
+- [FIX] prediction script to sort by number
+- [FIX] evaluation view to set 0 as default
+- [FIX] evaluation model method when completed
+- [FIX] prediction script to sort columns
+
+# 4.20.5 (2021/04/22)
+- [FIX] requirement in config/application.rb
+
+# 4.20.4 (2021/04/20)
+- [UPDATE] views to update table automatically by websocket
+- [UPDATE] gems
+
+# 4.20.3 (2021/04/11)
+- [UPDATE] analysis scripts to add race list file
+
+# 4.20.2 (2021/04/10)
+- [UPDATE] analysis script to set class_weight parameter
+- [UPDATE] gems
+
 # 4.20.1 (2021/03/23)
 - [FIX] for production
 

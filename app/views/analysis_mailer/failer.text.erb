@@ -1,7 +1,6 @@
 分析開始日時: <%= @analysis.created_at %>
 学習データ数: <%= @analysis.num_data %>
 特徴量の数: <%= @analysis.num_feature %>
-エントリー数: <%= @analysis.num_entry || '指定なし' %>
 パラメータ:
   max_depth: <%= @analysis.parameter.max_depth %>
   max_features: <%= @analysis.parameter.max_features %>

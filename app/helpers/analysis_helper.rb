@@ -4,12 +4,19 @@ module AnalysisHelper
   def analysis_table_headers
     [
       {name: '実行開始日時', width: 20},
+      {name: '指定方法', width: 10},
       {name: '学習データ数', width: 15},
-      {name: '特徴量の数', width: 12},
-      {name: 'エントリー数', width: 15},
-      {name: 'パラメーター', width: 18},
-      {name: '状態', width: 10},
+      {name: '特徴量の数', width: 15},
+      {name: 'パラメーター', width: 15},
+      {name: '状態', width: 15},
     ]
+  end
+
+  def analysis_data_source_option
+    {
+      'ランダム' => 'random',
+      'ファイル' => 'file',
+    }
   end
 
   def index_input_common_option(name)
@@ -28,18 +35,14 @@ module AnalysisHelper
   end
 
   def question_sign(param_name)
-    content_tag(
-      :span,
-      nil,
-      class: 'glyphicon glyphicon-question-sign', title: question_title[param_name],
-    )
+    tag.span(class: 'bi bi-question-circle-fill', title: question_title[param_name])
   end
 
   def analysis_result_download_button(analysis)
     return unless analysis.state == 'completed'
 
-    content_tag(:button, class: 'btn btn-default', title: '結果をダウンロード') do
-      content_tag(:span, nil, class: 'glyphicon glyphicon-download-alt')
+    tag.button(class: 'btn btn-light btn-sm') do
+      tag.span(class: 'bi bi-download', title: '結果をダウンロード')
     end
   end
 

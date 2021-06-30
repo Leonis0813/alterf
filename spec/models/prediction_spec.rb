@@ -17,6 +17,16 @@ describe Prediction, type: :model do
     end
   end
 
+  shared_examples '更新した状態がブロードキャストされていること' do |state|
+    it "状態が#{state}になっていること" do
+      is_asserted_by { @prediction.state == state }
+    end
+
+    it '状態がブロードキャストされていること' do
+      is_asserted_by { @called }
+    end
+  end
+
   describe '#validates' do
     describe '正常系' do
       valid_attribute = {
@@ -80,7 +90,7 @@ describe Prediction, type: :model do
 
   describe '#import_results' do
     describe '正常系' do
-      file = Rails.root.join('spec', 'fixtures', 'prediction.yml')
+      file = Rails.root.join('spec/fixtures/prediction.yml')
       include_context 'トランザクション作成'
       include_context '予測ジョブ情報を作成する'
       before(:all) { @prediction.import_results(file) }
@@ -99,7 +109,7 @@ describe Prediction, type: :model do
 
     describe '異常系' do
       context 'ファイルが存在しない場合' do
-        file = Rails.root.join('spec', 'fixtures', 'not_exist.yml')
+        file = Rails.root.join('spec/fixtures/not_exist.yml')
         include_context 'トランザクション作成'
         include_context '予測ジョブ情報を作成する'
 
@@ -108,7 +118,7 @@ describe Prediction, type: :model do
 
       context 'ファイル内容が不正な場合' do
         context '配列の場合' do
-          file = Rails.root.join('spec', 'fixtures', 'array.yml')
+          file = Rails.root.join('spec/fixtures/array.yml')
           include_context 'トランザクション作成'
           include_context '予測ジョブ情報を作成する'
           before(:all) { File.open(file, 'w') {|f| YAML.dump([3, 5, 11, 17], f) } }
@@ -119,7 +129,7 @@ describe Prediction, type: :model do
         end
 
         context 'ハッシュの値が数値でない場合' do
-          file = Rails.root.join('spec', 'fixtures', 'invalid_value.yml')
+          file = Rails.root.join('spec/fixtures/invalid_value.yml')
           include_context 'トランザクション作成'
           include_context '予測ジョブ情報を作成する'
           before(:all) { File.open(file, 'w') {|f| YAML.dump({'invalid' => 1}, f) } }
@@ -130,5 +140,46 @@ describe Prediction, type: :model do
         end
       end
     end
+  end
+
+  describe '#start!' do
+    include_context 'トランザクション作成'
+    include_context 'ActionCableのモックを作成'
+    before do
+      @prediction = create(:prediction)
+      @prediction.start!
+    end
+
+    it '実行開始日時が設定されていること' do
+      is_asserted_by { @prediction.performed_at.present? }
+    end
+
+    it_behaves_like '更新した状態がブロードキャストされていること',
+                    Prediction::STATE_PROCESSING
+  end
+
+  describe '#completed!' do
+    include_context 'トランザクション作成'
+    include_context 'ActionCableのモックを作成'
+    before do
+      @prediction = create(:prediction)
+      [3, 1].each {|number| @prediction.results.create!(number: number, won: true) }
+      @prediction.completed!
+    end
+
+    it_behaves_like '更新した状態がブロードキャストされていること',
+                    Prediction::STATE_COMPLETED
+  end
+
+  describe '#failed!' do
+    include_context 'トランザクション作成'
+    include_context 'ActionCableのモックを作成'
+    before do
+      @prediction = create(:prediction)
+      @prediction.failed!
+    end
+
+    it_behaves_like '更新した状態がブロードキャストされていること',
+                    Prediction::STATE_ERROR
   end
 end

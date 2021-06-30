@@ -5,12 +5,15 @@ shared_context 'HTML初期化' do
 end
 
 shared_examples 'ヘッダーが表示されていること' do
-  base_xpath =
-    '//div[@class="navbar navbar-default navbar-static-top"]/div[@class="container"]'
+  base_xpath = [
+    '//nav[@class="navbar navbar-expand-lg navbar-dark bg-dark"]',
+    'div[@class="container-fluid"]',
+  ].join('/')
+
   ul_xpath = [
     base_xpath,
-    'div[@class="navbar-collapse collapse navbar-responsive-collapse"]',
-    'ul[@class="nav navbar-nav"]',
+    'div[@class="collapse navbar-collapse"]',
+    'ul[@class="navbar-nav"]',
   ].join('/')
 
   it 'アプリ名が表示されていること' do
@@ -25,30 +28,22 @@ shared_examples 'ヘッダーが表示されていること' do
     ['/evaluations', '評価画面'],
   ].each do |href, text|
     it 'リンクが表示されていること' do
-      link = @html.xpath("#{ul_xpath}/li/a[@href='#{href}']")
+      link = @html.xpath("#{ul_xpath}/li[@class='nav-item']/a[@href='#{href}']")
       is_asserted_by { link.present? }
       is_asserted_by { link.text == text }
     end
   end
 end
 
-shared_examples 'タイトルが表示されていること' do |expected_title|
-  it do
-    title = @html.xpath("#{form_panel_xpath}/h3")
-    is_asserted_by { title.present? }
-    is_asserted_by { title.text.strip == expected_title }
-  end
-end
-
 shared_examples '表示件数情報が表示されていること' do |total: 0, from: 0, to: 0|
   it 'タイトルが表示されていること' do
-    title = @html.xpath("#{table_panel_xpath}/h3")
+    title = @html.xpath(table_title_xpath)
     is_asserted_by { title.present? }
     is_asserted_by { title.text == 'ジョブ実行履歴' }
   end
 
   it '件数情報が表示されていること' do
-    number = @html.xpath("#{table_panel_xpath}/h4")
+    number = @html.xpath("#{table_panel_xpath}/span[@id='page-info']/h5")
     is_asserted_by { number.present? }
     is_asserted_by { number.text == "#{total}件中#{from}〜#{to}件を表示" }
   end
@@ -56,7 +51,7 @@ end
 
 shared_examples 'ページングボタンが表示されていないこと' do
   it do
-    paging = @html.xpath("#{table_panel_xpath}/nav/ul[@class='pagination']")
+    paging = @html.xpath(paging_xpath)
     is_asserted_by { paging.blank? }
   end
 end

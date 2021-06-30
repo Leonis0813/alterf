@@ -35,6 +35,9 @@ pipeline {
           sh "rvm ${RUBY_VERSION} do bundle install --path=vendor/bundle"
           sh "rvm ${RUBY_VERSION} do env RAILS_ENV=test bundle exec rake db:drop"
           sh "rvm ${RUBY_VERSION} do env RAILS_ENV=test bundle exec rake db:setup"
+          sh "yarn install"
+          sh "rvm ${RUBY_VERSION} do env RAILS_ENV=test bundle exec rake webpacker:clean"
+          sh "rvm ${RUBY_VERSION} do env RAILS_ENV=test bundle exec rake webpacker:compile"
         }
       }
     }

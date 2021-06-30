@@ -6,9 +6,9 @@ linters:
         - '.rubocop.yml'
       Layout/InitialIndentation:
         Enabled: false
+      Layout/LineLength:
+        Max: 110
       Layout/TrailingEmptyLines:
         Enabled: false
       Lint/UselessAssignment:
         Enabled: false
-      Metrics/LineLength:
-        Max: 110

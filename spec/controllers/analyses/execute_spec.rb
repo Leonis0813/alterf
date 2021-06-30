@@ -3,10 +3,13 @@
 require 'rails_helper'
 
 describe AnalysesController, type: :controller do
+  data_file_path = Rails.root.join('spec/fixtures/training_data.txt')
+  data_file = Rack::Test::UploadedFile.new(File.open(data_file_path))
+
   describe '#execute' do
     default_params = {
+      data_source: 'random',
       num_data: '1000',
-      num_entry: '9',
       parameter: {
         max_depth: '',
         max_features: 'all',
@@ -20,6 +23,7 @@ describe AnalysesController, type: :controller do
     shared_context 'リクエスト送信' do |params: default_params|
       before do
         allow(AnalysisJob).to receive(:perform_later).and_return(true)
+        data_file.rewind
         response = post(:execute, params: params)
         @response_status = response.status
         @response_body = JSON.parse(response.body) rescue response.body
@@ -41,10 +45,16 @@ describe AnalysesController, type: :controller do
     end
 
     describe '正常系' do
-      ['9', ''].each do |num_entry|
-        context "num_entryに'#{num_entry}'を指定した場合" do
-          params = default_params.merge(num_entry: num_entry)
+      [
+        ['random', {num_data: 100}],
+        ['file', {data_file: data_file}],
+      ].each do |data_source, data_params|
+        context "data_sourceに#{data_source}を指定した場合" do
+          params = default_params.except(:num_data)
+                                 .merge(data_source: data_source)
+                                 .merge(data_params)
           include_context 'トランザクション作成'
+          before { allow(Denebola::Race).to receive(:where).and_return(%w[12345678]) }
           include_context 'リクエスト送信', params: params
           before { @analysis = Analysis.find_by(state: 'waiting') }
 
@@ -76,7 +86,7 @@ describe AnalysesController, type: :controller do
     end
 
     describe '異常系' do
-      required_keys = %i[num_data parameter]
+      required_keys = %i[data_source parameter]
 
       CommonHelper.generate_combinations(required_keys).each do |absent_keys|
         context "#{absent_keys.join(',')}がない場合" do
@@ -99,8 +109,8 @@ describe AnalysesController, type: :controller do
       end
 
       invalid_attribute = {
-        num_data: ['invalid', [1], {data: 1}, nil],
-        num_entry: ['invalid', [1], {entry: 1}],
+        data_source: ['invalid', [1], {source: 'random'}, nil],
+        num_data: ['invalid', [1], {data: 1}],
       }
 
       CommonHelper.generate_test_case(invalid_attribute).each do |invalid_param|
@@ -151,16 +161,38 @@ describe AnalysesController, type: :controller do
         end
       end
 
+      [
+        ['空ファイルの場合', []],
+        ['空行が含まれている場合', ['12345678', '', '23456789']],
+      ].each do |desc, lines|
+        context desc do
+          invalid_file_path = Rails.root.join('spec/fixtures/invalid_data.txt')
+          File.open(invalid_file_path, 'w') do |file|
+            lines.each {|line| file.puts(line) }
+          end
+          invalid_file = Rack::Test::UploadedFile.new(File.open(data_file_path))
+          params = default_params.merge(data_source: 'file', data_file: invalid_file)
+          errors = [
+            {
+              'error_code' => 'invalid_parameter',
+              'parameter' => 'data_file',
+              'resource' => 'analysis',
+            },
+          ]
+
+          after(:all) { FileUtils.rm_f(invalid_file_path) }
+
+          include_context 'リクエスト送信', params: params
+          it_behaves_like 'レスポンスが正常であること',
+                          status: 400, body: {'errors' => errors}
+        end
+      end
+
       context '複合エラーの場合' do
         errors = [
           {
             'error_code' => 'absent_parameter',
-            'parameter' => 'num_data',
-            'resource' => 'analysis',
-          },
-          {
-            'error_code' => 'invalid_parameter',
-            'parameter' => 'num_entry',
+            'parameter' => 'data_source',
             'resource' => 'analysis',
           },
           {
@@ -169,7 +201,7 @@ describe AnalysesController, type: :controller do
             'resource' => 'analysis',
           },
         ]
-        params = {num_entry: 'invalid', parameter: {num_tree: 'invalid'}}
+        params = {parameter: {num_tree: 'invalid'}}
         include_context 'リクエスト送信', params: params
         it_behaves_like 'レスポンスが正常であること',
                         status: 400, body: {'errors' => errors}

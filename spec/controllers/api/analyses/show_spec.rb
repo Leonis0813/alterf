@@ -40,19 +40,12 @@ describe Api::AnalysesController, type: :controller do
           }
         end,
       }
-      parameter = analysis.parameter.slice(
-        :max_depth,
-        :max_features,
-        :max_leaf_nodes,
-        :min_samples_leaf,
-        :min_samples_split,
-        :num_tree,
-      )
+      parameter = analysis.parameter.slice(*parameter_attribute_names)
       @body = analysis.slice(
         :analysis_id,
+        :data_source,
         :num_data,
         :num_feature,
-        :num_entry,
         :performed_at,
         :state,
       ).merge(parameter: parameter, result: result).deep_stringify_keys

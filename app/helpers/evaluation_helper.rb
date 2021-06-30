@@ -3,14 +3,26 @@
 module EvaluationHelper
   def evaluation_table_headers
     [
-      {name: '実行開始日時', width: 21},
-      {name: 'モデル', width: 20},
-      {name: '状態', width: 16},
+      {name: '実行開始日時', width: 14},
+      {name: 'モデル', width: 15},
+      {name: '指定方法', width: 9},
+      {name: 'データ数', width: 8},
+      {name: '状態', width: 11},
       {name: '適合率', width: 9},
       {name: '再現率', width: 9},
       {name: '特異度', width: 9},
       {name: 'F値', width: 9},
     ]
+  end
+
+  def collapse_params(id, expanded)
+    {
+      type: 'button',
+      'data-bs-toggle' => 'collapse',
+      'data-bs-target' => "##{id}",
+      'aria-controls' => id,
+      'aria-expanded' => expanded,
+    }
   end
 
   def progress(evaluation)
@@ -33,7 +45,24 @@ module EvaluationHelper
     end
   end
 
-  def row_class(numbers, datum)
+  def row_class(state)
+    case state
+    when 'waiting'
+      'cursor-auto'
+    when 'processing'
+      'table-warning cursor-pointer'
+    when 'completed'
+      'table-success cursor-pointer'
+    when 'error'
+      'table-danger cursor-auto'
+    end
+  end
+
+  def row_title(state)
+    %w[processing completed].include?(state) ? '結果を確認' : ''
+  end
+
+  def datum_row_class(numbers, datum)
     return 'warning' if datum.prediction_results.empty?
 
     numbers.include?(datum.ground_truth) ? 'success' : 'danger'
@@ -43,7 +72,7 @@ module EvaluationHelper
     number == ground_truth ? 'limegreen' : 'gray'
   end
 
-  def data_source_option
+  def evaluation_data_source_option
     {
       'Top20' => 'remote',
       'ファイル' => 'file',
@@ -57,8 +86,8 @@ module EvaluationHelper
     return unless evaluation.state == 'completed'
 
     link_to(evaluation_download_path(evaluation.evaluation_id), remote: true) do
-      content_tag(:button, class: 'btn btn-success') do
-        content_tag(:span, nil, class: 'glyphicon glyphicon-download-alt')
+      tag.button(class: 'btn btn-success') do
+        tag.span(class: 'bi bi-download')
       end
     end
   end

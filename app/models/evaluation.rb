@@ -58,8 +58,10 @@ class Evaluation < ApplicationRecord
     end
   end
 
+  after_create :broadcast
+
   def set_analysis!
-    data_dir = Rails.root.join('tmp', 'files', 'evaluations', id.to_s)
+    data_dir = Rails.root.join('tmp/files/evaluations', id.to_s)
     analysis_id = read_analysis_id(File.join(data_dir, 'metadata.yml'))
     analysis = Analysis.find_by(analysis_id: analysis_id)
     raise StandardError if analysis.nil?
@@ -75,9 +77,7 @@ class Evaluation < ApplicationRecord
                  NetkeibaClient.new.http_get_race_top
                else
                  file_path = Rails.root.join(
-                   'tmp',
-                   'files',
-                   'evaluations',
+                   'tmp/files/evaluations',
                    id.to_s,
                    Settings.evaluation.race_list_filename,
                  )
@@ -112,23 +112,39 @@ class Evaluation < ApplicationRecord
       attribute[:f_measure] = (2 * precision * recall) / (precision + recall)
     end
     update!(attribute)
+
+    completed_data_size = data.to_a.count {|datum| datum.prediction_results.present? }
+
+    %i[precision recall f_measure].each {|key| attribute[key] ||= 0 }
+    attribute[:progress] = (100 * completed_data_size / data.size.to_f).round(0)
+    broadcast(attribute)
+
+    attribute[:evaluation_id] = evaluation_id
+    ActionCable.server.broadcast('evaluation_datum', attribute)
   end
 
   def output_race_ids
     return if [DATA_SOURCE_FILE, DATA_SOURCE_TEXT].include?(data_source)
 
-    file_path = Rails.root.join('tmp', 'files', 'evaluations', id.to_s, 'data.txt')
+    file_path = Rails.root.join('tmp/files/evaluations', id.to_s, 'data.txt')
     File.open(file_path, 'w') do |file|
       data.pluck(:race_id).each {|race_id| file.puts(race_id) }
     end
   end
 
   def start!
-    update!(state: Analysis::STATE_PROCESSING, performed_at: Time.zone.now)
+    update!(state: STATE_PROCESSING, performed_at: Time.zone.now)
+    broadcast(state: state, performed_at: performed_at.strftime('%Y/%m/%d %T'))
   end
 
   def complete!
-    update!(state: Analysis::STATE_COMPLETED, completed_at: Time.zone.now)
+    update!(state: STATE_COMPLETED, completed_at: Time.zone.now)
+    broadcast(slice(:state, :data_source))
+  end
+
+  def failed!
+    update!(state: STATE_ERROR)
+    broadcast(slice(:state))
   end
 
   private
@@ -138,12 +154,7 @@ class Evaluation < ApplicationRecord
   end
 
   def sample_race_ids
-    if analysis&.num_entry
-      Denebola::Feature.group(:race_id).having('count_all = ?', analysis.num_entry)
-                       .count.keys
-    else
-      Denebola::Feature.pluck(:race_id)
-    end.uniq.sample(self.num_data)
+    Denebola::Feature.distinct.pluck(:race_id).sample(num_data)
   end
 
   def true_positive
@@ -168,5 +179,10 @@ class Evaluation < ApplicationRecord
     data.inject(0) do |fn, datum|
       fn + datum.prediction_results.lost.where(number: datum.ground_truth).count
     end.to_f
+  end
+
+  def broadcast(attribute = {})
+    updated_attribute = attribute.merge('evaluation_id' => evaluation_id)
+    ActionCable.server.broadcast('evaluation', updated_attribute)
   end
 end

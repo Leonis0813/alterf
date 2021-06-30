@@ -20,23 +20,14 @@ describe 'ブラウザで予測する', type: :request do
 
     describe '不正な値を入力する' do
       before(:all) do
-        @driver.find_element(:id, 'type_url').click
-        @driver.find_element(:id, 'prediction_test_data').send_keys('invalid')
         @driver.find_element(:xpath, '//form/input[@value="実行"]').click
-        @wait.until { @driver.find_element(:class, 'modal-body').displayed? }
+        @wait.until { @driver.find_element(:id, 'dialog-execute-error').displayed? }
+        @dialog = @driver.find_element(:id, 'dialog-execute-error')
       end
 
-      it 'タイトルが正しいこと' do
-        xpath = '//div[@class="modal-header"]/h4[@class="modal-title"]'
-        text = 'エラーが発生しました'
-        is_asserted_by { @driver.find_element(:xpath, xpath).text == text }
-      end
-
-      it 'エラーメッセージが正しいこと' do
-        xpath = '//div[@class="modal-body"]/div'
-        text = '入力値を見直してください'
-        is_asserted_by { @driver.find_element(:xpath, xpath).text == text }
-      end
+      it_behaves_like 'ダイアログが正しく表示されていること',
+                      'エラーが発生しました',
+                      '入力値を見直してください'
 
       describe 'テストデータ形式を変更する' do
         before(:all) do

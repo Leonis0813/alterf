@@ -1,57 +1,44 @@
-<tr id='<%= analysis.analysis_id %>'>
-  <td class='<%= state_to_class(analysis.state) %>'>
+<tr id='<%= analysis.analysis_id %>' class='table-<%= state_to_class(analysis.state) %>'>
+  <td class='performed_at'>
     <%= time_to_string(analysis.performed_at) %>
   </td>
-  <td class='<%= state_to_class(analysis.state) %>'>
+  <td class='data_source'>
+    <%= analysis_data_source_option.invert[analysis.data_source] %>
+  </td>
+  <td class='num_data'>
     <%= analysis.num_data %>
   </td>
-  <td class='<%= state_to_class(analysis.state) %>'>
+  <td class='num_feature'>
     <%= analysis.num_feature %>
   </td>
-  <td class='<%= state_to_class(analysis.state) %>'>
-    <%= analysis.num_entry %>
-  </td>
-  <td class='<%= state_to_class(analysis.state) %>'>
-    <button class='btn btn-xs btn-<%= state_to_class(analysis.state) %> btn-param'>
+  <td class='parameter'>
+    <button class='btn btn-sm btn-<%= state_to_class(analysis.state) %> btn-param'>
       確認
     </button>
   </td>
-  <td class='<%= state_to_class(analysis.state) %>'>
+  <td class='state'>
   <% case analysis.state %>
   <% when 'processing' %>
     <span class='processing'><%= state_to_title(analysis.state) %></span>
-    <i class='fa fa-refresh fa-spin'></i>
+    <i class='fas fa-sync-alt fa-spin'></i>
   <% when 'completed' %>
     <%= link_to analysis_path(analysis.analysis_id), target: :_blank, rel: 'noopener noreferrer' do %>
-      <button class='btn btn-xs btn-success' title='結果を確認'>
+      <button class='btn btn-sm btn-success' title='結果を確認'>
         <%= state_to_title(analysis.state) %>
-        <span class='glyphicon glyphicon-new-window'></span>
+        <span class='bi bi-box-arrow-up-right'></span>
       </button>
     <% end %>
   <% else %>
     <%= state_to_title(analysis.state) %>
   <% end %>
   </td>
-  <td class='download'>
+  <td class='download' style='background-color: #f5f5f5'>
     <%= analysis_result_download_button(analysis) %>
   </td>
-  <td class='rebuild'>
-    <%= form_tag analyses_path, remote: true, style: 'padding: 0px' do %>
-      <%= hidden_field_tag :num_data, analysis.num_data, id: "num_data-#{analysis.analysis_id}" %>
-      <%= hidden_field_tag :num_entry, analysis.num_entry, id: "num_entry-#{analysis.analysis_id}" %>
-
-      <% %i[
-           max_depth
-           max_features
-           max_leaf_nodes
-           min_samples_leaf
-           min_samples_split
-           num_tree
-         ].each do |name| %>
-        <%= hidden_field_tag name, analysis.parameter.send(name), name: "parameter[#{name}]" %>
-      <% end %>
-      <%= button_tag type: :submit, class: 'btn btn-default' do %>
-        <span class='glyphicon glyphicon-repeat' />
+  <td class='rebuild' style='background-color: #f5f5f5'>
+    <%= form_tag analysis_rebuild_path(analysis.analysis_id), remote: true, style: 'padding: 0px' do %>
+      <%= button_tag type: :submit, class: 'btn btn-light btn-sm' do %>
+        <span class='bi bi-arrow-repeat' />
       <% end %>
     <% end %>
   </td>

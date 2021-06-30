@@ -21,8 +21,9 @@ describe 'evaluations/manage', type: :view do
     include_context 'HTML初期化'
     it_behaves_like '評価画面共通テスト'
     it_behaves_like 'ページングボタンが表示されていないこと'
+    it_behaves_like 'テーブルの列がリンクになっていないこと'
     it_behaves_like '実行開始時間が表示されていないこと'
-    it_behaves_like 'ジョブの状態が正しいこと', state: '実行待ち'
+    it_behaves_like '評価ジョブの情報が表示されていること', state: '実行待ち'
     it_behaves_like 'ダウンロードボタンが表示されていないこと'
   end
 
@@ -33,7 +34,8 @@ describe 'evaluations/manage', type: :view do
     include_context 'HTML初期化'
     it_behaves_like '評価画面共通テスト'
     it_behaves_like 'ページングボタンが表示されていないこと'
-    it_behaves_like 'ジョブの状態が正しいこと', state: '0%完了', button_class: 'warning'
+    it_behaves_like 'テーブルの列がリンクになっていること'
+    it_behaves_like '評価ジョブの情報が表示されていること', state: '0%完了'
     it_behaves_like 'ダウンロードボタンが表示されていないこと'
   end
 
@@ -54,8 +56,8 @@ describe 'evaluations/manage', type: :view do
         include_context 'HTML初期化'
         it_behaves_like '評価画面共通テスト'
         it_behaves_like 'ページングボタンが表示されていないこと'
-        it_behaves_like 'ジョブの状態が正しいこと',
-                        state: '完了', button_class: 'success'
+        it_behaves_like 'テーブルの列がリンクになっていること'
+        it_behaves_like '評価ジョブの情報が表示されていること', state: '完了'
         it_behaves_like '評価結果情報が表示されていること'
         it_behaves_like 'ダウンロードボタンが表示されていないこと'
       end
@@ -69,8 +71,8 @@ describe 'evaluations/manage', type: :view do
         include_context 'HTML初期化'
         it_behaves_like '評価画面共通テスト'
         it_behaves_like 'ページングボタンが表示されていないこと'
-        it_behaves_like 'ジョブの状態が正しいこと',
-                        state: '完了', button_class: 'success'
+        it_behaves_like 'テーブルの列がリンクになっていること'
+        it_behaves_like '評価ジョブの情報が表示されていること', state: '完了'
         it_behaves_like '評価結果情報が表示されていること'
         it_behaves_like 'ダウンロードボタンが表示されていること'
       end
@@ -84,7 +86,8 @@ describe 'evaluations/manage', type: :view do
     include_context 'HTML初期化'
     it_behaves_like '評価画面共通テスト'
     it_behaves_like 'ページングボタンが表示されていないこと'
-    it_behaves_like 'ジョブの状態が正しいこと', state: 'エラー'
+    it_behaves_like 'テーブルの列がリンクになっていないこと'
+    it_behaves_like '評価ジョブの情報が表示されていること', state: 'エラー'
     it_behaves_like 'ダウンロードボタンが表示されていないこと'
   end
 

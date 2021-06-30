@@ -10,18 +10,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_11_142246) do
+ActiveRecord::Schema.define(version: 2021_06_06_042203) do
 
   create_table "analyses", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "analysis_id", default: "", null: false
+    t.string "data_source"
     t.integer "num_data"
     t.integer "num_feature"
-    t.integer "num_entry"
     t.string "state"
     t.datetime "performed_at"
     t.datetime "completed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "analysis_data", charset: "utf8", force: :cascade do |t|
+    t.bigint "analysis_id", null: false
+    t.string "race_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["analysis_id", "race_id"], name: "index_analysis_data_on_analysis_id_and_race_id", unique: true
+    t.index ["analysis_id"], name: "index_analysis_data_on_analysis_id"
   end
 
   create_table "analysis_parameters", id: :integer, charset: "utf8", force: :cascade do |t|
@@ -117,6 +126,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_142246) do
   end
 
   create_table "predictions", id: :integer, charset: "utf8", force: :cascade do |t|
+    t.bigint "analysis_id"
     t.string "prediction_id"
     t.string "model"
     t.string "test_data"
@@ -124,6 +134,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_142246) do
     t.datetime "performed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["analysis_id"], name: "index_predictions_on_analysis_id"
     t.index ["prediction_id"], name: "index_predictions_on_prediction_id", unique: true
   end
 

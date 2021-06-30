@@ -3,18 +3,6 @@
 require 'rails_helper'
 
 describe 'ジョブ情報を確認する', type: :request do
-  shared_examples 'ダイアログが正しく表示されていること' do |title, message|
-    it 'タイトルが正しいこと' do
-      xpath = 'div//h4[@class="modal-title"]'
-      is_asserted_by { @dialog.find_element(:xpath, xpath).text == title }
-    end
-
-    it 'メッセージが正しいこと' do
-      xpath = 'div//div[@class="modal-body"]'
-      is_asserted_by { @dialog.find_element(:xpath, xpath).text == message }
-    end
-  end
-
   include_context 'Webdriver起動'
 
   describe '分析画面を開く' do
@@ -40,12 +28,16 @@ describe 'ジョブ情報を確認する', type: :request do
 
     describe '分析ジョブ情報を検索する' do
       before(:all) do
-        @driver.find_element(:id, 'btn-modal-execute-error-ok').click
-        @wait.until { not @driver.find_element(:id, 'dialog-execute-error').displayed? }
+        @wait.until do
+          @driver.find_element(:id, 'btn-modal-execute-error-ok').click
+          not @driver.find_element(:id, 'dialog-execute-error').displayed?
+        end
         element = @driver.find_element(:id, 'input-index-num_data')
         element.clear
         element.send_keys('1')
-        @driver.find_element(:xpath, '//form/input[@value="検索"]').click
+        @wait.until do
+          @driver.find_element(:xpath, '//form/input[@value="検索"]').click.nil?
+        end
       end
 
       it '分析ジョブ一覧が表示されていること' do

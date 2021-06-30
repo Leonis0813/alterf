@@ -19,7 +19,7 @@ end
 
 shared_examples '評価画面共通テスト' do |expected: {}|
   it_behaves_like 'ヘッダーが表示されていること'
-  it_behaves_like '評価情報入力フォームが表示されていること'
+  it_behaves_like '入力フォーム用のタブが表示されていること'
   it_behaves_like '表示件数情報が表示されていること',
                   total: expected[:total] || EvaluationViewHelper::DEFAULT_PER_PAGE,
                   from: expected[:from] || 1,
@@ -28,35 +28,53 @@ shared_examples '評価画面共通テスト' do |expected: {}|
                   rows: expected[:rows] || EvaluationViewHelper::DEFAULT_PER_PAGE
 end
 
-shared_examples '評価情報入力フォームが表示されていること' do
-  it 'タイトルが表示されていること' do
-    title = @html.xpath("#{form_panel_xpath}/h3")
-    is_asserted_by { title.present? }
-    is_asserted_by { title.text == 'モデルを評価' }
+shared_examples '入力フォーム用のタブが表示されていること' do
+  it '表示切り替え用のタブが表示されていること' do
+    xpath = [
+      form_tab_xpath,
+      'li[@class="nav-item"]',
+      'button[@id="collapse-form"]',
+    ].join('/')
+    collapse = @html.xpath(xpath)
+    is_asserted_by { collapse.present? }
   end
 
-  %w[model data].each do |param|
-    it "evaluation_#{param}を含む<label>タグがあること" do
-      label =
-        @html.xpath("#{input_xpath}/label[@for='evaluation_#{param}']")
+  it 'ジョブ登録用のタブが表示されていること' do
+    xpath = [
+      form_tab_xpath,
+      'li[@class="nav-item active"]',
+      'button[@id="tab-register"][@class="nav-link active"]' \
+      '[@data-bs-target="#new-evaluation"]',
+    ].join('/')
+    tab_register = @html.xpath(xpath)
+    is_asserted_by { tab_register.present? }
+    is_asserted_by { tab_register.text.strip == 'ジョブ登録' }
+  end
+
+  it_behaves_like 'ジョブ登録フォームが表示されていること'
+end
+
+shared_examples 'ジョブ登録フォームが表示されていること' do
+  [
+    %w[evaluation_model モデル],
+    %w[evaluation_data 評価データ],
+    %w[data_source 指定方法:],
+  ].each do |param, text|
+    it "フォームのラベルが表示されていること(ラベル: #{text})" do
+      label = @html.xpath("#{input_xpath}/label[@for='#{param}']")
       is_asserted_by { label.present? }
+      is_asserted_by { label.text.strip == text }
     end
   end
 
-  it 'evaluation_modelを含む<input>タグがあること' do
-    input =
-      @html.xpath("#{input_xpath}/input[@id='evaluation_model']")
+  it 'モデル入力フォームが表示されていること' do
+    input = @html.xpath("#{input_xpath}/input[@id='evaluation_model']")
     is_asserted_by { input.present? }
   end
 
-  it 'data_sourceを含む<label>タグがあること' do
-    xpath = "#{input_xpath}/span/label[@for='data_source']"
-    is_asserted_by { @html.xpath(xpath).present? }
-  end
-
-  it 'data_sourceを含む<select>タグがあること' do
-    xpath = "#{input_xpath}/span/select[@id='data_source']"
-    is_asserted_by { @html.xpath(xpath).present? }
+  it '指定方法を選択するセレクトボックスが表示されていること' do
+    select = @html.xpath("#{input_xpath}/select[@id='evaluation_data_source']")
+    is_asserted_by { select.present? }
   end
 
   [
@@ -65,35 +83,45 @@ shared_examples '評価情報入力フォームが表示されていること' d
     %w[text 直接入力],
     %w[random ランダム],
   ].each do |value, text|
-    it "valueが#{value}の<option>タグがあること" do
-      xpath = "#{input_xpath}/span/select[@id='data_source']/option[@value='#{value}']"
-      is_asserted_by { @html.xpath(xpath).present? }
-      is_asserted_by { @html.xpath(xpath).text == text }
+    it "指定方法として#{text}が選択できること" do
+      xpath = "#{input_xpath}/select[@id='evaluation_data_source']" \
+              "/option[@value='#{value}']"
+      option = @html.xpath(xpath)
+      is_asserted_by { option.present? }
+      is_asserted_by { option.text.strip == text }
     end
   end
 
-  it '非表示で無効になっているファイル入力フォームがあること' do
-    xpath = "#{input_xpath}/input[@id='evaluation_data_file']" \
-            "[@class='form-data-source not-selected'][@disabled]"
-    is_asserted_by { @html.xpath(xpath).present? }
+  [
+    %w[file input ファイル],
+    %w[text textarea テキスト],
+    %w[random input データ数],
+  ].each do |id, tag, desc|
+    it "非表示で無効になっている#{desc}入力フォームがあること" do
+      xpath = [
+        input_xpath,
+        "#{tag}[@id='evaluation_data_#{id}'][@disabled]" \
+        '[@class="form-control form-data-source not-selected"][@disabled]',
+      ].join('/')
+      form = @html.xpath(xpath)
+      is_asserted_by { form.present? }
+    end
   end
 
-  it '非表示で無効になっているテキスト入力フォームがあること' do
-    xpath = "#{input_xpath}/textarea[@id='evaluation_data_text']" \
-            "[@class='form-control form-data-source not-selected'][@disabled]"
-    is_asserted_by { @html.xpath(xpath).present? }
-  end
-
-  it '非表示で無効になっているデータ数入力フォームがあること' do
-    xpath = "#{input_xpath}/input[@id='evaluation_data_random']" \
-            "[@class='form-control form-data-source not-selected'][@disabled]"
-    is_asserted_by { @html.xpath(xpath).present? }
-  end
-
-  %w[submit reset].each do |type|
+  [
+    %w[submit 実行],
+    %w[reset リセット],
+  ].each do |type, value|
     it "typeが#{type}のボタンがあること" do
-      button = @html.xpath("#{form_xpath}/input[@type='#{type}']")
+      xpath = [
+        form_xpath,
+        'div[@class="row text-end"]',
+        'div[@class="col-12"]',
+        "input[@type='#{type}']",
+      ].join('/')
+      button = @html.xpath(xpath)
       is_asserted_by { button.present? }
+      is_asserted_by { button.attribute('value').value == value }
     end
   end
 end
@@ -101,11 +129,21 @@ end
 shared_examples '評価ジョブテーブルが表示されていること' do |rows: 0|
   before { @table = @html.xpath(table_xpath) }
 
-  it '8列のテーブルが表示されていること' do
-    is_asserted_by { @table.search('thead/th').size == 8 }
+  it '10列のテーブルが表示されていること' do
+    is_asserted_by { @table.search('thead/th').size == 10 }
   end
 
-  %w[実行開始日時 モデル 状態 適合率 再現率 特異度 F値].each_with_index do |text, i|
+  %w[
+    実行開始日時
+    モデル
+    指定方法
+    データ数
+    状態
+    適合率
+    再現率
+    特異度
+    F値
+  ].each_with_index do |text, i|
     it "#{i + 1}列目のヘッダーが#{text}であること" do
       is_asserted_by { @table.search('thead/th')[i].text == text }
     end
@@ -113,6 +151,24 @@ shared_examples '評価ジョブテーブルが表示されていること' do |
 
   it 'ジョブの数が正しいこと' do
     is_asserted_by { @table.search('tbody/tr').size == rows }
+  end
+end
+
+shared_examples 'テーブルの列がリンクになっていないこと' do
+  it do
+    @html.xpath("#{table_xpath}/tbody/tr").each do |row|
+      is_asserted_by { row.attribute('class').value.include?('cursor-auto') }
+      is_asserted_by { row.attribute('title').value.empty? }
+    end
+  end
+end
+
+shared_examples 'テーブルの列がリンクになっていること' do
+  it do
+    @html.xpath("#{table_xpath}/tbody/tr").each do |row|
+      is_asserted_by { row.attribute('class').value.include?('cursor-pointer') }
+      is_asserted_by { row.attribute('title').value.include?('結果を確認') }
+    end
   end
 end
 
@@ -124,21 +180,33 @@ shared_examples '実行開始時間が表示されていないこと' do
   end
 end
 
-shared_examples 'ジョブの状態が正しいこと' do |state: nil, button_class: nil|
+shared_examples '評価ジョブの情報が表示されていること' do |state: nil|
   before { @rows = @html.xpath("#{table_xpath}/tbody/tr") }
 
-  it do
-    @evaluations.size.times do |i|
-      is_asserted_by { @rows[i].search('td')[2].text.strip == state }
+  it 'モデルが表示されていること' do
+    @evaluations.each_with_index do |evaluation, i|
+      model = @rows[i].search('td')[1].text.strip
+      is_asserted_by { model == evaluation.model }
     end
   end
 
-  it '詳細ボタンになっていること', unless: %w[実行待ち エラー].include?(state) do
+  it '指定方法が表示されていること' do
     @evaluations.each_with_index do |evaluation, i|
-      button_xpath = "a[@href='/evaluations/#{evaluation.evaluation_id}']" \
-                     "/button[@class='btn btn-xs btn-#{button_class}']"
-      button = @rows[i].search('td')[2].children.search(button_xpath)
-      is_asserted_by { button.present? }
+      data_source = @rows[i].search('td')[2].text.strip
+      is_asserted_by { data_source == data_source_map[evaluation.data_source] }
+    end
+  end
+
+  it 'データ数が表示されていること' do
+    @evaluations.each_with_index do |evaluation, i|
+      data_size = @rows[i].search('td')[3].text.strip
+      is_asserted_by { data_size == evaluation.num_data.to_s }
+    end
+  end
+
+  it '状態が表示されていること' do
+    @evaluations.size.times do |i|
+      is_asserted_by { @rows[i].search('td')[4].text.strip == state }
     end
   end
 end
@@ -148,28 +216,28 @@ shared_examples '評価結果情報が表示されていること' do
 
   it '適合率が表示されていること' do
     @evaluations.each_with_index do |evaluation, i|
-      precision = @rows[i].children.search('td')[3]
+      precision = @rows[i].children.search('td')[5]
       is_asserted_by { precision.text.strip == evaluation.precision.round(3).to_s }
     end
   end
 
   it '再現率が表示されていること' do
     @evaluations.each_with_index do |evaluation, i|
-      recall = @rows[i].children.search('td')[4]
+      recall = @rows[i].children.search('td')[6]
       is_asserted_by { recall.text.strip == evaluation.recall.round(3).to_s }
     end
   end
 
   it '特異度が表示されていること' do
     @evaluations.each_with_index do |evaluation, i|
-      specificity = @rows[i].children.search('td')[5]
+      specificity = @rows[i].children.search('td')[7]
       is_asserted_by { specificity.text.strip == evaluation.specificity.round(3).to_s }
     end
   end
 
   it 'F値が表示されていること' do
     @evaluations.each_with_index do |evaluation, i|
-      f_measure = @rows[i].children.search('td')[6]
+      f_measure = @rows[i].children.search('td')[8]
       is_asserted_by { f_measure.text.strip == evaluation.f_measure.round(3).to_s }
     end
   end
@@ -180,7 +248,7 @@ shared_examples 'ダウンロードボタンが表示されていないこと' d
     rows = @html.xpath("#{table_xpath}/tbody/tr")
 
     @evaluations.each_with_index do |evaluation, i|
-      download_button = rows[i].children.search('td')[7]
+      download_button = rows[i].children.search('td')[9]
       download_link = download_button.search(download_link_xpath(evaluation))
       is_asserted_by { download_link.blank? }
     end
@@ -192,7 +260,7 @@ shared_examples 'ダウンロードボタンが表示されていること' do
     rows = @html.xpath("#{table_xpath}/tbody/tr")
 
     @evaluations.each_with_index do |evaluation, i|
-      download_button = rows[i].children.search('td')[7]
+      download_button = rows[i].children.search('td')[9]
       download_link = download_button.search(download_link_xpath(evaluation))
       is_asserted_by { download_link.present? }
     end

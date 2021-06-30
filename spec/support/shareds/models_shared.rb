@@ -1,5 +1,14 @@
 # coding: utf-8
 
+shared_context 'ActionCableのモックを作成' do
+  before do
+    @called = false
+    allow_any_instance_of(ActionCable::Server::Base).to receive(:broadcast) do
+      @called = true
+    end
+  end
+end
+
 shared_examples 'バリデーションエラーにならないこと' do
   it_is_asserted_by { @object.valid? }
 end

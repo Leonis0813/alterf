@@ -1,0 +1,47 @@
+form {
+  padding: 10px;
+}
+
+#analysis_data_file {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.not-selected {
+  display: none !important;
+}
+
+.input-custom {
+  padding: 0px 5px;
+}
+
+span.first, span.prev, span.next, span.last {
+  a {
+    text-decoration: none;
+    color: #ff0000;
+  }
+}
+
+#table-analysis {
+  font-size: 14px;
+}
+
+.table > thead > tr > th.rebuild {
+  border: none;
+  width: 5%;
+}
+
+.table > tbody > tr > td.rebuild {
+  border-style: none;
+  padding: 0px 5px;
+  vertical-align: middle;
+}
+
+.table-title {
+  padding: 10px 0px;
+}
+
+.pagination-info, .fmeasure-info {
+  padding: 10px 0px;
+  display: inline;
+}

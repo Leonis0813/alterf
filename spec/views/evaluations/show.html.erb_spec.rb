@@ -6,7 +6,8 @@ describe 'evaluations/show', type: :view do
   def table_panel_xpath
     [
       '//div[@id="main-content"]',
-      'div[@class="col-lg-12 well"]',
+      'div[@class="col-lg-12 card text-dark bg-light"]',
+      'div[@class="card-body"]',
     ].join('/')
   end
 
@@ -37,15 +38,13 @@ describe 'evaluations/show', type: :view do
     it_behaves_like 'テーブルが表示されていること'
 
     it 'タイトルが表示されていること' do
-      xpath = [table_panel_xpath, 'h3'].join('/')
-      is_asserted_by { @html.xpath(xpath).text.strip == '評価結果詳細' }
+      title = @html.xpath([table_panel_xpath, 'h4'].join('/')).text.strip
+      is_asserted_by { title == '評価結果詳細' }
     end
 
-    it 'F値が表示されていること' do
-      xpath = [table_panel_xpath, 'h4'].join('/')
-      is_asserted_by do
-        @html.xpath(xpath).text.strip == "F値: #{@evaluation.f_measure.round(3)}"
-      end
+    it 'グラフ描画領域があること' do
+      xpath = [table_panel_xpath, 'svg[@id="performance"]'].join('/')
+      is_asserted_by { @html.xpath(xpath).present? }
     end
   end
 
@@ -55,11 +54,11 @@ describe 'evaluations/show', type: :view do
       @table = @html.xpath(xpath)
     end
 
-    it '4列のテーブルが表示されていること' do
-      is_asserted_by { @table.xpath('//thead/th').size == 4 }
+    it '5列のテーブルが表示されていること' do
+      is_asserted_by { @table.xpath('//thead/th').size == 5 }
     end
 
-    %w[No レース名 予測結果 正解].each_with_index do |text, i|
+    %w[No レース名 エントリー数 予測結果 正解].each_with_index do |text, i|
       it "#{i + 1}列目のヘッダーが#{text}であること" do
         is_asserted_by { @table.xpath('//thead/th')[i].text == text }
       end
@@ -70,7 +69,7 @@ describe 'evaluations/show', type: :view do
     end
   end
 
-  shared_examples '予測結果の行のデザインが正しいこと' do |tr_class: 'success'|
+  shared_examples '予測結果の行のデザインが正しいこと' do |tr_class: 'table-success'|
     before(:each) do
       @rows =
         @html.xpath("#{table_panel_xpath}/table[@class='table table-hover']/tbody/tr")
@@ -102,13 +101,29 @@ describe 'evaluations/show', type: :view do
       end
     end
 
-    it '予測結果が表示されていること', unless: tr_class == 'warning' do
+    it 'エントリー数が表示されていないこと', if: tr_class == 'table-warning' do
+      @rows.each do |row|
+        num_entry = row.children.search('td')[2]
+        is_asserted_by { num_entry.text.strip.blank? }
+      end
+    end
+
+    it 'エントリー数が正しいこと', unless: tr_class == 'table-warning' do
       @evaluation.data.each_with_index do |datum, i|
-        span_stacks = @rows[i].children.search('td')[2].children.search('span')
+        num_entry = @rows[i].children.search('td')[2]
+        is_asserted_by { num_entry.text.strip == datum.prediction_results.size.to_s }
+      end
+    end
+
+    it '予測結果が表示されていること', unless: tr_class == 'table-warning' do
+      expected_span_class = 'fa-layers fa-fw fa-2x prediction-result'
+
+      @evaluation.data.each_with_index do |datum, i|
+        span_stacks = @rows[i].children.search('td')[3].children.search('span')
 
         datum.prediction_results.won.each_with_index do |result, j|
           is_asserted_by do
-            span_stacks[j].attribute('class').value == 'fa-stack prediction-result'
+            span_stacks[j].attribute('class').value == expected_span_class
           end
 
           color = result.number == datum.ground_truth ? 'limegreen' : 'gray'
@@ -116,10 +131,10 @@ describe 'evaluations/show', type: :view do
 
           circle, number = span_stacks[j].children.search('i')
           is_asserted_by do
-            circle.attribute('class').value == 'fa fa-circle fa-stack-2x'
+            circle.attribute('class').value == 'fa fa-circle'
           end
           is_asserted_by do
-            number.attribute('class').value == 'fa fa-stack-1x fa-inverse'
+            number.attribute('class').value == 'fa-layers-text fa-inverse fa-xs'
           end
           is_asserted_by { number.text.strip == result.number.to_s }
         end
@@ -127,16 +142,20 @@ describe 'evaluations/show', type: :view do
     end
 
     it '正解が表示されていること' do
+      expected_span_class = 'fa-layers fa-fw fa-2x prediction-result'
+
       @evaluation.data.each_with_index do |datum, i|
-        span_stack = @rows[i].children.search('td')[3].children.search('span')
+        span_stack = @rows[i].children.search('td')[4].children.search('span')
         is_asserted_by do
-          span_stack.attribute('class').value == 'fa-stack prediction-result'
+          span_stack.attribute('class').value == expected_span_class
         end
         is_asserted_by { span_stack.attribute('style').value == 'color: limegreen' }
 
         circle, number = span_stack.children.search('i')
-        is_asserted_by { circle.attribute('class').value == 'fa fa-circle fa-stack-2x' }
-        is_asserted_by { number.attribute('class').value == 'fa fa-stack-1x fa-inverse' }
+        is_asserted_by { circle.attribute('class').value == 'fa fa-circle' }
+        is_asserted_by do
+          number.attribute('class').value == 'fa-layers-text fa-inverse fa-xs'
+        end
         is_asserted_by { number.text.strip == datum.ground_truth.to_s }
       end
     end
@@ -160,7 +179,7 @@ describe 'evaluations/show', type: :view do
     include_context '評価データを作成する', wons: [4, 10, 15]
     include_context 'HTML初期化'
     it_behaves_like '画面共通テスト'
-    it_behaves_like '予測結果の行のデザインが正しいこと', tr_class: 'danger'
+    it_behaves_like '予測結果の行のデザインが正しいこと', tr_class: 'table-danger'
   end
 
   context '予測結果がない場合' do
@@ -168,7 +187,7 @@ describe 'evaluations/show', type: :view do
     include_context '評価データを作成する'
     include_context 'HTML初期化'
     it_behaves_like '画面共通テスト'
-    it_behaves_like '予測結果の行のデザインが正しいこと', tr_class: 'danger'
+    it_behaves_like '予測結果の行のデザインが正しいこと', tr_class: 'table-danger'
   end
 
   context 'ジョブが完了していない場合' do
@@ -176,6 +195,6 @@ describe 'evaluations/show', type: :view do
     include_context '評価データを作成する', result_size: 0
     include_context 'HTML初期化'
     it_behaves_like '画面共通テスト'
-    it_behaves_like '予測結果の行のデザインが正しいこと', tr_class: 'warning'
+    it_behaves_like '予測結果の行のデザインが正しいこと', tr_class: 'table-warning'
   end
 end

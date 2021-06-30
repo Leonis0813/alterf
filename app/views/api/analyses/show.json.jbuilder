@@ -1,9 +1,9 @@
 json.(
   @analysis,
   :analysis_id,
+  :data_source,
   :num_data,
   :num_feature,
-  :num_entry,
   :state,
   :performed_at,
 )
