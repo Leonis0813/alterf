@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_06_042203) do
+ActiveRecord::Schema.define(version: 2021_07_01_114612) do
 
   create_table "analyses", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "analysis_id", default: "", null: false
@@ -88,7 +88,17 @@ ActiveRecord::Schema.define(version: 2021_06_06_042203) do
     t.index ["analysis_id"], name: "index_analysis_results_on_analysis_id", unique: true
   end
 
-  create_table "evaluation_data", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "evaluation_race_test_data", charset: "utf8", force: :cascade do |t|
+    t.bigint "evaluation_race_id", null: false
+    t.integer "number", null: false
+    t.boolean "prediction_result"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["evaluation_race_id", "number"], name: "index_evaluation_race_test_data_on_evaluation_race_id_and_number", unique: true
+    t.index ["evaluation_race_id"], name: "index_evaluation_race_test_data_on_evaluation_race_id"
+  end
+
+  create_table "evaluation_races", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "evaluation_id", null: false
     t.string "race_id", default: "", null: false
     t.string "race_name", null: false
