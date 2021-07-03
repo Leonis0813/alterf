@@ -1,5 +1,5 @@
 class Evaluation::Race::TestDatum < ApplicationRecord
-  validates :number
+  validates :number,
             presence: {message: MESSAGE_ABSENT}
   validates :number,
             numericality: {
@@ -9,10 +9,10 @@ class Evaluation::Race::TestDatum < ApplicationRecord
             },
             allow_nil: true
 
-  belongs_to :evaluation_race
+  belongs_to :race, foreign_key: 'evaluation_race_id'
 
   scope :feature, -> do
     Denebola::Feature.select(*Denebola::Feature::NAMES)
-                     .find_by(race_id: evaluation_race.race_id, number: number)
+                     .find_by(race_id: race.race_id, number: number)
   end
 end

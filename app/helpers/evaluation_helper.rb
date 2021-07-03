@@ -34,13 +34,13 @@ module EvaluationHelper
     when 'waiting'
       '実行待ち'
     else
-      if evaluation.data.empty?
+      if evaluation.races.empty?
         '0%完了'
       else
         completed_data_size = evaluation.races.to_a.count do |race|
           race.test_data.where.not(prediction_result: nil).exists?
         end
-        "#{(100 * completed_data_size / evaluation.data.size.to_f).round(0)}%完了"
+        "#{(100 * completed_data_size / evaluation.races.size.to_f).round(0)}%完了"
       end
     end
   end

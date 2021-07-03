@@ -75,7 +75,7 @@ $(function() {
   $('#nav-link-evaluation').addClass('active');
 
   $('#table-evaluation-result').on('click', 'td', function(event) {
-    const evaluationId = $('#table-evaluation-result').attr('id');
+    const evaluationId = $('#table-evaluation-result').data('evaluation-id');
     const raceId = $(this).parents('tr').attr('id');
     open(`/alterf/evaluations/${evaluationId}/races/${raceId}`, '_blank');
   });
