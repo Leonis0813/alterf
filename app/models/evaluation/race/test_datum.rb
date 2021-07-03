@@ -12,6 +12,7 @@ class Evaluation::Race::TestDatum < ApplicationRecord
   belongs_to :evaluation_race
 
   scope :feature, -> do
-    Denebola::Feature.where(race_id: evaluation_race.race_id, number: number)
+    Denebola::Feature.select(*Denebola::Feature::NAMES)
+                     .find_by(race_id: evaluation_race.race_id, number: number)
   end
 end
