@@ -37,8 +37,8 @@ module EvaluationHelper
       if evaluation.data.empty?
         '0%完了'
       else
-        completed_data_size = evaluation.data.to_a.count do |datum|
-          datum.prediction_results.present?
+        completed_data_size = evaluation.races.to_a.count do |race|
+          race.test_data.where.not(prediction_result: nil).exists?
         end
         "#{(100 * completed_data_size / evaluation.data.size.to_f).round(0)}%完了"
       end
@@ -62,10 +62,10 @@ module EvaluationHelper
     %w[processing completed].include?(state) ? '結果を確認' : ''
   end
 
-  def datum_row_class(numbers, datum)
-    return 'warning' if datum.prediction_results.empty?
+  def race_row_class(numbers, race)
+    return 'warning' if race.test_data.exists?(prediction_result: nil)
 
-    numbers.include?(datum.ground_truth) ? 'success' : 'danger'
+    numbers.include?(race.ground_truth) ? 'success' : 'danger'
   end
 
   def span_color(number, ground_truth)

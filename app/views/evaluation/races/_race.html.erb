@@ -1,20 +1,21 @@
-<% numbers = datum.prediction_results.where(won: true).map(&:number).sort %>
-<tr id='<%= datum.race_id %>' class='table-<%= datum_row_class(numbers, datum) %>'>
+<% numbers = race.test_data.where(prediction_result: true).map(&:number).sort %>
+<tr id='<%= race.race_id %>' class='table-<%= race_row_class(numbers, race) %>'
+    title='テストデータを確認'>
   <td>
-    <%= datum_counter + 1 %>
+    <%= race_counter + 1 %>
   </td>
   <td>
-    <%= link_to datum.race_url, {target: :_blank} do %>
-      <%= datum.race_name %>
+    <%= link_to race.race_url, {target: :_blank} do %>
+      <%= race.race_name %>
       <span class='bi bi-box-arrow-up-right'></span>
     <% end %>
   </td>
   <td class='num_entry'>
-    <%= datum.prediction_results.empty? ? '' : datum.prediction_results.size %>
+    <%= race.test_data.empty? ? '' : race.test_data.size %>
   </td>
   <td class='result' style='padding: 4px'>
   <% numbers.each do |number| %>
-    <% color = span_color(number, datum.ground_truth) %>
+    <% color = span_color(number, race.ground_truth) %>
     <span class='fa-layers fa-fw fa-2x prediction-result' style='color: <%= color %>'>
       <i class='fa fa-circle'></i>
       <i class='fa-layers-text fa-inverse fa-xs'><%= number %></i>
@@ -24,7 +25,7 @@
   <td style='padding: 4px'>
     <span class='fa-layers fa-fw fa-2x prediction-result' style='color: limegreen'>
       <i class='fa fa-circle'></i>
-      <i class='fa-layers-text fa-inverse fa-xs'><%= datum.ground_truth %></i>
+      <i class='fa-layers-text fa-inverse fa-xs'><%= race.ground_truth %></i>
     </span>
   </td>
 </tr>
