@@ -5,7 +5,7 @@
     <%= race_counter + 1 %>
   </td>
   <td>
-    <%= link_to race.race_url, {target: :_blank} do %>
+    <%= link_to race.race_url, {target: :_blank, rel: 'noopener noreferrer'} do %>
       <%= race.race_name %>
       <span class='bi bi-box-arrow-up-right'></span>
     <% end %>

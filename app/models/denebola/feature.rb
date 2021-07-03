@@ -29,6 +29,6 @@ module Denebola
       weight_per
       win_times
       won
-    ]
+    ].freeze
   end
 end

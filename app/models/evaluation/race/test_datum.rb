@@ -9,9 +9,11 @@ class Evaluation::Race::TestDatum < ApplicationRecord
             },
             allow_nil: true
 
-  belongs_to :race, foreign_key: 'evaluation_race_id'
+  belongs_to :race,
+             foreign_key: 'evaluation_race_id',
+             inverse_of: :test_data
 
-  scope :feature, -> do
+  scope :feature, lambda do
     Denebola::Feature.select(*Denebola::Feature::NAMES)
                      .find_by(race_id: race.race_id, number: number)
   end

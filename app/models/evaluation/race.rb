@@ -15,7 +15,8 @@ class Evaluation::Race < ApplicationRecord
   belongs_to :evaluation
   has_many :test_data,
            foreign_key: 'evaluation_race_id',
-           dependent: :destroy
+           dependent: :destroy,
+           inverse_of: :race
 
   after_create do
     attribute = slice(:race_name, :race_url).merge(
