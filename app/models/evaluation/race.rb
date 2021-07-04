@@ -21,7 +21,7 @@ class Evaluation::Race < ApplicationRecord
   after_create do
     attribute = slice(:race_name, :race_url).merge(
       'evaluation_id' => evaluation.evaluation_id,
-      'no' => evaluation.data.size,
+      'no' => evaluation.races.size,
       'message_type' => 'create',
       )
     broadcast(attribute)
