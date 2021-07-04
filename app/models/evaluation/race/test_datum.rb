@@ -13,6 +13,9 @@ class Evaluation::Race::TestDatum < ApplicationRecord
              foreign_key: 'evaluation_race_id',
              inverse_of: :test_data
 
+  scope :won, -> { where(prediction_result: true) }
+  scope :lost, -> { where(prediction_result: false) }
+
   def feature
     Denebola::Feature.select(*Denebola::Feature::NAMES)
                      .find_by(race_id: race.race_id, number: number)

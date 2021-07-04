@@ -27,16 +27,16 @@ class Evaluation::Race < ApplicationRecord
     broadcast(attribute)
   end
 
-  def import_prediction_results(result_file)
+  def import_prediction_results!(result_file)
     race_result = YAML.load_file(result_file)
     raise ActiveRecord::RecordInvalid, self unless race_result.is_a?(Hash)
 
     race_result.each do |number, result|
-      prediction_results.create!(number: number, won: (result == 1))
+      test_data.create!(number: number, prediction_result: (result == 1))
     end
-    wons = prediction_results.won.pluck(:number).sort
+    wons = test_data.won.pluck(:number).sort
 
-    broadcast(num_entry: prediction_results.size, wons: wons, message_type: 'update')
+    broadcast(num_entry: test_data.size, wons: wons, message_type: 'update')
   end
 
   private

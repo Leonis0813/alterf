@@ -37,7 +37,7 @@ class EvaluationsController < ApplicationController
       end
     end
 
-    EvaluationJob.perform_later(evaluation.id)
+    EvaluationJob.perform_later(evaluation)
     render status: :ok, json: {}
   end
 

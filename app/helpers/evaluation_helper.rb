@@ -38,7 +38,7 @@ module EvaluationHelper
         '0%完了'
       else
         completed_data_size = evaluation.races.to_a.count do |race|
-          race.test_data.where.not(prediction_result: nil).exists?
+          race.test_data.present?
         end
         "#{(100 * completed_data_size / evaluation.races.size.to_f).round(0)}%完了"
       end
@@ -63,7 +63,7 @@ module EvaluationHelper
   end
 
   def race_row_class(numbers, race)
-    return 'warning' if race.test_data.exists?(prediction_result: nil)
+    return 'warning' if race.test_data.empty?
 
     numbers.include?(race.ground_truth) ? 'success' : 'danger'
   end
