@@ -1,0 +1,34 @@
+#table-evaluation-race {
+  font-size: 14px;
+}
+
+.tablesorter-headerUnSorted {
+  background-image: url(data:image/gif;base64,R0lGODlhFQAJAIAAAP///////yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
+  background-repeat: no-repeat;
+  background-position: center right;
+  padding: 4px 20px 4px 4px !important;
+  cursor: pointer;
+}
+
+.tablesorter-headerAsc {
+  background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
+  background-repeat: no-repeat;
+  background-position: center right;
+  border-bottom: #000 2px solid;
+  padding: 4px 20px 4px 4px !important;
+  cursor: pointer;
+}
+
+.tablesorter-headerDesc {
+  background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
+  background-repeat: no-repeat;
+  background-position: center right;
+  border-bottom: #000 2px solid;
+  padding: 4px 20px 4px 4px !important;
+  cursor: pointer;
+}
+
+.sorter-false {
+  background-image: none;
+  cursor: default;
+}
