@@ -44,6 +44,6 @@ class Evaluation::Race < ApplicationRecord
   def broadcast(attribute)
     attribute.merge!(slice(:race_id, :ground_truth))
     attribute[:evaluation_id] = evaluation.evaluation_id
-    ActionCable.server.broadcast('evaluation_datum', attribute)
+    ActionCable.server.broadcast('evaluation_race', attribute)
   end
 end

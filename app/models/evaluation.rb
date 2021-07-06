@@ -120,7 +120,7 @@ class Evaluation < ApplicationRecord
     broadcast(attribute)
 
     attribute[:evaluation_id] = evaluation_id
-    ActionCable.server.broadcast('evaluation_datum', attribute)
+    ActionCable.server.broadcast('evaluation_race', attribute)
   end
 
   def output_race_ids
