@@ -1,4 +1,12 @@
-#table-evaluation-race {
+#raw-data, #feature {
+  padding: 1rem;
+}
+
+.card-body.table-responsive {
+  padding: 0px;
+}
+
+#table-evaluation-race-raw-data, #table-evaluation-race-feature {
   font-size: 14px;
 }
 

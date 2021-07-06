@@ -1,25 +1,45 @@
 <%= javascript_pack_tag 'evaluation/races/show' %>
 <%= stylesheet_pack_tag 'evaluation/races/show' %>
 
-<div class='col-lg-12 card text-dark bg-light'>
-  <div class='card-body table-responsive'>
-    <h4 class='card-title table-title'>テストデータ - <%= @evaluation_race.race_name %></h4>
+<h4 class='table-title mb-3'>テストデータ - <%= @evaluation_race.race_name %></h4>
 
-    <div class='form-check form-switch mb-2'>
-      <%= check_box_tag :normalize, true, false, class: 'form-check-input' %>
-      <%= label_tag :normalize, '正規化' %>
+<ul class='nav nav-tabs' style='border-bottom: 0px'>
+  <li class='nav-item active'>
+    <%= button_tag '生データ', {id: 'tab-raw-data'}.merge(tab_params('raw-data', true)) %>
+  </li>
+  <li class='nav-item active'>
+    <%= button_tag '特徴量', {id: 'tab-feature'}.merge(tab_params('feature', false)) %>
+  </li>
+</ul>
+
+<div class='tab-content'>
+  <div id='raw-data' class='card text-dark bg-light tab-pane active'>
+    <div class='card-body table-responsive'>
+      <table id='table-evaluation-race-raw-data' class='table table-hover'>
+        <thead class='table-dark'>
+          <% Denebola::Feature::NAMES.each do |feature_name| %>
+            <th><%= feature_name %></th>
+          <% end %>
+        </thead>
+        <tbody>
+          <%= render @evaluation_race.test_data.sort_by(&:number) %>
+        </tbody>
+      </table>
     </div>
+  </div>
 
-
-    <table id='table-evaluation-race' class='table table-hover text-nowrap'>
-      <thead class='table-dark'>
-        <% Denebola::Feature::NAMES.each do |feature_name| %>
-          <th><%= feature_name %></th>
-        <% end %>
-      </thead>
-      <tbody>
-        <%= render @evaluation_race.test_data.sort_by(&:number) %>
-      </tbody>
-    </table>
+  <div id='feature' class='card text-dark bg-light tab-pane'>
+    <div class='card-body table-responsive'>
+      <table id='table-evaluation-race-feature' class='table table-hover'>
+        <thead class='table-dark'>
+          <% Denebola::Feature::NAMES.each do |feature_name| %>
+            <th><%= feature_name %></th>
+          <% end %>
+        </thead>
+        <tbody>
+          <%= render @evaluation_race.test_data.sort_by(&:number) %>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

@@ -1,6 +1,6 @@
 <% feature = test_datum.feature %>
 <tr class='<%= test_datum.prediction_result ? 'table-success' : 'table-danger' %>'>
   <% Denebola::Feature::NAMES.each do |name| %>
-    <td><%= feature[name] %></td>
+    <td class='<%= name %>'><%= feature[name] %></td>
   <% end %>
 </tr>
