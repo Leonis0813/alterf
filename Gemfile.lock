@@ -253,7 +253,7 @@ GEM
     method_source (1.0.0)
     mime-types (3.3.1)
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2021.0225)
+    mime-types-data (3.2021.0704)
     mini_mime (1.1.0)
     mini_portile2 (2.5.3)
     minitest (5.14.4)
@@ -338,7 +338,7 @@ GEM
     raindrops (0.19.2)
     rake (12.3.3)
     rchardet (1.8.0)
-    rdoc (6.3.1)
+    rdoc (6.3.2)
     red-colors (0.3.0)
       matrix
     redis (4.3.1)
