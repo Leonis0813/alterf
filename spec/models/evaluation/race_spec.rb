@@ -11,7 +11,7 @@ describe Evaluation::Race, type: :model do
     ground_truth: 1,
   }
 
-  shared_context '評価データ情報を作成する' do |attribute: default_attribute|
+  shared_context '評価レース情報を作成する' do |attribute: default_attribute|
     before do
       @evaluation ||= create(:evaluation)
       @evaluation_race = @evaluation.races.create!(attribute)
@@ -84,9 +84,9 @@ describe Evaluation::Race, type: :model do
   describe '#destroy' do
     describe '正常系' do
       include_context 'トランザクション作成'
-      include_context '評価データ情報を作成する'
+      include_context '評価レース情報を作成する'
       before { @other_evaluation_race = @evaluation_race }
-      include_context '評価データ情報を作成する'
+      include_context '評価レース情報を作成する'
       before do
         @evaluation_race.test_data.create!(number: 1)
         @other_evaluation_race.test_data.create!(number: 1)
@@ -114,7 +114,7 @@ describe Evaluation::Race, type: :model do
       file = Rails.root.join('spec/fixtures/prediction.yml')
       include_context 'トランザクション作成'
       include_context 'ActionCableのモックを作成'
-      include_context '評価データ情報を作成する'
+      include_context '評価レース情報を作成する'
       before do
         @called = false
         @evaluation_race.import_prediction_results!(file)
@@ -143,7 +143,7 @@ describe Evaluation::Race, type: :model do
       context 'ファイルが存在しない場合' do
         file = Rails.root.join('spec/fixtures/not_exist.yml')
         include_context 'トランザクション作成'
-        include_context '評価データ情報を作成する'
+        include_context '評価レース情報を作成する'
 
         it_behaves_like '結果をインポートすると例外が発生すること', file, Errno::ENOENT
       end
@@ -152,7 +152,7 @@ describe Evaluation::Race, type: :model do
         context '配列の場合' do
           file = Rails.root.join('spec/fixtures/array.yml')
           include_context 'トランザクション作成'
-          include_context '評価データ情報を作成する'
+          include_context '評価レース情報を作成する'
           before(:all) { File.open(file, 'w') {|f| YAML.dump([3, 5, 11, 17], f) } }
           after(:all) { FileUtils.rm(file) }
 
@@ -163,7 +163,7 @@ describe Evaluation::Race, type: :model do
         context 'ハッシュの値が数値でない場合' do
           file = Rails.root.join('spec/fixtures/invalid_value.yml')
           include_context 'トランザクション作成'
-          include_context '評価データ情報を作成する'
+          include_context '評価レース情報を作成する'
           before(:all) { File.open(file, 'w') {|f| YAML.dump({'invalid' => 1}, f) } }
           after(:all) { FileUtils.rm(file) }
 
