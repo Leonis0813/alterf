@@ -1,3 +1,5 @@
-module Denebola::Entry < Denebola::Base
-  belongs_to :race
+module Denebola
+  class Entry < Denebola::Base
+    belongs_to :race
+  end
 end
