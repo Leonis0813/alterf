@@ -1,5 +1,3 @@
-module Denebola
-  class Race < Denebola::Base
-    has_many :entries, dependent: :nullify
-  end
+class Denebola::Race < Denebola::Base
+  has_many :entries, dependent: :nullify
 end
