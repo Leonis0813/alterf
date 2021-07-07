@@ -18,11 +18,11 @@
       <table id='table-evaluation-race-raw-data' class='table table-hover'>
         <thead class='table-dark'>
           <% Denebola::Feature::NAMES.each do |feature_name| %>
-            <th><%= feature_name %></th>
+            <th class='<%= feature_name %>'><%= feature_name %></th>
           <% end %>
         </thead>
         <tbody>
-          <%= render @evaluation_race.test_data.sort_by(&:number) %>
+          <%= render @evaluation_race.test_data.sort_by(&:order) %>
         </tbody>
       </table>
     </div>
@@ -33,11 +33,11 @@
       <table id='table-evaluation-race-feature' class='table table-hover'>
         <thead class='table-dark'>
           <% Denebola::Feature::NAMES.each do |feature_name| %>
-            <th><%= feature_name %></th>
+            <th class='<%= feature_name %>'><%= feature_name %></th>
           <% end %>
         </thead>
         <tbody>
-          <%= render @evaluation_race.test_data.sort_by(&:number) %>
+          <%= render @evaluation_race.test_data.sort_by(&:order) %>
         </tbody>
       </table>
     </div>

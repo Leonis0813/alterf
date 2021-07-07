@@ -68,6 +68,14 @@ module EvaluationHelper
     numbers.include?(race.ground_truth) ? 'success' : 'danger'
   end
 
+  def cell_class(prediction_result, feature_name)
+    if feature_name == 'order'
+      'table-dark'
+    else
+      prediction_result ? 'table-success' : 'table-danger'
+    end
+  end
+
   def span_color(number, ground_truth)
     number == ground_truth ? 'limegreen' : 'gray'
   end

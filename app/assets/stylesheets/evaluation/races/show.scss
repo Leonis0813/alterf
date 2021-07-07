@@ -10,6 +10,19 @@
   font-size: 14px;
 }
 
+#table-evaluation-race-raw-data thead th.order,
+#table-evaluation-race-raw-data tbody tr td.order,
+#table-evaluation-race-feature thead th.order,
+#table-evaluation-race-feature tbody tr td.order {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0;
+  color: white;
+  background-color: black !important;
+  font-weight: bold;
+  border-bottom-width: 0px;
+}
+
 .tablesorter-headerUnSorted {
   background-image: url(data:image/gif;base64,R0lGODlhFQAJAIAAAP///////yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
   background-repeat: no-repeat;

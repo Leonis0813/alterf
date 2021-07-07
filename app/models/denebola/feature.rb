@@ -1,6 +1,7 @@
 module Denebola
   class Feature < Denebola::Base
     NAMES = %w[
+      order
       age
       blank
       burden_weight
@@ -28,7 +29,6 @@ module Denebola
       weight_diff
       weight_per
       win_times
-      won
     ].freeze
   end
 end

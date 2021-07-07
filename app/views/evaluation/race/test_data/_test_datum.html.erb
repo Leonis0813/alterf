@@ -1,6 +1,8 @@
-<% feature = test_datum.feature %>
-<tr class='<%= test_datum.prediction_result ? 'table-success' : 'table-danger' %>'>
+<% feature = test_datum.feature.attributes.merge('order' => test_datum.order) %>
+<tr>
   <% Denebola::Feature::NAMES.each do |name| %>
-    <td class='<%= name %>'><%= feature[name] %></td>
+    <td class='<%= name %> <%= cell_class(test_datum.prediction_result, name) %>'>
+      <%= feature[name] %>
+    </td>
   <% end %>
 </tr>

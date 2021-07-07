@@ -16,8 +16,16 @@ class Evaluation::Race::TestDatum < ApplicationRecord
   scope :won, -> { where(prediction_result: true) }
   scope :lost, -> { where(prediction_result: false) }
 
+  def order
+    order = Denebola::Race.find_by(race_id: race.race_id)
+                          .entries
+                          .find_by(number: number)
+                          .order
+    order.match?(/\A\d+\z/) ? order.to_i : order
+  end
+
   def feature
-    Denebola::Feature.select(*Denebola::Feature::NAMES)
+    Denebola::Feature.select(*(Denebola::Feature::NAMES - %w[order]))
                      .find_by(race_id: race.race_id, number: number)
   end
 end

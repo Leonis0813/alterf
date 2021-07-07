@@ -4,14 +4,14 @@ $(function() {
   ['raw-data', 'feature'].forEach(function(type) {
     $(`#table-evaluation-race-${type}`).tablesorter({
       headers: {
-        3: { sorter: false },
         4: { sorter: false },
-        7: { sorter: false },
-        13: { sorter: false },
-        15: { sorter: false },
-        17: { sorter: false },
-        21: { sorter: false },
+        5: { sorter: false },
+        8: { sorter: false },
+        14: { sorter: false },
+        16: { sorter: false },
+        18: { sorter: false },
         22: { sorter: false },
+        23: { sorter: false },
       }
     });
   });
@@ -62,7 +62,7 @@ $(function() {
     let featureMap = mapping[featureName];
 
     $(`#table-evaluation-race-feature td.${featureName}`).each(function(i, e) {
-      e.innerText = featureMap[e.innerText];
+      e.innerText = featureMap[e.innerText.trim()];
     });
   });
 });
