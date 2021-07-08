@@ -35,10 +35,10 @@ describe Evaluation::Race::TestDatum, type: :model do
 
       CommonHelper.generate_combinations(required_keys).each do |absent_keys|
         context "#{absent_keys.join(',')}が指定されていない場合" do
-          expected_error = absent_keys.map {|key| [key, 'absent_parameter'] }.to_h
+          expected_error = absent_keys.index_with('absent_parameter')
 
           before(:all) do
-            attribute = absent_keys.map {|key| [key, nil] }.to_h
+            attribute = absent_keys.index_with(nil)
             @object = build(:evaluation_race_test_datum, attribute)
             @object.validate
           end
@@ -53,7 +53,7 @@ describe Evaluation::Race::TestDatum, type: :model do
 
       CommonHelper.generate_test_case(invalid_attribute).each do |attribute|
         context "#{attribute.keys.join(',')}が不正な場合" do
-          expected_error = attribute.keys.map {|key| [key, 'invalid_parameter'] }.to_h
+          expected_error = attribute.keys.index_with('invalid_parameter')
 
           before(:all) do
             @object = build(:evaluation_race_test_datum, attribute)
