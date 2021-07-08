@@ -69,7 +69,7 @@ describe Evaluation::Race::TestDatum, type: :model do
   describe '#order' do
     [
       ['1', 1],
-      ['string', 'string'],
+      %w[string string],
     ].each do |order, expected|
       context "orderが#{order}の場合" do
         include_context 'トランザクション作成'
