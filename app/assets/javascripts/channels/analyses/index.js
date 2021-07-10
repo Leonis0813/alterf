@@ -59,7 +59,7 @@ consumer.subscriptions.create('AnalysisChannel', {
       '</button>'
     );
 
-    const element = document.querySelector(`${trId} > td.download > button`);
+    const element = document.querySelector(`tr${trId} > td.download > button`);
     new bs.Tooltip(element);
   },
 
@@ -85,7 +85,8 @@ consumer.subscriptions.create('AnalysisChannel', {
             '</button>' +
           '</a>'
         );
-        const element = document.querySelector(`${trId} > td.state > a > button`);
+
+        const element = document.querySelector(`tr${trId} > td.state > a > button`);
         new bs.Tooltip(element);
         break;
       case 'error':
