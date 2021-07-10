@@ -55,9 +55,17 @@ $(function() {
     (URL || webkitURL).revokeObjectURL(blobUrl);
   });
 
-  $('#table-evaluation').on('mouseover', '.download', function(event) {
-    $(this).parents('tr').attr('data-bs-original-title', '');
-  }).on('mouseleave', '.download', function(event) {
-    $(this).parents('tr').attr('data-bs-original-title', '結果を確認');
+  $('#table-evaluation').on('mouseover', '.download button', function(event) {
+    const rowId = $(this).parents('tr').attr('id');
+    const row = document.getElementById(rowId);
+    const tooltip = bs.Tooltip.getInstance(row);
+    tooltip.hide();
+    tooltip.disable();
+  }).on('mouseleave', '.download button', function(event) {
+    const rowId = $(this).parents('tr').attr('id');
+    const row = document.getElementById(rowId);
+    const tooltip = bs.Tooltip.getInstance(row);
+    tooltip.enable();
+    tooltip.show();
   });
 });
