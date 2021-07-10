@@ -3,8 +3,8 @@ $(function() {
 
   $('#nav-link-evaluation').addClass('active');
 
-  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (tooltip) {
-    new bs.Tooltip(tooltip);
+  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (element) {
+    new bs.Tooltip(element);
   });
 
   formCollapse.addEventListener('show.bs.collapse', function(event) {
