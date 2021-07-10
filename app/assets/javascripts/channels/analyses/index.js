@@ -52,15 +52,17 @@ consumer.subscriptions.create('AnalysisChannel', {
   },
 
   createDownloadButton(trId) {
-    $(`${trId} > td.download`).append(
+    const button = $(
       '<button class="btn btn-light btn-sm" title="分析結果をダウンロード" ' +
         'data-bs-toggle="tooltip" data-bs-placement="top">' +
         '<span class="bi bi-download"></span>' +
       '</button>'
     );
-
-    const element = document.querySelector(`tr${trId} > td.download > button`);
-    new bs.Tooltip(element);
+    $(`${trId} > td.download`).append(button);
+    button.ready(function() {
+      const element = document.querySelector(`tr${trId} > td.download > button`);
+      new bs.Tooltip(element);
+    });
   },
 
   changeStateText(trId, analysis) {
@@ -76,7 +78,7 @@ consumer.subscriptions.create('AnalysisChannel', {
         break;
       case 'completed':
         const href = `/alterf/analyses/${analysis.analysis_id}`;
-        column.append(
+        const button = $(
           `<a target='_blank' rel='noopener noreferrer' href=${href}>` +
             '<button class="btn btn-sm btn-success" title="分析結果を確認" ' +
               'data-bs-toggle="tooltip" data-bs-placement="top">' +
@@ -85,9 +87,11 @@ consumer.subscriptions.create('AnalysisChannel', {
             '</button>' +
           '</a>'
         );
-
-        const element = document.querySelector(`tr${trId} > td.state > a > button`);
-        new bs.Tooltip(element);
+        column.append(button);
+        button.ready(function() {
+          const element = document.querySelector(`tr${trId} > td.state > a > button`);
+          new bs.Tooltip(element);
+        });
         break;
       case 'error':
         column.text('エラー');
