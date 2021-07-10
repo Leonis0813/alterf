@@ -94,7 +94,13 @@ module EvaluationHelper
     return unless evaluation.state == 'completed'
 
     link_to(evaluation_download_path(evaluation.evaluation_id), remote: true) do
-      tag.button(class: 'btn btn-success') do
+      attribute = {
+        class: 'btn btn-success',
+        title: '評価レースをダウンロード',
+        data: {'bs-toggle' => 'tooltip', 'bs-placement' => 'top'},
+      }
+
+      tag.button(attribute) do
         tag.span(class: 'bi bi-download')
       end
     end

@@ -3,6 +3,10 @@ $(function() {
 
   $('#nav-link-evaluation').addClass('active');
 
+  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (tooltip) {
+    new bs.Tooltip(tooltip);
+  });
+
   formCollapse.addEventListener('show.bs.collapse', function(event) {
     $('button#collapse-form > span')
       .removeClass('bi-plus-circle')
@@ -49,5 +53,15 @@ $(function() {
     const filename = /filename="(.*)"/.exec(xhr.getResponseHeader('Content-Disposition'))[1];
     $('<a>', {href: blobUrl, download: filename})[0].click();
     (URL || webkitURL).revokeObjectURL(blobUrl);
+  });
+
+  $('#table-evaluation').on('mouseover', '.download', function(event) {
+    const row = document.getElementById($(this).parents('tr').attr('id'));
+    const tooltip = bs.Tooltip.getInstance(row);
+    tooltip.hide();
+  }).on('mouseleave', '.download', function(event) {
+    const row = document.getElementById($(this).parents('tr').attr('id'));
+    const tooltip = bs.Tooltip.getInstance(row);
+    tooltip.show();
   });
 });

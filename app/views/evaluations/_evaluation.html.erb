@@ -1,5 +1,6 @@
 <tr id='<%= evaluation.evaluation_id %>' class='<%= row_class(evaluation.state) %>'
-    title='<%= row_title(evaluation.state) %>' data-state='<%= evaluation.state %>'>
+    title='<%= row_title(evaluation.state) %>' data-state='<%= evaluation.state %>'
+    data-bs-toggle='tooltip' data-bs-placement='top' data-bs-offset='-500,0'>
   <td class='performed_at'>
     <%= time_to_string(evaluation.performed_at) %>
   </td>
