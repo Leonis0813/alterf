@@ -9,6 +9,10 @@ consumer.subscriptions.create('Evaluation::RaceChannel', {
     switch (race.message_type) {
       case 'create':
         this.createRow(race);
+        const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        tooltips.forEach(function (tooltip) {
+          return new bs.Tooltip(tooltip);
+        });
         break;
       case 'update':
         this.showResults(race);

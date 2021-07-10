@@ -21,7 +21,9 @@ consumer.subscriptions.create('AnalysisChannel', {
       this.changeStateText(trId, analysis);
       $(`${trId} > td[class*=performed_at]`).text(analysis.performed_at || '');
       $(`${trId} > td[class*=num_feature]`).text(analysis.num_feature || '');
-      document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (tooltip) {
+
+      const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+      tooltips.forEach(function (tooltip) {
         return new bs.Tooltip(tooltip);
       });
     } else {

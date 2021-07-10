@@ -22,6 +22,11 @@ consumer.subscriptions.create('EvaluationChannel', {
           column.attr('title', '結果を確認');
           $(`${trId} > td[class*=state]`).text('完了');
           this.addDownloadButton(trId, evaluation);
+
+          const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+          tooltips.forEach(function (tooltip) {
+            return new bs.Tooltip(tooltip);
+          });
           break;
         case 'error':
           column.removeClass('table-warning cursor-pointer');
