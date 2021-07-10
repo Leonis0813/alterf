@@ -15,16 +15,6 @@ module EvaluationHelper
     ]
   end
 
-  def collapse_params(id, expanded)
-    {
-      type: 'button',
-      'data-bs-toggle' => 'collapse',
-      'data-bs-target' => "##{id}",
-      'aria-controls' => id,
-      'aria-expanded' => expanded,
-    }
-  end
-
   def progress(evaluation)
     case evaluation.state
     when 'completed'
