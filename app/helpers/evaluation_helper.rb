@@ -87,7 +87,7 @@ module EvaluationHelper
       attribute = {
         class: 'btn btn-success',
         title: '評価レースをダウンロード',
-        data: {'bs-toggle' => 'tooltip', 'bs-placement' => 'top'},
+        data: {'bs-toggle' => 'tooltip'},
       }
 
       tag.button(attribute) do

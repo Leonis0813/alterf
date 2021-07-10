@@ -54,7 +54,7 @@ consumer.subscriptions.create('AnalysisChannel', {
   createDownloadButton(trId) {
     const button = $(
       '<button class="btn btn-light btn-sm" title="分析結果をダウンロード" ' +
-        'data-bs-toggle="tooltip" data-bs-placement="top">' +
+        'data-bs-toggle="tooltip">' +
         '<span class="bi bi-download"></span>' +
       '</button>'
     );
@@ -80,7 +80,7 @@ consumer.subscriptions.create('AnalysisChannel', {
         const button = $(
           `<a target='_blank' rel='noopener noreferrer' href=${href}>` +
             '<button class="btn btn-sm btn-success" title="分析結果を確認" ' +
-              'data-bs-toggle="tooltip" data-bs-placement="top">' +
+              'data-bs-toggle="tooltip">' +
               '完了' +
               '<span class="bi bi-box-arrow-up-right"></span>' +
             '</button>' +
