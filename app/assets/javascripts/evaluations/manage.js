@@ -56,12 +56,8 @@ $(function() {
   });
 
   $('#table-evaluation').on('mouseover', '.download', function(event) {
-    const row = document.getElementById($(this).parents('tr').attr('id'));
-    const tooltip = bs.Tooltip.getInstance(row);
-    tooltip.hide();
+    $(this).parents('tr').attr('data-bs-original-title', '');
   }).on('mouseleave', '.download', function(event) {
-    const row = document.getElementById($(this).parents('tr').attr('id'));
-    const tooltip = bs.Tooltip.getInstance(row);
-    tooltip.show();
+    $(this).parents('tr').attr('data-bs-original-title', '結果を確認');
   });
 });

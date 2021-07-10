@@ -57,6 +57,9 @@ consumer.subscriptions.create('EvaluationChannel', {
         '</button>' +
       '</a>'
     );
+
+    const element = document.querySelector(`${trId} > td.download > a > button`);
+    new bs.toolTip(element);
   },
 
   updateProgress(trId, evaluation) {
