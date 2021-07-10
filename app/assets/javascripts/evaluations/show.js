@@ -74,6 +74,10 @@ export default class EvaluationResult {
 $(function() {
   $('#nav-link-evaluation').addClass('active');
 
+  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (tooltip) {
+    return new bs.Tooltip(tooltip);
+  });
+
   $('#table-evaluation-result').on('click', 'td', function(event) {
     if (event.target.tagName === 'A') {
       return;
