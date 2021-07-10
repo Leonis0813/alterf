@@ -83,7 +83,9 @@ describe 'evaluations/show', type: :view do
 
     it '行の色が正しいこと' do
       @evaluation.races.size.times do |i|
-        is_asserted_by { @rows[i].attribute('class').value == tr_class }
+        is_asserted_by do
+          @rows[i].attribute('class').value == "cursor-pointer #{tr_class}"
+        end
       end
     end
 
