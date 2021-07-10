@@ -1,11 +1,6 @@
 $(function() {
   const formCollapse = document.getElementById('form-evaluation');
-
-  $('#nav-link-evaluation').addClass('active');
-
-  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (element) {
-    new bs.Tooltip(element);
-  });
+  const collapse = new bs.Collapse(formCollapse);
 
   formCollapse.addEventListener('show.bs.collapse', function(event) {
     $('button#collapse-form > span')
@@ -17,6 +12,31 @@ $(function() {
     $('button#collapse-form > span')
       .removeClass('bi-dash-circle')
       .addClass('bi-plus-circle');
+  });
+
+  $('#collapse-form').on('click', function() {
+    collapse.toggle();
+  });
+
+  $('#new_evaluation').on('ajax:success', function(event) {
+    const dialog = new bs.Modal(document.getElementById('dialog-execute'));
+    dialog.show();
+  });
+
+  $('#new_evaluation').on('ajax:error', function(event) {
+    const dialog = new bs.Modal(document.getElementById('dialog-execute-error'));
+    dialog.show();
+  });
+
+  $('#table-evaluation').on('ajax:error', function(event) {
+    const dialog = new bs.Modal(document.getElementById('dialog-download-error'));
+    dialog.show();
+  });
+
+  $('#nav-link-evaluation').addClass('active');
+
+  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (element) {
+    new bs.Tooltip(element);
   });
 
   $('#evaluation_data_source').on('change', function(event) {
