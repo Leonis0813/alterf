@@ -70,7 +70,7 @@ consumer.subscriptions.create('EvaluationChannel', {
     );
     $(`${trId} > td.download`).append(button);
     button.ready(function() {
-      new bs.toolTip($(`${trId} > td.download > a > button`));
+      new bs.Tooltip($(`${trId} > td.download > a > button`));
     });
   },
 
