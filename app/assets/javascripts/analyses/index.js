@@ -6,8 +6,8 @@ $(function() {
 
   $('#nav-link-analysis').addClass('active');
 
-  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (tooltip) {
-    return new bs.Tooltip(tooltip);
+  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (element) {
+    new bs.Tooltip(element);
   });
 
   $('#new_analysis').on('ajax:success', function(event) {

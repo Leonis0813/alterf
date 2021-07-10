@@ -21,15 +21,20 @@ consumer.subscriptions.create('AnalysisChannel', {
       this.changeStateText(trId, analysis);
       $(`${trId} > td[class*=performed_at]`).text(analysis.performed_at || '');
       $(`${trId} > td[class*=num_feature]`).text(analysis.num_feature || '');
-
-      const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-      tooltips.forEach(function (tooltip) {
-        return new bs.Tooltip(tooltip);
-      });
     } else {
+      let elements = document.querySelectorAll('button[data-bs-toggle="tooltip"]');
+      elements.forEach(function (element) {
+        bs.Tooltip.getInstance(element).dispose();
+      });
+
       $.ajax({
         url: location.href,
         dataType: 'script',
+      }).done(function() {
+        elements = document.querySelectorAll('button[data-bs-toggle="tooltip"]');
+        elements.forEach(function (element) {
+          new bs.Tooltip(element);
+        });
       });
     }
   },
@@ -53,6 +58,9 @@ consumer.subscriptions.create('AnalysisChannel', {
         '<span class="bi bi-download"></span>' +
       '</button>'
     );
+
+    const element = document.querySelector(`${trId} > td.download > button`);
+    new bs.Tooltip(element);
   },
 
   changeStateText(trId, analysis) {
@@ -77,6 +85,8 @@ consumer.subscriptions.create('AnalysisChannel', {
             '</button>' +
           '</a>'
         );
+        const element = document.querySelector(`${trId} > td.state > a > button`);
+        new bs.Tooltip(element);
         break;
       case 'error':
         column.text('エラー');
