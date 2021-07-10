@@ -63,7 +63,7 @@ consumer.subscriptions.create('EvaluationChannel', {
     const button = $(
       `<a data-remote='true' href='${href}'>` +
         '<button class="btn btn-success" title="評価レースをダウンロード" ' +
-          'data-bs-toggle="tooltip">' +
+          'data-bs-toggle="tooltip" data-bs-trigger="hover">' +
           '<span class="bi bi-download"></span>' +
         '</button>' +
       '</a>'

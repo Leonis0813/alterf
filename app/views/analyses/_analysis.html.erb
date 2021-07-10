@@ -13,7 +13,7 @@
   </td>
   <td class='parameter'>
     <button class='btn btn-sm btn-<%= state_to_class(analysis.state) %> btn-param'
-            title='パラメーターを確認' data-bs-toggle='tooltip'>
+            title='パラメーターを確認' data-bs-toggle='tooltip' data-bs-trigger='hover'>
       確認
     </button>
   </td>
@@ -24,7 +24,8 @@
     <i class='fas fa-sync-alt fa-spin'></i>
   <% when 'completed' %>
     <%= link_to analysis_path(analysis.analysis_id), target: :_blank, rel: 'noopener noreferrer' do %>
-      <button class='btn btn-sm btn-success' title='分析結果を確認' data-bs-toggle='tooltip'>
+      <button class='btn btn-sm btn-success' title='分析結果を確認'
+              data-bs-toggle='tooltip' data-bs-trigger='hover'>
         <%= state_to_title(analysis.state) %>
         <span class='bi bi-box-arrow-up-right'></span>
       </button>

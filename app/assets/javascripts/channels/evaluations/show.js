@@ -31,7 +31,8 @@ consumer.subscriptions.create('Evaluation::RaceChannel', {
   createRow(race) {
     $('tbody').append(
       `<tr id='${race.race_id}' class='cursor-pointer table-warning' ` +
-        'title="テストデータを確認" data-bs-toggle="tooltip" data-bs-offset="-500,0">' +
+        'title="テストデータを確認" data-bs-toggle="tooltip" data-bs-offset="-500,0" ' +
+        'data-bs-trigger="hover">' +
         `<td>${race.no}</td>` +
         '<td>' +
           `<a target='_blank' href='${race.race_url}'>` +

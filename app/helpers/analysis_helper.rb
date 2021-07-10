@@ -38,7 +38,7 @@ module AnalysisHelper
     attribute = {
       class: 'bi bi-question-circle-fill',
       title: question_title[param_name],
-      data: {'bs-toggle' => 'tooltip'},
+      data: tooltip_param,
     }
     tag.span(attribute)
   end
@@ -49,7 +49,7 @@ module AnalysisHelper
     attribute = {
       class: 'btn btn-light btn-sm',
       title: '分析結果をダウンロード',
-      data: {'bs-toggle' => 'tooltip'},
+      data: tooltip_param,
     }
 
     tag.button(attribute) do
@@ -62,7 +62,7 @@ module AnalysisHelper
       type: 'submit',
       class: 'btn btn-sm btn-light',
       title: '再実行',
-      data: {'bs-toggle' => 'tooltip'},
+      data: tooltip_param,
     }
 
     tag.button(attribute) do
@@ -81,5 +81,9 @@ module AnalysisHelper
       min_samples_split: '中間ノードに存在するデータ数の最小値',
       num_tree: '決定木の数',
     }
+  end
+
+  def tooltip_param
+    {'bs-toggle' => 'tooltip', 'bs-trigger' => 'hover'}
   end
 end
