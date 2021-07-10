@@ -12,7 +12,8 @@
     <%= analysis.num_feature %>
   </td>
   <td class='parameter'>
-    <button class='btn btn-sm btn-<%= state_to_class(analysis.state) %> btn-param'>
+    <button class='btn btn-sm btn-<%= state_to_class(analysis.state) %> btn-param'
+            title='パラメーターを確認' data-bs-toggle='tooltip' data-bs-placement='top'>
       確認
     </button>
   </td>
@@ -23,7 +24,8 @@
     <i class='fas fa-sync-alt fa-spin'></i>
   <% when 'completed' %>
     <%= link_to analysis_path(analysis.analysis_id), target: :_blank, rel: 'noopener noreferrer' do %>
-      <button class='btn btn-sm btn-success' title='結果を確認'>
+      <button class='btn btn-sm btn-success' title='分析結果を確認'
+              data-bs-toggle='tooltip' data-bs-placement='top'>
         <%= state_to_title(analysis.state) %>
         <span class='bi bi-box-arrow-up-right'></span>
       </button>
@@ -37,9 +39,7 @@
   </td>
   <td class='rebuild' style='background-color: #f5f5f5'>
     <%= form_tag analysis_rebuild_path(analysis.analysis_id), remote: true, style: 'padding: 0px' do %>
-      <%= button_tag type: :submit, class: 'btn btn-light btn-sm' do %>
-        <span class='bi bi-arrow-repeat' />
-      <% end %>
+      <%= analysis_rebuild_button %>
     <% end %>
   </td>
 </tr>
