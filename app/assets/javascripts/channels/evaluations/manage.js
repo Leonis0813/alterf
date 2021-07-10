@@ -14,6 +14,7 @@ consumer.subscriptions.create('EvaluationChannel', {
           column.attr('title', '結果を確認');
           $(`${trId} > td[class*=performed_at]`).text(evaluation.performed_at);
           $(`${trId} > td[class*=state]`).text('0%完了');
+          new bs.Tooltip(document.getElementById(evaluation.evaluation_id));
           break;
         case 'completed':
           column.removeClass('table-warning');
@@ -22,16 +23,13 @@ consumer.subscriptions.create('EvaluationChannel', {
           column.attr('title', '結果を確認');
           $(`${trId} > td[class*=state]`).text('完了');
           this.addDownloadButton(trId, evaluation);
-
-          const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-          tooltips.forEach(function (tooltip) {
-            return new bs.Tooltip(tooltip);
-          });
           break;
         case 'error':
           column.removeClass('table-warning cursor-pointer');
           column.addClass('table-danger cursor-auto');
           column.attr('data-state', evaluation.state);
+          column.attr('title', '');
+          column.attr('data-bs-original-title', '');
           $(`${trId} > td[class*=state]`).text('エラー');
           break;
         default:

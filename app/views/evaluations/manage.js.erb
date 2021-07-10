@@ -2,5 +2,5 @@ $('#page-info').html("<%= j(render(partial: 'layouts/page_info', locals: {resour
 $('#paginate').html("<%= j(paginate(@evaluations)) %>");
 $('tbody').html("<%= j(render(@evaluations)) %>");
 document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (tooltip) {
-  return new bs.Tooltip(tooltip);
+  new bs.Tooltip(tooltip);
 });

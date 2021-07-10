@@ -1,4 +1,4 @@
 $('tbody').html("<%= j(render(@evaluation.data)) %>");
 document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (tooltip) {
-  return new bs.Tooltip(tooltip);
+  new bs.Tooltip(tooltip);
 });
