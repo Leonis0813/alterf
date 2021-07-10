@@ -108,8 +108,8 @@ describe Evaluation, type: :model do
         end
 
         it '取得したレースIDが正しいこと' do
-          is_asserted_by { @evaluation.data.size == 1 }
-          is_asserted_by { @evaluation.data.first.race_id == '1234' }
+          is_asserted_by { @evaluation.races.size == 1 }
+          is_asserted_by { @evaluation.races.first.race_id == '1234' }
         end
       end
 
@@ -132,8 +132,8 @@ describe Evaluation, type: :model do
         after(:all) { Denebola::Race.destroy_all }
 
         it '取得したレースIDが正しいこと' do
-          is_asserted_by { @evaluation.data.size == 1 }
-          is_asserted_by { @evaluation.data.first.race_id == '1234' }
+          is_asserted_by { @evaluation.races.size == 1 }
+          is_asserted_by { @evaluation.races.first.race_id == '1234' }
         end
       end
     end
@@ -155,15 +155,18 @@ describe Evaluation, type: :model do
         @evaluation = create(:evaluation, attribute)
 
         data.each do |datum|
-          evaluation_datum = @evaluation.data.create!(
+          evaluation_race = @evaluation.races.create!(
             race_id: '1' * 8,
             race_name: 'race_name',
             race_url: 'http://example.com',
             ground_truth: datum[:ground_truth],
           )
           (1..4).each do |number|
-            attribute = {number: number, won: datum[:wons].include?(number)}
-            evaluation_datum.prediction_results.create!(attribute)
+            attribute = {
+              number: number,
+              prediction_result: datum[:wons].include?(number),
+            }
+            evaluation_race.test_data.create!(attribute)
           end
         end
 

@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   post '/evaluations' => 'evaluations#execute'
   resources :evaluations, only: %i[] do
     get 'download' => 'evaluations#download', param: :evaluation_id
+    resources :races, only: %i[show], controller: 'evaluation/races', param: :race_id
   end
   resources :evaluations, only: %i[show], param: :evaluation_id
 

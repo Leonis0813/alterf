@@ -73,4 +73,18 @@ export default class EvaluationResult {
 
 $(function() {
   $('#nav-link-evaluation').addClass('active');
+
+  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (tooltip) {
+    return new bs.Tooltip(tooltip);
+  });
+
+  $('#table-evaluation-result').on('click', 'td', function(event) {
+    if (event.target.tagName === 'A') {
+      return;
+    }
+
+    const evaluationId = $('#table-evaluation-result').data('evaluation-id');
+    const raceId = $(this).parents('tr').attr('id');
+    open(`/alterf/evaluations/${evaluationId}/races/${raceId}`, '_blank');
+  });
 });

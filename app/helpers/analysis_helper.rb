@@ -35,14 +35,38 @@ module AnalysisHelper
   end
 
   def question_sign(param_name)
-    tag.span(class: 'bi bi-question-circle-fill', title: question_title[param_name])
+    attribute = {
+      class: 'bi bi-question-circle-fill',
+      title: question_title[param_name],
+      data: tooltip_param,
+    }
+    tag.span(attribute)
   end
 
   def analysis_result_download_button(analysis)
     return unless analysis.state == 'completed'
 
-    tag.button(class: 'btn btn-light btn-sm') do
-      tag.span(class: 'bi bi-download', title: '結果をダウンロード')
+    attribute = {
+      class: 'btn btn-light btn-sm',
+      title: '分析結果をダウンロード',
+      data: tooltip_param,
+    }
+
+    tag.button(attribute) do
+      tag.span(class: 'bi bi-download')
+    end
+  end
+
+  def analysis_rebuild_button
+    attribute = {
+      type: 'submit',
+      class: 'btn btn-sm btn-light',
+      title: '再実行',
+      data: tooltip_param,
+    }
+
+    tag.button(attribute) do
+      tag.span(class: 'bi bi-arrow-repeat')
     end
   end
 
@@ -57,5 +81,9 @@ module AnalysisHelper
       min_samples_split: '中間ノードに存在するデータ数の最小値',
       num_tree: '決定木の数',
     }
+  end
+
+  def tooltip_param
+    {'bs-toggle' => 'tooltip', 'bs-trigger' => 'hover'}
   end
 end

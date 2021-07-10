@@ -6,9 +6,8 @@
 
 <ul class='nav nav-tabs' style='border-bottom: 0px'>
   <li class='nav-item'>
-    <% params = collapse_params('form-evaluation', true) %>
-    <%= button_tag nil, {id: 'collapse-form', class: 'btn btn-light nav-link'}.merge(params) do %>
-      <span class='bi bi-dash-circle' aria-hidden='true'></span>
+    <%= button_tag nil, {id: 'collapse-form', class: 'btn btn-light nav-link'} do %>
+      <span class='bi bi-plus-circle'></span>
     <% end %>
   </li>
   <li class='nav-item active'>
@@ -87,22 +86,3 @@
     <%= render @evaluations %>
   </tbody>
 </table>
-
-<script>
-  $(function() {
-    $('#new_evaluation').on('ajax:success', function(event) {
-      var dialog = new bs.Modal(document.getElementById('dialog-execute'));
-      dialog.show();
-    });
-
-    $('#new_evaluation').on('ajax:error', function(event) {
-      var dialog = new bs.Modal(document.getElementById('dialog-execute-error'));
-      dialog.show();
-    });
-
-    $('#table-evaluation').on('ajax:error', function(event) {
-      var dialog = new bs.Modal(document.getElementById('dialog-download-error'));
-      dialog.show();
-    });
-  });
-</script>

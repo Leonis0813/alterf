@@ -1,4 +1,6 @@
-# 4.23.1 (2021/07/09)
+# 4.24.0 (2021/07/11)
+- [ADD] view to confirm evaluation data
+- [UPDATE] tooltip by bootstrap
 - [UPDATE] gems
 
 # 4.23.0 (2021/06/07)

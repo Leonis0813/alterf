@@ -1,0 +1,31 @@
+<% numbers = race.test_data.where(prediction_result: true).map(&:number).sort %>
+<tr id='<%= race.race_id %>' class='cursor-pointer table-<%= race_row_class(numbers, race) %>'
+    title='テストデータを確認' data-bs-toggle='tooltip' data-bs-trigger='hover' data-bs-offset='-500,0'>
+  <td>
+    <%= race_counter + 1 %>
+  </td>
+  <td>
+    <%= link_to race.race_url, {target: :_blank, rel: 'noopener noreferrer'} do %>
+      <%= race.race_name %>
+      <span class='bi bi-box-arrow-up-right'></span>
+    <% end %>
+  </td>
+  <td class='num_entry'>
+    <%= race.test_data.empty? ? '' : race.test_data.size %>
+  </td>
+  <td class='result' style='padding: 4px'>
+  <% numbers.each do |number| %>
+    <% color = span_color(number, race.ground_truth) %>
+    <span class='fa-layers fa-fw fa-2x prediction-result' style='color: <%= color %>'>
+      <i class='fa fa-circle'></i>
+      <i class='fa-layers-text fa-inverse fa-xs'><%= number %></i>
+    </span>
+  <% end %>
+  </td>
+  <td style='padding: 4px'>
+    <span class='fa-layers fa-fw fa-2x prediction-result' style='color: limegreen'>
+      <i class='fa fa-circle'></i>
+      <i class='fa-layers-text fa-inverse fa-xs'><%= race.ground_truth %></i>
+    </span>
+  </td>
+</tr>
