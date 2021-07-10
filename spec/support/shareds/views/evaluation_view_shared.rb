@@ -6,7 +6,7 @@ shared_context '評価ジョブを作成する' do |total: nil, update_attribute
     total.times do |i|
       attribute = {evaluation_id: i.to_s * 32}.merge(update_attribute)
       evaluation = create(:evaluation, attribute)
-      evaluation.data.create!(
+      evaluation.races.create!(
         race_id: '1' * 8,
         race_name: 'race_name',
         race_url: 'race_url',

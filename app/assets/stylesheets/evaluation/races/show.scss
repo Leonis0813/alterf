@@ -1,0 +1,55 @@
+#raw-data, #feature {
+  padding: 1rem;
+}
+
+.card-body.table-responsive {
+  padding: 0px;
+}
+
+#table-evaluation-race-raw-data, #table-evaluation-race-feature {
+  font-size: 14px;
+}
+
+#table-evaluation-race-raw-data thead th.order,
+#table-evaluation-race-raw-data tbody tr td.order,
+#table-evaluation-race-feature thead th.order,
+#table-evaluation-race-feature tbody tr td.order {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0;
+  color: white;
+  background-color: black !important;
+  font-weight: bold;
+  border-bottom-width: 0px;
+}
+
+.tablesorter-headerUnSorted {
+  background-image: url(data:image/gif;base64,R0lGODlhFQAJAIAAAP///////yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
+  background-repeat: no-repeat;
+  background-position: center right;
+  padding: 4px 20px 4px 4px !important;
+  cursor: pointer;
+}
+
+.tablesorter-headerAsc {
+  background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
+  background-repeat: no-repeat;
+  background-position: center right;
+  border-bottom: #000 2px solid;
+  padding: 4px 20px 4px 4px !important;
+  cursor: pointer;
+}
+
+.tablesorter-headerDesc {
+  background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAAP///////yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
+  background-repeat: no-repeat;
+  background-position: center right;
+  border-bottom: #000 2px solid;
+  padding: 4px 20px 4px 4px !important;
+  cursor: pointer;
+}
+
+.sorter-false {
+  background-image: none;
+  cursor: default;
+}

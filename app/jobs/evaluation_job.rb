@@ -3,19 +3,18 @@ class EvaluationJob < ApplicationJob
 
   queue_as :alterf
 
-  def perform(evaluation_id)
-    evaluation = Evaluation.find(evaluation_id)
+  def perform(evaluation)
     evaluation.start!
 
-    data_dir = Rails.root.join('tmp/files/evaluations', evaluation_id.to_s)
+    data_dir = Rails.root.join('tmp/files/evaluations', evaluation.id.to_s)
     unzip_model(File.join(data_dir, evaluation.model), data_dir)
 
     evaluation.set_analysis!
     evaluation.fetch_data!
 
-    evaluation.data.each do |datum|
+    evaluation.races.each do |race|
       File.open(File.join(data_dir, Settings.prediction.tmp_file_name), 'w') do |file|
-        feature = FeatureUtil.create_feature_from_denebola(datum.race_id)
+        feature = FeatureUtil.create_feature_from_denebola(race.race_id)
         YAML.dump(feature.to_hash.deep_stringify_keys, file)
       end
 
@@ -23,7 +22,7 @@ class EvaluationJob < ApplicationJob
       execute_script('predict.py', args)
 
       result_file = File.join(data_dir, 'prediction.yml')
-      datum.import_prediction_results(result_file)
+      race.import_prediction_results!(result_file)
       FileUtils.rm(result_file)
       evaluation.calculate!
     end

@@ -1,7 +1,6 @@
 $(function() {
   const formCollapse = document.getElementById('form-evaluation');
-
-  $('#nav-link-evaluation').addClass('active');
+  const collapse = new bs.Collapse(formCollapse);
 
   formCollapse.addEventListener('show.bs.collapse', function(event) {
     $('button#collapse-form > span')
@@ -13,6 +12,31 @@ $(function() {
     $('button#collapse-form > span')
       .removeClass('bi-dash-circle')
       .addClass('bi-plus-circle');
+  });
+
+  $('#collapse-form').on('click', function() {
+    collapse.toggle();
+  });
+
+  $('#new_evaluation').on('ajax:success', function(event) {
+    const dialog = new bs.Modal(document.getElementById('dialog-execute'));
+    dialog.show();
+  });
+
+  $('#new_evaluation').on('ajax:error', function(event) {
+    const dialog = new bs.Modal(document.getElementById('dialog-execute-error'));
+    dialog.show();
+  });
+
+  $('#table-evaluation').on('ajax:error', function(event) {
+    const dialog = new bs.Modal(document.getElementById('dialog-download-error'));
+    dialog.show();
+  });
+
+  $('#nav-link-evaluation').addClass('active');
+
+  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (element) {
+    new bs.Tooltip(element);
   });
 
   $('#evaluation_data_source').on('change', function(event) {
@@ -49,5 +73,19 @@ $(function() {
     const filename = /filename="(.*)"/.exec(xhr.getResponseHeader('Content-Disposition'))[1];
     $('<a>', {href: blobUrl, download: filename})[0].click();
     (URL || webkitURL).revokeObjectURL(blobUrl);
+  });
+
+  $('#table-evaluation').on('mouseover', '.download button', function(event) {
+    const rowId = $(this).parents('tr').attr('id');
+    const row = document.getElementById(rowId);
+    const tooltip = bs.Tooltip.getInstance(row);
+    tooltip.hide();
+    tooltip.disable();
+  }).on('mouseleave', '.download button', function(event) {
+    const rowId = $(this).parents('tr').attr('id');
+    const row = document.getElementById(rowId);
+    const tooltip = bs.Tooltip.getInstance(row);
+    tooltip.enable();
+    tooltip.show();
   });
 });

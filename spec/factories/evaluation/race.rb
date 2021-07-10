@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :datum, class: 'Evaluation::Datum' do
+  factory :evaluation_race, class: 'Evaluation::Race' do
     race_id { '1' * 8 }
     race_name { 'test' }
     race_url { 'https://example.com' }

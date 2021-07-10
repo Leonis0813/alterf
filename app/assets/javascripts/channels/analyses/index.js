@@ -22,9 +22,19 @@ consumer.subscriptions.create('AnalysisChannel', {
       $(`${trId} > td[class*=performed_at]`).text(analysis.performed_at || '');
       $(`${trId} > td[class*=num_feature]`).text(analysis.num_feature || '');
     } else {
+      let elements = document.querySelectorAll('button[data-bs-toggle="tooltip"]');
+      elements.forEach(function (element) {
+        bs.Tooltip.getInstance(element).dispose();
+      });
+
       $.ajax({
         url: location.href,
         dataType: 'script',
+      }).done(function() {
+        elements = document.querySelectorAll('button[data-bs-toggle="tooltip"]');
+        elements.forEach(function (element) {
+          new bs.Tooltip(element);
+        });
       });
     }
   },
@@ -42,11 +52,16 @@ consumer.subscriptions.create('AnalysisChannel', {
   },
 
   createDownloadButton(trId) {
-    $(`${trId} > td.download`).append(
-      '<button class="btn btn-light btn-sm" title="結果をダウンロード">' +
+    const button = $(
+      '<button class="btn btn-light btn-sm" title="分析結果をダウンロード" ' +
+        'data-bs-toggle="tooltip" data-bs-trigger="hover">' +
         '<span class="bi bi-download"></span>' +
       '</button>'
     );
+    $(`${trId} > td.download`).append(button);
+    button.ready(function() {
+      new bs.Tooltip($(`${trId} > td.download > button`));
+    });
   },
 
   changeStateText(trId, analysis) {
@@ -62,14 +77,19 @@ consumer.subscriptions.create('AnalysisChannel', {
         break;
       case 'completed':
         const href = `/alterf/analyses/${analysis.analysis_id}`;
-        column.append(
+        const button = $(
           `<a target='_blank' rel='noopener noreferrer' href=${href}>` +
-            '<button class="btn btn-sm btn-success" title="結果を確認">' +
+            '<button class="btn btn-sm btn-success" title="分析結果を確認" ' +
+              'data-bs-toggle="tooltip" data-bs-trigger="hover">' +
               '完了' +
               '<span class="bi bi-box-arrow-up-right"></span>' +
             '</button>' +
           '</a>'
         );
+        column.append(button);
+        button.ready(function() {
+          new bs.Tooltip($(`tr${trId} > td.state > a > button`));
+        });
         break;
       case 'error':
         column.text('エラー');
