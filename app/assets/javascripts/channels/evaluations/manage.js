@@ -48,7 +48,8 @@ consumer.subscriptions.create('EvaluationChannel', {
     const href = `/alterf/evaluations/${evaluation.evaluation_id}/download`;
     $(`${trId} > td.download`).append(
       `<a data-remote='true' href='${href}'>` +
-        '<button class="btn btn-success">' +
+        '<button class="btn btn-success" title="評価レースをダウンロード" ' +
+          'data-bs-toggle="tooltip" data-bs-placement="top">' +
           '<span class="bi bi-download"></span>' +
         '</button>' +
       '</a>'
