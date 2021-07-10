@@ -60,8 +60,7 @@ consumer.subscriptions.create('AnalysisChannel', {
     );
     $(`${trId} > td.download`).append(button);
     button.ready(function() {
-      const element = document.querySelector(`tr${trId} > td.download > button`);
-      new bs.Tooltip(element);
+      new bs.Tooltip($(`${trId} > td.download > button`));
     });
   },
 
@@ -89,8 +88,7 @@ consumer.subscriptions.create('AnalysisChannel', {
         );
         column.append(button);
         button.ready(function() {
-          const element = document.querySelector(`tr${trId} > td.state > a > button`);
-          new bs.Tooltip(element);
+          new bs.Tooltip($(`tr${trId} > td.state > a > button`));
         });
         break;
       case 'error':
