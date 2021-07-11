@@ -1,6 +1,7 @@
 # 4.24.0 (2021/07/11)
 - [ADD] view to confirm evaluation data
 - [UPDATE] tooltip by bootstrap
+- [UPDATE] gems
 
 # 4.23.0 (2021/06/07)
 - [REMOVE] analysis with specifing the number of entries
