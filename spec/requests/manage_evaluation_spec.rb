@@ -3,6 +3,17 @@
 require 'rails_helper'
 
 describe 'ブラウザで予測する', type: :request do
+  def wait_collapse
+    @wait.until do
+      form = @driver.find_element(:id, 'form-evaluation')
+      classes = form.attribute('class').split(' ')
+      if not classes.include?('collapsing') and not classes.include?('show')
+        @driver.find_element(:id, 'collapse-form').click
+      end
+      classes.include?('show')
+    end
+  end
+
   include_context 'Webdriver起動'
 
   describe '評価画面を開く' do
@@ -16,6 +27,7 @@ describe 'ブラウザで予測する', type: :request do
 
     describe 'モデルを指定せずに実行する' do
       before(:all) do
+        wait_collapse
         @driver.find_element(:xpath, '//form//input[@value="実行"]').click
         @wait.until { @driver.find_element(:id, 'dialog-execute-error').displayed? }
         @dialog = @driver.find_element(:id, 'dialog-execute-error')
@@ -28,6 +40,7 @@ describe 'ブラウザで予測する', type: :request do
       describe '評価データを指定方法をファイルに変更する' do
         before(:all) do
           @driver.get("#{base_url}/evaluations")
+          wait_collapse
           element = @wait.until { @driver.find_element(:id, 'evaluation_data_source') }
           select = Selenium::WebDriver::Support::Select.new(element)
           @wait.until { select.select_by(:value, 'file') || true rescue false }
