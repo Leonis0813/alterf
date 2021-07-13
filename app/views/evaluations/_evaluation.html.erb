@@ -6,7 +6,8 @@
   </td>
   <td class='model'>
     <%= evaluation.model %>
-    <button class='btn btn-sm btn-<%= state_to_class(evaluation.state) %> btn-param float-end'>
+    <button id='<%= evaluation.analysis&.analysis_id %>'
+            class='btn btn-sm btn-<%= state_to_class(evaluation.state) %> btn-param float-end'>
       パラメーターを確認
     </button>
   </td>

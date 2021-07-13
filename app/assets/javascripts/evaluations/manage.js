@@ -75,13 +75,13 @@ $(function() {
     (URL || webkitURL).revokeObjectURL(blobUrl);
   });
 
-  $('#table-evaluation').on('mouseover', '.download button', function(event) {
+  $('#table-evaluation').on('mouseover', '.download button, .model button', function(event) {
     const rowId = $(this).parents('tr').attr('id');
     const row = document.getElementById(rowId);
     const tooltip = bs.Tooltip.getInstance(row);
     tooltip.hide();
     tooltip.disable();
-  }).on('mouseleave', '.download button', function(event) {
+  }).on('mouseleave', '.download button, .model button', function(event) {
     const rowId = $(this).parents('tr').attr('id');
     const row = document.getElementById(rowId);
     const tooltip = bs.Tooltip.getInstance(row);
