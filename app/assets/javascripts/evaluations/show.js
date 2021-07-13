@@ -73,7 +73,7 @@ export default class EvaluationResult {
 
     d3.selectAll('text.value')
       .text(function(bar) {
-        return values[bar.index];
+        return Math.round(values[bar.index] * 1000) / 1000;
       })
       .transition()
       .duration(1000)

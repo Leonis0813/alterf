@@ -31,7 +31,8 @@ consumer.subscriptions.create('EvaluationChannel', {
           row.attr('title', '');
           row.attr('data-bs-original-title', '');
           $(`${trId} > td[class*=state]`).text('エラー');
-          bs.Tooltip.getInstance(row).dispose();
+          const tooltip = bs.Tooltip.getInstance(column);
+          tooltip && tooltip.dispose();
           break;
         default:
           this.updateProgress(trId, evaluation);
@@ -76,13 +77,5 @@ consumer.subscriptions.create('EvaluationChannel', {
 
   updateProgress(trId, evaluation) {
     $(`${trId} > td[class*=state]`).text(evaluation.progress + '%完了');
-    $(`${trId} > td[class*=precision]`).text(this.round(evaluation.precision));
-    $(`${trId} > td[class*=recall]`).text(this.round(evaluation.recall));
-    $(`${trId} > td[class*=specificity]`).text(this.round(evaluation.specificity));
-    $(`${trId} > td[class*=f_measure]`).text(this.round(evaluation.f_measure));
-  },
-
-  round(value) {
-    return Math.round(value * 1000) / 1000;
   }
 });
