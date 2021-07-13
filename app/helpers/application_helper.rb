@@ -25,6 +25,8 @@ module ApplicationHelper
       'success'
     when 'error'
       'danger'
+    else
+      'secondary'
     end
   end
 

@@ -13,6 +13,7 @@ consumer.subscriptions.create('EvaluationChannel', {
           row.attr('data-state', evaluation.state);
           row.attr('title', '結果を確認');
           $(`${trId} > td[class*=performed_at]`).text(evaluation.performed_at);
+          $(`${trId} > td[class*=model] > button`).addClass('btn-warning');
           $(`${trId} > td[class*=state]`).text('0%完了');
           new bs.Tooltip(row);
           break;
@@ -21,6 +22,8 @@ consumer.subscriptions.create('EvaluationChannel', {
           row.addClass('table-success');
           row.attr('data-state', evaluation.state);
           row.attr('title', '結果を確認');
+          $(`${trId} > td[class*=model] > button`).removeClass('btn-warning');
+          $(`${trId} > td[class*=model] > button`).addClass('btn-success');
           $(`${trId} > td[class*=state]`).text('完了');
           this.addDownloadButton(trId, evaluation);
           break;
@@ -30,12 +33,19 @@ consumer.subscriptions.create('EvaluationChannel', {
           row.attr('data-state', evaluation.state);
           row.attr('title', '');
           row.attr('data-bs-original-title', '');
+          $(`${trId} > td[class*=model] > button`).removeClass('btn-warning');
+          $(`${trId} > td[class*=model] > button`).addClass('btn-danger');
           $(`${trId} > td[class*=state]`).text('エラー');
           const tooltip = bs.Tooltip.getInstance(column);
           tooltip && tooltip.dispose();
           break;
         default:
-          this.updateProgress(trId, evaluation);
+          if (evaluation.analysis_id) {
+            $(`${trId} > td[class*=model] > button`).attr('id', evaluation.analysis_id);
+          }
+          if (evaluation.progress) {
+            $(`${trId} > td[class*=state]`).text(`${evaluation.progress}%完了`);
+          }
       }
     } else {
       let elements = document.querySelectorAll('[data-bs-toggle="tooltip"]');
@@ -73,9 +83,5 @@ consumer.subscriptions.create('EvaluationChannel', {
     button.ready(function() {
       new bs.Tooltip($(`${trId} > td.download > a > button`));
     });
-  },
-
-  updateProgress(trId, evaluation) {
-    $(`${trId} > td[class*=state]`).text(evaluation.progress + '%完了');
   }
 });

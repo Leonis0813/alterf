@@ -67,6 +67,7 @@ class Evaluation < ApplicationRecord
     raise StandardError if analysis.nil?
 
     update!(analysis: analysis)
+    broadcast(analysis_id: analysis_id)
   end
 
   def fetch_data!
@@ -116,8 +117,7 @@ class Evaluation < ApplicationRecord
     completed_data_size = races.to_a.count {|race| race.test_data.present? }
 
     %i[precision recall f_measure].each {|key| attribute[key] ||= 0 }
-    attribute[:progress] = (100 * completed_data_size / races.size.to_f).round(0)
-    broadcast(attribute)
+    broadcast(progress: (100 * completed_data_size / races.size.to_f).round(0))
 
     attribute[:evaluation_id] = evaluation_id
     ActionCable.server.broadcast('evaluation_race', attribute)
