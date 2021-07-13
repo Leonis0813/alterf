@@ -72,6 +72,9 @@ export default class EvaluationResult {
       });
 
     d3.selectAll('text.value')
+      .text(function(bar) {
+        return values[bar.index];
+      })
       .transition()
       .duration(1000)
       .attr('x', function(bar) {
