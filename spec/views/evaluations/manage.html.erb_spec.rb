@@ -58,7 +58,6 @@ describe 'evaluations/manage', type: :view do
         it_behaves_like 'ページングボタンが表示されていないこと'
         it_behaves_like 'テーブルの列がリンクになっていること'
         it_behaves_like '評価ジョブの情報が表示されていること', state: '完了'
-        it_behaves_like '評価結果情報が表示されていること'
         it_behaves_like 'ダウンロードボタンが表示されていないこと'
       end
     end
@@ -73,7 +72,6 @@ describe 'evaluations/manage', type: :view do
         it_behaves_like 'ページングボタンが表示されていないこと'
         it_behaves_like 'テーブルの列がリンクになっていること'
         it_behaves_like '評価ジョブの情報が表示されていること', state: '完了'
-        it_behaves_like '評価結果情報が表示されていること'
         it_behaves_like 'ダウンロードボタンが表示されていること'
       end
     end

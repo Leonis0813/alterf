@@ -49,7 +49,7 @@ const AnalysisResult = class {
       const bars = that.#createBars(importances, scale);
       importanceBar.drawBars(bars, {color: 'green', opacity: 0.3});
 
-      importanceBar.setEvent('rect', 'mouseover', function(bar) {
+      importanceBar.setEvent('rect', 'mouseover', function(event, bar) {
         d3.select('#importance')
           .append('text')
           .text(bar.value)

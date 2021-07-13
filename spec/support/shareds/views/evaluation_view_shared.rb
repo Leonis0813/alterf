@@ -129,20 +129,16 @@ end
 shared_examples '評価ジョブテーブルが表示されていること' do |rows: 0|
   before { @table = @html.xpath(table_xpath) }
 
-  it '10列のテーブルが表示されていること' do
-    is_asserted_by { @table.search('thead/th').size == 10 }
+  it '6列のテーブルが表示されていること' do
+    is_asserted_by { @table.search('thead/th').size == 6 }
   end
 
   %w[
     実行開始日時
     モデル
     指定方法
-    データ数
+    レース数
     状態
-    適合率
-    再現率
-    特異度
-    F値
   ].each_with_index do |text, i|
     it "#{i + 1}列目のヘッダーが#{text}であること" do
       is_asserted_by { @table.search('thead/th')[i].text == text }
@@ -185,8 +181,16 @@ shared_examples '評価ジョブの情報が表示されていること' do |sta
 
   it 'モデルが表示されていること' do
     @evaluations.each_with_index do |evaluation, i|
-      model = @rows[i].search('td')[1].text.strip
+      model = @rows[i].search('td')[1].text.strip.lines.first.strip
       is_asserted_by { model == evaluation.model }
+    end
+  end
+
+  it 'パラメーター確認ボタンが表示されていること' do
+    @rows.each do |row|
+      button = row.search('td')[1].search('button')[0]
+      is_asserted_by { button.present? }
+      is_asserted_by { button.text.strip == 'パラメーターを確認' }
     end
   end
 
@@ -211,44 +215,12 @@ shared_examples '評価ジョブの情報が表示されていること' do |sta
   end
 end
 
-shared_examples '評価結果情報が表示されていること' do
-  before { @rows = @html.xpath("#{table_xpath}/tbody/tr") }
-
-  it '適合率が表示されていること' do
-    @evaluations.each_with_index do |evaluation, i|
-      precision = @rows[i].children.search('td')[5]
-      is_asserted_by { precision.text.strip == evaluation.precision.round(3).to_s }
-    end
-  end
-
-  it '再現率が表示されていること' do
-    @evaluations.each_with_index do |evaluation, i|
-      recall = @rows[i].children.search('td')[6]
-      is_asserted_by { recall.text.strip == evaluation.recall.round(3).to_s }
-    end
-  end
-
-  it '特異度が表示されていること' do
-    @evaluations.each_with_index do |evaluation, i|
-      specificity = @rows[i].children.search('td')[7]
-      is_asserted_by { specificity.text.strip == evaluation.specificity.round(3).to_s }
-    end
-  end
-
-  it 'F値が表示されていること' do
-    @evaluations.each_with_index do |evaluation, i|
-      f_measure = @rows[i].children.search('td')[8]
-      is_asserted_by { f_measure.text.strip == evaluation.f_measure.round(3).to_s }
-    end
-  end
-end
-
 shared_examples 'ダウンロードボタンが表示されていないこと' do
   it do
     rows = @html.xpath("#{table_xpath}/tbody/tr")
 
     @evaluations.each_with_index do |evaluation, i|
-      download_button = rows[i].children.search('td')[9]
+      download_button = rows[i].children.search('td')[5]
       download_link = download_button.search(download_link_xpath(evaluation))
       is_asserted_by { download_link.blank? }
     end
@@ -260,7 +232,7 @@ shared_examples 'ダウンロードボタンが表示されていること' do
     rows = @html.xpath("#{table_xpath}/tbody/tr")
 
     @evaluations.each_with_index do |evaluation, i|
-      download_button = rows[i].children.search('td')[9]
+      download_button = rows[i].children.search('td')[5]
       download_link = download_button.search(download_link_xpath(evaluation))
       is_asserted_by { download_link.present? }
     end

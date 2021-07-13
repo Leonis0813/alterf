@@ -6,6 +6,10 @@
   </td>
   <td class='model'>
     <%= evaluation.model %>
+    <button id='<%= evaluation.analysis&.analysis_id %>'
+            class='btn btn-sm btn-<%= state_to_class(evaluation.state) %> btn-param float-end'>
+      パラメーターを確認
+    </button>
   </td>
   <td class='data_source'>
     <%= evaluation_data_source_option.invert[evaluation.data_source] %>
@@ -15,18 +19,6 @@
   </td>
   <td class='state'>
     <%= progress(evaluation) %>
-  </td>
-  <td class='precision'>
-    <%= evaluation.precision&.round(3) || 0.0 %>
-  </td>
-  <td class='recall'>
-    <%= evaluation.recall&.round(3) || 0.0 %>
-  </td>
-  <td class='specificity'>
-    <%= evaluation.specificity&.round(3) || 0.0 %>
-  </td>
-  <td class='f_measure'>
-    <%= evaluation.f_measure&.round(3) || 0.0 %>
   </td>
   <td class='download' style='background-color: white; cursor: default'>
     <%= evaluation_data_download_button(evaluation) %>

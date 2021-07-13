@@ -3,15 +3,11 @@
 module EvaluationHelper
   def evaluation_table_headers
     [
-      {name: '実行開始日時', width: 14},
-      {name: 'モデル', width: 15},
-      {name: '指定方法', width: 9},
-      {name: 'データ数', width: 8},
-      {name: '状態', width: 11},
-      {name: '適合率', width: 9},
-      {name: '再現率', width: 9},
-      {name: '特異度', width: 9},
-      {name: 'F値', width: 9},
+      {name: '実行開始日時', width: 16},
+      {name: 'モデル', width: 35},
+      {name: '指定方法', width: 11},
+      {name: 'レース数', width: 10},
+      {name: '状態', width: 21},
     ]
   end
 

@@ -1,3 +1,5 @@
+import * as common from '../application';
+
 $(function() {
   const formCollapse = document.getElementById('form-evaluation');
   const collapse = new bs.Collapse(formCollapse);
@@ -19,18 +21,15 @@ $(function() {
   });
 
   $('#new_evaluation').on('ajax:success', function(event) {
-    const dialog = new bs.Modal(document.getElementById('dialog-execute'));
-    dialog.show();
+    common.showDialog('dialog-execute');
   });
 
   $('#new_evaluation').on('ajax:error', function(event) {
-    const dialog = new bs.Modal(document.getElementById('dialog-execute-error'));
-    dialog.show();
+    common.showDialog('dialog-execute-error');
   });
 
   $('#table-evaluation').on('ajax:error', function(event) {
-    const dialog = new bs.Modal(document.getElementById('dialog-download-error'));
-    dialog.show();
+    common.showDialog('dialog-download-error');
   });
 
   $('#nav-link-evaluation').addClass('active');
@@ -58,11 +57,20 @@ $(function() {
     if (state === 'waiting' || state === 'error') {
       return;
     }
+
+    if ($(this).attr('class') === 'model' && event.target.tagName === 'BUTTON') {
+      return;
+    }
+
     if ($(this).attr('class') === 'download') {
       return;
     }
 
     open(`/alterf/evaluations/${row.attr('id')}`, '_blank');
+  });
+
+  $('#table-evaluation').on('click', '.model button', function(event) {
+    common.showParameterDialog($(this).attr('id'));
   });
 
   $('#table-evaluation').on('ajax:success', function(event) {
@@ -75,13 +83,13 @@ $(function() {
     (URL || webkitURL).revokeObjectURL(blobUrl);
   });
 
-  $('#table-evaluation').on('mouseover', '.download button', function(event) {
+  $('#table-evaluation').on('mouseover', '.download button, .model button', function(event) {
     const rowId = $(this).parents('tr').attr('id');
     const row = document.getElementById(rowId);
     const tooltip = bs.Tooltip.getInstance(row);
     tooltip.hide();
     tooltip.disable();
-  }).on('mouseleave', '.download button', function(event) {
+  }).on('mouseleave', '.download button, .model button', function(event) {
     const rowId = $(this).parents('tr').attr('id');
     const row = document.getElementById(rowId);
     const tooltip = bs.Tooltip.getInstance(row);
