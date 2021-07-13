@@ -187,6 +187,14 @@ shared_examples '評価ジョブの情報が表示されていること' do |sta
     end
   end
 
+  it 'パラメーター確認ボタンが表示されていること' do
+    @rows.each do |row|
+      button = row.search('td')[1].search('button')[0]
+      is_asserted_by { button.present? }
+      is_asserted_by { button.text.strip == 'パラメーターを確認' }
+    end
+  end
+
   it '指定方法が表示されていること' do
     @evaluations.each_with_index do |evaluation, i|
       data_source = @rows[i].search('td')[2].text.strip
