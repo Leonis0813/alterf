@@ -39,7 +39,25 @@ export default class EvaluationResult {
     this.#performanceBar.drawXAxis(x_axis.ORIGIN, this.#scale.x);
     this.#performanceBar.drawYAxis(y_axis.ORIGIN, this.#scale.y);
     this.#performanceBar.drawBars(bars, {color: 'orange', opacity: 0.5});
-    this.#appendText(bars);
+
+    const that = this;
+    d3.select('#performance')
+      .selectAll('.value')
+      .data(bars)
+      .enter()
+      .append('text')
+      .text(function(bar) {
+        return Math.round(bar.value * 1000) / 1000;
+      })
+      .attr('y', function(bar) {
+        return bar.y + that.#scale.y.bandwidth() / 2;
+      })
+      .attr('class', 'value')
+      .transition()
+      .duration(1000)
+      .attr('x', function(bar) {
+        return bar.x + that.#scale.x(bar.value) + 5;
+      });
   }
 
   updateBars(values) {
@@ -52,7 +70,13 @@ export default class EvaluationResult {
       .attr('width', function(bar) {
         return that.#scale.x(values[bar.index]);
       });
-    this.#appendText(bars);
+
+    d3.selectAll('text.value')
+      .transition()
+      .duration(1000)
+      .attr('x', function(bar) {
+        return bar.x + that.#scale.x(values[bar.index]) + 5;
+      });
   }
 
   #createBars(performances) {
@@ -71,29 +95,6 @@ export default class EvaluationResult {
         value: performance,
       };
     });
-  }
-
-  #appendText(bars) {
-    const that = this;
-    d3.selectAll('text.value').remove();
-    console.log(bars);
-    d3.select('#performance')
-      .selectAll('.value')
-      .data(bars)
-      .enter()
-      .append('text')
-      .text(function(bar) {
-        return Math.round(bar.value * 1000) / 1000;
-      })
-      .attr('y', function(bar) {
-        return bar.y + that.#scale.y.bandwidth() / 2;
-      })
-      .attr('class', 'value')
-      .transition()
-      .duration(1000)
-      .attr('x', function(bar) {
-        return bar.x + that.#scale.x(bar.value) + 5;
-      });
   }
 };
 
