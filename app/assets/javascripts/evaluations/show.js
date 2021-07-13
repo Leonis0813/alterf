@@ -39,7 +39,7 @@ export default class EvaluationResult {
     this.#performanceBar.drawXAxis(x_axis.ORIGIN, this.#scale.x);
     this.#performanceBar.drawYAxis(y_axis.ORIGIN, this.#scale.y);
     this.#performanceBar.drawBars(bars, {color: 'orange', opacity: 0.5});
-    this.#appendText(values);
+    this.#appendText(bars);
   }
 
   updateBars(values) {
@@ -52,7 +52,7 @@ export default class EvaluationResult {
       .attr('width', function(bar) {
         return that.#scale.x(values[bar.index]);
       });
-    this.#appendText(values);
+    this.#appendText(bars);
   }
 
   #createBars(performances) {
@@ -73,20 +73,27 @@ export default class EvaluationResult {
     });
   }
 
-  #appendText(values) {
+  #appendText(bars) {
+    const that = this;
     d3.selectAll('text.value').remove();
-    d3.selectAll('.bar')
+    console.log(bars);
+    d3.select('#performance')
+      .selectAll('.value')
+      .data(bars)
+      .enter()
       .append('text')
       .text(function(bar) {
-        return values[bar.index];
-      })
-      .attr('x', function(bar) {
-        return bar.x + that.#scale.x(values[bar.index]) + 5;
+        return Math.round(bar.value * 1000) / 1000;
       })
       .attr('y', function(bar) {
         return bar.y + that.#scale.y.bandwidth() / 2;
       })
-      .attr('class', 'value');
+      .attr('class', 'value')
+      .transition()
+      .duration(1000)
+      .attr('x', function(bar) {
+        return bar.x + that.#scale.x(bar.value) + 5;
+      });
   }
 };
 
