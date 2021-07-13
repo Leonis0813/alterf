@@ -1,4 +1,4 @@
-# 4.25.0 (2021/07/13)
+# 4.25.0 (2021/07/14)
 - [ADD] button for analysis parameter to evaluations view
 
 # 4.24.0 (2021/07/11)
