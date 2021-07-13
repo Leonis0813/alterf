@@ -1,8 +1,5 @@
 <%= javascript_pack_tag 'evaluations/manage' %>
 <%= stylesheet_pack_tag 'evaluations/manage' %>
-<%= render 'dialogs/execute_error' %>
-<%= render 'evaluations/dialogs/execute' %>
-<%= render 'evaluations/dialogs/download_error' %>
 
 <ul class='nav nav-tabs' style='border-bottom: 0px'>
   <li class='nav-item'>
@@ -86,3 +83,9 @@
     <%= render @evaluations %>
   </tbody>
 </table>
+
+<%= render 'dialogs/execute_error' %>
+<%= render 'dialogs/parameter' %>
+<%= render 'dialogs/parameter_error' %>
+<%= render 'evaluations/dialogs/execute' %>
+<%= render 'evaluations/dialogs/download_error' %>

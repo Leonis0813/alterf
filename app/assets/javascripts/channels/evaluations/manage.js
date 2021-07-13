@@ -2,36 +2,36 @@ import consumer from '../consumer';
 
 consumer.subscriptions.create('EvaluationChannel', {
   received(evaluation) {
-    const trId = `#${evaluation.evaluation_id}`;
-    const column = $(trId);
+    const trId = `tr#${evaluation.evaluation_id}`;
+    const row = $(trId);
 
-    if (column.length) {
+    if (row.length) {
       switch (evaluation.state) {
         case 'processing':
-          column.removeClass('cursor-auto');
-          column.addClass('table-warning cursor-pointer');
-          column.attr('data-state', evaluation.state);
-          column.attr('title', '結果を確認');
+          row.removeClass('cursor-auto');
+          row.addClass('table-warning cursor-pointer');
+          row.attr('data-state', evaluation.state);
+          row.attr('title', '結果を確認');
           $(`${trId} > td[class*=performed_at]`).text(evaluation.performed_at);
           $(`${trId} > td[class*=state]`).text('0%完了');
-          new bs.Tooltip(column);
+          new bs.Tooltip(row);
           break;
         case 'completed':
-          column.removeClass('table-warning');
-          column.addClass('table-success');
-          column.attr('data-state', evaluation.state);
-          column.attr('title', '結果を確認');
+          row.removeClass('table-warning');
+          row.addClass('table-success');
+          row.attr('data-state', evaluation.state);
+          row.attr('title', '結果を確認');
           $(`${trId} > td[class*=state]`).text('完了');
           this.addDownloadButton(trId, evaluation);
           break;
         case 'error':
-          column.removeClass('table-warning cursor-pointer');
-          column.addClass('table-danger cursor-auto');
-          column.attr('data-state', evaluation.state);
-          column.attr('title', '');
-          column.attr('data-bs-original-title', '');
+          row.removeClass('table-warning cursor-pointer');
+          row.addClass('table-danger cursor-auto');
+          row.attr('data-state', evaluation.state);
+          row.attr('title', '');
+          row.attr('data-bs-original-title', '');
           $(`${trId} > td[class*=state]`).text('エラー');
-          bs.Tooltip.getInstance(column).dispose();
+          bs.Tooltip.getInstance(row).dispose();
           break;
         default:
           this.updateProgress(trId, evaluation);
