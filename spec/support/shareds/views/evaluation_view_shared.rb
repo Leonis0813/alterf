@@ -129,17 +129,16 @@ end
 shared_examples '評価ジョブテーブルが表示されていること' do |rows: 0|
   before { @table = @html.xpath(table_xpath) }
 
-  it '7列のテーブルが表示されていること' do
-    is_asserted_by { @table.search('thead/th').size == 7 }
+  it '6列のテーブルが表示されていること' do
+    is_asserted_by { @table.search('thead/th').size == 6 }
   end
 
   %w[
     実行開始日時
     モデル
     指定方法
-    データ数
+    レース数
     状態
-    F値
   ].each_with_index do |text, i|
     it "#{i + 1}列目のヘッダーが#{text}であること" do
       is_asserted_by { @table.search('thead/th')[i].text == text }
@@ -216,23 +215,12 @@ shared_examples '評価ジョブの情報が表示されていること' do |sta
   end
 end
 
-shared_examples '評価結果情報が表示されていること' do
-  it 'F値が表示されていること' do
-    @rows = @html.xpath("#{table_xpath}/tbody/tr")
-
-    @evaluations.each_with_index do |evaluation, i|
-      f_measure = @rows[i].children.search('td')[5]
-      is_asserted_by { f_measure.text.strip == evaluation.f_measure.round(3).to_s }
-    end
-  end
-end
-
 shared_examples 'ダウンロードボタンが表示されていないこと' do
   it do
     rows = @html.xpath("#{table_xpath}/tbody/tr")
 
     @evaluations.each_with_index do |evaluation, i|
-      download_button = rows[i].children.search('td')[6]
+      download_button = rows[i].children.search('td')[5]
       download_link = download_button.search(download_link_xpath(evaluation))
       is_asserted_by { download_link.blank? }
     end
@@ -244,7 +232,7 @@ shared_examples 'ダウンロードボタンが表示されていること' do
     rows = @html.xpath("#{table_xpath}/tbody/tr")
 
     @evaluations.each_with_index do |evaluation, i|
-      download_button = rows[i].children.search('td')[6]
+      download_button = rows[i].children.search('td')[5]
       download_link = download_button.search(download_link_xpath(evaluation))
       is_asserted_by { download_link.present? }
     end

@@ -20,9 +20,6 @@
   <td class='state'>
     <%= progress(evaluation) %>
   </td>
-  <td class='f_measure'>
-    <%= evaluation.f_measure&.round(3) || 0.0 %>
-  </td>
   <td class='download' style='background-color: white; cursor: default'>
     <%= evaluation_data_download_button(evaluation) %>
   </td>

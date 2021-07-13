@@ -6,9 +6,8 @@ module EvaluationHelper
       {name: '実行開始日時', width: 16},
       {name: 'モデル', width: 35},
       {name: '指定方法', width: 11},
-      {name: 'データ数', width: 10},
-      {name: '状態', width: 13},
-      {name: 'F値', width: 8},
+      {name: 'レース数', width: 10},
+      {name: '状態', width: 21},
     ]
   end
 
