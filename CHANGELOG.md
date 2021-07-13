@@ -1,3 +1,6 @@
+# 4.25.0 (2021/07/13)
+- [ADD] button for analysis parameter to evaluations view
+
 # 4.24.0 (2021/07/11)
 - [ADD] view to confirm evaluation data
 - [UPDATE] tooltip by bootstrap
