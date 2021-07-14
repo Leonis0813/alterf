@@ -70,7 +70,7 @@ const AnalysisResult = class {
 
     this.#requestAnalysis.then(function(analysis) {
       const targetTree = analysis.result.decision_trees.find(function(decisionTree) {
-        return decisionTree.tree_id === targetTreeId;
+        return decisionTree.decision_tree_id === targetTreeId;
       });
 
       const decisionTree = new Tree('decision_tree');
@@ -108,7 +108,7 @@ const AnalysisResult = class {
 $(function() {
   $('#nav-link-analysis').addClass('active');
 
-  $('#tree_id').on('change', function() {
+  $('#decision_tree_id').on('change', function() {
     $('#decision_tree').children().remove();
     result.drawTree(parseInt($(this).val()));
   });
@@ -116,5 +116,4 @@ $(function() {
   const analysisId = location.pathname.replace('/alterf/analyses/', '');
   const result = new AnalysisResult(analysisId);
   result.drawImportance();
-  result.drawTree(0);
 });
