@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :analyses, only: %i[] do
     get 'download' => 'analyses#download', param: :analysis_id
     post 'rebuild' => 'analyses#rebuild', param: :analysis_id
+
     resource :result, only: %i[] do
       resources :importances, only: %i[index]
       resources :decision_trees, only: %i[show], param: :decision_tree_id
