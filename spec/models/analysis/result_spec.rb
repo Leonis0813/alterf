@@ -31,8 +31,6 @@ describe Analysis::Result, type: :model do
       end
 
       it 'DBに決定木情報が登録されていること' do
-        is_asserted_by { @result.decision_trees.exists?(tree_id: 0) }
-
         tree = YAML.load_file(File.join(fixture_dir, 'tree_0.yml'))
         nodes = @result.decision_trees.first.nodes
         is_asserted_by { nodes.size == tree['nodes'].size }
