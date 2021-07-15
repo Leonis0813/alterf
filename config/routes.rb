@@ -24,9 +24,12 @@ Rails.application.routes.draw do
     resources :analyses, only: [] do
       scope module: :analyses do
         resource :parameter, only: %i[show]
+
         resource :result, only: %i[] do
-          resources :importances, only: %i[index]
-          resources :decision_trees, only: %i[show], param: :decision_tree_id
+          scope module: :result do
+            resources :importances, only: %i[index]
+            resources :decision_trees, only: %i[show], param: :decision_tree_id
+          end
         end
       end
     end

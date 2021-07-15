@@ -9,7 +9,7 @@ class Api::Analyses::Result::DecisionTreesController < Api::Analyses::ResultCont
 
   private
 
-  def check_analysis_result_decision_tree
+  def check_request_analysis_result_decision_tree
     raise NotFound unless decision_tree
   end
 
