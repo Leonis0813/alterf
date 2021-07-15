@@ -20,7 +20,7 @@ class Analysis
       end
       importances.insert_all!(attributes)
 
-      attributes = Array.new(metadata['num_tree']) do |i|
+      attributes = Array.new(metadata['num_tree']) do
         {decision_tree_id: SecureRandom.hex(3)}.merge(timestamp)
       end
       decision_trees.insert_all!(attributes)
