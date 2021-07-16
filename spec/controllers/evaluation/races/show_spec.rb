@@ -22,10 +22,7 @@ describe Evaluation::RacesController, type: :controller do
     include_context 'トランザクション作成'
     include_context '評価レース情報を作成する'
     include_context 'リクエスト送信'
-
-    it 'ステータスコードが正しいこと' do
-      is_asserted_by { @response_status == 200 }
-    end
+    it_behaves_like 'ステータスコードが正しいこと', 200
   end
 
   describe '異常系' do
@@ -34,10 +31,7 @@ describe Evaluation::RacesController, type: :controller do
       include_context '評価レース情報を作成する'
       before { @evaluation_id = 'not_exist' }
       include_context 'リクエスト送信'
-
-      it 'ステータスコードが正しいこと' do
-        is_asserted_by { @response_status == 404 }
-      end
+      it_behaves_like 'ステータスコードが正しいこと', 404
     end
 
     context '評価レース情報が存在しない場合' do
@@ -45,10 +39,7 @@ describe Evaluation::RacesController, type: :controller do
       include_context '評価レース情報を作成する'
       before { @race_id = 'not_exist' }
       include_context 'リクエスト送信'
-
-      it 'ステータスコードが正しいこと' do
-        is_asserted_by { @response_status == 404 }
-      end
+      it_behaves_like 'ステータスコードが正しいこと', 404
     end
   end
 end
