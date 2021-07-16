@@ -25,7 +25,7 @@ describe Api::AnalysesController, type: :controller do
         end,
         decision_trees: analysis.result.decision_trees.map do |decision_tree|
           {
-            tree_id: decision_tree.tree_id,
+            decision_tree_id: decision_tree.decision_tree_id,
             nodes: decision_tree.nodes.map do |node|
               node.slice(
                 :node_id,
