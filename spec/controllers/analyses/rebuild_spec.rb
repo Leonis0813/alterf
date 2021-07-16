@@ -19,9 +19,7 @@ describe AnalysesController, type: :controller do
     end
     include_context 'リクエスト送信'
 
-    it 'ステータスコードが正しいこと' do
-      is_asserted_by { @response_status == 200 }
-    end
+    it_behaves_like 'ステータスコードが正しいこと', 200
 
     it '分析情報がコピーされていること' do
       is_asserted_by { Analysis.count == @before_count + 1 }
@@ -31,9 +29,6 @@ describe AnalysesController, type: :controller do
   describe '異常系' do
     before(:all) { @analysis_id = 'not_exist' }
     include_context 'リクエスト送信'
-
-    it 'ステータスコードが正しいこと' do
-      is_asserted_by { @response_status == 404 }
-    end
+    it_behaves_like 'ステータスコードが正しいこと', 404
   end
 end

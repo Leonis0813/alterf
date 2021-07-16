@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_01_114612) do
+ActiveRecord::Schema.define(version: 2021_07_14_143757) do
 
   create_table "analyses", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "analysis_id", default: "", null: false
@@ -64,10 +64,10 @@ ActiveRecord::Schema.define(version: 2021_07_01_114612) do
 
   create_table "analysis_result_decision_trees", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "analysis_result_id", null: false
-    t.integer "tree_id", null: false
+    t.string "decision_tree_id", limit: 6, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["analysis_result_id", "tree_id"], name: "index_unique_analysis_result_id_tree_id_on_decision_trees", unique: true
+    t.index ["analysis_result_id", "decision_tree_id"], name: "index_unique_analysis_result_id_tree_id_on_decision_trees", unique: true
     t.index ["analysis_result_id"], name: "index_analysis_result_decision_trees_on_analysis_result_id"
   end
 
