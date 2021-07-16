@@ -28,10 +28,7 @@ describe Api::Analyses::ParametersController, type: :controller do
     describe '異常系' do
       before { @analysis_id = 'not_exist' }
       include_context 'リクエスト送信'
-
-      it 'ステータスコードが正しいこと' do
-        is_asserted_by { @response_status == 404 }
-      end
+      it_behaves_like 'ステータスコードが正しいこと', 404
     end
   end
 end

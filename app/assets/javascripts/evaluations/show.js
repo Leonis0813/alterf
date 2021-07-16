@@ -39,6 +39,25 @@ export default class EvaluationResult {
     this.#performanceBar.drawXAxis(x_axis.ORIGIN, this.#scale.x);
     this.#performanceBar.drawYAxis(y_axis.ORIGIN, this.#scale.y);
     this.#performanceBar.drawBars(bars, {color: 'orange', opacity: 0.5});
+
+    const that = this;
+    d3.select('#performance')
+      .selectAll('.value')
+      .data(bars)
+      .enter()
+      .append('text')
+      .text(function(bar) {
+        return Math.round(bar.value * 1000) / 1000;
+      })
+      .attr('y', function(bar) {
+        return bar.y + that.#scale.y.bandwidth() / 2;
+      })
+      .attr('class', 'value')
+      .transition()
+      .duration(1000)
+      .attr('x', function(bar) {
+        return bar.x + that.#scale.x(bar.value) + 5;
+      });
   }
 
   updateBars(values) {
@@ -50,6 +69,16 @@ export default class EvaluationResult {
       .duration(1000)
       .attr('width', function(bar) {
         return that.#scale.x(values[bar.index]);
+      });
+
+    d3.selectAll('text.value')
+      .text(function(bar) {
+        return Math.round(values[bar.index] * 1000) / 1000;
+      })
+      .transition()
+      .duration(1000)
+      .attr('x', function(bar) {
+        return bar.x + that.#scale.x(values[bar.index]) + 5;
       });
   }
 
@@ -66,6 +95,7 @@ export default class EvaluationResult {
         width: that.#scale.x(performance),
         height: that.#scale.y.bandwidth() - 15,
         index: i,
+        value: performance,
       };
     });
   }
@@ -73,4 +103,18 @@ export default class EvaluationResult {
 
 $(function() {
   $('#nav-link-evaluation').addClass('active');
+
+  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (tooltip) {
+    return new bs.Tooltip(tooltip);
+  });
+
+  $('#table-evaluation-result').on('click', 'td', function(event) {
+    if (event.target.tagName === 'A') {
+      return;
+    }
+
+    const evaluationId = $('#table-evaluation-result').data('evaluation-id');
+    const raceId = $(this).parents('tr').attr('id');
+    open(`/alterf/evaluations/${evaluationId}/races/${raceId}`, '_blank');
+  });
 });

@@ -21,14 +21,14 @@ describe 'evaluations/show', type: :view do
         recall: 0.5,
         f_measure: 0.6,
       )
-      datum = @evaluation.data.create!(
+      race = @evaluation.races.create!(
         race_id: '1' * 8,
         race_name: 'テスト',
         race_url: 'http://example.com',
         ground_truth: 1,
       )
       result_size.times do |i|
-        datum.prediction_results.create!(number: i + 1, won: wons.include?(i + 1))
+        race.test_data.create!(number: i + 1, prediction_result: wons.include?(i + 1))
       end
     end
   end
@@ -76,28 +76,30 @@ describe 'evaluations/show', type: :view do
     end
 
     it 'Noが正しいこと' do
-      @evaluation.data.size.times do |i|
+      @evaluation.races.size.times do |i|
         is_asserted_by { @rows[i].children.search('td')[0].text.strip == (i + 1).to_s }
       end
     end
 
     it '行の色が正しいこと' do
-      @evaluation.data.size.times do |i|
-        is_asserted_by { @rows[i].attribute('class').value == tr_class }
+      @evaluation.races.size.times do |i|
+        is_asserted_by do
+          @rows[i].attribute('class').value == "cursor-pointer #{tr_class}"
+        end
       end
     end
 
     it 'レース名が正しいこと' do
-      @evaluation.data.each_with_index do |datum, i|
+      @evaluation.races.each_with_index do |race, i|
         race_name = @rows[i].children.search('td')[1]
-        is_asserted_by { race_name.text.strip == datum.race_name }
+        is_asserted_by { race_name.text.strip == race.race_name }
       end
     end
 
     it 'レース名がリンクになっていること' do
-      @evaluation.data.each_with_index do |datum, i|
+      @evaluation.races.each_with_index do |race, i|
         race_url = @rows[i].children.search('td')[1].children.search('a')
-        is_asserted_by { race_url.attribute('href').value == datum.race_url }
+        is_asserted_by { race_url.attribute('href').value == race.race_url }
       end
     end
 
@@ -109,24 +111,24 @@ describe 'evaluations/show', type: :view do
     end
 
     it 'エントリー数が正しいこと', unless: tr_class == 'table-warning' do
-      @evaluation.data.each_with_index do |datum, i|
+      @evaluation.races.each_with_index do |race, i|
         num_entry = @rows[i].children.search('td')[2]
-        is_asserted_by { num_entry.text.strip == datum.prediction_results.size.to_s }
+        is_asserted_by { num_entry.text.strip == race.test_data.size.to_s }
       end
     end
 
     it '予測結果が表示されていること', unless: tr_class == 'table-warning' do
       expected_span_class = 'fa-layers fa-fw fa-2x prediction-result'
 
-      @evaluation.data.each_with_index do |datum, i|
+      @evaluation.races.each_with_index do |race, i|
         span_stacks = @rows[i].children.search('td')[3].children.search('span')
 
-        datum.prediction_results.won.each_with_index do |result, j|
+        race.test_data.won.each_with_index do |result, j|
           is_asserted_by do
             span_stacks[j].attribute('class').value == expected_span_class
           end
 
-          color = result.number == datum.ground_truth ? 'limegreen' : 'gray'
+          color = result.number == race.ground_truth ? 'limegreen' : 'gray'
           is_asserted_by { span_stacks[j].attribute('style').value == "color: #{color}" }
 
           circle, number = span_stacks[j].children.search('i')
@@ -144,7 +146,7 @@ describe 'evaluations/show', type: :view do
     it '正解が表示されていること' do
       expected_span_class = 'fa-layers fa-fw fa-2x prediction-result'
 
-      @evaluation.data.each_with_index do |datum, i|
+      @evaluation.races.each_with_index do |race, i|
         span_stack = @rows[i].children.search('td')[4].children.search('span')
         is_asserted_by do
           span_stack.attribute('class').value == expected_span_class
@@ -156,7 +158,7 @@ describe 'evaluations/show', type: :view do
         is_asserted_by do
           number.attribute('class').value == 'fa-layers-text fa-inverse fa-xs'
         end
-        is_asserted_by { number.text.strip == datum.ground_truth.to_s }
+        is_asserted_by { number.text.strip == race.ground_truth.to_s }
       end
     end
   end

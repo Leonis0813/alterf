@@ -12,6 +12,8 @@ Rails:
 
 Layout/LineLength:
   Max: 89
+  Exclude:
+    - 'db/migrate/*'
 
 Layout/SpaceInsideBlockBraces:
   SpaceBeforeBlockParameters: false

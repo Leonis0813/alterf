@@ -30,10 +30,7 @@ describe AnalysesController, type: :controller do
     after { FileUtils.rm_rf(Dir[File.join(tmp_dir, '*')]) }
     include_context '分析結果を作成する'
     include_context 'リクエスト送信'
-
-    it 'ステータスコードが正しいこと' do
-      is_asserted_by { @response_status == 200 }
-    end
+    it_behaves_like 'ステータスコードが正しいこと', 200
   end
 
   describe '異常系' do

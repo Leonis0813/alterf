@@ -1,3 +1,14 @@
+# 4.25.1 (2021/07/16)
+- [IMPROVE] performance of response for analysis result view
+
+# 4.25.0 (2021/07/14)
+- [ADD] button for analysis parameter to evaluations view
+
+# 4.24.0 (2021/07/11)
+- [ADD] view to confirm evaluation data
+- [UPDATE] tooltip by bootstrap
+- [UPDATE] gems
+
 # 4.23.0 (2021/06/07)
 - [REMOVE] analysis with specifing the number of entries
 - [UPDATE] gems

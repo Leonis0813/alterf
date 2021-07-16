@@ -3,8 +3,10 @@ class EvaluationsController < ApplicationController
 
   def manage
     @evaluation = Evaluation.new
-    @evaluations = Evaluation.includes(data: :prediction_results)
-                             .all.order(created_at: :desc).page(params[:page])
+    @evaluations = Evaluation.includes(races: :test_data)
+                             .all
+                             .order(created_at: :desc)
+                             .page(params[:page])
   end
 
   def execute
@@ -35,7 +37,7 @@ class EvaluationsController < ApplicationController
       end
     end
 
-    EvaluationJob.perform_later(evaluation.id)
+    EvaluationJob.perform_later(evaluation)
     render status: :ok, json: {}
   end
 
@@ -57,7 +59,7 @@ class EvaluationsController < ApplicationController
   end
 
   def evaluation
-    @evaluation ||= Evaluation.includes(data: :prediction_results)
+    @evaluation ||= Evaluation.includes(races: :test_data)
                               .find_by(request.path_parameters.slice(:evaluation_id))
   end
 

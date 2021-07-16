@@ -7,7 +7,8 @@
 
     <svg id='performance'></svg>
 
-    <table id='table-evaluation-result' class='table table-hover'>
+    <table id='table-evaluation-result' class='table table-hover'
+           data-evaluation-id='<%= @evaluation.evaluation_id %>'>
       <thead>
         <th width='6%'>No</th>
         <th width='30%'>レース名</th>
@@ -16,7 +17,7 @@
         <th width='6%'>正解</th>
       </thead>
       <tbody>
-        <%= render @evaluation.data %>
+        <%= render @evaluation.races %>
       </tbody>
     </table>
   </div>

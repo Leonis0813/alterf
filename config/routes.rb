@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   post '/evaluations' => 'evaluations#execute'
   resources :evaluations, only: %i[] do
     get 'download' => 'evaluations#download', param: :evaluation_id
+    resources :races, only: %i[show], controller: 'evaluation/races', param: :race_id
   end
   resources :evaluations, only: %i[show], param: :evaluation_id
 
@@ -23,6 +24,13 @@ Rails.application.routes.draw do
     resources :analyses, only: [] do
       scope module: :analyses do
         resource :parameter, only: %i[show]
+
+        resource :result, only: %i[] do
+          scope module: :result do
+            resources :importances, only: %i[index]
+            resources :decision_trees, only: %i[show], param: :decision_tree_id
+          end
+        end
       end
     end
     resources :analyses, only: %i[show], param: :analysis_id

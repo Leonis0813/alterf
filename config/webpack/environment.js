@@ -13,7 +13,6 @@ environment.plugins.prepend(
   new webpack.ProvidePlugin({
     $: 'jquery',
     jQuery: 'jquery',
-    Popper: '@popperjs/core',
     bs: 'bootstrap',
     d3: 'd3',
   })

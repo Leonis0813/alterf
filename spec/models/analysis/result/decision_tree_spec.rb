@@ -18,11 +18,11 @@ describe Analysis::Result::DecisionTree, type: :model do
     end
 
     describe '異常系' do
-      context 'tree_idが指定されていない場合' do
-        expected_error = {tree_id: 'absent_parameter'}
+      context 'decision_tree_idが指定されていない場合' do
+        expected_error = {decision_tree_id: 'absent_parameter'}
 
         before(:all) do
-          @object = build(:decision_tree, tree_id: nil)
+          @object = build(:decision_tree, decision_tree_id: nil)
           @object.validate
         end
 
@@ -30,7 +30,7 @@ describe Analysis::Result::DecisionTree, type: :model do
       end
 
       invalid_attribute = {
-        tree_id: [-1, 0.1],
+        decision_tree_id: %w[00000 0000000 gggggg],
       }
 
       CommonHelper.generate_test_case(invalid_attribute).each do |attribute|
@@ -46,8 +46,8 @@ describe Analysis::Result::DecisionTree, type: :model do
         end
       end
 
-      context 'tree_idが重複している場合' do
-        expected_error = {tree_id: 'duplicated_resource'}
+      context 'decision_tree_idが重複している場合' do
+        expected_error = {decision_tree_id: 'duplicated_resource'}
         include_context 'トランザクション作成'
         before(:all) do
           create(:decision_tree, analysis_result_id: 1)
@@ -71,7 +71,7 @@ describe Analysis::Result::DecisionTree, type: :model do
         FileUtils.mkdir_p(output_dir)
         FileUtils.cp(File.join(fixture_dir, 'tree_0.yml'), output_dir)
 
-        @analysis.result.decision_trees.first.import!
+        @analysis.result.decision_trees.first.import!(0)
         @nodes = @analysis.result.decision_trees.first.nodes
       end
 

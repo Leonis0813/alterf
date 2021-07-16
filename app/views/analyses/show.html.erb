@@ -23,9 +23,11 @@
     <div class='card-body'>
       <h4 class='card-title'>決定木</h4>
       <div class='form-inline'>
-        <%= label_tag :tree_id, 'Tree ID' %>
-        <% options = @analysis.result.decision_trees.map(&:tree_id).sort %>
-        <%= select_tag :tree_id, options_for_select(options, 0), class: 'form-select' %>
+        <%= label_tag :decision_tree_id, 'Tree ID' %>
+        <% decision_trees = @analysis.result.decision_trees %>
+        <% options = decision_trees.map.with_index {|tree, i| [i, tree.decision_tree_id] }.to_h %>
+        <% params = {include_blank: true, class: 'form-select'} %>
+        <%= select_tag :decision_tree_id, options_for_select(options, selected: options.invert[0]), params %>
       </div>
       <svg id='decision_tree'></svg>
     </div>

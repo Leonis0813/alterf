@@ -44,7 +44,7 @@ class Evaluation < ApplicationRecord
             allow_nil: true
 
   belongs_to :analysis
-  has_many :data, dependent: :destroy
+  has_many :races, dependent: :destroy
 
   after_initialize if: :new_record? do |evaluation|
     evaluation.evaluation_id = SecureRandom.hex
@@ -67,6 +67,7 @@ class Evaluation < ApplicationRecord
     raise StandardError if analysis.nil?
 
     update!(analysis: analysis)
+    broadcast(analysis_id: analysis_id)
   end
 
   def fetch_data!
@@ -85,7 +86,7 @@ class Evaluation < ApplicationRecord
                end
 
     race_ids.each do |race_id|
-      data.create!(
+      races.create!(
         race_id: race_id,
         race_name: Denebola::Race.find_by(race_id: race_id).race_name,
         race_url: "#{Settings.netkeiba.base_url}/race/#{race_id}",
@@ -113,14 +114,13 @@ class Evaluation < ApplicationRecord
     end
     update!(attribute)
 
-    completed_data_size = data.to_a.count {|datum| datum.prediction_results.present? }
+    completed_data_size = races.to_a.count {|race| race.test_data.present? }
 
     %i[precision recall f_measure].each {|key| attribute[key] ||= 0 }
-    attribute[:progress] = (100 * completed_data_size / data.size.to_f).round(0)
-    broadcast(attribute)
+    broadcast(progress: (100 * completed_data_size / races.size.to_f).round(0))
 
     attribute[:evaluation_id] = evaluation_id
-    ActionCable.server.broadcast('evaluation_datum', attribute)
+    ActionCable.server.broadcast('evaluation_race', attribute)
   end
 
   def output_race_ids
@@ -128,7 +128,7 @@ class Evaluation < ApplicationRecord
 
     file_path = Rails.root.join('tmp/files/evaluations', id.to_s, 'data.txt')
     File.open(file_path, 'w') do |file|
-      data.pluck(:race_id).each {|race_id| file.puts(race_id) }
+      races.pluck(:race_id).each {|race_id| file.puts(race_id) }
     end
   end
 
@@ -158,26 +158,26 @@ class Evaluation < ApplicationRecord
   end
 
   def true_positive
-    data.inject(0) do |tp, datum|
-      tp + datum.prediction_results.won.where(number: datum.ground_truth).count
+    races.inject(0) do |tp, race|
+      tp + race.test_data.won.where(number: race.ground_truth).count
     end.to_f
   end
 
   def true_negative
-    data.inject(0) do |tn, datum|
-      tn + datum.prediction_results.lost.where.not(number: datum.ground_truth).count
+    races.inject(0) do |tn, race|
+      tn + race.test_data.lost.where.not(number: race.ground_truth).count
     end.to_f
   end
 
   def false_positive
-    data.inject(0) do |fp, datum|
-      fp + datum.prediction_results.won.where.not(number: datum.ground_truth).count
+    races.inject(0) do |fp, race|
+      fp + race.test_data.won.where.not(number: race.ground_truth).count
     end.to_f
   end
 
   def false_negative
-    data.inject(0) do |fn, datum|
-      fn + datum.prediction_results.lost.where(number: datum.ground_truth).count
+    races.inject(0) do |fn, race|
+      fn + race.test_data.lost.where(number: race.ground_truth).count
     end.to_f
   end
 

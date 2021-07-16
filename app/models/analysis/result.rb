@@ -20,9 +20,13 @@ class Analysis
       end
       importances.insert_all!(attributes)
 
-      attributes = Array.new(metadata['num_tree']) {|i| {tree_id: i}.merge(timestamp) }
+      attributes = Array.new(metadata['num_tree']) do
+        {decision_tree_id: SecureRandom.hex(3)}.merge(timestamp)
+      end
       decision_trees.insert_all!(attributes)
-      decision_trees.reload.each(&:import!)
+      decision_trees.reload.each_with_index do |decision_tree, index|
+        decision_tree.import!(index)
+      end
     end
   end
 end
