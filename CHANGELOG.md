@@ -1,3 +1,6 @@
+# 4.25.1 (2021/07/16)
+- [IMPROVE] performance of response for analysis result view
+
 # 4.25.0 (2021/07/14)
 - [ADD] button for analysis parameter to evaluations view
 
