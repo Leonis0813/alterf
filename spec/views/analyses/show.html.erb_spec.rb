@@ -63,15 +63,18 @@ describe 'analyses/show', type: :view do
       'div[@class="card-body"]',
       'div[@class="form-inline"]',
     ].join('/')
-    select_label = @html.xpath("#{form_xpath}/label[@for='tree_id']")
+    select_label = @html.xpath("#{form_xpath}/label[@for='decision_tree_id']")
     is_asserted_by { select_label.present? }
     is_asserted_by { select_label.text == 'Tree ID' }
 
-    select_form_xpath = "#{form_xpath}/select[@id='tree_id'][@class='form-select']"
+    select_form_xpath = [
+      form_xpath,
+      'select[@id="decision_tree_id"][@class="form-select"]',
+    ].join('/')
     select_form = @html.xpath(select_form_xpath)
     is_asserted_by { select_form.present? }
 
-    selected_option = @html.xpath("#{select_form_xpath}/option[@selected]")
-    is_asserted_by { selected_option.attribute('value').value == '0' }
+    selected_option = @html.xpath("#{select_form_xpath}/option").first
+    is_asserted_by { selected_option.attribute('value').value.blank? }
   end
 end
